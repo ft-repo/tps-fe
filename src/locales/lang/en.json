@@ -15,6 +15,10 @@
                 "item1": "Group collapse menu item 1",
                 "item2": "Group collapse menu item 2"
             }
-        }
+        },
+        "routeEstimation": "Route Estimation",
+        "permitList": "Permit List",
+        "vehicleList": "Vehicle List",
+        "executiveData": "Executive Data"
     }
 }

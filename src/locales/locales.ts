@@ -2,11 +2,15 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import en from './lang/en.json'
+import th from './lang/th.json'
 import appConfig from '@/configs/app.config'
 
 const resources = {
     en: {
         translation: en,
+    },
+    th: {
+        translation: th,
     },
 }
 
