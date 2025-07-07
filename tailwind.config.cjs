@@ -16,6 +16,7 @@ module.exports = {
 		theme: {
 			fontFamily: {
 				sans: [
+					'Noto Sans Thai',
 					'Inter',
 					'ui-sans-serif',
 					'system-ui',
