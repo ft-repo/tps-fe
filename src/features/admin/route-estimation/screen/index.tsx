@@ -1,30 +1,33 @@
-import React, { useState } from 'react'
-import Tabs from '@/components/ui/Tabs'
-import { TemplateForm } from '../components'
+import React, { useMemo } from 'react'
+import { EstimateResult, RouteEstimation, RequestPermit } from '../components'
+import { useRouteEstimationContext } from '../context'
 
-const { TabNav, TabList, TabContent } = Tabs
+interface Props {
 
-const RouteEstimationScreen = () => {
-  const [tabKey, setTabKey] = useState<string>('tab1')
+}
+
+const RouteEstimationScreen: React.FC<Props> = (props) => {
+  const { } = props
+  const { step } = useRouteEstimationContext()
+
+  const renderFormStep = useMemo(() => {
+    switch (step) {
+      case 1:
+        return <RouteEstimation />
+      case 2:
+        return <EstimateResult />
+      case 3:
+        return <RequestPermit />
+      default:
+        return null
+    }
+  }, [step])
 
   return (
-    <>
-      <Tabs
-        defaultValue={tabKey}
-        variant='pill'
-        onChange={(tabKey) => setTabKey(tabKey)}
-      >
-        <TabList>
-          <TabNav value={tabKey}>รถคู่ที่ 1</TabNav>
-        </TabList>
-        <div className="p-4">
-          <TabContent value="tab1" >
-            <TemplateForm />
-          </TabContent>
-        </div>
-      </Tabs>
-    </>
+    <div>
+      {renderFormStep}
+    </div>
   )
 }
 
-export default RouteEstimationScreen
+export default React.memo<Props>(RouteEstimationScreen)

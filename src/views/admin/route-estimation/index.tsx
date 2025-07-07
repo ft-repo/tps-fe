@@ -1,13 +1,16 @@
 import React from 'react'
-import RouteEstimationScreen from '@/features/admin/route-estimation/screen/index'
+import RouteEstimationScreen from '@/features/admin/route-estimation/screen'
+import { RouteEstimatationProvider } from '@/features/admin/route-estimation/context'
 
-const RouteEstimationIndex = () => {
+interface Props { }
 
+const RouteEstimationIndex: React.FC<Props> = (props) => {
+  const { } = props;
   return (
-    <div>
+    <RouteEstimatationProvider>
       <RouteEstimationScreen />
-    </div>
+    </RouteEstimatationProvider>
   )
 }
 
-export default RouteEstimationIndex
+export default React.memo<Props>(RouteEstimationIndex)
