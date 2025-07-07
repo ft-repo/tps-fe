@@ -8,3 +8,7 @@
    - develop = เป็น branch ที่ใช้ทำงานเป็นหลัก
    - features/... = เป็น branch ที่ใช้ทำ features หรือ modules แยก จะได้ไม่ต้องชนกับ develop (สามารถ merge เข้า develop ได้)
    - hotfixes/... = เอาไว้ใช้แก้ issue ใน features / modules แบบ specific
+3. การตั้งชื่อ commit
+   - feat: [...commit_name] สำหรับเพิ่มไฟล์ใหม่เข้า staging area
+   - fix: [...commit_name] สำหรับแก้ไขไฟล์ใหม่เข้า staging area
+   - build: [...commit_name] กรณีลง library ใหม่
