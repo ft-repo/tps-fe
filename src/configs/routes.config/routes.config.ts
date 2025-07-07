@@ -20,14 +20,26 @@ export const protectedRoutes = [
     },
     {
         key: 'permitList',
-        path: '/permit-list',
-        component: lazy(() => import('@/views/admin/permit-list')),
+        path: '/permit-list/overview',
+        component: lazy(() => import('@/views/admin/permit-list/overview')),
+        authority: [],
+    },
+    {
+        key: 'permitListById',
+        path: '/permit-list/view',
+        component: lazy(() => import('@/views/admin/permit-list/view')),
         authority: [],
     },
     {
         key: 'vehicleList',
-        path: '/vehicle-list',
-        component: lazy(() => import('@/views/admin/vehicle-list')),
+        path: '/vehicle-list/overview',
+        component: lazy(() => import('@/views/admin/vehicle-list/overview')),
+        authority: [],
+    },
+        {
+        key: 'createVehicleList',
+        path: '/vehicle-list/create',
+        component: lazy(() => import('@/views/admin/vehicle-list/create')),
         authority: [],
     },
     {
@@ -36,44 +48,4 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/admin/executive-data')),
         authority: [],
     }
-    // {
-    //     key: 'singleMenuItem',
-    //     path: '/single-menu-view',
-    //     component: lazy(() => import('@/views/demo/SingleMenuView')),
-    //     authority: [],
-    // },
-    // {
-    //     key: 'collapseMenu.item1',
-    //     path: '/collapse-menu-item-view-1',
-    //     component: lazy(() => import('@/views/demo/CollapseMenuItemView1')),
-    //     authority: [],
-    // },
-    // {
-    //     key: 'collapseMenu.item2',
-    //     path: '/collapse-menu-item-view-2',
-    //     component: lazy(() => import('@/views/demo/CollapseMenuItemView2')),
-    //     authority: [],
-    // },
-    // {
-    //     key: 'groupMenu.single',
-    //     path: '/group-single-menu-item-view',
-    //     component: lazy(() => import('@/views/demo/GroupSingleMenuItemView')),
-    //     authority: [],
-    // },
-    // {
-    //     key: 'groupMenu.collapse.item1',
-    //     path: '/group-collapse-menu-item-view-1',
-    //     component: lazy(
-    //         () => import('@/views/demo/GroupCollapseMenuItemView1'),
-    //     ),
-    //     authority: [],
-    // },
-    // {
-    //     key: 'groupMenu.collapse.item2',
-    //     path: '/group-collapse-menu-item-view-2',
-    //     component: lazy(
-    //         () => import('@/views/demo/GroupCollapseMenuItemView2'),
-    //     ),
-    //     authority: [],
-    // },
 ]
