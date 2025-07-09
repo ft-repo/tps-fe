@@ -29,7 +29,7 @@ const navigationConfig: NavigationTree[] = [
     },
     {
         key: 'permitList',
-        path: '/permit-list/overview',
+        path: '/permit-list',
         title: 'Permit List',
         translateKey: 'nav.permitList',
         icon: 'permitList',
@@ -39,7 +39,7 @@ const navigationConfig: NavigationTree[] = [
     },
     {
         key: 'vehicleList',
-        path: '/vehicle-list/overview',
+        path: '/vehicle-list',
         title: 'Vehicle List',
         translateKey: 'nav.vehicleList',
         icon: 'vehicleList',

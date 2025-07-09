@@ -15,31 +15,19 @@ export const protectedRoutes = [
     {
         key: 'routeEstimation',
         path: '/route-estimation',
-        component: lazy(() => import('@/views/admin/route-estimation')),
+        component: lazy(() => import('@/views/admin/route-estimation/')),
         authority: [],
     },
     {
         key: 'permitList',
-        path: '/permit-list/overview',
-        component: lazy(() => import('@/views/admin/permit-list/overview')),
-        authority: [],
-    },
-    {
-        key: 'permitListById',
-        path: '/permit-list/view',
-        component: lazy(() => import('@/views/admin/permit-list/view')),
+        path: '/permit-list',
+        component: lazy(() => import('@/views/admin/permit-list')),
         authority: [],
     },
     {
         key: 'vehicleList',
-        path: '/vehicle-list/overview',
-        component: lazy(() => import('@/views/admin/vehicle-list/overview')),
-        authority: [],
-    },
-        {
-        key: 'createVehicleList',
-        path: '/vehicle-list/create',
-        component: lazy(() => import('@/views/admin/vehicle-list/create')),
+        path: '/vehicle-list',
+        component: lazy(() => import('@/views/admin/vehicle-list')),
         authority: [],
     },
     {
