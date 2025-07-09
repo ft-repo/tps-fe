@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react'
-import { useRouteEstimationContext } from '../../context'
+import { useRouteContext } from '../../context'
 import { Tabs } from '@/components/ui'
 import { DetailResult, TableResult } from '../../components'
 
@@ -11,7 +11,7 @@ interface Props {
 
 const EstimateResult: React.FC<Props> = (props) => {
   const { } = props
-  const { dataParser } = useRouteEstimationContext()
+  const { dataParser } = useRouteContext()
   const [tabKey, setTabKey] = useState<string>('tab0')
 
   const renderTabList = useMemo(() => {

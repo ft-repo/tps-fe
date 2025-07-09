@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { EstimateResult, RouteEstimation, RequestPermit } from '../components'
-import { useRouteEstimationContext } from '../context'
+import { useRouteContext } from '../context'
 
 interface Props {
 
@@ -8,7 +8,7 @@ interface Props {
 
 const RouteEstimationScreen: React.FC<Props> = (props) => {
   const { } = props
-  const { step } = useRouteEstimationContext()
+  const { step } = useRouteContext()
 
   const renderFormStep = useMemo(() => {
     switch (step) {

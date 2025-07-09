@@ -4,7 +4,7 @@ import { TemplateForm } from '../../components'
 import { useForm, useFieldArray } from "react-hook-form";
 import { HiX } from 'react-icons/hi';
 import { Button, Notification, toast } from '@/components/ui';
-import { useRouteEstimationContext } from '../../context';
+import { useRouteContext } from '../../context';
 import { FormValue } from '@/@types/admin/route-estimation';
 import { initFormValue } from '../mock';
 
@@ -15,7 +15,7 @@ interface Props { }
 const RouteEstimation: React.FC<Props> = (props) => {
   const { } = props;
   const [tabKey, setTabKey] = useState<string>('tab0')
-  const { setStep, setDataParser } = useRouteEstimationContext()
+  const { setStep, setDataParser } = useRouteContext()
   const { control, handleSubmit } = useForm<FormValue>({
     defaultValues: {
       form_template: [initFormValue]
