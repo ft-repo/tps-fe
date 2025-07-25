@@ -5,7 +5,7 @@ import { Button, DatePicker, Input, Select, Upload } from '@/components/ui'
 import React from 'react'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { Control, Controller } from 'react-hook-form'
-import { FieldType } from '@/@types/entrepreneur/entrepreneur-info';
+import { FieldType } from '@/@types/entrepreneur/executive-data';
 
 interface Props {
   control: Control<FieldType>;

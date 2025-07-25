@@ -57,15 +57,27 @@ export const protectedRoutes = [
     },
     /** ROLE STAFF */
     {
-        key: 'user_info',
-        path: '/user-info/overview',
-        component: lazy(() => import('@/views/staff/user-info/overview')),
+        key: 'entrepreneur_overview',
+        path: '/user-info/entrepreneur/overview',
+        component: lazy(() => import('@/views/staff/user-info/entrepreneur/overview')),
         authority: [],
     },
     {
-        key: 'create_user_info',
-        path: '/user-info/create',
-        component: lazy(() => import('@/views/staff/user-info/create')),
+        key: 'view_entrepreneur',
+        path: '/user-info/entrepreneur/view',
+        component: lazy(() => import('@/views/staff/user-info/entrepreneur/view')),
+        authority: [],
+    },
+    {
+        key: 'staff_overview',
+        path: '/user-info/staff/overview',
+        component: lazy(() => import('@/views/staff/user-info/staff/overview')),
+        authority: [],
+    },
+    {
+        key: 'create_staff',
+        path: '/user-info/staff/create',
+        component: lazy(() => import('@/views/staff/user-info/staff/create')),
         authority: [],
     },
     {
