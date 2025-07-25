@@ -2,7 +2,10 @@
   "nav": {
     "route_estimation": "ประเมินเส้นทาง",
     "permit_list": "รายการขออนุญาต",
-    "vehicle_;ist": "รายการรถ",
-    "entrepreneur_info": "ข้อมูลผู้ประกอบการ"
+    "vehicle_list": "รายการรถ",
+    "entrepreneur_info": "ข้อมูลผู้ประกอบการ",
+    "user_info": "ข้อมูลผู้ใช้งาน",
+    "request_list": "รายการคำขออนุญาต",
+    "request_history": "ประวัติการขออนุญาต"
   }
 }

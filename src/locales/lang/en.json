@@ -19,6 +19,9 @@
         "route_estimation": "Route Estimation",
         "permit_list": "Permit List",
         "vehicle_list": "Vehicle List",
-        "entrepreneur_info": "Executive Info"
+        "entrepreneur_info": "Executive Info",
+        "user_info": "User Info",
+        "request_list": "Request List",
+        "request_history": "Request History"
     }
 }
