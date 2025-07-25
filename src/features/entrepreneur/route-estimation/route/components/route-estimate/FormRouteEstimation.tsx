@@ -308,12 +308,26 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
       <section className='mt-5'>
         <h5>รายละเอียด</h5>
         <section className='mb-3'>
-          <p><strong>น้ำหนักรถเปล่ารวม:</strong> 27,900 กก.</p>
-          <p><strong>น้ำหนักรถเปล่ารวมน้ำหนักเพลา:</strong> 57,000 กก.</p>
-          <p><strong>มิติรถเปล่า (ม.):</strong> กว้าง 3.50 X ยาว 9.00 X สูง 4.30</p>
-          <p><strong>มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.):</strong> กว้าง 3.50 X ยาว 9.00 X สูง 4.96</p>
+          <div className='bg-gray-200 rounded-md p-3'>
+            <div className='flex items-center flex-wrap gap-3 justify-between'>
+              <p><strong>น้ำหนักรถเปล่ารวม:</strong></p>
+              <p>27,900 กก.</p>
+            </div>
+            <div className='flex items-center flex-wrap gap-3 justify-between'>
+              <p><strong>น้ำหนักรถเปล่ารวมน้ำหนักเพลา:</strong></p>
+              <p>57,000 กก.</p>
+            </div>
+            <div className='flex items-center flex-wrap gap-3 justify-between'>
+              <p><strong>มิติรถเปล่า (ม.):</strong></p>
+              <p>กว้าง 3.50 X ยาว 9.00 X สูง 4.30</p>
+            </div>
+            <div className='flex items-center flex-wrap gap-3 justify-between'>
+              <p><strong>มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.):</strong></p>
+              <p>กว้าง 3.50 X ยาว 9.00 X สูง 4.96</p>
+            </div>
+          </div>
         </section>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="block sm:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Card
             header={(
               <div className="rounded-tl-lg rounded-tr-lg overflow-hidden">
