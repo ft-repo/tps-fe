@@ -6,6 +6,8 @@
     "entrepreneur_info": "ข้อมูลผู้ประกอบการ",
     "user_info": "ข้อมูลผู้ใช้งาน",
     "request_list": "รายการคำขออนุญาต",
-    "request_history": "ประวัติการขออนุญาต"
+    "request_history": "ประวัติการขออนุญาต",
+    "entrepreneur_overview": "ข้อมูลผู้ประกอบการ",
+    "staff_overview": "ข้อมูลเจ้าหน้าที่"
   }
 }

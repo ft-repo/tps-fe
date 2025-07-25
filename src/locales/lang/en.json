@@ -22,6 +22,8 @@
         "entrepreneur_info": "Executive Info",
         "user_info": "User Info",
         "request_list": "Request List",
-        "request_history": "Request History"
+        "request_history": "Request History",
+        "entrepreneur_overview": "Entrepreneur Info",
+        "staff_overview": "Staff Info"
     }
 }
