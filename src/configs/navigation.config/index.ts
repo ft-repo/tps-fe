@@ -60,13 +60,35 @@ const navigationConfig: NavigationTree[] = [
     },
     {
         key: 'user_info',
-        path: '/user-info/overview',
+        path: '',
         title: 'User Info',
         translateKey: 'nav.user_info',
         icon: 'user_info',
-        type: NAV_ITEM_TYPE_ITEM,
+        // type: NAV_ITEM_TYPE_ITEM,
+        type: 'collapse',
         authority: [],
-        subMenu: [],
+        subMenu: [
+            {
+                key: 'entrepreneur_overview',
+                path: '/user-info/entrepreneur/overview',
+                title: 'ข้อมูลผู้ประกอบการ',
+                translateKey: 'nav.entrepreneur_overview',
+                icon: 'entrepreneur_overview',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [],
+                subMenu: []
+            },
+            {
+                key: 'staff_overview',
+                path: '/user-info/staff/overview',
+                title: 'ข้อมูลเจ้าหน้าที่',
+                translateKey: 'nav.staff_overview',
+                icon: 'staff_overview',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: [],
+                subMenu: []
+            },
+        ],
     },
     {
         key: 'request_list',
