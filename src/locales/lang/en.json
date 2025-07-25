@@ -16,9 +16,9 @@
                 "item2": "Group collapse menu item 2"
             }
         },
-        "routeEstimation": "Route Estimation",
-        "permitList": "Permit List",
-        "vehicleList": "Vehicle List",
-        "executiveData": "Executive Data"
+        "route_estimation": "Route Estimation",
+        "permit_list": "Permit List",
+        "vehicle_list": "Vehicle List",
+        "entrepreneur_info": "Executive Info"
     }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { lazy } from 'react'
 import authRoute from './authRoute'
 import type { Routes } from '@/@types/routes'
@@ -11,29 +12,114 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/Home')),
         authority: [],
     },
-    /** Example purpose only, please remove */
+    /** ROLE ADMIN */
     {
-        key: 'routeEstimation',
-        path: '/route-estimation',
-        component: lazy(() => import('@/views/admin/route-estimation/')),
+        key: 'route_estimation',
+        path: '/route-estimation/route',
+        component: lazy(() => import('@/views/entrepreneur/route-estimation/route')),
         authority: [],
     },
     {
-        key: 'permitList',
+        key: 'other_route_estimation',
+        path: '/route-estimation/other',
+        component: lazy(() => import('@/views/entrepreneur/route-estimation/other')),
+        authority: [],
+    },
+    {
+        key: 'permit_list',
         path: '/permit-list',
-        component: lazy(() => import('@/views/admin/permit-list')),
+        component: lazy(() => import('@/views/entrepreneur/permit-list/overview')),
         authority: [],
     },
     {
-        key: 'vehicleList',
-        path: '/vehicle-list',
-        component: lazy(() => import('@/views/admin/vehicle-list')),
+        key: 'view_permit_list',
+        path: '/permit-list/view',
+        component: lazy(() => import('@/views/entrepreneur/permit-list/view')),
         authority: [],
     },
     {
-        key: 'executiveData',
-        path: '/executive-data',
-        component: lazy(() => import('@/views/admin/executive-data')),
+        key: 'vehicle_list',
+        path: '/vehicle-list/overview',
+        component: lazy(() => import('@/views/entrepreneur/vehicle-list/overview')),
+        authority: [],
+    },
+    {
+        key: 'create_vehicle_list',
+        path: '/vehicle-list/create',
+        component: lazy(() => import('@/views/entrepreneur/vehicle-list/create')),
+        authority: [],
+    },
+    {
+        key: 'entrepreneur_info',
+        path: '/entrepreneur-info',
+        component: lazy(() => import('@/views/entrepreneur/entrepreneur-info')),
+        authority: [],
+    },
+    /** ROLE STAFF */
+    {
+        key: 'user_info',
+        path: '/user-info/overview',
+        component: lazy(() => import('@/views/staff/user-info/overview')),
+        authority: [],
+    },
+    {
+        key: 'create_user_info',
+        path: '/user-info/create',
+        component: lazy(() => import('@/views/staff/user-info/create')),
+        authority: [],
+    },
+    {
+        key: 'request_list',
+        path: '/request-list/overview',
+        component: lazy(() => import('@/views/staff/request-list/overview')),
+        authority: [],
+    },
+    {
+        key: 'approval_document',
+        path: '/request-list/approval/document',
+        component: lazy(() => import('@/views/staff/request-list/approval/document')),
+        authority: [],
+    },
+    {
+        key: 'approval_route',
+        path: '/request-list/approval/route',
+        component: lazy(() => import('@/views/staff/request-list/approval/route')),
+        authority: [],
+    },
+    {
+        key: 'approval_vehicle',
+        path: '/request-list/approval/vehicle',
+        component: lazy(() => import('@/views/staff/request-list/approval/vehicle')),
+        authority: [],
+    },
+    {
+        key: 'approval_sign',
+        path: '/request-list/approval/sign',
+        component: lazy(() => import('@/views/staff/request-list/approval/sign')),
+        authority: [],
+    },
+    {
+        key: 'approval_permit',
+        path: '/request-list/approval/permit',
+        component: lazy(() => import('@/views/staff/request-list/approval/permit')),
+        authority: [],
+    },
+    {
+        key: 'request_history',
+        path: '/request-history/overview',
+        component: lazy(() => import('@/views/staff/request-history/overview')),
+        authority: [],
+    },
+    {
+        key: 'view_normal_vehicle',
+        path: '/request-history/view/normal_vehicle',
+        component: lazy(() => import('@/views/staff/request-history/view/normal_vehicle')),
+        authority: [],
+    },
+    {
+        key: 'view_other_vehicle',
+        path: '/request-history/view/other_vehicle',
+        component: lazy(() => import('@/views/staff/request-history/view/other_vehicle')),
         authority: [],
     }
 ]

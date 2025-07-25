@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { lazy } from 'react'
 import type { Routes } from '@/@types/routes'
 

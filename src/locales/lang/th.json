@@ -1,8 +1,8 @@
 {
   "nav": {
-    "routeEstimation": "ประเมินเส้นทาง",
-    "permitList": "รายการขออนุญาต",
-    "vehicleList": "รายการรถ",
-    "executiveData": "ข้อมูลผู้ประกอบการ"
+    "route_estimation": "ประเมินเส้นทาง",
+    "permit_list": "รายการขออนุญาต",
+    "vehicle_;ist": "รายการรถ",
+    "entrepreneur_info": "ข้อมูลผู้ประกอบการ"
   }
 }

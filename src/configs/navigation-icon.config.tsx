@@ -11,6 +11,11 @@ import {
 	LuTruck,
 	LuServer,
 } from "react-icons/lu";
+import {
+	FaRegUser,
+	FaListOl,
+	FaHistory
+} from "react-icons/fa";
 import type { JSX } from 'react'
 
 export type NavigationIcons = Record<string, JSX.Element>
@@ -21,11 +26,15 @@ const navigationIcon: NavigationIcons = {
 	collapseMenu: <HiOutlineTemplate />,
 	groupSingleMenu: <HiOutlineDesktopComputer />,
 	groupCollapseMenu: <HiOutlineColorSwatch />,
-	// CUSTOM MENUBAR
-	routeEstimation: <LuMapPin />,
-	permitList: <LuListChecks />,
-	vehicleList: <LuTruck />,
-	executiveData: <LuServer />,
+	// CUSTOM MENUBAR - ADMIN
+	route_estimation: <LuMapPin />,
+	permit_list: <LuListChecks />,
+	vehicle_list: <LuTruck />,
+	entrepreneur_info: <LuServer />,
+	// CUSTOM MENUBAR - STAFF
+	user_info: <FaRegUser />,
+	request_list: <FaListOl />,
+	request_history: <FaHistory />
 }
 
 export default navigationIcon
