@@ -5,3 +5,4 @@
 @import './template/index.css';
 @import './vendors/index.css';
 @import './docs/index.css';
+@plugin "daisyui";
