@@ -13,7 +13,7 @@ const appConfig: AppConfig = {
     unAuthenticatedEntryPath: '/sign-in',
     tourPath: '/',
     // locale: 'en',
-    locale: 'th',
+    locale: 'en',
     enableMock: true,
 }
 
