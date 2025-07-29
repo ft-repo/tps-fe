@@ -11,6 +11,7 @@ interface Props {
 
 const FormSearchCategory: React.FC<Props> = (props) => {
   const { } = props
+  const navigate = useNavigate()
 
 
   const form = useForm<FieldType>({
