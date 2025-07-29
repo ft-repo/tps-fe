@@ -10,15 +10,16 @@ interface SideProps extends CommonProps {
 
 const Side = ({ children, content, ...rest }: SideProps) => {
     return (
-        <div className="grid lg:grid-cols-3 h-full">
+        <div className="grid lg:grid-cols-2 h-full">
             <div
                 className="bg-no-repeat bg-cover py-6 px-16 flex-col justify-between hidden lg:flex"
                 style={{
-                    backgroundImage: `url('/img/others/auth-side-bg.jpg')`,
+                    backgroundImage: `url('/img/others/auth-cover-bg.svg')`,
                 }}
             >
-                <Logo mode="dark" />
-                <div>
+                {/* <Logo mode="dark" type="full" /> */}
+                <img src="/img/logo/logo-dark-full.svg" alt="logo" />
+                {/* <div>
                     <div className="mb-6 flex items-center gap-4">
                         <Avatar
                             className="border-2 border-white"
@@ -37,13 +38,13 @@ const Side = ({ children, content, ...rest }: SideProps) => {
                         crafted with Tailwind CSS, it fulfilled most of the use
                         case to create modern and beautiful UI and application
                     </p>
-                </div>
-                <span className="text-white">
+                </div> */}
+                {/* <span className="text-white">
                     Copyright &copy; {`${new Date().getFullYear()}`}{' '}
                     <span className="font-semibold">{`${APP_NAME}`}</span>{' '}
-                </span>
+                </span> */}
             </div>
-            <div className="col-span-2 flex flex-col justify-center items-center bg-white dark:bg-gray-800">
+            <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800">
                 <div className="w-full xl:max-w-[450px] px-8 max-w-[380px]">
                     <div className="mb-8">{content}</div>
                     {children

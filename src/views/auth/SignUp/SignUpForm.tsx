@@ -64,10 +64,10 @@ const SignUpForm = (props: SignUpFormProps) => {
             )}
             <Formik
                 initialValues={{
-                    userName: 'admin1',
-                    password: '123Qwe1',
-                    confirmPassword: '123Qwe1',
-                    email: 'test@testmail.com',
+                    userName: '',
+                    password: '',
+                    confirmPassword: '',
+                    email: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -82,15 +82,15 @@ const SignUpForm = (props: SignUpFormProps) => {
                     <Form>
                         <FormContainer>
                             <FormItem
-                                label="User Name"
+                                label="ประเภทผู้ประกอบการ"
                                 invalid={errors.userName && touched.userName}
                                 errorMessage={errors.userName}
                             >
                                 <Field
-                                    type="text"
+                                    type=""
                                     autoComplete="off"
                                     name="userName"
-                                    placeholder="User Name"
+                                    placeholder="ประเภทผู้ประกอบการ"
                                     component={Input}
                                 />
                             </FormItem>
