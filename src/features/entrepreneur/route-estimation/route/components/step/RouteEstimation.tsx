@@ -9,7 +9,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { Button, Notification, toast } from '@/components/ui';
 import { useRouteContext } from '../../context';
 import { FieldType } from '@/@types/entrepreneur/route-estimation';
-import { initFormValue } from '../mock';
+import { initFormValue } from '../../mock';
 
 const { TabNav, TabList, TabContent } = Tabs
 

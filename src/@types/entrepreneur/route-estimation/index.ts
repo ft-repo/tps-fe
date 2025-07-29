@@ -25,3 +25,11 @@ export interface ContextProps {
   dataParser: FieldType;
   setDataParser: (dataParser: FieldType) => void;
 }
+
+export interface VehicleData {
+  title: string;
+  description: string;
+  image: string;
+}
+
+export type SummaryData = Omit<VehicleData, 'image'>
