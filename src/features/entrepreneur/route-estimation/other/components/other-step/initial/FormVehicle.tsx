@@ -75,18 +75,18 @@ const FormVehicle: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <h5>น้ำหนักลงเพลา (กิโลกรัม)</h5>
-        <div className='block lg:grid grid-cols-2 lg:grid-cols-4 gap-3'>
-          <fieldset>
+        <div className='block sm:grid grid-cols-2 2xl:grid-cols-4 gap-3'>
+          <fieldset className='mb-3 sm:mb-0'>
             <Input
               placeholder='กรุณาระบุ'
             />
           </fieldset>
-          <fieldset>
+          <fieldset className='mb-3 sm:mb-0'>
             <Input
               placeholder='กรุณาระบุ'
             />
           </fieldset>
-          <fieldset>
+          <fieldset className='mb-3 sm:mb-0'>
             <Input
               placeholder='กรุณาระบุ'
             />

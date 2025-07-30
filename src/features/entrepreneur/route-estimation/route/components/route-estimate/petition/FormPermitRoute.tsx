@@ -15,7 +15,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
   return (
     <main>
       <section>
-        <div className='block xl:grid grid-cols-2 gap-3'>
+        <div className='block md:grid grid-cols-2 gap-3'>
           <div className='col-span-2'>
             <fieldset>
               <label>ข้าพเจ้า (ชื่อบริษัท / ห้าง / ร้าน)</label>
@@ -74,7 +74,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
       </section>
       <section className='mt-5'>
         <h5>เอกสารสำคัญ</h5>
-        <div className='block xl:grid grid-cols-3 gap-3'>
+        <div className='block md:grid grid-cols-2 2xl:grid-cols-3 gap-3'>
           <fieldset>
             <label>หนังสือมอบอำนาจ</label>
             <Upload draggable>

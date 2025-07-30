@@ -24,7 +24,7 @@ const OtherInfo: React.FC<Props> = (props) => {
           <Button variant='solid' size='sm' onClick={() => setStep(2)}>ถัดไป</Button>
         </div>
       </section>
-      <div className='block lg:grid grid-cols-2 gap-5 mt-5'>
+      <div className='block xl:grid grid-cols-2 gap-5 mt-5'>
         <FormPetition />
         <FormVehicleContent />
       </div>

@@ -12,7 +12,7 @@ const DetailResult: React.FC<Props> = (props) => {
   const { data } = props
 
   return (
-    <div className='grid lg:grid-cols-2 gap-5 '>
+    <div className='block 2xl:grid grid-cols-2 gap-5 '>
       <div>
         <h4>รายละเอียด รถคู่ที่ 1 : รถลากจูง + รถกึ่งพ่วง</h4>
         <CardVehicleDetails

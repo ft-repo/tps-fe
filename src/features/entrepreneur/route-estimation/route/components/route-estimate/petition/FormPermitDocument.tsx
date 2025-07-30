@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react' 
+import React from 'react'
 import { Input, Upload } from '@/components/ui'
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 
@@ -13,7 +13,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
 
   return (
     <main>
-      <div className='block xl:grid grid-cols-2 gap-3'>
+      <div className='block md:grid grid-cols-2 gap-3'>
         <fieldset>
           <h5>รถลากจูง</h5>
           <label>เลขทะเบียน / เลขตัวรถ</label>
@@ -29,7 +29,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
           />
         </fieldset>
       </div>
-      <div className='block xl:grid grid-cols-3 gap-3 mt-3'>
+      <div className='block md:grid grid-cols-2 2xl:grid-cols-3 gap-3 mt-3'>
         <fieldset>
           <label>รูปแบบที่แสดงมิติ รถลากจูง (ถ้ามี)</label>
           <Upload draggable>

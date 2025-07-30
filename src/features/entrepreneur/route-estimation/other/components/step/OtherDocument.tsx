@@ -6,7 +6,6 @@ import { useOtherContext } from '../../context'
 import FormDocumentApproval from '../other-step/upload/FormDocumentApproval'
 import FormDocumentVehicle from '../other-step/upload/FormDocumentVehicle'
 import FormDocumentProposal from '../other-step/upload/FormDocumentProposal'
-import { STATUS_COLOR } from '@/utils/constant'
 
 interface Props {
 
@@ -26,7 +25,7 @@ const OtherDocument: React.FC<Props> = (props) => {
         </div>
       </section>
       <section className='mt-3'>
-        <div className='block lg:grid grid-cols-2 gap-5 mt-5'>
+        <div className='block xl:grid grid-cols-2 gap-5 mt-5'>
           <FormDocumentProposal />
           <FormDocumentVehicle />
         </div>
