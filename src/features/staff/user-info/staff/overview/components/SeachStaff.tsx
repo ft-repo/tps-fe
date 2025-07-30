@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Input } from '@/components/ui'
+import { FaPlus as PlusIcon } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom'
 
 const SeachStaff = () => {
@@ -11,7 +12,7 @@ const SeachStaff = () => {
       <Button type='submit' variant='solid'>ค้นหา</Button>
       <Button
         variant='solid'
-        //size="sm"
+        icon={<PlusIcon />}
         onClick={() => navigate('/staff/create')}
         >
           เพิ่มผู้ใช้งาน
