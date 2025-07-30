@@ -42,7 +42,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
 
   return (
     <>
-      <section className='flex justify-between items-center'>
+      <section className='flex justify-between items-center flex-wrap'>
         <h5>ข้อมูลผู้ประกอบการ</h5>
         <div className='flex items-center gap-3'>
           <Button variant='default' size='sm'>ย้อนกลับข้อมูลก่อนหน้า</Button>
