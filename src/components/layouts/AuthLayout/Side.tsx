@@ -17,8 +17,8 @@ const Side = ({ children, content, ...rest }: SideProps) => {
                     backgroundImage: `url('/img/others/auth-cover-bg.svg')`,
                 }}
             >
-                <div style={{ position: 'fixed', top: 32, left: 64, zIndex: 10 }}>
-                    <img src="/img/logo/logo-dark-full.svg" alt="logo" />
+                <div className="fixed top-6 left-12 z-10">
+                    <img src="/img/logo/logo-dark-full.svg" className='w-100' alt="logo" />
                 </div>
             </div>
             <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800">
