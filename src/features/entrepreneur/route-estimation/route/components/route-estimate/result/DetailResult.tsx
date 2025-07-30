@@ -35,7 +35,7 @@ const DetailResult: React.FC<Props> = (props) => {
           <p>{data.end_route || '-'}</p>
         </section>
       </div>
-      <figure className='h-full bg-gray-400 block'>
+      <figure className='h-full bg-gray-400 block rounded-md overflow-hidden'>
         <h1>MAP GOES HERE</h1>
       </figure>
     </div>
