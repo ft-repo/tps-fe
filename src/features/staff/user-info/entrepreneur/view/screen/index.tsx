@@ -6,12 +6,12 @@ interface Props {
 
 }
 
-const OverviewScreen: React.FC<Props> = (props) => {
+const ViewScreen: React.FC<Props> = (props) => {
   const { } = props
 
   return (
-    <div>hello2</div>
+    <div>index</div>
   )
 }
 
-export default React.memo<Props>(OverviewScreen)
+export default React.memo<Props>(ViewScreen)

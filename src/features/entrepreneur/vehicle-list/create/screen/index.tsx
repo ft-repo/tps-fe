@@ -48,7 +48,7 @@ const CreateScreen: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <section className='flex justify-between items-center'>
+      <section className='flex justify-between items-center flex-wrap gap-5'>
         <h3>เพิ่มรายการรถ</h3>
         <div className='flex items-center gap-3'>
           <Button variant='default' size='sm' onClick={() => navigate(-1)}>ย้อนกลับ</Button>
