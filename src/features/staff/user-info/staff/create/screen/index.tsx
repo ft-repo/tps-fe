@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import { SeachCreateStaff, CreateStaffTable } from '../components'
+import { SeachCreateStaff, CreateStaffTable, CreateStaffData } from '../components'
 
 interface Props {
 
@@ -18,6 +18,7 @@ const CreateScreen: React.FC<Props> = (props) => {
       </section>
       <section>
         <CreateStaffTable/>
+        <CreateStaffData/>
       </section>
     </div>
   )

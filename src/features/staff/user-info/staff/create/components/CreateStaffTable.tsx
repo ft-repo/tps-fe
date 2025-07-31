@@ -7,6 +7,7 @@ const CreateStaffTable = () => {
 
   return (
     <div>
+        <div className='block xl:grid grid-cols-2 gap-5 mt-5'>
       <Table>
                 <THead>
                     <Tr>
@@ -29,6 +30,7 @@ const CreateStaffTable = () => {
                     </Tr>
                 </TBody>
             </Table>
+            </div>
     </div>
   )
 }

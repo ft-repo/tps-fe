@@ -13,7 +13,7 @@ const SeachStaff = () => {
       <Button
         variant='solid'
         icon={<PlusIcon />}
-        onClick={() => navigate('/staff/create')}
+        onClick={() => navigate('/user-info/staff/create')}
         >
           เพิ่มผู้ใช้งาน
         </Button>
