@@ -33,9 +33,10 @@ interface TableData {
 
 const TableCategoryAdmin: React.FC<Props> = (props) => {
   const { } = props
-  // const navigation = useNavigate()
+  const navigate = useNavigate()
   const [modalOpen, setModalOpen] = React.useState(false);
   const [selectedRow, setSelectedRow] = React.useState<TableData | null>(null);
+
   const columns = useMemo<ColumnDef<any>[]>(() => [
     {
       header: 'เลขที่',
@@ -64,20 +65,71 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
     {
       header: 'ตรวจเอกสาร',
       accessorKey: 'validate_document',
-      cell: ({ getValue }) => renderStatusBadge(getValue() as string)
+      cell: ({ getValue, row }) => {
+        const status = (getValue() as string).trim();
+        const isDisabled = status.includes("ยุติ");
 
+        return (
+          <span
+            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
+              }`}
+            onClick={() => {
+              if (!isDisabled) {
+                setSelectedRow(row.original);
+                navigate('/request-list/approval/document');
+              }
+            }}
+          >
+            {status}
+          </span>
+        );
+      }
     },
     {
       header: 'ตรวจเส้นทาง',
       accessorKey: 'validate_route',
-      cell: ({ getValue }) => renderStatusBadge(getValue() as string)
+      cell: ({ getValue, row }) => {
+        const status = (getValue() as string).trim();
+        const isDisabled = status.includes("ยุติ");
 
+        return (
+          <span
+            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
+              }`}
+            onClick={() => {
+              if (!isDisabled) {
+                setSelectedRow(row.original);
+                navigate('/request-list/approval/route');
+              }
+            }}
+          >
+            {status}
+          </span>
+        );
+      }
     },
     {
       header: 'ตรวจยานพาหนะ',
       accessorKey: 'validate_vehicle',
-      cell: ({ getValue }) => renderStatusBadge(getValue() as string)
+      cell: ({ getValue, row }) => {
+        const status = (getValue() as string).trim();
+        const isDisabled = status.includes("ยุติ");
 
+        return (
+          <span
+            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
+              }`}
+            onClick={() => {
+              if (!isDisabled) {
+                setSelectedRow(row.original);
+                navigate('/request-list/approval/vehicle');
+              }
+            }}
+          >
+            {status}
+          </span>
+        );
+      }
     },
     {
       header: 'รอลงนาม',
@@ -85,18 +137,17 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
       cell: ({ getValue, row }) => {
         const status = (getValue() as string).trim();
         const isDisabled = status.includes("ยุติ");
-        const navigate = useNavigate();
 
         return (
           <span
+            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
+              }`}
             onClick={() => {
               if (!isDisabled) {
                 setSelectedRow(row.original);
                 navigate('/request-list/approval/permit');
               }
             }}
-            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
-              }`}
           >
             {status}
           </span>
@@ -112,58 +163,58 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
 
         return (
           <span
+            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
+              }`}
             onClick={() => {
               if (!isDisabled) {
                 setSelectedRow(row.original);
                 setModalOpen(true);
               }
             }}
-            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
-              }`}
           >
             {status}
           </span>
         );
       }
     },
-  ], [])
+  ], [navigate])
 
-  const renderStatusBadge = (status: string) => {
-    if (!status) return null;
+  // const renderStatusBadge = (status: string) => {
+  //   if (!status) return null;
 
-    const cleanStatus = status.trim();
-    const parts = cleanStatus.split(' ');
-    const main = parts.slice(0, -3).join(' ') || cleanStatus;
-    const maybeDate = parts.slice(-3).join(' ');
-    const isDate = maybeDate.match(/\d{1,2}\s(ม\.ค\.|ก\.พ\.|มี\.ค\.|เม\.ย\.|พ\.ค\.|มิ\.ย\.|ก\.ค\.|ส\.ค\.|ก\.ย\.|ต\.ค\.|พ\.ย\.|ธ\.ค\.)\s\d{2,4}/);
+  //   const cleanStatus = status.trim();
+  //   const parts = cleanStatus.split(' ');
+  //   const main = parts.slice(0, -3).join(' ') || cleanStatus;
+  //   const maybeDate = parts.slice(-3).join(' ');
+  //   const isDate = maybeDate.match(/\d{1,2}\s(ม\.ค\.|ก\.พ\.|มี\.ค\.|เม\.ย\.|พ\.ค\.|มิ\.ย\.|ก\.ค\.|ส\.ค\.|ก\.ย\.|ต\.ค\.|พ\.ย\.|ธ\.ค\.)\s\d{2,4}/);
 
-    const baseClass =
-      'w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight';
-    let colorClass = 'bg-slate-200 text-black';
+  //   const baseClass =
+  //     'w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight';
+  //   let colorClass = 'bg-slate-200 text-black';
 
-    if (cleanStatus.includes('ไม่ผ่าน')) {
-      colorClass = 'bg-red-500 text-white';
-    } else if (cleanStatus.includes('ผ่านการตรวจ')) {
-      colorClass = 'bg-green-500 text-white';
-    } else if (cleanStatus.includes('รอดำเนินการ') || cleanStatus.includes('กำลังดำเนินการ')) {
-      colorClass = 'bg-yellow-400 text-black';
-    } else if (cleanStatus.includes('ยุติ')) {
-      colorClass = 'bg-gray-500 text-white';
-    }
+  //   if (cleanStatus.includes('ไม่ผ่าน')) {
+  //     colorClass = 'bg-red-500 text-white';
+  //   } else if (cleanStatus.includes('ผ่านการตรวจ')) {
+  //     colorClass = 'bg-green-500 text-white';
+  //   } else if (cleanStatus.includes('รอดำเนินการ') || cleanStatus.includes('กำลังดำเนินการ')) {
+  //     colorClass = 'bg-yellow-400 text-black';
+  //   } else if (cleanStatus.includes('ยุติ')) {
+  //     colorClass = 'bg-gray-500 text-white';
+  //   }
 
-    return (
-      <span className={`${baseClass} ${colorClass}`}>
-        {isDate ? (
-          <>
-            <div>{main}</div>
-            <div>{maybeDate}</div>
-          </>
-        ) : (
-          <div>{cleanStatus}</div>
-        )}
-      </span>
-    );
-  };
+  //   return (
+  //     <span className={`${baseClass} ${colorClass}`}>
+  //       {isDate ? (
+  //         <>
+  //           <div>{main}</div>
+  //           <div>{maybeDate}</div>
+  //         </>
+  //       ) : (
+  //         <div>{cleanStatus}</div>
+  //       )}
+  //     </span>
+  //   );
+  // };
 
   const data = useMemo<TableData[]>(() => [
     {
@@ -225,17 +276,18 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
       <Table
         data={data}
         columns={columns}
-        totalData={data.length}
-        pageSizeOption={[
-          { value: 10, label: '10 / page' },
-          { value: 20, label: '20 / page' },
-          { value: 30, label: '30 / page' },
-          { value: 40, label: '40 / page' },
-          { value: 50, label: '50 / page' },
-        ]}
+      // totalData={data.length}
+      // pageSizeOption={[
+      //   { value: 10, label: '10 / page' },
+      //   { value: 20, label: '20 / page' },
+      //   { value: 30, label: '30 / page' },
+      //   { value: 40, label: '40 / page' },
+      //   { value: 50, label: '50 / page' },
+      // ]}
       />
       <ConfirmModal
         open={modalOpen}
+        data={selectedRow}
         onClose={() => setModalOpen(false)}
         onConfirm={() => {
           if (selectedRow) {
@@ -243,7 +295,6 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
           }
           setModalOpen(false);
         }}
-        data={selectedRow}
       />
     </div>
   )

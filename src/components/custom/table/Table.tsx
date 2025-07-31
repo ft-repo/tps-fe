@@ -2,10 +2,10 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useMemo } from 'react'
+import React, { } from 'react'
 import Table from '@/components/ui/Table'
-import Pagination from '@/components/ui/Pagination'
-import Select from '@/components/ui/Select'
+// import Pagination from '@/components/ui/Pagination'
+// import Select from '@/components/ui/Select'
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,22 +18,22 @@ import {
 
 const { Tr, Th, Td, THead, TBody } = Table
 
-type Option = {
-  value: number
-  label: string
-}
+// type Option = {
+//   value: number
+//   label: string
+// }
 
 interface Props {
   data: any[];
   columns: ColumnDef<any, any>[];
-  totalData: number;
-  pageSizeOption?: Option[];
+  // totalData: number;
+  // pageSizeOption?: Option[];
   // DISPLAY
-  showPagination?: boolean;
+  // showPagination?: boolean;
 }
 
 const CustomTable: React.FC<Props> = (props) => {
-  const { data, columns, totalData, pageSizeOption, showPagination = true } = props
+  const { data, columns } = props
 
   const table = useReactTable({
     data,
@@ -45,45 +45,45 @@ const CustomTable: React.FC<Props> = (props) => {
   })
 
   // FUNCTION
-  const onPaginationChange = useCallback((page: number) => {
-    table.setPageIndex(page - 1)
-  }, [table])
+  // const onPaginationChange = useCallback((page: number) => {
+  //   table.setPageIndex(page - 1)
+  // }, [table])
 
-  const onSelectChange = useCallback((value = 0) => {
-    table.setPageSize(Number(value))
-  }, [table])
+  // const onSelectChange = useCallback((value = 0) => {
+  //   table.setPageSize(Number(value))
+  // }, [table])
 
-  const renderPagination = useMemo(() => {
-    if (!showPagination) return
+  // const renderPagination = useMemo(() => {
+  //   if (!showPagination) return
 
-    return (
-      <div className="flex items-center justify-between mt-4">
-        <Pagination
-          pageSize={table.getState().pagination.pageSize}
-          currentPage={table.getState().pagination.pageIndex + 1}
-          total={totalData}
-          onChange={onPaginationChange}
-        />
-        <div style={{ minWidth: 130 }}>
-          <Select<Option>
-            size="sm"
-            isSearchable={false}
-            value={pageSizeOption?.filter((option) => option.value === table.getState().pagination.pageSize
-            )}
-            options={pageSizeOption}
-            onChange={(option) => onSelectChange(option?.value)}
-          />
-        </div>
-      </div>
-    )
-  }, [
-    onPaginationChange,
-    onSelectChange,
-    pageSizeOption,
-    showPagination,
-    table,
-    totalData
-  ])
+  //   return (
+  //     <div className="flex items-center justify-between mt-4">
+  //       <Pagination
+  //         pageSize={table.getState().pagination.pageSize}
+  //         currentPage={table.getState().pagination.pageIndex + 1}
+  //         total={totalData}
+  //         onChange={onPaginationChange}
+  //       />
+  //       <div style={{ minWidth: 130 }}>
+  //         <Select<Option>
+  //           size="sm"
+  //           isSearchable={false}
+  //           value={pageSizeOption?.filter((option) => option.value === table.getState().pagination.pageSize
+  //           )}
+  //           options={pageSizeOption}
+  //           onChange={(option) => onSelectChange(option?.value)}
+  //         />
+  //       </div>
+  //     </div>
+  //   )
+  // }, [
+  //   onPaginationChange,
+  //   onSelectChange,
+  //   pageSizeOption,
+  //   showPagination,
+  //   table,
+  //   totalData
+  // ])
 
   return (
     <div>
@@ -126,7 +126,7 @@ const CustomTable: React.FC<Props> = (props) => {
           })}
         </TBody>
       </Table>
-      {renderPagination}
+      {/* {renderPagination} */}
     </div>
   )
 }
