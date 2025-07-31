@@ -1,8 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import ColumbinaImage from '../components/ColumbinaImage'
-import ColumbinaText from '../components/ColumbinaText'
+import FormSearch from '../components/FormSearchEntrepreneur'
+import TableEntrepreneur from '../components/TableEntrepreneur'
 
 interface Props {
 
@@ -13,8 +13,13 @@ const OverviewScreen: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <ColumbinaImage />
-      <ColumbinaText />
+      <h3>ข้อมูลผู้ประกอบการ</h3>
+      <section className='mt-5'>
+        <FormSearch />
+      </section>
+      <section className='mt-5'>
+        <TableEntrepreneur />
+      </section>
     </div>
   )
 }

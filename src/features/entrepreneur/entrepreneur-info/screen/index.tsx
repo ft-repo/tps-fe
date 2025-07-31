@@ -4,7 +4,7 @@
 import React, { useCallback, useRef } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '../components';
 import { useForm } from 'react-hook-form';
-import { FieldType } from '@/@types/entrepreneur/entrepreneur-info';
+import { FieldType } from '@/@types/entrepreneur/executive-data';
 import dayjs from 'dayjs';
 import { Button } from '@/components/ui';
 
@@ -43,7 +43,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
   return (
     <>
       <section className='flex justify-between items-center flex-wrap'>
-        <h5>ข้อมูลผู้ประกอบการ</h5>
+        <h3>ข้อมูลผู้ประกอบการ</h3>
         <div className='flex items-center gap-3'>
           <Button variant='default' size='sm'>ย้อนกลับข้อมูลก่อนหน้า</Button>
           <Button variant='solid' size='sm' onClick={() => submitRef.current?.click()}>บันทึกข้อมูลใหม่</Button>

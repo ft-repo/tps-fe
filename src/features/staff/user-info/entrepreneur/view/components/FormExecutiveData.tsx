@@ -1,9 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import { Button, DatePicker, Input, Select, Upload } from '@/components/ui'
+import { Input, Select } from '@/components/ui'
 import React from 'react'
-import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { Control, Controller } from 'react-hook-form'
 import { FieldType } from '@/@types/entrepreneur/executive-data';
 
@@ -170,43 +169,6 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
-                />
-              </fieldset>
-            )
-          }}
-        />
-        <fieldset>
-          <label>อัปโหลดรูป</label>
-          <Upload
-            className='block mt-1'
-          >
-            <Button
-              variant="solid"
-              icon={<HiOutlineCloudUpload />}
-              size='sm'
-              type='button'
-            >
-              อัปโหลดไฟล์
-            </Button>
-          </Upload>
-        </fieldset>
-        <Controller
-          disabled
-          name='approved_date'
-          control={control}
-          render={({ field }) => {
-            return (
-              <fieldset>
-                <label>วันที่รับอนุฐาต</label>
-                <DatePicker
-                  {...field}
-                  name={field.name}
-                  placeholder='กรุณาเลือกวันที่'
-                  disabled={field.disabled}
-                  labelFormat={{
-                    month: 'MM',
-                    year: 'YYYY'
-                  }}
                 />
               </fieldset>
             )
