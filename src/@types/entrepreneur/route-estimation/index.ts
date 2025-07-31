@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface FieldType {
   form_template: FieldArray[];
 }
@@ -21,7 +22,15 @@ export interface FieldArray {
 
 export interface ContextProps {
   step: number;
-  setStep: (step: number) => void;
+  setStep: (step: number | any) => void;
   dataParser: FieldType;
   setDataParser: (dataParser: FieldType) => void;
 }
+
+export interface VehicleData {
+  title: string;
+  description: string;
+  image: string;
+}
+
+export type SummaryData = Omit<VehicleData, 'image'>

@@ -9,7 +9,8 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { Button, Notification, toast } from '@/components/ui';
 import { useRouteContext } from '../../context';
 import { FieldType } from '@/@types/entrepreneur/route-estimation';
-import { initFormValue } from '../mock';
+import { initFormValue } from '../../mock';
+import { useNavigate } from 'react-router-dom';
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -17,6 +18,7 @@ interface Props { }
 
 const RouteEstimation: React.FC<Props> = (props) => {
   const { } = props;
+  const navigate = useNavigate()
   const [tabKey, setTabKey] = useState<string>('tab0')
   const { setStep, setDataParser } = useRouteContext()
   const { control, handleSubmit } = useForm<FieldType>({
@@ -76,8 +78,9 @@ const RouteEstimation: React.FC<Props> = (props) => {
           </div>
           <Button
             variant='solid'
-            className='bg-yellow-500 hover:bg-yellow-300 transition duration-300'
+            className='bg-yellow-500 hover:bg-yellow-300 active:bg-yellow-600 transition duration-300'
             size='sm'
+            onClick={() => navigate('/route-estimation/other')}
           >
             ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)
           </Button>

@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable import/no-unresolved */
 import React from 'react'
-import OverviewScreen from '@/features/staff/user-info/staff/overview'
+import OverviewScreen from '@/features/staff/user-info/staff/overview/screen'
 
 interface Props {
 
