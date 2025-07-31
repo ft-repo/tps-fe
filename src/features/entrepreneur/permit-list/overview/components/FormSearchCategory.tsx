@@ -1,3 +1,5 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/permit-list'
 import { Button, Input } from '@/components/ui'
 import React, { useCallback } from 'react'
