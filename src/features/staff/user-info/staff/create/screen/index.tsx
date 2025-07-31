@@ -12,13 +12,17 @@ const CreateScreen: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <h3>เพิ่มข้อมูลเจ้าหน้าที่</h3>
       <section>
-        <SeachCreateStaff/>
+        <h3>เพิ่มข้อมูลเจ้าหน้าที่</h3>
+        <div className='mt-5'>
+          <SeachCreateStaff />
+        </div>
       </section>
-      <section>
-        <CreateStaffTable/>
-        <CreateStaffData/>
+      <section className='mt-5'>
+        <div className='block xl:grid grid-cols-2 gap-5'>
+          <CreateStaffTable />
+          <CreateStaffData />
+        </div>
       </section>
     </div>
   )

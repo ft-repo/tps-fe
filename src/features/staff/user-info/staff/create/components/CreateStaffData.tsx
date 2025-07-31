@@ -1,132 +1,87 @@
-import { useState } from 'react'
-import { FormItem, FormContainer } from '@/components/ui/Form'
-import Input from '@/components/ui/Input'
-import Button from '@/components/ui/Button'
-import Checkbox from '@/components/ui/Checkbox'
-import { Field, Form, Formik } from 'formik'
-import { HiOutlineEyeOff, HiOutlineEye } from 'react-icons/hi'
-import * as Yup from 'yup'
-import type { MouseEvent } from 'react'
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
+import React from 'react'
+import { Button, Input, Select } from '@/components/ui'
+import { useNavigate } from 'react-router-dom'
 
-const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Email Required'),
-    userName: Yup.string()
-        .min(3, 'Too Short!')
-        .max(12, 'Too Long!')
-        .required('User Name Required'),
-    password: Yup.string()
-        .required('Password Required')
-        .min(8, 'Too Short!')
-        .matches(/^[A-Za-z0-9_-]*$/, 'Only Letters & Numbers Allowed'),
-    rememberMe: Yup.bool(),
-})
+interface Props {
 
-const CreateStaffData = () => {
-  const [pwInputType, setPwInputType] = useState('password')
+}
 
-  const onPasswordVisibleClick = (e: MouseEvent) => {
-    e.preventDefault()
-    setPwInputType(pwInputType === 'password' ? 'text' : 'password')
-  }
-
-  const passwordVisible = (
-    <span
-      className="cursor-pointer"
-      onClick={(e) => onPasswordVisibleClick(e)}
-    >
-      {pwInputType === 'password' ? (
-        <HiOutlineEyeOff />
-      ) : (
-        <HiOutlineEye />
-      )}
-    </span>
-  )
+const CreateStaffData: React.FC<Props> = (props) => {
+  const { } = props
+  const navigate = useNavigate()
 
   return (
-    <div className='block xl:grid grid-cols-3 gap-5 mt-5'>
-      <Formik
-        initialValues={{
-          email: '',
-          userName: '',
-          password: '',
-          rememberMe: false,
-        }}
-        validationSchema={validationSchema}
-        onSubmit={(values, { resetForm, setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2))
-            setSubmitting(false)
-            resetForm()
-          }, 400)
-        }}
-      >
-        {({ touched, errors, resetForm }) => (
-          <Form>
-            <FormContainer>
-              <FormItem
-                label="Email"
-                invalid={errors.email && touched.email}
-                errorMessage={errors.email}
-              >
-                <Field
-                  type="email"
-                  autoComplete="off"
-                  name="email"
-                  placeholder="Email"
-                  component={Input}
-                />
-              </FormItem>
-              <FormItem
-                label="User Name"
-                invalid={errors.userName && touched.userName}
-                errorMessage={errors.userName}
-              >
-                <Field
-                  type="text"
-                  autoComplete="off"
-                  name="userName"
-                  placeholder="User Name"
-                  component={Input}
-                />
-              </FormItem>
-              <FormItem
-                label="Password"
-                invalid={errors.password && touched.password}
-                errorMessage={errors.password}
-              >
-                <Field
-                  type={pwInputType}
-                  suffix={passwordVisible}
-                  autoComplete="off"
-                  name="password"
-                  placeholder="Password"
-                  component={Input}
-                />
-              </FormItem>
-              <FormItem>
-                <Field name="rememberMe" component={Checkbox}>
-                  Remember Me
-                </Field>
-              </FormItem>
-              <FormItem>
-                <Button
-                  type="reset"
-                  className="ltr:mr-2 rtl:ml-2"
-                  onClick={() => resetForm()}
-                >
-                  Reset
-                </Button>
-                <Button variant="solid" type="submit">
-                  Submit
-                </Button>
-              </FormItem>
-            </FormContainer>
-          </Form>
-        )}
-      </Formik>
-
+    <div className='border-2 rounded-md p-4'>
+      <section>
+        <h5>เพิ่มข้อมูลผู้ใช้งาน</h5>
+        <div className='block lg:grid grid-cols-2 2xl:grid-cols-3 gap-5 mt-3'>
+          <fieldset>
+            <label>Username</label>
+            <Input
+              placeholder='กรุณาระบุ'
+            />
+          </fieldset>
+        </div>
+        <div className='block sm:grid grid-cols-2 lg:grid-cols-3 gap-5 mt-3'>
+          <fieldset>
+            <label>คำนำหน้า</label>
+            <Input
+              placeholder='กรุณาระบุ'
+            />
+          </fieldset>
+          <fieldset>
+            <label>ชื่อ</label>
+            <Input
+              placeholder='กรุณาระบุ'
+            />
+          </fieldset>
+          <fieldset>
+            <label>นามสกุล</label>
+            <Input
+              placeholder='กรุณาระบุ'
+            />
+          </fieldset>
+          <div className='lg:col-span-2'>
+            <fieldset>
+              <label>หน่วยงาน</label>
+              <Select
+                placeholder='กรุณาเลือก'
+                options={[]}
+              />
+            </fieldset>
+          </div>
+          <fieldset>
+            <fieldset>
+              <label>สิทธิ์การเข้าใช้งาน</label>
+              <Select
+                placeholder='กรุณาเลือก'
+                options={[]}
+              />
+            </fieldset>
+          </fieldset>
+        </div>
+      </section>
+      <section className='mt-5'>
+        <div className='flex items-center gap-3'>
+          <Button
+            type='button'
+            variant='default'
+            onClick={() => navigate(-1)}
+          >
+            ย้อนกลับ
+          </Button>
+          <Button
+            type='submit'
+            variant='solid'
+          >
+            บันทึก
+          </Button>
+        </div>
+      </section>
     </div>
   )
 }
 
-export default CreateStaffData
+export default React.memo<Props>(CreateStaffData)
