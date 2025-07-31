@@ -6,7 +6,7 @@ interface Props {
 
 }
 
-const NormalVehicleIndex: React.FC<Props> = (props) => {
+const ViewScreen: React.FC<Props> = (props) => {
   const { } = props
 
   return (
@@ -14,4 +14,4 @@ const NormalVehicleIndex: React.FC<Props> = (props) => {
   )
 }
 
-export default React.memo<Props>(NormalVehicleIndex)
+export default React.memo<Props>(ViewScreen)
