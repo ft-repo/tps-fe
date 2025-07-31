@@ -4,6 +4,15 @@ import type { Routes } from '@/@types/routes'
 
 const authRoute: Routes = [
     {
+        key: 'routeEstimationPub',
+        path: '/tms',
+        component: lazy(() => import('@/views/entrepreneur/route-estimation/public')),
+        authority: [],
+        meta: {
+            layout: 'blank',
+        },
+    },
+    {
         key: 'signIn',
         path: `/sign-in`,
         component: lazy(() => import('@/views/auth/SignIn')),

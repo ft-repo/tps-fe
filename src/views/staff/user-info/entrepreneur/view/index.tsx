@@ -1,4 +1,7 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react'
+import ViewScreen from '@/features/staff/user-info/entrepreneur/view/screen'
 
 interface Props {
 
@@ -8,7 +11,9 @@ const ViewIndex: React.FC<Props> = (props) => {
   const { } = props
 
   return (
-    <div>index</div>
+    <div>
+      <ViewScreen />
+    </div>
   )
 }
 
