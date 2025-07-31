@@ -12,7 +12,7 @@ const DetailResult: React.FC<Props> = (props) => {
   const { data } = props
 
   return (
-    <div className='grid lg:grid-cols-2 gap-5 '>
+    <div className='block 2xl:grid grid-cols-2 gap-5 '>
       <div>
         <h4>รายละเอียด รถคู่ที่ 1 : รถลากจูง + รถกึ่งพ่วง</h4>
         <CardVehicleDetails
@@ -35,7 +35,7 @@ const DetailResult: React.FC<Props> = (props) => {
           <p>{data.end_route || '-'}</p>
         </section>
       </div>
-      <figure className='h-full bg-gray-400 block'>
+      <figure className='h-full bg-gray-400 block rounded-md overflow-hidden'>
         <h1>MAP GOES HERE</h1>
       </figure>
     </div>
