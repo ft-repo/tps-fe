@@ -259,7 +259,7 @@ const ApprovalDocumentIndex: React.FC<Props> = (props) => {
                   value="approved"
                   checked={approvalStatus === 'approved'}
                   onChange={handleApprovalStatusChange}
-                  style={{ marginRight: '5px' }}
+                  style={{ marginRight: '5px', marginBottom: '10px' }}
                 />
                 ผ่านการตรวจสอบ
               </label>
@@ -346,6 +346,7 @@ const ApprovalDocumentIndex: React.FC<Props> = (props) => {
             borderBottomLeftRadius: '0px',   // มุมล่างซ้าย            
             width: '65%',
             padding: '2rem',
+            marginRight: '20px',
           }}>
             <div style={{
               fontFamily: 'Sarabun, sans-serif', // ใช้ฟอนต์ Sarabun (หากติดตั้งในระบบ) หรือ sans-serif ทั่วไป
