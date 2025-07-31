@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-refresh/only-export-components */
 import React, { useMemo, useState } from 'react'
 import { Table } from '@/components/custom/table'
 import { ColumnDef } from '@tanstack/react-table'
-import { Tag } from '@/components/ui'
+// import { Tag } from '@/components/ui'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
 import ConfirmModal from './ConfirmPermitModal'
@@ -22,7 +24,7 @@ interface TableData {
 const TableOtherAdmin: React.FC<Props> = () => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedRow, setSelectedRow] = useState<TableData | null>(null);
+  const [selectedRow, setSelectedRow] = useState<TableData | any>(null);
 
   const renderStatusBadge = (status: string) => {
     if (!status) return null;
@@ -89,16 +91,16 @@ const TableOtherAdmin: React.FC<Props> = () => {
 
         return (
           <span
+            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled
+              ? 'bg-gray-500 text-white cursor-not-allowed'
+              : 'bg-yellow-400 text-black'
+              }`}
             onClick={() => {
               if (!isDisabled) {
                 setSelectedRow(row.original);
                 navigate('/request-list/approval/permit');
               }
             }}
-            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled
-              ? 'bg-gray-500 text-white cursor-not-allowed'
-              : 'bg-yellow-400 text-black'
-              }`}
           >
             {status}
           </span>
@@ -114,21 +116,21 @@ const TableOtherAdmin: React.FC<Props> = () => {
 
         return (
           <span
+            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
+              }`}
             onClick={() => {
               if (!isDisabled) {
                 setSelectedRow(row.original);
                 setModalOpen(true);
               }
             }}
-            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
-              }`}
           >
             {status}
           </span>
         );
       }
     },
-  ], []);
+  ], [navigate]);
 
   const data = useMemo<TableData[]>(() => [
     {
@@ -155,17 +157,18 @@ const TableOtherAdmin: React.FC<Props> = () => {
       <Table
         data={data}
         columns={columns}
-        totalData={data.length}
-        pageSizeOption={[
-          { value: 10, label: '10 / page' },
-          { value: 20, label: '20 / page' },
-          { value: 30, label: '30 / page' },
-          { value: 40, label: '40 / page' },
-          { value: 50, label: '50 / page' },
-        ]}
+        // totalData={data.length}
+        // pageSizeOption={[
+        //   { value: 10, label: '10 / page' },
+        //   { value: 20, label: '20 / page' },
+        //   { value: 30, label: '30 / page' },
+        //   { value: 40, label: '40 / page' },
+        //   { value: 50, label: '50 / page' },
+        // ]}
       />
       <ConfirmModal
         open={modalOpen}
+        data={selectedRow}
         onClose={() => setModalOpen(false)}
         onConfirm={() => {
           if (selectedRow) {
@@ -173,7 +176,6 @@ const TableOtherAdmin: React.FC<Props> = () => {
           }
           setModalOpen(false);
         }}
-        data={selectedRow}
       />
     </div>
   );
