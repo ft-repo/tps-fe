@@ -83,7 +83,7 @@ const SignInForm = (props: SignInFormProps) => {
                     <Form>
                         <FormContainer>
                             <FormItem
-                                label="User Name"
+                                label="เลขทะเบียนนิติบุคคล"
                                 invalid={
                                     (errors.userName &&
                                         touched.userName) as boolean
@@ -94,12 +94,12 @@ const SignInForm = (props: SignInFormProps) => {
                                     type="text"
                                     autoComplete="off"
                                     name="userName"
-                                    placeholder="User Name"
+                                    placeholder="เลขทะเบียนนิติบุคคล"
                                     component={Input}
                                 />
                             </FormItem>
                             <FormItem
-                                label="Password"
+                                label="รหัสผ่าน"
                                 invalid={
                                     (errors.password &&
                                         touched.password) as boolean
@@ -109,33 +109,34 @@ const SignInForm = (props: SignInFormProps) => {
                                 <Field
                                     autoComplete="off"
                                     name="password"
-                                    placeholder="Password"
+                                    placeholder="รหัสผ่าน"
                                     component={PasswordInput}
                                 />
                             </FormItem>
-                            <div className="flex justify-between mb-6">
-                                <Field
+                            <div className="flex justify-end mb-6">
+                                {/* <Field
                                     className="mb-0"
                                     name="rememberMe"
                                     component={Checkbox}
                                 >
                                     Remember Me
-                                </Field>
+                                </Field> */}
                                 <ActionLink to={forgotPasswordUrl}>
-                                    Forgot Password?
+                                    ลืมรหัสผ่าน?
                                 </ActionLink>
                             </div>
                             <Button
                                 block
                                 loading={isSubmitting}
                                 variant="solid"
+                                // color='primary'
                                 type="submit"
                             >
-                                {isSubmitting ? 'Signing in...' : 'Sign In'}
+                                {isSubmitting ? 'กำลังลงชื่อเข้าใช้...' : 'ลงชื่อเข้าใช้'}
                             </Button>
                             <div className="mt-4 text-center">
-                                <span>{`Don't have an account yet?`} </span>
-                                <ActionLink to={signUpUrl}>Sign up</ActionLink>
+                                <span>{`ยังไม่มีบัญชี?`} </span>
+                                <ActionLink to={signUpUrl}>สมัครสมาชิก</ActionLink>
                             </div>
                         </FormContainer>
                     </Form>
