@@ -1,5 +1,3 @@
-/* eslint-disable no-empty-pattern */
-/* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/permit-list'
 import { Button, Input } from '@/components/ui'
 import React, { useCallback } from 'react'
@@ -9,7 +7,7 @@ interface Props {
 
 }
 
-const FormSearchCategory: React.FC<Props> = (props) => {
+const FormSearchOtherAdmin: React.FC<Props> = (props) => {
   const { } = props
 
 
@@ -47,4 +45,4 @@ const FormSearchCategory: React.FC<Props> = (props) => {
   )
 }
 
-export default React.memo<Props>(FormSearchCategory)
+export default React.memo<Props>(FormSearchOtherAdmin)

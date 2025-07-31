@@ -1,17 +1,21 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
+import Input from '@/components/ui/Input'
 
 interface Props {
 
 }
-
-const ViewScreen: React.FC<Props> = (props) => {
+const ColumbinaText: React.FC<Props> = (props) => {
   const { } = props
-
   return (
-    <div>index</div>
+    <>
+    <div className='grid grid-cols-2'>
+    <div className='bg-red-400 rounded-lg shadow-x1 min-h-20'/> 
+    </div>
+    </>
+
   )
 }
 
-export default React.memo<Props>(ViewScreen)
+      export default React.memo<Props>(ColumbinaText)
