@@ -2,6 +2,7 @@ import { FieldType } from '@/@types/entrepreneur/permit-list'
 import { Button, Input } from '@/components/ui'
 import React, { useCallback } from 'react'
 import { useForm, Controller } from "react-hook-form"
+import StatusSummary, { StatusItem } from './StatusSumary'
 
 interface Props {
 
@@ -17,6 +18,13 @@ const FormSearchOtherAdmin: React.FC<Props> = (props) => {
     }
   })
 
+  const summaryItems: StatusItem[] = [
+    { label: 'ตรวจเอกสาร', count: 8 },
+    { label: 'คณะกรรมการพิจารณา', count: 10 },
+    { label: 'รอลงนาม', count: 17 },
+    { label: 'ออกใบอนุญาต', count: 5 },
+  ]
+
   const { handleSubmit, control } = form
 
   const onSubmit = useCallback((data: FieldType) => {
@@ -25,21 +33,30 @@ const FormSearchOtherAdmin: React.FC<Props> = (props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className='flex items-center gap-3 xl:w-1/3'>
-        <Controller
-          name='permit_list'
-          control={control}
-          render={({ field }) => {
-            return (
+      <div className="flex flex-wrap items-center justify-between gap-3 w-full">
+        <div className='flex flex-wrap gap-3 text-2xl font-bold text-black'>
+          รายการขออนุญาตรถหมวด 2 (4 - 7 เพลา)
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <StatusSummary items={summaryItems} />
+        </div>
+        <div className="flex items-center gap-3 flex-nowrap">
+          <Controller
+            name="permit_list"
+            control={control}
+            render={({ field }) => (
               <Input
                 {...field}
-                name={field.name}
                 placeholder="พิมพ์เพื่อค้นหา..."
+                className="min-w-[190px]"
               />
-            )
-          }}
-        />
-        <Button type='submit' variant='solid'>ค้นหา</Button>
+            )}
+          />
+          <Button type="submit" variant="solid" className="whitespace-nowrap">
+            ค้นหา
+          </Button>
+        </div>
+
       </div>
     </form>
   )

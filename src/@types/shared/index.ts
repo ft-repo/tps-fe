@@ -16,3 +16,7 @@ export interface StatusColor {
     text: string;
   };
 }
+export interface ApprovalStatusValue {
+  className: string;
+  text: string;
+};

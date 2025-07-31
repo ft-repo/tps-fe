@@ -4,22 +4,17 @@
 /* eslint-disable react-refresh/only-export-components */
 import { ColumnDef } from '@tanstack/react-table'
 import React, { useMemo } from 'react'
-// import Table from '@/components/ui/Table'
 import dayjs from 'dayjs'
-// import { Tag } from '@/components/ui'
-// import { useNavigate } from 'react-router-dom'
 import { Table } from '@/components/custom/table'
 import { Tag } from '@/components/ui';
 import { APPROVAL_STATUS } from '@/utils/constant';
-
-// const { Tr, Th, Td, THead, TBody } = Table
 
 interface Props {
 
 }
 
 interface TableData {
-  no: string;
+  business_name: string;
   road_code: string;
   road_name: string;
   start_date: string;
@@ -34,12 +29,11 @@ interface TableData {
 
 const TableCategory: React.FC<Props> = (props) => {
   const { } = props
-  // const navigation = useNavigate()
 
   const columns = useMemo<ColumnDef<any>[]>(() => [
     {
-      header: 'เลขที่',
-      accessorKey: 'no'
+      header: 'ชื่อบริษัท / ห้าง / ร้าน',
+      accessorKey: 'business_name'
     },
     {
       header: 'รหัสสายทาง',
@@ -59,7 +53,7 @@ const TableCategory: React.FC<Props> = (props) => {
     },
     {
       header: 'วันที่ขออนุญาต',
-      accessorKey: 'permit_date'
+      accessorKey: 'permit_date',
     },
     {
       header: 'ตรวจเอกสาร',
@@ -88,8 +82,8 @@ const TableCategory: React.FC<Props> = (props) => {
       accessorKey: 'validate_vehicle',
       cell: () => {
         return (
-          <Tag className={APPROVAL_STATUS['IN_PROGRESS'].className}>
-            {APPROVAL_STATUS['IN_PROGRESS'].text}
+          <Tag className={APPROVAL_STATUS['APPROVED'].className}>
+            {APPROVAL_STATUS['APPROVED'].text}
           </Tag>
         )
       }
@@ -115,13 +109,12 @@ const TableCategory: React.FC<Props> = (props) => {
           </Tag>
         )
       }
-
     },
   ], [])
 
   const data = useMemo<TableData[]>(() => [
     {
-      no: '007',
+      business_name: 'บริษัท บีคอน โกลบอล เทรด จำกัด',
       road_code: 'ชม. 3005',
       road_name: 'ถนนอบจ.ชม.3005 (บ้านหนองบัวคำ - บ้านโป่ง)',
       start_date: dayjs().format('DD MMM YYYY'),

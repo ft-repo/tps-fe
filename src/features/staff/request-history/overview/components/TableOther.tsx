@@ -3,16 +3,15 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useMemo } from 'react'
-import { Table } from '@/components/custom/table'
 import dayjs from 'dayjs'
+import { Tag } from '@/components/ui'
+import { Table } from '@/components/custom/table'
 import { APPROVAL_STATUS } from '@/utils/constant';
-import { Tag } from '@/components/ui';
 import { ColumnDef } from '@tanstack/react-table';
 
 interface TableData {
   business_name: string;
   petition_date: string;
-  validate_document: string;
   committee_conside: string;
   wait_signed: string;
   petition_approved: string;
@@ -33,17 +32,6 @@ const TableOther: React.FC<Props> = (props) => {
     {
       header: 'วันที่ขออนุญาต',
       accessorKey: 'petition_date'
-    },
-    {
-      header: 'ตรวจเอกสาร',
-      accessorKey: 'validate_document',
-      cell: () => {
-        return (
-          <Tag className={APPROVAL_STATUS['APPROVED'].className}>
-            {APPROVAL_STATUS['APPROVED'].text}
-          </Tag>
-        )
-      }
     },
     {
       header: 'คณะกรรมการพิจารณา',
@@ -84,7 +72,6 @@ const TableOther: React.FC<Props> = (props) => {
     {
       business_name: 'ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด',
       petition_date: dayjs().format('DD MMM YYYY'),
-      validate_document: 'IN_PROGRESS',
       committee_conside: 'IN_PROGRESS',
       wait_signed: 'IN_PROGRESS',
       petition_approved: 'IN_PROGRESS',
@@ -94,8 +81,8 @@ const TableOther: React.FC<Props> = (props) => {
   return (
     <div>
       <Table
-        columns={columns}
         data={data}
+        columns={columns}
       />
     </div>
   )
