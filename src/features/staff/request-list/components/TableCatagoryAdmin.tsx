@@ -10,7 +10,7 @@ import dayjs from 'dayjs'
 // import { useNavigate } from 'react-router-dom'
 import { Table } from '@/components/custom/table'
 import ConfirmModal from './ConfirmPermitModal'
-
+import { useNavigate } from 'react-router-dom';
 // const { Tr, Th, Td, THead, TBody } = Table
 
 interface Props {
@@ -82,8 +82,26 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
     {
       header: 'รอลงนาม',
       accessorKey: 'wait_signed',
-      cell: ({ getValue }) => renderStatusBadge(getValue() as string)
+      cell: ({ getValue, row }) => {
+        const status = (getValue() as string).trim();
+        const isDisabled = status.includes("ยุติ");
+        const navigate = useNavigate();
 
+        return (
+          <span
+            onClick={() => {
+              if (!isDisabled) {
+                setSelectedRow(row.original);
+                navigate('/request-list/approval/permit');
+              }
+            }}
+            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
+              }`}
+          >
+            {status}
+          </span>
+        );
+      }
     },
     {
       header: 'ออกใบอนุญาต',
@@ -100,7 +118,7 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
                 setModalOpen(true);
               }
             }}
-            className={`min-w-[130px] h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
+            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
               }`}
           >
             {status}
@@ -120,7 +138,7 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
     const isDate = maybeDate.match(/\d{1,2}\s(ม\.ค\.|ก\.พ\.|มี\.ค\.|เม\.ย\.|พ\.ค\.|มิ\.ย\.|ก\.ค\.|ส\.ค\.|ก\.ย\.|ต\.ค\.|พ\.ย\.|ธ\.ค\.)\s\d{2,4}/);
 
     const baseClass =
-      'min-w-[130px] h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight';
+      'w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight';
     let colorClass = 'bg-slate-200 text-black';
 
     if (cleanStatus.includes('ไม่ผ่าน')) {
@@ -204,124 +222,6 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
 
   return (
     <div>
-      {/* <Table>
-        <THead>
-          <Tr>
-            <Th>เลขที่</Th>
-            <Th>รหัสสายทาง</Th>
-            <Th>ชื่อสายทาง</Th>
-            <Th>วันที่เริ่มต้น</Th>
-            <Th>วันที่สิ้นสุด</Th>
-            <Th>วันที่ขออนุญาต</Th>
-            <Th>ตรวจเอกสาร</Th>
-            <Th>ตรวจเส้นทาง</Th>
-            <Th>ตรวจยานพาหนะ</Th>
-            <Th>รอลงนาม</Th>
-            <Th>ออกใบอนุญาต</Th>
-          </Tr>
-        </THead>
-        <TBody>
-          <Tr className='cursor-pointer' onClick={() => navigation('/permit-list/view')}>
-            <Td>007</Td>
-            <Td>ชม. 3005</Td>
-            <Td>ถนนอบจ.ชม.3005 (บ้านหนองบัวคำ - บ้านโป่ง)</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-red-500 text-white border-0 rounded">
-                รอดตรวจสอบ
-              </Tag>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>007</Td>
-            <Td>ชม. 3005</Td>
-            <Td>ถนนอบจ.ชม.3005 (บ้านหนองบัวคำ - บ้านโป่ง)</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-red-500 text-white border-0 rounded">
-                รอดตรวจสอบ
-              </Tag>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>007</Td>
-            <Td>ชม. 3005</Td>
-            <Td>ถนนอบจ.ชม.3005 (บ้านหนองบัวคำ - บ้านโป่ง)</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                กำลังดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-red-500 text-white border-0 rounded">
-                รอดตรวจสอบ
-              </Tag>
-            </Td>
-          </Tr>
-        </TBody>
-      </Table> */}
       <Table
         data={data}
         columns={columns}

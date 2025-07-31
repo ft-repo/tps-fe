@@ -13,7 +13,6 @@ const ContentSearchOtherAdmin: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <h3>รายการขออนุญาตรถนอกเหนือ (4 - 7 เพลา)</h3>
       <section className='mt-5'>
         <FormSearchOtherAdmin />
       </section>
