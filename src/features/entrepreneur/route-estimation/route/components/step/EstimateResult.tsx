@@ -55,7 +55,6 @@ const EstimateResult: React.FC<Props> = (props) => {
     return contentArr
   }, [dataParser])
 
-
   return (
     <div>
       <section className='flex items-center justify-between gap-3 flex-wrap'>

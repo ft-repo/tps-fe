@@ -2,18 +2,18 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react';
 import { FormRouteEstimation } from '../..'
-import { FieldArray } from '@/@types/entrepreneur/route-estimation';
+import { FieldType, FieldArray } from '@/@types/entrepreneur/route-estimation';
 import { Control } from 'react-hook-form';
 import MapRouteEstimation from './MapRouteEstimation';
 
 interface Props {
   formItem: FieldArray;
   formIndex: number;
-  control: Control<FieldArray>;
+  control: Control<FieldType>;
 }
 
 const TemplateForm: React.FC<Props> = (props) => {
-  const { formIndex, formItem, control } = props;
+  const { formItem, formIndex, control } = props;
 
   return (
     <div className='grid grid-cols-1 xl:grid-cols-3 gap-5'>

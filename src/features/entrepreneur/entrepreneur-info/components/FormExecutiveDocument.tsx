@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import { FieldType } from '@/@types/entrepreneur/entrepreneur-info'
+import { FieldType } from '@/@types/entrepreneur/executive-data'
 import { Upload } from '@/components/ui'
 import { Control } from 'react-hook-form'
 import { FaUpload as UploadIcon } from "react-icons/fa6";
@@ -17,8 +17,8 @@ const FormExecutiveDocument: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <h3>เอกสารและหลักฐานนิติบุคคล</h3>
-      <div className='block xl:grid grid-cols-3 gap-5 mt-5'>
+      <h5>เอกสารและหลักฐานนิติบุคคล</h5>
+      <div className='block lg:grid grid-cols-2 2xl:grid-cols-3 gap-5 mt-5'>
         <fieldset>
           <label>สำเนาบัตรประชาชนผู้มีอำนาจ</label>
           <Upload

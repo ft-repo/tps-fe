@@ -1,12 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
-import Table from '@/components/ui/Table'
+import React, { useMemo } from 'react'
+import { Table } from '@/components/custom/table'
 import dayjs from 'dayjs'
-import { Tag } from '@/components/ui'
+import { APPROVAL_STATUS } from '@/utils/constant';
+import { Tag } from '@/components/ui';
+import { ColumnDef } from '@tanstack/react-table';
 
-const { Tr, Th, Td, THead, TBody } = Table
+interface TableData {
+  business_name: string;
+  petition_date: string;
+  validate_document: string;
+  committee_conside: string;
+  wait_signed: string;
+  petition_approved: string;
+}
 
 interface Props {
 
@@ -15,70 +25,102 @@ interface Props {
 const TableOther: React.FC<Props> = (props) => {
   const { } = props
 
+  const columns = useMemo<ColumnDef<any>[]>(() => [
+    {
+      header: 'ชื่อบริษัท / ห้าง / ร้าน',
+      accessorKey: 'business_name'
+    },
+    {
+      header: 'วันที่ขออนุญาต',
+      accessorKey: 'petition_date'
+    },
+    {
+      header: 'ตรวจเอกสาร',
+      accessorKey: 'validate_document',
+      cell: () => {
+        return (
+          <Tag className={APPROVAL_STATUS['APPROVED'].className}>
+            {APPROVAL_STATUS['APPROVED'].text}
+          </Tag>
+        )
+      }
+    },
+    {
+      header: 'คณะกรรมการพิจารณา',
+      accessorKey: 'committee_conside',
+      cell: () => {
+        return (
+          <Tag className={APPROVAL_STATUS['APPROVED'].className}>
+            {APPROVAL_STATUS['APPROVED'].text}
+          </Tag>
+        )
+      }
+    },
+    {
+      header: 'รอลงนาม',
+      accessorKey: 'wait_signed',
+      cell: () => {
+        return (
+          <Tag className={APPROVAL_STATUS['IN_PROGRESS'].className}>
+            {APPROVAL_STATUS['IN_PROGRESS'].text}
+          </Tag>
+        )
+      }
+    },
+    {
+      header: 'ออกใบอนุญาต',
+      accessorKey: 'petition_approved',
+      cell: () => {
+        return (
+          <Tag className={APPROVAL_STATUS['WAIT_APPROVAL'].className}>
+            {APPROVAL_STATUS['WAIT_APPROVAL'].text}
+          </Tag>
+        )
+      }
+    },
+  ], [])
+
+  const data = useMemo<TableData[]>(() => [
+    {
+      business_name: 'ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด',
+      petition_date: dayjs().format('DD MMM YYYY'),
+      validate_document: 'IN_PROGRESS',
+      committee_conside: 'IN_PROGRESS',
+      wait_signed: 'IN_PROGRESS',
+      petition_approved: 'IN_PROGRESS',
+    },
+  ], [])
+
   return (
     <div>
-      <Table>
-        <THead>
-          <Tr>
-            <Th>ชื่อบริษัท / ห้าง / ร้าน</Th>
-            <Th>วันที่ขออนุญาต</Th>
-            <Th>ตรวจเอกสาร</Th>
-            <Th>คณะกรรมการพิจารณา</Th>
-            <Th>รอลงนาม</Th>
-            <Th>ออกใบอนุญาต</Th>
-          </Tr>
-        </THead>
-        <TBody>
-          <Tr>
-            <Td>ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>
-              <Tag className="bg-blue-500 text-black border-0 rounded">
-                ข้อความใหม่
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                รอดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                รอดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-red-500 text-black border-0 rounded">
-                รอตรวจสอบ
-              </Tag>
-            </Td>
-          </Tr>
-          <Tr>
-            <Td>ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด</Td>
-            <Td>{dayjs().format('DD MMM YYYY')}</Td>
-            <Td>
-              <Tag className="bg-blue-500 text-black border-0 rounded">
-                ข้อความใหม่
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                รอดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-yellow-500 text-black border-0 rounded">
-                รอดำเนินการ
-              </Tag>
-            </Td>
-            <Td>
-              <Tag className="bg-red-500 text-black border-0 rounded">
-                รอตรวจสอบ
-              </Tag>
-            </Td>
-          </Tr>
-        </TBody>
-      </Table>
+      <Table
+        showPagination
+        data={data}
+        columns={columns}
+        totalData={data.length || 0}
+        pageSizeOption={[
+          {
+            label: '10 / หน้า',
+            value: 10,
+          },
+          {
+            label: '20 / หน้า',
+            value: 20,
+          },
+          {
+            label: '30 / หน้า',
+            value: 30,
+          },
+          {
+            label: '40 / หน้า',
+            value: 40,
+          },
+          {
+            label: '50 / หน้า',
+            value: 50,
+          },
+        ]}
+      />
     </div>
   )
 }
