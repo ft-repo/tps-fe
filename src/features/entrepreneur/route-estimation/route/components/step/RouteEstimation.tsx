@@ -27,7 +27,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
     }
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, remove } = useFieldArray({
     control,
     name: "form_template"
   });
@@ -35,14 +35,14 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const onSubmit = useCallback((data: FieldType) => {
     toast.push(
       <Notification
-        title={'Data submission successful'}
+        title={'Success'}
         type={'success'}
         onClose={() => {
           setStep(2)
           setDataParser(data)
         }}
       >
-        <p className='break-all'>{JSON.stringify(data)}</p>
+        <p className='break-all'>Successfully submit data</p>
       </Notification>
     )
   }, [setDataParser, setStep])
@@ -59,13 +59,16 @@ const RouteEstimation: React.FC<Props> = (props) => {
             <TabList>
               {fields.map((item, index) => {
                 return (
-                  <TabNav key={index} value={`tab` + index}>
+                  <TabNav
+                    key={index}
+                    value={`tab` + index}
+                  >
                     รถคู่ที่ {index + 1}
                   </TabNav>
                 )
               })}
             </TabList>
-            {fields.length < 4 ?
+            {/* {fields.length < 4 ?
               <Button
                 type='button'
                 size='sm'
@@ -74,7 +77,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
               >
                 เพิ่มรถคู่
               </Button>
-              : null}
+              : null} */}
           </div>
           <Button
             variant='solid'

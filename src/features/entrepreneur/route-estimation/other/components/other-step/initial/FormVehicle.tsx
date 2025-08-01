@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { Input } from '@/components/ui'
+import { Input, Select } from '@/components/ui'
 import React from 'react'
 
 interface Props {
@@ -26,8 +26,9 @@ const FormVehicle: React.FC<Props> = (props) => {
           <div className='col-span-2'>
             <fieldset>
               <label>ประเภท</label>
-              <Input
-                placeholder='กรุณาระบุ'
+              <Select
+                placeholder='กรุณาเลือก'
+                options={[]}
               />
             </fieldset>
           </div>
@@ -42,8 +43,9 @@ const FormVehicle: React.FC<Props> = (props) => {
           <div className='col-span-2'>
             <fieldset>
               <label>จังหวัด</label>
-              <Input
-                placeholder='กรุณาระบุ'
+              <Select
+                placeholder='กรุณาเลือก'
+                options={[]}
               />
             </fieldset>
           </div>
@@ -58,8 +60,9 @@ const FormVehicle: React.FC<Props> = (props) => {
           <div className='col-span-2'>
             <fieldset>
               <label>จำนวนเพลา</label>
-              <Input
-                placeholder='กรุณาระบุ'
+              <Select
+                placeholder='กรุณาเลือก'
+                options={[]}
               />
             </fieldset>
           </div>

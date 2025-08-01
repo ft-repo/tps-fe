@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { Input } from '@/components/ui'
+import { Input, Select } from '@/components/ui'
 import React from 'react'
 
 interface Props {
@@ -57,20 +57,23 @@ const FormPetition: React.FC<Props> = (props) => {
           </fieldset>
           <fieldset>
             <label>แขวง / ตำบล</label>
-            <Input
-              placeholder='กรุณาระบุ'
+            <Select
+              placeholder='กรุณาเลือก'
+              options={[]}
             />
           </fieldset>
           <fieldset>
             <label>เขต / อำเภอ</label>
-            <Input
-              placeholder='กรุณาระบุ'
+            <Select
+              placeholder='กรุณาเลือก'
+              options={[]}
             />
           </fieldset>
           <fieldset>
             <label>จังหวัด</label>
-            <Input
-              placeholder='กรุณาระบุ'
+            <Select
+              placeholder='กรุณาเลือก'
+              options={[]}
             />
           </fieldset>
           <fieldset>
@@ -126,20 +129,23 @@ const FormPetition: React.FC<Props> = (props) => {
           </fieldset>
           <fieldset>
             <label>แขวง / ตำบล</label>
-            <Input
-              placeholder='กรุณาระบุ'
+            <Select
+              placeholder='กรุณาเลือก'
+              options={[]}
             />
           </fieldset>
           <fieldset>
             <label>เขต / อำเภอ</label>
-            <Input
-              placeholder='กรุณาระบุ'
+            <Select
+              placeholder='กรุณาเลือก'
+              options={[]}
             />
           </fieldset>
           <fieldset>
             <label>จังหวัด</label>
-            <Input
-              placeholder='กรุณาระบุ'
+            <Select
+              placeholder='กรุณาเลือก'
+              options={[]}
             />
           </fieldset>
           <fieldset>
@@ -195,20 +201,23 @@ const FormPetition: React.FC<Props> = (props) => {
           </fieldset>
           <fieldset>
             <label>แขวง / ตำบล</label>
-            <Input
-              placeholder='กรุณาระบุ'
+            <Select
+              placeholder='กรุณาเลือก'
+              options={[]}
             />
           </fieldset>
           <fieldset>
             <label>เขต / อำเภอ</label>
-            <Input
-              placeholder='กรุณาระบุ'
+            <Select
+              placeholder='กรุณาเลือก'
+              options={[]}
             />
           </fieldset>
           <fieldset>
             <label>จังหวัด</label>
-            <Input
-              placeholder='กรุณาระบุ'
+            <Select
+              placeholder='กรุณาเลือก'
+              options={[]}
             />
           </fieldset>
           <fieldset>
