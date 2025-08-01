@@ -8,14 +8,7 @@ import { Tag } from '@/components/ui'
 import { Table } from '@/components/custom/table'
 import { APPROVAL_STATUS } from '@/utils/constant';
 import { ColumnDef } from '@tanstack/react-table';
-
-interface TableData {
-  business_name: string;
-  petition_date: string;
-  committee_conside: string;
-  wait_signed: string;
-  petition_approved: string;
-}
+import { TableOtherData } from '@/@types/staff/user-info';
 
 interface Props {
 
@@ -68,7 +61,7 @@ const TableOther: React.FC<Props> = (props) => {
     },
   ], [])
 
-  const data = useMemo<TableData[]>(() => [
+  const data = useMemo<TableOtherData[]>(() => [
     {
       business_name: 'ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด',
       petition_date: dayjs().format('DD MMM YYYY'),
@@ -81,8 +74,32 @@ const TableOther: React.FC<Props> = (props) => {
   return (
     <div>
       <Table
+        showPagination
         data={data}
         columns={columns}
+        totalData={data.length || 0}
+        pageSizeOption={[
+          {
+            label: '10 / หน้า',
+            value: 10,
+          },
+          {
+            label: '20 / หน้า',
+            value: 20,
+          },
+          {
+            label: '30 / หน้า',
+            value: 30,
+          },
+          {
+            label: '40 / หน้า',
+            value: 40,
+          },
+          {
+            label: '50 / หน้า',
+            value: 50,
+          },
+        ]}
       />
     </div>
   )
