@@ -8,23 +8,10 @@ import dayjs from 'dayjs'
 import { Table } from '@/components/custom/table'
 import { Tag } from '@/components/ui';
 import { APPROVAL_STATUS } from '@/utils/constant';
+import { TableCategoryData } from '@/@types/staff/user-info';
 
 interface Props {
 
-}
-
-interface TableData {
-  business_name: string;
-  road_code: string;
-  road_name: string;
-  start_date: string;
-  end_date: string;
-  permit_date: string;
-  validate_document: any;
-  validate_route: any;
-  validate_vehicle: any;
-  wait_signed: any;
-  permit: any;
 }
 
 const TableCategory: React.FC<Props> = (props) => {
@@ -112,7 +99,7 @@ const TableCategory: React.FC<Props> = (props) => {
     },
   ], [])
 
-  const data = useMemo<TableData[]>(() => [
+  const data = useMemo<TableCategoryData[]>(() => [
     {
       business_name: 'บริษัท บีคอน โกลบอล เทรด จำกัด',
       road_code: 'ชม. 3005',
@@ -131,8 +118,32 @@ const TableCategory: React.FC<Props> = (props) => {
   return (
     <div>
       <Table
+        showPagination
         data={data}
         columns={columns}
+        totalData={data.length || 0}
+        pageSizeOption={[
+          {
+            label: '10 / หน้า',
+            value: 10,
+          },
+          {
+            label: '20 / หน้า',
+            value: 20,
+          },
+          {
+            label: '30 / หน้า',
+            value: 30,
+          },
+          {
+            label: '40 / หน้า',
+            value: 40,
+          },
+          {
+            label: '50 / หน้า',
+            value: 50,
+          },
+        ]}
       />
     </div>
   )
