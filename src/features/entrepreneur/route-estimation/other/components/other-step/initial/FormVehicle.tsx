@@ -2,13 +2,15 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Input, Select } from '@/components/ui'
 import React from 'react'
+import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
+import { Control, Controller } from 'react-hook-form';
 
 interface Props {
-
+  control: Control<FieldTypeForOther>;
 }
 
 const FormVehicle: React.FC<Props> = (props) => {
-  const { } = props
+  const { control } = props
 
   return (
     <div className='border-2 rounded-md p-4 mb-3'>
@@ -16,63 +18,133 @@ const FormVehicle: React.FC<Props> = (props) => {
         <h5>ข้อมูลยานพาหนะ</h5>
         <div className='block lg:grid grid-cols-2 lg:grid-cols-4 gap-3 mt-3'>
           <div className='col-span-4'>
-            <fieldset>
-              <label>ลักษณะ / มาตราฐาน</label>
-              <Input
-                placeholder='กรุณาระบุ'
-              />
-            </fieldset>
+            <Controller
+              name='vehicle_appearance'
+              control={control}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>ลักษณะ / มาตราฐาน</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                    />
+                  </fieldset>
+                )
+              }}
+            />
           </div>
           <div className='col-span-2'>
-            <fieldset>
-              <label>ประเภท</label>
-              <Select
-                placeholder='กรุณาเลือก'
-                options={[]}
-              />
-            </fieldset>
+            <Controller
+              name='vehicle_type'
+              control={control}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>ประเภท</label>
+                    <Select
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาเลือก'
+                      options={[]}
+                    />
+                  </fieldset>
+                )
+              }}
+            />
           </div>
           <div className='col-span-2'>
-            <fieldset>
-              <label>เลขทะเบียน</label>
-              <Input
-                placeholder='กรุณาระบุ'
-              />
-            </fieldset>
+            <Controller
+              name='vehicle_license_plate'
+              control={control}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>เลขทะเบียน</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                    />
+                  </fieldset>
+                )
+              }}
+            />
           </div>
           <div className='col-span-2'>
-            <fieldset>
-              <label>จังหวัด</label>
-              <Select
-                placeholder='กรุณาเลือก'
-                options={[]}
-              />
-            </fieldset>
+            <Controller
+              name='vehicle_province'
+              control={control}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>จังหวัด</label>
+                    <Select
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาเลือก'
+                      options={[]}
+                    />
+                  </fieldset>
+                )
+              }}
+            />
           </div>
           <div className='col-span-2'>
-            <fieldset>
-              <label>สี</label>
-              <Input
-                placeholder='กรุณาระบุ'
-              />
-            </fieldset>
+            <Controller
+              name='vehicle_color'
+              control={control}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>สี</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                    />
+                  </fieldset>
+                )
+              }}
+            />
           </div>
           <div className='col-span-2'>
-            <fieldset>
-              <label>จำนวนเพลา</label>
-              <Select
-                placeholder='กรุณาเลือก'
-                options={[]}
-              />
-            </fieldset>
+            <Controller
+              name='vehicle_axles'
+              control={control}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>จำนวนเพลา</label>
+                    <Select
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาเลือก'
+                      options={[]}
+                    />
+                  </fieldset>
+                )
+              }}
+            />
           </div>
           <div className='col-span-2'>
-            <fieldset>
-              <label>น้ำหนักรวม (กิโลกรัม)</label>
-              <Input
-                placeholder='กรุณาระบุ'
-              />
-            </fieldset>
+            <Controller
+              name='vehicle_weight'
+              control={control}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>น้ำหนักรวม (กิโลกรัม)</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                    />
+                  </fieldset>
+                )
+              }}
+            />
           </div>
         </div>
       </section>

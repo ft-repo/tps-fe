@@ -1,11 +1,12 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { FormPetition, FormVehicleContent } from '../../components'
-import { Button } from '@/components/ui'
+import { Button, Notification, toast } from '@/components/ui'
 import { useNavigate } from 'react-router-dom'
 import { useOtherContext } from '../../context'
 import { useForm } from 'react-hook-form'
+import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation'
 
 interface Props {
 
@@ -14,9 +15,10 @@ interface Props {
 const OtherInfo: React.FC<Props> = (props) => {
   const { } = props
   const navigate = useNavigate()
-  const { setStep } = useOtherContext()
+  const { setStep, setDataParser } = useOtherContext()
+  const refSubmit = useRef<HTMLButtonElement>(null)
 
-  const form = useForm({
+  const form = useForm<FieldTypeForOther>({
     defaultValues: {
       // 1. PETITOR INFO
       company_name: '',
@@ -65,11 +67,22 @@ const OtherInfo: React.FC<Props> = (props) => {
     }
   })
 
-  const { handleSubmit } = form
+  const { handleSubmit, control } = form
 
-  const onSubmit = useCallback((value) => {
-    console.log(value)
-  }, [])
+  const onSubmit = useCallback((data: FieldTypeForOther) => {
+    toast.push(
+      <Notification
+        title={'Success'}
+        type={'success'}
+        onClose={() => {
+          setStep(2)
+          setDataParser(data)
+        }}
+      >
+        <p className='break-all'>Successfully submit data</p>
+      </Notification>
+    )
+  }, [setDataParser, setStep])
 
   return (
     <main>
@@ -77,14 +90,19 @@ const OtherInfo: React.FC<Props> = (props) => {
         <h3>ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)</h3>
         <div className='flex items-center gap-3'>
           <Button variant='default' size='sm' onClick={() => navigate('/route-estimation/route')}>ย้อนกลับ</Button>
-          <Button variant='solid' size='sm' onClick={() => setStep(2)}>ถัดไป</Button>
+          <Button variant='solid' size='sm' onClick={() => refSubmit.current?.click()}>ถัดไป</Button>
         </div>
       </section>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className='block xl:grid grid-cols-2 gap-5 mt-5'>
-          <FormPetition />
-          <FormVehicleContent />
+          <FormPetition
+            control={control}
+          />
+          <FormVehicleContent
+            control={control}
+          />
         </div>
+        <button ref={refSubmit} hidden type='submit' />
       </form>
     </main>
   )
