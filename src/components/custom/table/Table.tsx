@@ -46,12 +46,10 @@ const CustomTable: React.FC<Props> = (props) => {
 
   // FUNCTION
   const onPaginationChange = useCallback((page: number) => {
-    console.log('===', page)
     table.setPageIndex(page - 1)
   }, [table])
 
   const onSelectChange = useCallback((value = 0) => {
-    console.log('===', value)
     table.setPageSize(Number(value))
   }, [table])
 
