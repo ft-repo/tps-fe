@@ -4,6 +4,7 @@ import React from 'react'
 import CardVehicleDetails from '../initial/CardVehicleDetails';
 import { SUMMARY_DATA, VEHICLE_DATA } from '../../../mock';
 import VehicleSummary from '../initial/VehicleSummary';
+import MapRouteEstimation from '../initial/MapRouteEstimation';
 
 interface Props {
   data: FieldArray;
@@ -43,9 +44,9 @@ const DetailResult: React.FC<Props> = (props) => {
           <p>{data.end_route || '-'}</p>
         </section>
       </div>
-      <figure className='h-full bg-gray-400 block rounded-md overflow-hidden'>
-        <h1>MAP GOES HERE</h1>
-      </figure>
+      <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[70vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
+        <MapRouteEstimation />
+      </div>
     </div>
   )
 }
