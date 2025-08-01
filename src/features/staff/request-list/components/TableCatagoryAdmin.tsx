@@ -274,16 +274,32 @@ const TableCategoryAdmin: React.FC<Props> = (props) => {
   return (
     <div>
       <Table
+        showPagination
         data={data}
         columns={columns}
-      // totalData={data.length}
-      // pageSizeOption={[
-      //   { value: 10, label: '10 / page' },
-      //   { value: 20, label: '20 / page' },
-      //   { value: 30, label: '30 / page' },
-      //   { value: 40, label: '40 / page' },
-      //   { value: 50, label: '50 / page' },
-      // ]}
+        totalData={data.length || 0}
+        pageSizeOption={[
+          {
+            label: '10 / หน้า',
+            value: 10,
+          },
+          {
+            label: '20 / หน้า',
+            value: 20,
+          },
+          {
+            label: '30 / หน้า',
+            value: 30,
+          },
+          {
+            label: '40 / หน้า',
+            value: 40,
+          },
+          {
+            label: '50 / หน้า',
+            value: 50,
+          },
+        ]}
       />
       <ConfirmModal
         open={modalOpen}

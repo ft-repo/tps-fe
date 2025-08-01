@@ -17,7 +17,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
   return (
     <div>
       <h5>ข้อมูลสำคัญ</h5>
-      <div className='block xl:grid grid-cols-2 gap-5 mt-5'>
+      <div className='block lg:grid grid-cols-2 gap-5 mt-5'>
         <Controller
           disabled
           name='business_type'
