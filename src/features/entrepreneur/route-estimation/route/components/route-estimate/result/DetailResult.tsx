@@ -2,7 +2,8 @@
 import { FieldArray } from '@/@types/entrepreneur/route-estimation'
 import React from 'react'
 import CardVehicleDetails from '../initial/CardVehicleDetails';
-import { VEHICLE_DATA } from '../../../mock';
+import { SUMMARY_DATA, VEHICLE_DATA } from '../../../mock';
+import VehicleSummary from '../initial/VehicleSummary';
 
 interface Props {
   data: FieldArray;
@@ -15,9 +16,16 @@ const DetailResult: React.FC<Props> = (props) => {
     <div className='block 2xl:grid grid-cols-2 gap-5 '>
       <div>
         <h4>รายละเอียด รถคู่ที่ 1 : รถลากจูง + รถกึ่งพ่วง</h4>
-        <CardVehicleDetails
-          data={VEHICLE_DATA}
-        />
+        <section className='mt-3'>
+          <VehicleSummary
+            data={SUMMARY_DATA}
+          />
+        </section>
+        <section className='mt-3'>
+          <CardVehicleDetails
+            data={VEHICLE_DATA}
+          />
+        </section>
         <section className='mt-3'>
           <h5>น้ำหนักลงเพลา รถลากจูง (กิโลกรัม)</h5>
           <p>{data.recover_vehicle_chassis_weight_1 || '0'} : {data.recover_vehicle_chassis_weight_2 || '0'} : {data.recover_vehicle_chassis_weight_3 || '0'}</p>

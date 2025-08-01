@@ -88,37 +88,33 @@ const TableResult: React.FC<Props> = (props) => {
       </section>
       <section className='mt-5'>
         <Table
-          columns={columns}
+          showPagination
           data={tableData}
-          totalData={tableData.length}
-          showPagination={false}
+          columns={columns}
+          totalData={tableData.length || 0}
+          pageSizeOption={[
+            {
+              label: '10 / หน้า',
+              value: 10,
+            },
+            {
+              label: '20 / หน้า',
+              value: 20,
+            },
+            {
+              label: '30 / หน้า',
+              value: 30,
+            },
+            {
+              label: '40 / หน้า',
+              value: 40,
+            },
+            {
+              label: '50 / หน้า',
+              value: 50,
+            },
+          ]}
         />
-        {/* <Table>
-          <THead>
-            <Tr>
-              <Th>Company</Th>
-              <Th>Contact</Th>
-              <Th>Country</Th>
-            </Tr>
-          </THead>
-          <TBody>
-            <Tr>
-              <Td>Alfreds Futterkiste</Td>
-              <Td>Maria Anders</Td>
-              <Td>Germany</Td>
-            </Tr>
-            <Tr>
-              <Td>Centro comercial Moctezuma</Td>
-              <Td>Francisco Chang</Td>
-              <Td>Mexico</Td>
-            </Tr>
-            <Tr>
-              <Td>Ernst Handel</Td>
-              <Td>Roland Mendel</Td>
-              <Td>Austria</Td>
-            </Tr>
-          </TBody>
-        </Table> */}
       </section>
     </div >
   )

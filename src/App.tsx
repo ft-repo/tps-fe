@@ -15,20 +15,20 @@ const environment = process.env.NODE_ENV
  * If you wish to enable mock api
  */
 if (environment !== 'production' && appConfig.enableMock) {
-    mockServer({ environment })
+	mockServer({ environment })
 }
 function App() {
-    return (
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <BrowserRouter>
-                    <Theme>
-                        <Layout />
-                    </Theme>
-                </BrowserRouter>
-            </PersistGate>
-        </Provider>
-    )
+	return (
+		<Provider store={store}>
+			<PersistGate loading={null} persistor={persistor}>
+				<BrowserRouter>
+					<Theme>
+						<Layout />
+					</Theme>
+				</BrowserRouter>
+			</PersistGate>
+		</Provider>
+	)
 }
 
 export default App
