@@ -18,7 +18,7 @@ const FormExecutiveDocument: React.FC<Props> = (props) => {
   return (
     <div>
       <h5>เอกสารและหลักฐานนิติบุคคล</h5>
-      <div className='block xl:grid grid-cols-3 gap-5 mt-5'>
+      <div className='block lg:grid grid-cols-2 2xl:grid-cols-3 gap-5 mt-5'>
         <fieldset>
           <label>สำเนาบัตรประชาชนผู้มีอำนาจ</label>
           <Upload

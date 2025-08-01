@@ -44,7 +44,7 @@ const FormInfo: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ประเภทรถ</label>
+                  <label>เลขทะเบียน / เลขตัวรถ</label>
                   <Input
                     {...field}
                     name={field.name}
@@ -60,7 +60,7 @@ const FormInfo: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ประเภทรถ</label>
+                  <label>ยี่ห้อ</label>
                   <Input
                     {...field}
                     name={field.name}
@@ -76,7 +76,7 @@ const FormInfo: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ประเภทรถ</label>
+                  <label>จังหวัด</label>
                   <Input
                     {...field}
                     name={field.name}
