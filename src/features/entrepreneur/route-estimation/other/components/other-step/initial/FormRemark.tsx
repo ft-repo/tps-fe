@@ -38,7 +38,7 @@ const FormRemark: React.FC<Props> = (props) => {
             control={control}
             render={({ field }) => {
               return (
-                <fieldset>
+                <fieldset className='mt-3'>
                   <label>เหตุผลที่ขอ</label>
                   <Input
                     {...field}
