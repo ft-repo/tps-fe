@@ -38,6 +38,7 @@
     "html-react-parser": "^5.2.1",
     "i18next": "^24.2.0",
     "leaflet": "^1.9.4",
+    "leaflet-routing-machine": "^3.2.12",
     "lodash": "^4.17.21",
     "miragejs": "^0.1.48",
     "pdfjs-dist": "^3.4.120",
