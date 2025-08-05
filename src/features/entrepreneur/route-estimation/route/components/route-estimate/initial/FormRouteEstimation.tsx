@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable import/no-unresolved */
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Input, Select } from '@/components/ui'
 import { Control, Controller } from 'react-hook-form'
 import { FieldType, FieldArray } from '@/@types/entrepreneur/route-estimation'
@@ -13,12 +13,28 @@ interface Props {
   formItem: FieldArray;
   formIndex: number;
   control: Control<FieldType>
+  setFirstPoint?: (point: [number, number]) => void
+  setSecondPoint?: (point: [number, number]) => void
 }
 
 const FormRouteEstimation: React.FC<Props> = (props) => {
-  const { formItem, formIndex, control } = props
+  const { formItem, formIndex, control, setFirstPoint, setSecondPoint } = props
+  const firstPointTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const secondPointTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   console.log(formItem)
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (firstPointTimeoutRef.current) {
+        clearTimeout(firstPointTimeoutRef.current)
+      }
+      if (secondPointTimeoutRef.current) {
+        clearTimeout(secondPointTimeoutRef.current)
+      }
+    }
+  }, [])
 
   return (
     <>
@@ -299,6 +315,20 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
                       {...field}
                       name={`form_template.'${formIndex}.${field.name}`}
                       placeholder="ต้นทาง"
+                      onChange={(e) => {
+                        field.onChange(e)
+                        const [lat, lng] = e.target.value.split(',').map(Number) ?? []
+                        
+                        // Clear existing timeout
+                        if (firstPointTimeoutRef.current) {
+                          clearTimeout(firstPointTimeoutRef.current)
+                        }
+                        
+                        // Set new timeout for 500ms delay
+                        firstPointTimeoutRef.current = setTimeout(() => {
+                          setFirstPoint?.([lat, lng])
+                        }, 500)
+                      }}
                     />
                   </fieldset>
                 )
@@ -317,6 +347,20 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
                       {...field}
                       name={`form_template.'${formIndex}.${field.name}`}
                       placeholder="ปลายทาง"
+                      onChange={(e) => {
+                        field.onChange(e)
+                        const [lat, lng] = e.target.value.split(',').map(Number) ?? []
+                        
+                        // Clear existing timeout
+                        if (secondPointTimeoutRef.current) {
+                          clearTimeout(secondPointTimeoutRef.current)
+                        }
+                        
+                        // Set new timeout for 500ms delay
+                        secondPointTimeoutRef.current = setTimeout(() => {
+                          setSecondPoint?.([lat, lng])
+                        }, 500)
+                      }}
                     />
                   </fieldset>
                 )
