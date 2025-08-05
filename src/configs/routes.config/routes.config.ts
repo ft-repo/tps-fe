@@ -145,5 +145,11 @@ export const protectedRoutes = [
         path: '/request-history/view/other_vehicle',
         component: lazy(() => import('@/views/staff/request-history/view/other_vehicle')),
         authority: [],
-    }
+    },
+    {
+        key: 'approval_other_document',
+        path: '/request-history/approval/other-document',
+        component: lazy(() => import('@/views/staff/request-history/approval/other-document')),
+        authority: [],
+    },
 ]
