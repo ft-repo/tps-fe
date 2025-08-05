@@ -117,6 +117,18 @@ export const protectedRoutes = [
         authority: [],
     },
     {
+        key: 'approval_evaluation',
+        path: '/request-list/approval/evaluation',
+        component: lazy(() => import('@/views/staff/request-list/approval/evaluation')),
+        authority: [],
+    },
+    {
+        key: 'approval_other_document',
+        path: '/request-list/approval/other-document',
+        component: lazy(() => import('@/views/staff/request-list/approval/other-document')),
+        authority: [],
+    },
+    {
         key: 'request_history',
         path: '/request-history/overview',
         component: lazy(() => import('@/views/staff/request-history/overview')),
@@ -133,5 +145,11 @@ export const protectedRoutes = [
         path: '/request-history/view/other_vehicle',
         component: lazy(() => import('@/views/staff/request-history/view/other_vehicle')),
         authority: [],
-    }
+    },
+    {
+        key: 'approval_other_document',
+        path: '/request-history/approval/other-document',
+        component: lazy(() => import('@/views/staff/request-history/approval/other-document')),
+        authority: [],
+    },
 ]
