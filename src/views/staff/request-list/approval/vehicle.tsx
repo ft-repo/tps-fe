@@ -5,8 +5,7 @@ interface Props {
 
 }
 
-const ApprovalVehicleIndex: React.FC<Props> = (props) => {
-  const { } = props
+const ApprovalVehicleIndex: React.FC<Props> = () => {
 
   return (
     <ApprovalVehiclePage/>
