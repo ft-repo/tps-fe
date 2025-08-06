@@ -1,4 +1,4 @@
-import { apiSignIn, apiSignOut, apiSignUp } from '@/services/AuthService'
+import { apiSignIn, apiSignUp } from '@/services/AuthService'
 import {
 	setUser,
 	signInSuccess,
@@ -40,18 +40,19 @@ function useAuth() {
 				if (resp.data.details) {
 					dispatch(
 						setUser(
-							resp.data.details || {
-								id: '',
-								registration_no: '',
+							{
+								id: resp.data.details.id,
+								registration_no: resp.data.details.registration_no,
 								business_details: {
-									entity_type_id: 0,
-									business_name: '',
+									entity_type_id: resp.data.details.business_details.entity_type_id,
+									business_name: resp.data.details.business_details.business_name,
 									entity_type: {
-										id: 0,
-										name: '',
+										id: resp.data.details.business_details.entity_type.id,
+										name: resp.data.details.business_details.entity_type.name,
 									},
 								},
-							},
+								authority: ['USER'],
+							},	
 						),
 					)
 				}
@@ -85,17 +86,18 @@ function useAuth() {
 				if (resp.data.details) {
 					dispatch(
 						setUser(
-							resp.data.details || {
-								id: '',
-								registration_no: '',
+							{
+								id: resp.data.details.id,
+								registration_no: resp.data.details.registration_no,
 								business_details: {
-									entity_type_id: 0,
-									business_name: '',
+									entity_type_id: resp.data.details.business_details.entity_type_id,
+									business_name: resp.data.details.business_details.business_name,
 									entity_type: {
-										id: 0,
-										name: '',
+										id: resp.data.details.business_details.entity_type.id,
+										name: resp.data.details.business_details.entity_type.name,
 									},
 								},
+								authority: ['USER'],
 							},
 						),
 					)
@@ -134,6 +136,7 @@ function useAuth() {
 						name: '',
 					},
 				},
+				authority: [],
 			}),
 		)
 		navigate(appConfig.unAuthenticatedEntryPath)
