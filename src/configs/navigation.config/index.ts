@@ -7,16 +7,16 @@ import {
 import type { NavigationTree } from '@/@types/navigation'
 
 const navigationConfig: NavigationTree[] = [
-    {
-        key: 'home',
-        path: '/home',
-        title: 'Home',
-        translateKey: 'nav.home',
-        icon: 'home',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
-        subMenu: [],
-    },
+    // {
+    //     key: 'home',
+    //     path: '/home',
+    //     title: 'Home',
+    //     translateKey: 'nav.home',
+    //     icon: 'home',
+    //     type: NAV_ITEM_TYPE_ITEM,
+    //     authority: [],
+    //     subMenu: [],
+    // },
     /** Example purpose only, please remove */
     {
         key: 'route_estimation',

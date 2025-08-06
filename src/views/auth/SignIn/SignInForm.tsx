@@ -18,15 +18,15 @@ interface SignInFormProps extends CommonProps {
 }
 
 type SignInFormSchema = {
-    userName: string
+    registration_no: string
     password: string
-    rememberMe: boolean
+    // rememberMe: boolean
 }
 
 const validationSchema = Yup.object().shape({
-    userName: Yup.string().required('Please enter your user name'),
+    registration_no: Yup.string().required('Please enter your registration no'),
     password: Yup.string().required('Please enter your password'),
-    rememberMe: Yup.bool(),
+    // rememberMe: Yup.bool(),
 })
 
 const SignInForm = (props: SignInFormProps) => {
@@ -45,10 +45,10 @@ const SignInForm = (props: SignInFormProps) => {
         values: SignInFormSchema,
         setSubmitting: (isSubmitting: boolean) => void,
     ) => {
-        const { userName, password } = values
+        const { registration_no, password } = values
         setSubmitting(true)
 
-        const result = await signIn({ userName, password })
+        const result = await signIn({ registration_no, password })
 
         if (result?.status === 'failed') {
             setMessage(result.message)
@@ -66,9 +66,9 @@ const SignInForm = (props: SignInFormProps) => {
             )}
             <Formik
                 initialValues={{
-                    userName: 'admin',
-                    password: '123Qwe',
-                    rememberMe: true,
+                    registration_no: '',
+                    password: '',
+                    // rememberMe: true,
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -85,15 +85,15 @@ const SignInForm = (props: SignInFormProps) => {
                             <FormItem
                                 label="เลขทะเบียนนิติบุคคล"
                                 invalid={
-                                    (errors.userName &&
-                                        touched.userName) as boolean
+                                    (errors.registration_no &&
+                                        touched.registration_no) as boolean
                                 }
-                                errorMessage={errors.userName}
+                                errorMessage={errors.registration_no}
                             >
                                 <Field
                                     type="text"
                                     autoComplete="off"
-                                    name="userName"
+                                    name="registration_no"
                                     placeholder="เลขทะเบียนนิติบุคคล"
                                     component={Input}
                                 />
