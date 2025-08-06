@@ -35,16 +35,22 @@ function useAuth() {
 		try {
 			const resp = await apiSignIn(values)
 			if (resp.data) {
-				const { token } = resp.data
-				dispatch(signInSuccess(token))
-				if (resp.data.user) {
+				const { access_token } = resp.data
+				dispatch(signInSuccess(access_token))
+				if (resp.data.details) {
 					dispatch(
 						setUser(
-							resp.data.user || {
-								avatar: '',
-								userName: 'Anonymous',
-								authority: ['USER'],
-								email: '',
+							resp.data.details || {
+								id: '',
+								registration_no: '',
+								business_details: {
+									entity_type_id: 0,
+									business_name: '',
+									entity_type: {
+										id: 0,
+										name: '',
+									},
+								},
 							},
 						),
 					)
@@ -62,9 +68,10 @@ function useAuth() {
 			}
 			// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 		} catch (errors: any) {
+			console.log(errors)
 			return {
 				status: 'failed',
-				message: errors?.response?.data?.message || errors.toString(),
+				message: errors?.response?.data?.res_data?.message || errors.toString(),
 			}
 		}
 	}
@@ -73,16 +80,22 @@ function useAuth() {
 		try {
 			const resp = await apiSignUp(values)
 			if (resp.data) {
-				const { token } = resp.data
-				dispatch(signInSuccess(token))
-				if (resp.data.user) {
+				const { access_token } = resp.data
+				dispatch(signInSuccess(access_token))
+				if (resp.data.details) {
 					dispatch(
 						setUser(
-							resp.data.user || {
-								avatar: '',
-								userName: 'Anonymous',
-								authority: ['USER'],
-								email: '',
+							resp.data.details || {
+								id: '',
+								registration_no: '',
+								business_details: {
+									entity_type_id: 0,
+									business_name: '',
+									entity_type: {
+										id: 0,
+										name: '',
+									},
+								},
 							},
 						),
 					)
@@ -102,7 +115,7 @@ function useAuth() {
 		} catch (errors: any) {
 			return {
 				status: 'failed',
-				message: errors?.response?.data?.message || errors.toString(),
+				message: errors?.response?.data?.res_data?.message || errors.toString(),
 			}
 		}
 	}
@@ -111,10 +124,16 @@ function useAuth() {
 		dispatch(signOutSuccess())
 		dispatch(
 			setUser({
-				avatar: '',
-				userName: '',
-				email: '',
-				authority: [],
+				id: '',
+				registration_no: '',
+				business_details: {
+					entity_type_id: 0,
+					business_name: '',
+					entity_type: {
+						id: 0,
+						name: '',
+					},
+				},
 			}),
 		)
 		navigate(appConfig.unAuthenticatedEntryPath)
