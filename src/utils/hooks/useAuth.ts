@@ -140,7 +140,7 @@ function useAuth() {
 	}
 
 	const signOut = async () => {
-		await apiSignOut()
+		// await apiSignOut()
 		handleSignOut()
 	}
 
