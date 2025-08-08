@@ -1,12 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit'
 // TYPE
-import master, { MasterState } from './masterSlice'
+import master, { } from './masterSlice'
 
 const reducer = combineReducers({
   master
 })
 
-export type EntrepreneurState = {
+export type MasterState = {
   master: MasterState
 }
 

@@ -1,30 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { FaPenToSquare as EditIcon, FaTrash as DeleteIcon } from "react-icons/fa6";
 import { Button } from '@/components/ui';
 import { ColumnDef, DataTable } from '@/components/shared';
-import { Data, TableData } from '@/@types/entrepreneur/vehicle-list';
+import { TableData } from '@/@types/entrepreneur/vehicle-list';
+import { Data } from '@/@types/reducer/vehicle';
 
 interface Props {
-  data: Data | any;
+  data: Data;
   loading: boolean;
   setOpen: (open: any) => void;
+  onChangeTable: (page: number | string | null, pageSize: number | string | null) => void;
+  openModalWithData: (id: number) => void;
 }
 
 const TableVehicleList: React.FC<Props> = (props) => {
-  const { data, loading, setOpen } = props
+  const { data, loading, onChangeTable, openModalWithData } = props
 
   const columns: ColumnDef<TableData>[] = useMemo(() => {
     return [
       {
         header: 'เลขที่',
-        accessorKey: 'no',
+        accessorKey: 'id',
       },
       {
         header: 'ประเภท',
-        accessorKey: 'vehicle_type',
+        accessorKey: 'vehicle_type_name',
       },
       {
         header: 'ยี่ห้อ',
@@ -32,11 +35,11 @@ const TableVehicleList: React.FC<Props> = (props) => {
       },
       {
         header: 'เลขทะเบียน / เลขตัวรถ',
-        accessorKey: 'license_plate',
+        accessorKey: 'plate_no',
       },
       {
         header: 'จังหวัด',
-        accessorKey: 'province',
+        accessorKey: 'plate_province',
       },
       {
         header: 'น้ำหนัก (กิโลกรัม)',
@@ -45,14 +48,15 @@ const TableVehicleList: React.FC<Props> = (props) => {
       {
         header: 'จัดการ',
         accessorKey: 'action',
-        cell: () => {
+        cell: ({ row }) => {
           return (
             <div className='flex items-center gap-2'>
               <Button
                 size='xs'
                 variant='solid'
                 icon={<EditIcon />}
-                onClick={() => setOpen({ open: true })}
+                // onClick={() => setOpen({ open: true })}
+                onClick={() => openModalWithData(row.original.id)}
               />
               <Button
                 size='xs'
@@ -65,7 +69,7 @@ const TableVehicleList: React.FC<Props> = (props) => {
         }
       },
     ]
-  }, [setOpen])
+  }, [openModalWithData])
 
   // const mockData: TableData[] = [
   //   {
@@ -86,17 +90,17 @@ const TableVehicleList: React.FC<Props> = (props) => {
   //   },
   // ]
 
-  const handlePaginationChange = (pageIndex: number) => {
-    console.log(pageIndex)
-  }
+  const handlePaginationChange = useCallback((pageIndex: number) => {
+    onChangeTable(pageIndex, null)
+  }, [onChangeTable])
 
-  const handleSelectChange = (pageSize: number) => {
-    console.log(pageSize)
-  }
+  const handleSelectChange = useCallback((pageSize: number) => {
+    onChangeTable(null, pageSize)
+  }, [onChangeTable])
 
   return (
     <DataTable
-      data={data}
+      data={data.data}
       columns={columns}
       loading={loading}
       pagingData={{

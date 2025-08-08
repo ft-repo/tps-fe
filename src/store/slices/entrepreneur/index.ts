@@ -1,7 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import vehicleList from './vehicleListSlice'
 // TYPE
-import { VehicleListState } from '@/@types/entrepreneur/vehicle-list'
+import { VehicleListState } from '@/@types/reducer/vehicle'
 
 const reducer = combineReducers({
   vehicleList

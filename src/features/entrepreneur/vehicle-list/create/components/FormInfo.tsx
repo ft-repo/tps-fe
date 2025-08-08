@@ -7,6 +7,7 @@ import { postUploadFile } from '@/services/entrepreneur/VehicleListService'
 import React, { useCallback } from 'react'
 import { Control, Controller } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
+import { useAppSelector } from '@/store'
 
 interface Props {
   control: Control<FieldType>;
@@ -15,6 +16,7 @@ interface Props {
 
 const FormInfo: React.FC<Props> = (props) => {
   const { control, setValue } = props
+  const { vehicle_type } = useAppSelector(state => state.master)
 
   const uploadFile = useCallback(async (file: any) => {
     try {
@@ -53,20 +55,16 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาเลือก'
-                    options={[
-                      {
-                        label: '1',
-                        value: 1
-                      },
-                      {
-                        label: '2',
-                        value: 2
-                      },
-                      {
-                        label: '3',
-                        value: 3
-                      },
-                    ]}
+                    options={vehicle_type.map((item) => {
+                      return {
+                        label: item.name,
+                        value: item.id,
+                      }
+                    }) as any}
+                    onChange={(e: any) => {
+                      setValue('vehicle_type', e.value)
+                      field.onChange(e)
+                    }}
                   />
                 </fieldset>
               )

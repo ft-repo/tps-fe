@@ -17,6 +17,14 @@ export const getVehicleList = async (params: GetVehicleListParams) => {
   })
 }
 
+export const getVehicleListByID = async (id: number | string | null | any) => {
+  return ApiService.fetchData<VehicleListResponse>({
+    url: `client/vehicle/${id}`,
+    method: 'get',
+    // params = query/parameter
+  })
+}
+
 export const postVehicleList = async (data: APIPostBody) => {
   return ApiService.fetchData<any>({
     url: 'client/vehicle',
