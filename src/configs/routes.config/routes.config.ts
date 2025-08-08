@@ -153,4 +153,10 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/staff/request-history/approval/other-document')),
         authority: ['USER','ADMIN'],
     },
+    {
+        key: 'approval_document',
+        path: '/request-history/approval/document',
+        component: lazy(() => import('@/views/staff/request-history/approval/document')),
+        authority: [],
+    },
 ]
