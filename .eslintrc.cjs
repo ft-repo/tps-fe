@@ -46,6 +46,7 @@ module.exports = {
         "reservedFirst": true,
         "noSortAlphabetically": true
       }
-    ]
+    ],
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };
