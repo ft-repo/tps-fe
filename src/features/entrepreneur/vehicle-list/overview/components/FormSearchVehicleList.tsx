@@ -2,8 +2,9 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { Select } from '@/components/ui';
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useAppSelector } from '@/store';
 
 export interface FieldType {
   vehicle_type_id: number | string;
@@ -16,6 +17,7 @@ interface Props {
 const FormSearchVehicleList: React.FC<Props> = (props) => {
   const { searchData } = props
   const submitRef = useRef<HTMLButtonElement>(null)
+  const { vehicle_type } = useAppSelector(state => state.master)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -23,11 +25,20 @@ const FormSearchVehicleList: React.FC<Props> = (props) => {
     }
   })
 
-  const { handleSubmit, control } = form
+  const { handleSubmit, control, setValue } = form
 
   const onSubmit = useCallback((value: any) => {
     searchData(value.vehicle_type_id.value)
   }, [searchData])
+
+  const selectOptions = useMemo(() => {
+    return vehicle_type.map((item) => {
+      return {
+        label: item.name,
+        value: item.id
+      }
+    })
+  }, [vehicle_type])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -38,35 +49,21 @@ const FormSearchVehicleList: React.FC<Props> = (props) => {
           return (
             <fieldset className='mb-5'>
               <Select
+                isSearchable
                 {...field}
                 name={field.name}
-                options={[
-                  {
-                    label: 'ทั้งหมด',
-                    value: 'ALL'
-                  },
-                  {
-                    label: 'รถลากจูง',
-                    value: 1
-                  },
-                  {
-                    label: 'รถกึ่งพ่วง',
-                    value: 2
-                  },
-                  {
-                    label: 'เครื่องจักร',
-                    value: 3
-                  },
-                  {
-                    label: 'สินค้า',
-                    value: 4
-                  },
-                ] as any}
+                options={[{
+                  label: 'ทั้งหมด',
+                  value: 'ALL'
+                },
+                ...selectOptions
+                ]}
                 placeholder='กรุณาเลือก'
                 className='w-full lg:w-1/4'
-                onChange={(e) => {
-                  console.log(e)
+                onChange={(e: any) => {
+                  setValue('vehicle_type_id', e.value)
                   field.onChange(e)
+                  // SUBMIT
                   submitRef.current?.click()
                 }}
               />

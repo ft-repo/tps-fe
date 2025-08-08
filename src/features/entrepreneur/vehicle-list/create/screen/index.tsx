@@ -3,7 +3,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useRef } from 'react'
 import { FormInfo, FormDocument } from '../components'
-import { Button } from '@/components/ui';
+import { Button, Notification, toast } from '@/components/ui';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
@@ -48,7 +48,7 @@ const CreateScreen: React.FC<Props> = (props) => {
     // BUILD BODY
     const body: APIPostBody = {
       vehicle_detail: {
-        vehicle_type_id: 1,
+        vehicle_type_id: value.vehicle_type || '',
         plate_no: value.license_plate || '',
         plate_province: value.province || '',
         brand: value.vehicle_model || '',
@@ -72,23 +72,41 @@ const CreateScreen: React.FC<Props> = (props) => {
         back_rear_url: value.file_back_image_id
       }
     }
-    console.log(body)
     // CREATING REQUEST
     try {
       const response = await postVehicleList(body)
       if (response.status === 200) {
-        console.log('success')
+        toast.push(
+          <Notification
+            type="success"
+            title="สำเร็จ"
+            onClose={() => navigate('/vehicle-list/overview')}
+          >
+            บันทึกข้อมูลสำเร็จ
+          </Notification>, {
+          placement: 'top-center',
+        })
       } else {
-        console.log('error')
+        console.log(response)
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error.message)
+        console.error(error.message)
       } else {
-        console.log(error)
+        console.error(error)
       }
+
+      toast.push(
+        <Notification
+          type="danger"
+          title="ผิดพลาด"
+        >
+          ไม่สามารถบันทึกข้อมูลได้
+        </Notification>, {
+        placement: 'top-center',
+      })
     }
-  }, [])
+  }, [navigate])
 
   return (
     <div>

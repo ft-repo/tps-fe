@@ -50,6 +50,7 @@ const FormDocument: React.FC<Props> = (props) => {
             <label className='block'>เอกสารถือครองสิทธิ์</label>
             <Upload
               draggable
+              uploadLimit={1}
               onChange={(file) => uploadFile('file_property_document_id', file)}
             >
               <div className="my-8 text-center">
@@ -69,6 +70,7 @@ const FormDocument: React.FC<Props> = (props) => {
             <label className='block'>สัญญาจ้างหรือเช่า</label>
             <Upload
               draggable
+              uploadLimit={1}
               onChange={(file) => uploadFile('file_hire_contact_document_id', file)}
             >
               <div className="my-8 text-center">
@@ -88,6 +90,7 @@ const FormDocument: React.FC<Props> = (props) => {
             <label className='block'>สัญญาเช่าซื้อ</label>
             <Upload
               draggable
+              uploadLimit={1}
               onChange={(file) => uploadFile('file_purchase_contact_document_id', file)}
             >
               <div className="my-8 text-center">
@@ -107,6 +110,7 @@ const FormDocument: React.FC<Props> = (props) => {
             <label className='block'>สัญญามอบสิทธิ์</label>
             <Upload
               draggable
+              uploadLimit={1}
               onChange={(file) => uploadFile('file_transfer_contact_document_id', file)}
             >
               <div className="my-8 text-center">
@@ -131,6 +135,7 @@ const FormDocument: React.FC<Props> = (props) => {
             <label className='block'>รูปด้านหน้า</label>
             <Upload
               draggable
+              uploadLimit={1}
               onChange={(file) => uploadFile('file_front_image_id', file, true)}
             >
               <div className="my-8 text-center">
@@ -150,6 +155,7 @@ const FormDocument: React.FC<Props> = (props) => {
             <label className='block'>รูปด้านข้าง</label>
             <Upload
               draggable
+              uploadLimit={1}
               onChange={(file) => uploadFile('file_side_image_id', file, true)}
             >
               <div className="my-8 text-center">
@@ -169,6 +175,7 @@ const FormDocument: React.FC<Props> = (props) => {
             <label className='block'>รูปด้านหลัง</label>
             <Upload
               draggable
+              uploadLimit={1}
               onChange={(file) => uploadFile('file_back_image_id', file, true)}
             >
               <div className="my-8 text-center">
