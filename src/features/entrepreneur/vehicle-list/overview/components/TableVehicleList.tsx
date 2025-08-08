@@ -1,108 +1,112 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
-import Table from '@/components/ui/Table/Table'
+import React, { useMemo } from 'react'
 import { FaPenToSquare as EditIcon, FaTrash as DeleteIcon } from "react-icons/fa6";
-import { OpenTypes } from './ModalUpdateVehicle';
 import { Button } from '@/components/ui';
-
-const { Tr, Th, Td, THead, TBody } = Table
+import { ColumnDef, DataTable } from '@/components/shared';
+import { Data, TableData } from '@/@types/entrepreneur/vehicle-list';
 
 interface Props {
-  setOpen: (open: OpenTypes) => void;
+  data: Data | any;
+  loading: boolean;
+  setOpen: (open: any) => void;
 }
 
 const TableVehicleList: React.FC<Props> = (props) => {
-  const { setOpen } = props
+  const { data, loading, setOpen } = props
+
+  const columns: ColumnDef<TableData>[] = useMemo(() => {
+    return [
+      {
+        header: 'เลขที่',
+        accessorKey: 'no',
+      },
+      {
+        header: 'ประเภท',
+        accessorKey: 'vehicle_type',
+      },
+      {
+        header: 'ยี่ห้อ',
+        accessorKey: 'brand',
+      },
+      {
+        header: 'เลขทะเบียน / เลขตัวรถ',
+        accessorKey: 'license_plate',
+      },
+      {
+        header: 'จังหวัด',
+        accessorKey: 'province',
+      },
+      {
+        header: 'น้ำหนัก (กิโลกรัม)',
+        accessorKey: 'weight',
+      },
+      {
+        header: 'จัดการ',
+        accessorKey: 'action',
+        cell: () => {
+          return (
+            <div className='flex items-center gap-2'>
+              <Button
+                size='xs'
+                variant='solid'
+                icon={<EditIcon />}
+                onClick={() => setOpen({ open: true })}
+              />
+              <Button
+                size='xs'
+                variant='solid'
+                icon={<DeleteIcon />}
+                color='red-600'
+              />
+            </div>
+          )
+        }
+      },
+    ]
+  }, [setOpen])
+
+  // const mockData: TableData[] = [
+  //   {
+  //     no: '0016',
+  //     vehicle_type: 'รถลากจูง',
+  //     brand: 'ISUZU',
+  //     license_plate: '56 - 2256',
+  //     province: 'กรุงเทพมหานคร',
+  //     weight: '800'
+  //   },
+  //   {
+  //     no: '0016',
+  //     vehicle_type: 'รถลากจูง',
+  //     brand: 'ISUZU',
+  //     license_plate: '56 - 2256',
+  //     province: 'กรุงเทพมหานคร',
+  //     weight: '800'
+  //   },
+  // ]
+
+  const handlePaginationChange = (pageIndex: number) => {
+    console.log(pageIndex)
+  }
+
+  const handleSelectChange = (pageSize: number) => {
+    console.log(pageSize)
+  }
 
   return (
-    <Table>
-      <THead>
-        <Tr>
-          <Th>เลขที่</Th>
-          <Th>ประเภท</Th>
-          <Th>ยี่ห้อ</Th>
-          <Th>เลขทะเบียน / เลขตัวรถ</Th>
-          <Th>จังหวัด</Th>
-          <Th>น้ำหนัก (กิโลกรัม)</Th>
-          <Th>จัดการ</Th>
-        </Tr>
-      </THead>
-      <TBody>
-        <Tr>
-          <Td>0016</Td>
-          <Td>รถลากจูง</Td>
-          <Td>ISUZU</Td>
-          <Td>56 - 2256</Td>
-          <Td>กรุงเทพมหานคร</Td>
-          <Td>800</Td>
-          <Td>
-            <div className='flex items-center gap-2'>
-              <Button
-                size='xs'
-                variant='solid'
-                icon={<EditIcon />}
-                onClick={() => setOpen({ open: true })}
-              />
-              <Button
-                size='xs'
-                variant='solid'
-                icon={<DeleteIcon />}
-                color='red-600'
-              />
-            </div>
-          </Td>
-        </Tr>
-        <Tr>
-          <Td>0016</Td>
-          <Td>รถลากจูง</Td>
-          <Td>ISUZU</Td>
-          <Td>56 - 2256</Td>
-          <Td>กรุงเทพมหานคร</Td>
-          <Td>800</Td>
-          <Td>
-            <div className='flex items-center gap-2'>
-              <Button
-                size='xs'
-                variant='solid'
-                icon={<EditIcon />}
-                onClick={() => setOpen({ open: true })}
-              />
-              <Button
-                size='xs'
-                variant='solid'
-                icon={<DeleteIcon />}
-                color='red-600'
-              />
-            </div>
-          </Td>
-        </Tr>
-        <Tr>
-          <Td>0016</Td>
-          <Td>รถลากจูง</Td>
-          <Td>ISUZU</Td>
-          <Td>56 - 2256</Td>
-          <Td>กรุงเทพมหานคร</Td>
-          <Td>800</Td>
-          <Td>
-            <div className='flex items-center gap-2'>
-              <Button
-                size='xs'
-                variant='solid'
-                icon={<EditIcon />}
-                onClick={() => setOpen({ open: true })}
-              />
-              <Button
-                size='xs'
-                variant='solid'
-                icon={<DeleteIcon />}
-                color='red-600'
-              />
-            </div>
-          </Td>
-        </Tr>
-      </TBody>
-    </Table>
+    <DataTable
+      data={data}
+      columns={columns}
+      loading={loading}
+      pagingData={{
+        total: data.total,
+        pageIndex: data.page,
+        pageSize: data.limit,
+      }}
+      onPaginationChange={handlePaginationChange}
+      onSelectChange={handleSelectChange}
+    />
   )
 }
 
