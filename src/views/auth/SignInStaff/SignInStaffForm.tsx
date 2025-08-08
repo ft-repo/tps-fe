@@ -11,25 +11,25 @@ import { Field, Form, Formik } from 'formik'
 import * as Yup from 'yup'
 import type { CommonProps } from '@/@types/common'
 
-interface SignInFormProps extends CommonProps {
+interface SignInStaffFormProps extends CommonProps {
     disableSubmit?: boolean
     forgotPasswordUrl?: string
     signUpUrl?: string
 }
 
-type SignInFormSchema = {
-    registration_no: string
+type SignInStaffFormSchema = {
+    userName: string
     password: string
-    // rememberMe: boolean
+    rememberMe: boolean
 }
 
 const validationSchema = Yup.object().shape({
-    registration_no: Yup.string().required('Please enter your registration no'),
+    userName: Yup.string().required('Please enter your user name'),
     password: Yup.string().required('Please enter your password'),
-    // rememberMe: Yup.bool(),
+    rememberMe: Yup.bool(),
 })
 
-const SignInForm = (props: SignInFormProps) => {
+const SignInStaffForm = (props: SignInStaffFormProps) => {
     const {
         disableSubmit = false,
         className,
@@ -42,13 +42,13 @@ const SignInForm = (props: SignInFormProps) => {
     const { signIn } = useAuth()
 
     const onSignIn = async (
-        values: SignInFormSchema,
+        values: SignInStaffFormSchema,
         setSubmitting: (isSubmitting: boolean) => void,
     ) => {
-        const { registration_no, password } = values
+        const { userName, password } = values
         setSubmitting(true)
 
-        const result = await signIn({ registration_no, password })
+        const result = await signIn({ userName, password })
 
         if (result?.status === 'failed') {
             setMessage(result.message)
@@ -66,9 +66,9 @@ const SignInForm = (props: SignInFormProps) => {
             )}
             <Formik
                 initialValues={{
-                    registration_no: '',
-                    password: '',
-                    // rememberMe: true,
+                    userName: 'admin',
+                    password: '123Qwe',
+                    rememberMe: true,
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -85,15 +85,15 @@ const SignInForm = (props: SignInFormProps) => {
                             <FormItem
                                 label="เลขทะเบียนนิติบุคคล"
                                 invalid={
-                                    (errors.registration_no &&
-                                        touched.registration_no) as boolean
+                                    (errors.userName &&
+                                        touched.userName) as boolean
                                 }
-                                errorMessage={errors.registration_no}
+                                errorMessage={errors.userName}
                             >
                                 <Field
                                     type="text"
                                     autoComplete="off"
-                                    name="registration_no"
+                                    name="userName"
                                     placeholder="เลขทะเบียนนิติบุคคล"
                                     component={Input}
                                 />
@@ -146,4 +146,4 @@ const SignInForm = (props: SignInFormProps) => {
     )
 }
 
-export default SignInForm
+export default SignInStaffForm

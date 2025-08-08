@@ -8,24 +8,13 @@ import type { NavigationTree } from '@/@types/navigation'
 
 const navigationConfig: NavigationTree[] = [
     {
-        key: 'home',
-        path: '/home',
-        title: 'Home',
-        translateKey: 'nav.home',
-        icon: 'home',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
-        subMenu: [],
-    },
-    /** Example purpose only, please remove */
-    {
         key: 'route_estimation',
         path: '/route-estimation/route',
         title: 'Route Estimation',
         translateKey: 'nav.route_estimation',
         icon: 'route_estimation',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
+        authority: ['USER'],
         subMenu: [],
     },
     {
@@ -35,7 +24,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.permit_list',
         icon: 'permit_list',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
+        authority: ['USER'],
         subMenu: [],
     },
     {
@@ -45,7 +34,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.vehicle_list',
         icon: 'vehicle_list',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
+        authority: ['USER'],
         subMenu: [],
     },
     {
@@ -55,9 +44,11 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.entrepreneur_info',
         icon: 'entrepreneur_info',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
+        authority: ['USER'],
         subMenu: [],
     },
+    // STAFF ARE HERE
+    // IF STAFF LOGIN IS READY, REMOVE USER FROM AUTHORITY
     {
         key: 'user_info',
         path: '',
@@ -66,7 +57,7 @@ const navigationConfig: NavigationTree[] = [
         icon: 'user_info',
         // type: NAV_ITEM_TYPE_ITEM,
         type: 'collapse',
-        authority: [],
+        authority: ['USER','ADMIN'],
         subMenu: [
             {
                 key: 'entrepreneur_overview',
@@ -75,7 +66,7 @@ const navigationConfig: NavigationTree[] = [
                 translateKey: 'nav.entrepreneur_overview',
                 icon: 'entrepreneur_overview',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [],
+                authority: ['USER','ADMIN'],
                 subMenu: []
             },
             {
@@ -85,7 +76,7 @@ const navigationConfig: NavigationTree[] = [
                 translateKey: 'nav.staff_overview',
                 icon: 'staff_overview',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [],
+                authority: ['USER','ADMIN'],
                 subMenu: []
             },
         ],
@@ -97,7 +88,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.request_list',
         icon: 'request_list',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
+        authority: ['USER','ADMIN'],
         subMenu: [],
     },
     {
@@ -107,7 +98,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.request_history',
         icon: 'request_history',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
+        authority: ['USER','ADMIN'],
         subMenu: [],
     },
 ]

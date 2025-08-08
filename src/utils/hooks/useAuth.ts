@@ -1,4 +1,4 @@
-import { apiSignIn, apiSignOut, apiSignUp } from '@/services/AuthService'
+import { apiSignIn, apiSignUp } from '@/services/AuthService'
 import {
 	setUser,
 	signInSuccess,
@@ -35,17 +35,24 @@ function useAuth() {
 		try {
 			const resp = await apiSignIn(values)
 			if (resp.data) {
-				const { token } = resp.data
-				dispatch(signInSuccess(token))
-				if (resp.data.user) {
+				const { access_token } = resp.data
+				dispatch(signInSuccess(access_token))
+				if (resp.data.details) {
 					dispatch(
 						setUser(
-							resp.data.user || {
-								avatar: '',
-								userName: 'Anonymous',
+							{
+								id: resp.data.details.id,
+								registration_no: resp.data.details.registration_no,
+								business_details: {
+									entity_type_id: resp.data.details.business_details.entity_type_id,
+									business_name: resp.data.details.business_details.business_name,
+									entity_type: {
+										id: resp.data.details.business_details.entity_type.id,
+										name: resp.data.details.business_details.entity_type.name,
+									},
+								},
 								authority: ['USER'],
-								email: '',
-							},
+							},	
 						),
 					)
 				}
@@ -62,9 +69,10 @@ function useAuth() {
 			}
 			// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 		} catch (errors: any) {
+			console.log(errors)
 			return {
 				status: 'failed',
-				message: errors?.response?.data?.message || errors.toString(),
+				message: errors?.response?.data?.res_data?.message || errors.toString(),
 			}
 		}
 	}
@@ -73,16 +81,23 @@ function useAuth() {
 		try {
 			const resp = await apiSignUp(values)
 			if (resp.data) {
-				const { token } = resp.data
-				dispatch(signInSuccess(token))
-				if (resp.data.user) {
+				const { access_token } = resp.data
+				dispatch(signInSuccess(access_token))
+				if (resp.data.details) {
 					dispatch(
 						setUser(
-							resp.data.user || {
-								avatar: '',
-								userName: 'Anonymous',
+							{
+								id: resp.data.details.id,
+								registration_no: resp.data.details.registration_no,
+								business_details: {
+									entity_type_id: resp.data.details.business_details.entity_type_id,
+									business_name: resp.data.details.business_details.business_name,
+									entity_type: {
+										id: resp.data.details.business_details.entity_type.id,
+										name: resp.data.details.business_details.entity_type.name,
+									},
+								},
 								authority: ['USER'],
-								email: '',
 							},
 						),
 					)
@@ -102,7 +117,7 @@ function useAuth() {
 		} catch (errors: any) {
 			return {
 				status: 'failed',
-				message: errors?.response?.data?.message || errors.toString(),
+				message: errors?.response?.data?.res_data?.message || errors.toString(),
 			}
 		}
 	}
@@ -111,9 +126,16 @@ function useAuth() {
 		dispatch(signOutSuccess())
 		dispatch(
 			setUser({
-				avatar: '',
-				userName: '',
-				email: '',
+				id: '',
+				registration_no: '',
+				business_details: {
+					entity_type_id: 0,
+					business_name: '',
+					entity_type: {
+						id: 0,
+						name: '',
+					},
+				},
 				authority: [],
 			}),
 		)
@@ -121,7 +143,7 @@ function useAuth() {
 	}
 
 	const signOut = async () => {
-		await apiSignOut()
+		// await apiSignOut()
 		handleSignOut()
 	}
 

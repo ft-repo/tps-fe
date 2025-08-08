@@ -134,51 +134,14 @@ const ApprovalDocumentIndex: React.FC<Props> = (props) => {
           width: '100%',
           padding: '15px 20px 0px 20px',
         }}>
-          <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1F74AA', width: '34.6%' }}>
+          <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1F74AA', width: '90%' }}>
             ตรวจสอบเอกสาร
           </div>
 
-          {/* Navigation Tabs */}
-          <div style={{
-            display: 'flex',
-            overflow: 'hidden',
-            width: '50.4%',
-          }}>
-            <div style={{
-              width: '200px',           // กำหนดความกว้างกล่อง
-              height: '60px',           // กำหนดความสูงกล่อง
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              backgroundColor: '#1F74AA', // Active tab
-              color: 'white',
-              fontSize: '16px',         // เพิ่มขนาดตัวอักษร
-              borderTopLeftRadius: '15px',
-              borderTopRightRadius: '15px',
-            }}>
-              หนังสือมอบอำนาจ
-            </div>
 
-            <div style={{
-              width: '200px',
-              height: '60px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-              backgroundColor: '#5A9BC3',
-              color: '#ffffff',
-              fontSize: '16px',
-              borderTopLeftRadius: '15px',
-              borderTopRightRadius: '15px',
-            }}>
-              หนังสือวิศวะเครื่องกล
-            </div>
-          </div>
 
           {/* ปุ่ม Export to PDF */}
-          <div style={{ width: '15%', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+          <div style={{ width: '10%', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
             <button style={{
               backgroundColor: '#1F74AA',
               color: 'white',
@@ -337,6 +300,37 @@ const ApprovalDocumentIndex: React.FC<Props> = (props) => {
           </div>
 
           {/* Main Form Content (หนังสือมอบอำนาจ) */}
+          <div style={{
+            width: '200px',           // กำหนดความกว้างกล่อง
+            height: '60px',           // กำหนดความสูงกล่อง
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            backgroundColor: '#1F74AA', // Active tab
+            color: 'white',
+            fontSize: '16px',         // เพิ่มขนาดตัวอักษร
+            borderTopLeftRadius: '15px',
+            borderTopRightRadius: '15px',
+          }}>
+            หนังสือมอบอำนาจ
+          </div>
+
+          <div style={{
+            width: '200px',
+            height: '60px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            backgroundColor: '#5A9BC3',
+            color: '#ffffff',
+            fontSize: '16px',
+            borderTopLeftRadius: '15px',
+            borderTopRightRadius: '15px',
+          }}>
+            หนังสือวิศวะเครื่องกล
+          </div>
           <div style={{
             fontFamily: 'Sarabun, sans-serif', // ใช้ฟอนต์ Sarabun (หากติดตั้งในระบบ) หรือ sans-serif ทั่วไป
             backgroundColor: '#1F74AA',
