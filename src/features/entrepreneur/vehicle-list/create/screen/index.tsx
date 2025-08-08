@@ -7,6 +7,8 @@ import { Button } from '@/components/ui';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
+import { APIPostBody } from '@/@types/services/vehicle';
+import { postVehicleList } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
 
@@ -40,10 +42,52 @@ const CreateScreen: React.FC<Props> = (props) => {
     }
   })
 
-  const { handleSubmit, control } = form;
+  const { handleSubmit, control, setValue } = form;
 
-  const onSubmit = useCallback((value: FieldType) => {
-    console.log(value)
+  const onSubmit = useCallback(async (value: FieldType) => {
+    // BUILD BODY
+    const body: APIPostBody = {
+      vehicle_detail: {
+        vehicle_type_id: 1,
+        plate_no: value.license_plate || '',
+        plate_province: value.province || '',
+        brand: value.vehicle_model || '',
+        weight: Number(value.vehicle_weight) || 0,
+        color: value.vehicle_color || '',
+        kingpin_distance: Number(value.vehicle_distance) || 0,
+        width: Number(value.wide_unit) || 0,
+        length: Number(value.long_unit) || 0,
+        height: Number(value.tall_unit) || 0,
+        registration_document_url: value.file_registered_document_id
+      },
+      vehicle_owner_document: {
+        owner_document_url: value.file_property_document_id,
+        employment_contact_url: value.file_hire_contact_document_id,
+        buyer_contact_url: value.file_purchase_contact_document_id,
+        assignment_contact_url: value.file_transfer_contact_document_id
+      },
+      vehicle_picture: {
+        front_rear_url: value.file_front_image_id,
+        side_rear_url: value.file_side_image_id,
+        back_rear_url: value.file_back_image_id
+      }
+    }
+    console.log(body)
+    // CREATING REQUEST
+    try {
+      const response = await postVehicleList(body)
+      if (response.status === 200) {
+        console.log('success')
+      } else {
+        console.log('error')
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message)
+      } else {
+        console.log(error)
+      }
+    }
   }, [])
 
   return (
@@ -60,9 +104,11 @@ const CreateScreen: React.FC<Props> = (props) => {
           <div className='block xl:grid grid-cols-2 gap-3'>
             <FormInfo
               control={control}
+              setValue={setValue}
             />
             <FormDocument
               control={control}
+              setValue={setValue}
             />
           </div>
           <button ref={submitRef} hidden type='submit' />

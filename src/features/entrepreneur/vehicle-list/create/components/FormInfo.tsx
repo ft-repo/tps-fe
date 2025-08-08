@@ -1,17 +1,38 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { Button, Input, Select, Upload } from '@/components/ui'
-import React from 'react'
+import { postUploadFile } from '@/services/entrepreneur/VehicleListService'
+import React, { useCallback } from 'react'
 import { Control, Controller } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 
 interface Props {
   control: Control<FieldType>;
+  setValue: any;
 }
 
 const FormInfo: React.FC<Props> = (props) => {
-  const { control } = props
+  const { control, setValue } = props
+
+  const uploadFile = useCallback(async (file: any) => {
+    try {
+      // POST
+      const response = await postUploadFile({ upload: file[0] })
+      if (response.status === 200) {
+        setValue('file_registered_document_id', response.data?.url)
+      } else {
+        console.log('Error')
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    }
+  }, [setValue])
 
   return (
     <div>
@@ -32,7 +53,20 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาเลือก'
-                    options={[]}
+                    options={[
+                      {
+                        label: '1',
+                        value: 1
+                      },
+                      {
+                        label: '2',
+                        value: 2
+                      },
+                      {
+                        label: '3',
+                        value: 3
+                      },
+                    ]}
                   />
                 </fieldset>
               )
@@ -120,7 +154,7 @@ const FormInfo: React.FC<Props> = (props) => {
           />
           <div className='col-span-2'>
             <Controller
-              name='vehicle_color'
+              name='vehicle_distance'
               control={control}
               render={({ field }) => {
                 return (
@@ -191,7 +225,10 @@ const FormInfo: React.FC<Props> = (props) => {
       <section className='mt-5'>
         <fieldset>
           <label className='block'>เอกสารเล่มทะเบียน</label>
-          <Upload>
+          <Upload
+            uploadLimit={1}
+            onChange={(file) => uploadFile(file)}
+          >
             <Button
               variant="solid"
               icon={<HiOutlineCloudUpload />}
