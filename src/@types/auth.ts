@@ -58,6 +58,7 @@ export type SignInResponse = {
     };
   };
   refresh_token: string;
+  role: string;
 }
 
 export type SignUpResponse = SignInResponse

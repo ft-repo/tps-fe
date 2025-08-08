@@ -24,13 +24,6 @@ export async function apiSignUp(data: SignUpCredential) {
     })
 }
 
-export async function apiSignOut() {
-    return ApiService.fetchData({
-        url: '/sign-out',
-        method: 'post',
-    })
-}
-
 export async function apiForgotPassword(data: ForgotPassword) {
     return ApiService.fetchData({
         url: '/forgot-password',

@@ -6,12 +6,7 @@ const ApiService = {
 		param: AxiosRequestConfig<Request>,
 	) {
 		return new Promise<AxiosResponse<Response>>((resolve, reject) => {
-			BaseService({
-				...param,
-				headers: {
-					"x-api-key": import.meta.env.VITE_API_KEY
-				}
-			})
+			BaseService(param)
 				.then((response: AxiosResponse<Response>) => {
 					resolve(response)
 				})

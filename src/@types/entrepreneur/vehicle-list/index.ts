@@ -1,5 +1,6 @@
 export interface FieldType {
-  vehicle_type: string;
+  // vehicle_type: string;
+  vehicle_type: string | number | null;
   license_plate: string;
   vehicle_model: string;
   province: string;
@@ -18,4 +19,14 @@ export interface FieldType {
   file_front_image_id: string;
   file_side_image_id: string;
   file_back_image_id: string;
+}
+
+// COMPONENT TABLE
+export interface TableData {
+  id: string | number | null | any;
+  vehicle_type_name: string;
+  brand: string;
+  plate_no: string;
+  plate_province: string;
+  weight: string;
 }

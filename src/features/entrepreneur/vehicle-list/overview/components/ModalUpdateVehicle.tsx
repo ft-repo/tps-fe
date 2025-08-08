@@ -44,7 +44,7 @@ const DialogContent = (props: DialogContentProps) => {
     }
   })
 
-  const { handleSubmit, control } = form;
+  const { handleSubmit, control ,setValue} = form;
 
   const onSubmit = useCallback((value: FieldType) => {
     console.log(value)
@@ -58,6 +58,7 @@ const DialogContent = (props: DialogContentProps) => {
         />
         <FormUpdateDocument
           control={control}
+          setValue={setValue}
         />
       </div>
       <button ref={ref} hidden type='submit' />
@@ -66,8 +67,11 @@ const DialogContent = (props: DialogContentProps) => {
 }
 
 const ModalUpdateVehicle: React.FC<Props> = (props) => {
-  const { open, setOpen } = props
+  const { open, data,setOpen } = props
   const submitRef = useRef<HTMLButtonElement>(null)
+
+  console.log(open)
+  console.log(data)
 
   return (
     <Dialog
