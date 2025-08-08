@@ -1,8 +1,8 @@
 // GET
 export interface GetVehicleListParams {
   vehicle_type_id: number | string | null;
-  page: number;
-  limit: number;
+  page: number | string | null;
+  limit: number | string | null;
 }
 
 export interface VehicleListResponse {

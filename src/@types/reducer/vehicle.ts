@@ -10,9 +10,9 @@ export interface Overview {
 }
 
 export interface Search {
-  vehicle_type_id: string;
-  page: number;
-  limit: number;
+  vehicle_type_id: string | number | null | any;
+  page: number | string | null | any;
+  limit: number | string | null | any;
 }
 
 export interface Data {
