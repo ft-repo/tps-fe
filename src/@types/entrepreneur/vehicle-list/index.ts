@@ -19,3 +19,13 @@ export interface FieldType {
   file_side_image_id: string;
   file_back_image_id: string;
 }
+
+// COMPONENT TABLE
+export interface TableData {
+  no: string;
+  vehicle_type: string;
+  brand: string;
+  license_plate: string;
+  province: string;
+  weight: string;
+}

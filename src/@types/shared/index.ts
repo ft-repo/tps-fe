@@ -20,3 +20,19 @@ export interface ApprovalStatusValue {
   className: string;
   text: string;
 };
+
+// MASTER SLICE
+export interface EntityState {
+  id: string | number;
+  name: string;
+}
+
+export interface ThailandState {
+  id: string | number;
+  name_th: string;
+  name_en: string;
+}
+
+export interface SubDistrictState extends ThailandState {
+  zip_code: string;
+}
