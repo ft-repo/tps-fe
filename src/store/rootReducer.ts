@@ -4,18 +4,20 @@ import base, { BaseState } from './slices/base'
 import locale, { LocaleState } from './slices/locale/localeSlice'
 import theme, { ThemeState } from './slices/theme/themeSlice'
 import master, { MasterState } from './slices/master/masterSlice'
+import layout, { LayoutState } from './slices/layout/LayoutSlice'
 import RtkQueryService from '@/services/RtkQueryService'
 import entrepreneur, { EntrepreneurState } from './slices/entrepreneur'
 
 export type RootState = {
-	auth: AuthState
-	base: BaseState
-	locale: LocaleState
-	theme: ThemeState
-	master: MasterState
-	entrepreneur: EntrepreneurState
+	auth: AuthState;
+	base: BaseState;
+	locale: LocaleState;
+	theme: ThemeState;
+	master: MasterState;
+	entrepreneur: EntrepreneurState;
+	layout: LayoutState;
 	/* eslint-disable @typescript-eslint/no-explicit-any */
-	[RtkQueryService.reducerPath]: any
+	[RtkQueryService.reducerPath]: any;
 }
 
 export interface AsyncReducers {
@@ -29,6 +31,7 @@ const staticReducers = {
 	theme,
 	master,
 	entrepreneur,
+	layout,
 	[RtkQueryService.reducerPath]: RtkQueryService.reducer,
 }
 

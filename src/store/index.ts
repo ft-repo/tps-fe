@@ -7,5 +7,6 @@ export * from './slices/theme/themeSlice'
 export * from './slices/locale/localeSlice'
 export * from './rootReducer'
 export * from './hook'
-export * from './slices/master'
+export * from './slices/master/masterSlice'
+export * from './slices/layout/LayoutSlice'
 export default store
