@@ -1,6 +1,6 @@
 import { EntityState, SubDistrictState, ThailandState } from '@/@types/shared';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getContactTypeAPI, getEntityAPI, getVechicleTypeAPI } from '@/services/master/MasterService';
+import { getContactTypeAPI, getDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI } from '@/services/master/MasterService';
 
 export type MasterState = {
   entity: EntityState[];
@@ -42,6 +42,16 @@ export const getVehicleType = createAsyncThunk(SLICE_NAME + '/apiGetVehicleType'
   return response.data
 })
 
+export const getProvince = createAsyncThunk(SLICE_NAME + '/apiGetProvince', async () => {
+  const response = await getProvinceAPI('', '', '')
+  return response.data
+})
+
+export const getDistrict = createAsyncThunk(SLICE_NAME + '/apiGetDistrict', async (provinceId: string) => {
+  const response = await getDistrictAPI(provinceId, '', '')
+  return response.data
+})
+
 const masterSlice = createSlice({
   name: SLICE_NAME,
   initialState,
@@ -54,6 +64,12 @@ const masterSlice = createSlice({
     },
     getVehicleType: (state, action) => {
       state.vehicle_type = action.payload
+    },
+    getProvince: (state, action) => {
+      state.province = action.payload
+    },
+    getDistrict: (state, action) => {
+      state.district = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -88,6 +104,28 @@ const masterSlice = createSlice({
         state.loading = true
       })
       .addCase(getVehicleType.rejected, (state) => {
+        state.loading = false
+      })
+    // GET PROVINCE
+    builder.addCase(getProvince.fulfilled, (state, action) => {
+      state.province = action.payload
+      state.loading = false
+    })
+      .addCase(getProvince.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getProvince.rejected, (state) => {
+        state.loading = false
+      })
+    // GET DISTRICT
+    builder.addCase(getDistrict.fulfilled, (state, action) => {
+      state.district = action.payload
+      state.loading = false
+    })
+      .addCase(getDistrict.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getDistrict.rejected, (state) => {
         state.loading = false
       })
   },
