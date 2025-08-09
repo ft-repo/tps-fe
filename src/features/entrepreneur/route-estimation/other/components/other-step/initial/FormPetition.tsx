@@ -2,15 +2,20 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
 import { Input, Select } from '@/components/ui'
+import { useAppSelector } from '@/store';
 import React from 'react'
-import { Control, Controller } from 'react-hook-form'
+import { Control, Controller, UseFormSetValue } from 'react-hook-form'
 
 interface Props {
   control: Control<FieldTypeForOther>;
+  setValue: UseFormSetValue<FieldTypeForOther>
+  setProvinceId: (provinceId: string) => void
+  setDistrictId: (districtId: string) => void
 }
 
 const FormPetition: React.FC<Props> = (props) => {
-  const { control } = props
+  const { control, setValue, setProvinceId, setDistrictId, } = props
+  const { province, district, sub_district, } = useAppSelector((state) => state.master)
 
   return (
     <div>
@@ -132,7 +137,20 @@ const FormPetition: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาเลือก'
-                    options={[]}
+                    options={sub_district.map((item) => {
+                      return {
+                        label: item.name_th,
+                        value: item.id,
+                      }
+                    })}
+                    onChange={(e: any) => {
+                      setValue(
+                        'company_sub_district',
+                        e.value,
+                      )
+                      field.onChange(e)
+                    }}
+                    isDisabled={sub_district.length === 0}
                   />
                 </fieldset>
               )
@@ -149,7 +167,21 @@ const FormPetition: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาเลือก'
-                    options={[]}
+                    options={district.map((item) => {
+                      return {
+                        label: item.name_th,
+                        value: item.id,
+                      }
+                    })}
+                    onChange={(e: any) => {
+                      setValue(
+                        'company_district',
+                        e.value,
+                      )
+                      setDistrictId(e.value)
+                      field.onChange(e)
+                    }}
+                    isDisabled={district.length === 0}
                   />
                 </fieldset>
               )
@@ -166,7 +198,20 @@ const FormPetition: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาเลือก'
-                    options={[]}
+                    options={province.map((item) => {
+                      return {
+                        label: item.name_th,
+                        value: item.id,
+                      }
+                    })}
+                    onChange={(e: any) => {
+                      setValue(
+                        'company_province',
+                        e.value,
+                      )
+                      setProvinceId(e.value)
+                      field.onChange(e)
+                    }}
                   />
                 </fieldset>
               )
@@ -487,7 +532,7 @@ const FormPetition: React.FC<Props> = (props) => {
             }}
           />
           <Controller
-            name='registered_company_sub_district'
+            name='transferer_company_sub_district'
             control={control}
             render={({ field }) => {
               return (
@@ -497,14 +542,27 @@ const FormPetition: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาเลือก'
-                    options={[]}
+                    options={sub_district.map((item) => {
+                      return {
+                        label: item.name_th,
+                        value: item.id,
+                      }
+                    })}
+                    onChange={(e: any) => {
+                      setValue(
+                        'transferer_company_sub_district',
+                        e.value,
+                      )
+                      field.onChange(e)
+                    }}
+                    isDisabled={sub_district.length === 0}
                   />
                 </fieldset>
               )
             }}
           />
           <Controller
-            name='registered_company_district'
+            name='transferer_company_district'
             control={control}
             render={({ field }) => {
               return (
@@ -514,14 +572,29 @@ const FormPetition: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาเลือก'
-                    options={[]}
+                    options={district.map((item) => {
+                      return {
+                        label: item.name_th,
+                        value: item.id,
+                      }
+                    })}
+                    onChange={(e: any) => {
+                      setValue(
+                        'transferer_company_district',
+                        e.value,
+                      )
+                      setDistrictId(e.value)
+                      field.onChange(e)
+                    }}
+                    isDisabled={district.length === 0}
+
                   />
                 </fieldset>
               )
             }}
           />
           <Controller
-            name='registered_company_province'
+            name='transferer_company_province'
             control={control}
             render={({ field }) => {
               return (
@@ -531,7 +604,20 @@ const FormPetition: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาเลือก'
-                    options={[]}
+                    options={province.map((item) => {
+                      return {
+                        label: item.name_th,
+                        value: item.id,
+                      }
+                    })}
+                    onChange={(e: any) => {
+                      setValue(
+                        'transferer_company_province',
+                        e.value,
+                      )
+                      setProvinceId(e.value)
+                      field.onChange(e)
+                    }}
                   />
                 </fieldset>
               )
