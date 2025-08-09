@@ -1,7 +1,7 @@
 import { EntityState, SubDistrictState, ThailandState } from '@/@types/shared';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants';
-import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI } from '@/services/master/MasterService';
+import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI, getEntityTypeAPI } from '@/services/master/MasterService';
 
 export type MasterState = {
   entity: EntityState[];
@@ -10,6 +10,7 @@ export type MasterState = {
   province: ThailandState[];
   district: ThailandState[];
   sub_district: SubDistrictState[];
+  entity_type: EntityState[];
   loading: boolean;
 }
 
@@ -20,6 +21,7 @@ const initialState: MasterState = {
   province: [],
   district: [],
   sub_district: [],
+  entity_type: [],
   loading: false
 }
 
@@ -58,6 +60,11 @@ export const getSubDistrict = createAsyncThunk(SLICE_BASE_NAME + '/apiGetSubDist
    return response.data
 })
 
+export const getEntityType = createAsyncThunk(SLICE_BASE_NAME + '/apiGetEntityType', async () => {
+  const response = await getEntityTypeAPI()
+  return response.data
+})
+
 const masterSlice = createSlice({
   name: SLICE_BASE_NAME,
   initialState,
@@ -79,6 +86,9 @@ const masterSlice = createSlice({
     },
     getSubDistrict: (state, action)=>{
       state.sub_district = action.payload
+    },
+    getEntityType: (state, action) => {
+      state.entity_type = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -148,6 +158,17 @@ const masterSlice = createSlice({
     .addCase(getSubDistrict.rejected, (state) => {
       state.loading = false
     })
+    // GET ENTITY_TYPE
+    builder.addCase(getEntityType.fulfilled, (state, action) => {
+      state.entity_type = action.payload
+      state.loading = false
+    })
+      .addCase(getEntityType.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getEntityType.rejected, (state) => {
+        state.loading = false
+      })
   },
 })
 

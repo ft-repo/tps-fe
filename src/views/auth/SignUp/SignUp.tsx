@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import SignUpForm from './SignUpForm'
 import { SignUpCredential } from '@/@types/auth'
 import { useAppDispatch } from '@/store'
-import { getDistrict, getProvince, getSubDistrict } from '@/store/slices/master/masterSlice'
+import { getDistrict, getEntityType, getProvince, getSubDistrict } from '@/store/slices/master/masterSlice'
 import { Button } from '@/components/ui'
 import useTimeOutMessage from '@/utils/hooks/useTimeOutMessage'
 import { ActionLink } from '@/components/shared'
@@ -45,6 +45,7 @@ const SignUp = () => {
 
     useEffect(() => {
         dispatch(getProvince())
+        dispatch(getEntityType())
     }, [dispatch])
 
     useEffect(() => {
@@ -82,7 +83,7 @@ const SignUp = () => {
                         {isSubmitting ? 'กำลังสร้างบัญชี...' : 'ลงทะเบียน'}
                     </Button>
                 </div>
-                <div className="mt-4 mb-4 text-center">
+                <div className="mt-4 mb-8 text-center">
                     <span>มีบัญชีอยู่แล้ว? </span>
                     <ActionLink to={'/sign-in'}>เข้าสู่ระบบ</ActionLink>
                 </div>

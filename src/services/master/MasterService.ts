@@ -65,3 +65,10 @@ export const getSubDistrictAPI = async (provinceId?: string, districtId?: string
     method: 'get',
   })
 }
+
+export const getEntityTypeAPI = async () => {
+  return ApiService.fetchData<TestAPIResponse>({
+    url: '/lists/entity',
+    method: 'get',
+  })
+}
