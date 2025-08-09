@@ -4,17 +4,18 @@
 import React, { useCallback } from 'react'
 import { Upload } from '@/components/ui'
 import { FaUpload as UploadIcon } from "react-icons/fa6";
-import { Control } from 'react-hook-form';
+import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { postUploadFile, postUploadImage } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
   control: Control<FieldType>;
-  setValue: any;
+  setValue: UseFormSetValue<FieldType>;
+  errors: FieldErrors<FieldType>;
 }
 
 const FormDocument: React.FC<Props> = (props) => {
-  const { setValue } = props
+  const { control, setValue, errors } = props
 
   const uploadFile = useCallback(async (fieldName: string, file: any, isImage: boolean = false) => {
     let uploadAPI
@@ -27,7 +28,7 @@ const FormDocument: React.FC<Props> = (props) => {
       // POST
       const response = await uploadAPI({ upload: file[0] })
       if (response.status === 200) {
-        setValue([fieldName], response.data?.url)
+        setValue([fieldName] as any, response.data?.url)
       } else {
         console.log('Error')
       }
@@ -46,151 +47,249 @@ const FormDocument: React.FC<Props> = (props) => {
         <h5>หลักฐานการแสดงความเป็นเจ้าของกรรมสิทธิ์</h5>
         <p>แนบไฟล์อย่างใดอย่างหนึ่ง</p>
         <div className='block md:grid lg:grid-cols-2 2xl:grid-cols-4 gap-3 mt-3'>
-          <fieldset>
-            <label className='block'>เอกสารถือครองสิทธิ์</label>
-            <Upload
-              draggable
-              uploadLimit={1}
-              onChange={(file) => uploadFile('file_property_document_id', file)}
-            >
-              <div className="my-8 text-center">
-                <div className="text-6xl mb-4 flex justify-center">
-                  <UploadIcon />
-                </div>
-                <p className="font-semibold text-gray-800 dark:text-white">
-                  เพิ่มไฟล์
-                </p>
-                <p className="mt-1 opacity-60 dark:text-white">
-                  กรุณาอัปโหลดไฟล์ประเภท PDF
-                </p>
-              </div>
-            </Upload>
-          </fieldset>
-          <fieldset>
-            <label className='block'>สัญญาจ้างหรือเช่า</label>
-            <Upload
-              draggable
-              uploadLimit={1}
-              onChange={(file) => uploadFile('file_hire_contact_document_id', file)}
-            >
-              <div className="my-8 text-center">
-                <div className="text-6xl mb-4 flex justify-center">
-                  <UploadIcon />
-                </div>
-                <p className="font-semibold text-gray-800 dark:text-white">
-                  เพิ่มไฟล์
-                </p>
-                <p className="mt-1 opacity-60 dark:text-white">
-                  กรุณาอัปโหลดไฟล์ประเภท PDF
-                </p>
-              </div>
-            </Upload>
-          </fieldset>
-          <fieldset>
-            <label className='block'>สัญญาเช่าซื้อ</label>
-            <Upload
-              draggable
-              uploadLimit={1}
-              onChange={(file) => uploadFile('file_purchase_contact_document_id', file)}
-            >
-              <div className="my-8 text-center">
-                <div className="text-6xl mb-4 flex justify-center">
-                  <UploadIcon />
-                </div>
-                <p className="font-semibold text-gray-800 dark:text-white">
-                  เพิ่มไฟล์
-                </p>
-                <p className="mt-1 opacity-60 dark:text-white">
-                  กรุณาอัปโหลดไฟล์ประเภท PDF
-                </p>
-              </div>
-            </Upload>
-          </fieldset>
-          <fieldset>
-            <label className='block'>สัญญามอบสิทธิ์</label>
-            <Upload
-              draggable
-              uploadLimit={1}
-              onChange={(file) => uploadFile('file_transfer_contact_document_id', file)}
-            >
-              <div className="my-8 text-center">
-                <div className="text-6xl mb-4 flex justify-center">
-                  <UploadIcon />
-                </div>
-                <p className="font-semibold text-gray-800 dark:text-white">
-                  เพิ่มไฟล์
-                </p>
-                <p className="mt-1 opacity-60 dark:text-white">
-                  กรุณาอัปโหลดไฟล์ประเภท PDF
-                </p>
-              </div>
-            </Upload>
-          </fieldset>
+          <Controller
+            name='file_property_document_id'
+            control={control}
+            rules={{
+              required: 'กรุณาอัปโหลดเอกสารถือครองสิทธิ์'
+            }}
+            render={() => {
+              return (
+                <fieldset>
+                  <label className='block'>เอกสารถือครองสิทธิ์</label>
+                  <Upload
+                    draggable
+                    uploadLimit={1}
+                    onChange={(file) => uploadFile('file_property_document_id', file)}
+                  >
+                    <div className="my-8 text-center">
+                      <div className="text-6xl mb-4 flex justify-center">
+                        <UploadIcon />
+                      </div>
+                      <p className="font-semibold text-gray-800 dark:text-white">
+                        เพิ่มไฟล์
+                      </p>
+                      <p className="mt-1 opacity-60 dark:text-white">
+                        กรุณาอัปโหลดไฟล์ประเภท PDF
+                      </p>
+                    </div>
+                  </Upload>
+                  {!!errors.file_property_document_id &&
+                    <p className='text-red-500'>{errors.file_property_document_id.message}</p>
+                  }
+                </fieldset>
+              )
+            }}
+          />
+          <Controller
+            name='file_hire_contact_document_id'
+            control={control}
+            rules={{
+              required: 'กรุณาอัปโหลดสัญญาจ้างหรือเช่า'
+            }}
+            render={() => {
+              return (
+                <fieldset>
+                  <label className='block'>สัญญาจ้างหรือเช่า</label>
+                  <Upload
+                    draggable
+                    uploadLimit={1}
+                    onChange={(file) => uploadFile('file_hire_contact_document_id', file)}
+                  >
+                    <div className="my-8 text-center">
+                      <div className="text-6xl mb-4 flex justify-center">
+                        <UploadIcon />
+                      </div>
+                      <p className="font-semibold text-gray-800 dark:text-white">
+                        เพิ่มไฟล์
+                      </p>
+                      <p className="mt-1 opacity-60 dark:text-white">
+                        กรุณาอัปโหลดไฟล์ประเภท PDF
+                      </p>
+                    </div>
+                  </Upload>
+                  {!!errors.file_hire_contact_document_id &&
+                    <p className='text-red-500'>{errors.file_hire_contact_document_id.message}</p>
+                  }
+                </fieldset>
+              )
+            }}
+          />
+          <Controller
+            name='file_purchase_contact_document_id'
+            control={control}
+            rules={{
+              required: 'กรุณาอัปโหลดสัญญาเช่าซื้อ'
+            }}
+            render={() => {
+              return (
+                <fieldset>
+                  <label className='block'>สัญญาเช่าซื้อ</label>
+                  <Upload
+                    draggable
+                    uploadLimit={1}
+                    onChange={(file) => uploadFile('file_purchase_contact_document_id', file)}
+                  >
+                    <div className="my-8 text-center">
+                      <div className="text-6xl mb-4 flex justify-center">
+                        <UploadIcon />
+                      </div>
+                      <p className="font-semibold text-gray-800 dark:text-white">
+                        เพิ่มไฟล์
+                      </p>
+                      <p className="mt-1 opacity-60 dark:text-white">
+                        กรุณาอัปโหลดไฟล์ประเภท PDF
+                      </p>
+                    </div>
+                  </Upload>
+                  {!!errors.file_purchase_contact_document_id &&
+                    <p className='text-red-500'>{errors.file_purchase_contact_document_id.message}</p>
+                  }
+                </fieldset>
+              )
+            }}
+          />
+          <Controller
+            name='file_transfer_contact_document_id'
+            control={control}
+            rules={{
+              required: 'กรุณาระบุสัญญามอบสิทธิ์'
+            }}
+            render={() => {
+              return (
+                <fieldset>
+                  <label className='block'>สัญญามอบสิทธิ์</label>
+                  <Upload
+                    draggable
+                    uploadLimit={1}
+                    onChange={(file) => uploadFile('file_transfer_contact_document_id', file)}
+                  >
+                    <div className="my-8 text-center">
+                      <div className="text-6xl mb-4 flex justify-center">
+                        <UploadIcon />
+                      </div>
+                      <p className="font-semibold text-gray-800 dark:text-white">
+                        เพิ่มไฟล์
+                      </p>
+                      <p className="mt-1 opacity-60 dark:text-white">
+                        กรุณาอัปโหลดไฟล์ประเภท PDF
+                      </p>
+                    </div>
+                  </Upload>
+                  {!!errors.file_transfer_contact_document_id &&
+                    <p className='text-red-500'>{errors.file_transfer_contact_document_id.message}</p>
+                  }
+                </fieldset>
+              )
+            }}
+          />
         </div>
       </section >
       <section className='mt-5'>
         <h5>รถบรรทุก</h5>
         <div className='block md:grid lg:grid-cols-2 2xl:grid-cols-4 gap-3 mt-3'>
-          <fieldset>
-            <label className='block'>รูปด้านหน้า</label>
-            <Upload
-              draggable
-              uploadLimit={1}
-              onChange={(file) => uploadFile('file_front_image_id', file, true)}
-            >
-              <div className="my-8 text-center">
-                <div className="text-6xl mb-4 flex justify-center">
-                  <UploadIcon />
-                </div>
-                <p className="font-semibold text-gray-800 dark:text-white">
-                  เพิ่มไฟล์
-                </p>
-                <p className="mt-1 opacity-60 dark:text-white">
-                  กรุณาอัปโหลดไฟล์ประเภท PDF
-                </p>
-              </div>
-            </Upload>
-          </fieldset>
-          <fieldset>
-            <label className='block'>รูปด้านข้าง</label>
-            <Upload
-              draggable
-              uploadLimit={1}
-              onChange={(file) => uploadFile('file_side_image_id', file, true)}
-            >
-              <div className="my-8 text-center">
-                <div className="text-6xl mb-4 flex justify-center">
-                  <UploadIcon />
-                </div>
-                <p className="font-semibold text-gray-800 dark:text-white">
-                  เพิ่มไฟล์
-                </p>
-                <p className="mt-1 opacity-60 dark:text-white">
-                  กรุณาอัปโหลดไฟล์ประเภท PDF
-                </p>
-              </div>
-            </Upload>
-          </fieldset>
-          <fieldset>
-            <label className='block'>รูปด้านหลัง</label>
-            <Upload
-              draggable
-              uploadLimit={1}
-              onChange={(file) => uploadFile('file_back_image_id', file, true)}
-            >
-              <div className="my-8 text-center">
-                <div className="text-6xl mb-4 flex justify-center">
-                  <UploadIcon />
-                </div>
-                <p className="font-semibold text-gray-800 dark:text-white">
-                  เพิ่มไฟล์
-                </p>
-                <p className="mt-1 opacity-60 dark:text-white">
-                  กรุณาอัปโหลดไฟล์ประเภท PDF
-                </p>
-              </div>
-            </Upload>
-          </fieldset>
+          <Controller
+            name='file_front_image_id'
+            control={control}
+            rules={{
+              required: 'กรุณาระบุรูปด้านหน้า'
+            }}
+            render={() => {
+              return (
+                <fieldset>
+                  <label className='block'>รูปด้านหน้า</label>
+                  <Upload
+                    draggable
+                    uploadLimit={1}
+                    onChange={(file) => uploadFile('file_front_image_id', file, true)}
+                  >
+                    <div className="my-8 text-center">
+                      <div className="text-6xl mb-4 flex justify-center">
+                        <UploadIcon />
+                      </div>
+                      <p className="font-semibold text-gray-800 dark:text-white">
+                        เพิ่มไฟล์
+                      </p>
+                      <p className="mt-1 opacity-60 dark:text-white">
+                        กรุณาอัปโหลดไฟล์ประเภท PDF
+                      </p>
+                    </div>
+                  </Upload>
+                  {!!errors.file_front_image_id &&
+                    <p className='text-red-500'>{errors.file_front_image_id.message}</p>
+                  }
+                </fieldset>
+              )
+            }}
+          />
+          <Controller
+            name='file_side_image_id'
+            control={control}
+            rules={{
+              required: 'กรุณาอัปโหลดรูปด้านข้าง'
+            }}
+            render={() => {
+              return (
+                <fieldset>
+                  <label className='block'>รูปด้านข้าง</label>
+                  <Upload
+                    draggable
+                    uploadLimit={1}
+                    onChange={(file) => uploadFile('file_side_image_id', file, true)}
+                  >
+                    <div className="my-8 text-center">
+                      <div className="text-6xl mb-4 flex justify-center">
+                        <UploadIcon />
+                      </div>
+                      <p className="font-semibold text-gray-800 dark:text-white">
+                        เพิ่มไฟล์
+                      </p>
+                      <p className="mt-1 opacity-60 dark:text-white">
+                        กรุณาอัปโหลดไฟล์ประเภท PDF
+                      </p>
+                    </div>
+                  </Upload>
+                  {!!errors.file_side_image_id &&
+                    <p className='text-red-500'>{errors.file_side_image_id.message}</p>
+                  }
+                </fieldset>
+              )
+            }}
+          />
+          <Controller
+            name='file_back_image_id'
+            control={control}
+            rules={{
+              required: 'กรุณาอัปโหลดรูปด้านหลัง'
+            }}
+            render={() => {
+              return (
+                <fieldset>
+                  <label className='block'>รูปด้านหลัง</label>
+                  <Upload
+                    draggable
+                    uploadLimit={1}
+                    onChange={(file) => uploadFile('file_back_image_id', file, true)}
+                  >
+                    <div className="my-8 text-center">
+                      <div className="text-6xl mb-4 flex justify-center">
+                        <UploadIcon />
+                      </div>
+                      <p className="font-semibold text-gray-800 dark:text-white">
+                        เพิ่มไฟล์
+                      </p>
+                      <p className="mt-1 opacity-60 dark:text-white">
+                        กรุณาอัปโหลดไฟล์ประเภท PDF
+                      </p>
+                    </div>
+                  </Upload>
+                  {!!errors.file_back_image_id &&
+                    <p className='text-red-500'>{errors.file_back_image_id.message}</p>
+                  }
+                </fieldset>
+              )
+            }}
+          />
         </div>
       </section>
     </div >

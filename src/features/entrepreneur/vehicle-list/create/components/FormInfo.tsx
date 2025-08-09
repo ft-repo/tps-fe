@@ -5,17 +5,18 @@ import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { Button, Input, Select, Upload } from '@/components/ui'
 import { postUploadFile } from '@/services/entrepreneur/VehicleListService'
 import React, { useCallback } from 'react'
-import { Control, Controller, UseFormSetValue } from 'react-hook-form'
+import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
 
 interface Props {
   control: Control<FieldType>;
   setValue: UseFormSetValue<FieldType>;
+  errors: FieldErrors<FieldType>;
 }
 
 const FormInfo: React.FC<Props> = (props) => {
-  const { control, setValue } = props
+  const { control, setValue, errors } = props
   const { vehicle_type } = useAppSelector(state => state.master)
 
   const uploadFile = useCallback(async (file: any) => {
@@ -47,6 +48,9 @@ const FormInfo: React.FC<Props> = (props) => {
           <Controller
             name='vehicle_type'
             control={control}
+            rules={{
+              required: 'กรุณาระบุประเภทรถ'
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -66,6 +70,9 @@ const FormInfo: React.FC<Props> = (props) => {
                       field.onChange(e)
                     }}
                   />
+                  {!!errors.vehicle_type &&
+                    <p className='text-red-500'>{errors.vehicle_type.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -73,6 +80,9 @@ const FormInfo: React.FC<Props> = (props) => {
           <Controller
             name='license_plate'
             control={control}
+            rules={{
+              required: 'กรุณาระบุเลขทะเบียน / เลขตัวรถ'
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -82,6 +92,9 @@ const FormInfo: React.FC<Props> = (props) => {
                     name={field.name}
                     placeholder='กรุณาระบุ'
                   />
+                  {!!errors.license_plate &&
+                    <p className='text-red-500'>{errors.license_plate.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -89,6 +102,9 @@ const FormInfo: React.FC<Props> = (props) => {
           <Controller
             name='vehicle_model'
             control={control}
+            rules={{
+              required: 'กรุณาระบุยี่ห้อ',
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -98,6 +114,9 @@ const FormInfo: React.FC<Props> = (props) => {
                     name={field.name}
                     placeholder='กรุณาระบุ'
                   />
+                  {!!errors.vehicle_model &&
+                    <p className='text-red-500'>{errors.vehicle_model.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -105,6 +124,9 @@ const FormInfo: React.FC<Props> = (props) => {
           <Controller
             name='province'
             control={control}
+            rules={{
+              required: 'กรุณาระบุจังหวัด'
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -114,6 +136,9 @@ const FormInfo: React.FC<Props> = (props) => {
                     name={field.name}
                     placeholder='กรุณาระบุ'
                   />
+                  {!!errors.province &&
+                    <p className='text-red-500'>{errors.province.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -121,6 +146,9 @@ const FormInfo: React.FC<Props> = (props) => {
           <Controller
             name='vehicle_weight'
             control={control}
+            rules={{
+              required: 'กรุณาระบุน้ำหนักรถเปล่า (กก.)'
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -130,6 +158,9 @@ const FormInfo: React.FC<Props> = (props) => {
                     name={field.name}
                     placeholder='กรุณาระบุ'
                   />
+                  {!!errors.vehicle_weight &&
+                    <p className='text-red-500'>{errors.vehicle_weight.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -137,6 +168,9 @@ const FormInfo: React.FC<Props> = (props) => {
           <Controller
             name='vehicle_color'
             control={control}
+            rules={{
+              required: 'กรุณาระบุสีรถ'
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -146,6 +180,9 @@ const FormInfo: React.FC<Props> = (props) => {
                     name={field.name}
                     placeholder='กรุณาระบุ'
                   />
+                  {!!errors.vehicle_color &&
+                    <p className='text-red-500'>{errors.vehicle_color.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -154,6 +191,9 @@ const FormInfo: React.FC<Props> = (props) => {
             <Controller
               name='vehicle_distance'
               control={control}
+              rules={{
+                required: 'กรุณาระบุระยะ kingpin (ม.)'
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -163,6 +203,9 @@ const FormInfo: React.FC<Props> = (props) => {
                       name={field.name}
                       placeholder='กรุณาระบุ'
                     />
+                    {!!errors.vehicle_distance &&
+                      <p className='text-red-500'>{errors.vehicle_distance.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -173,6 +216,9 @@ const FormInfo: React.FC<Props> = (props) => {
           <Controller
             name='wide_unit'
             control={control}
+            rules={{
+              required: 'กรุณาระบุกว้าง (ม.)'
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -182,6 +228,9 @@ const FormInfo: React.FC<Props> = (props) => {
                     name={field.name}
                     placeholder='กรุณาระบุ'
                   />
+                  {!!errors.wide_unit &&
+                    <p className='text-red-500'>{errors.wide_unit.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -189,6 +238,9 @@ const FormInfo: React.FC<Props> = (props) => {
           <Controller
             name='long_unit'
             control={control}
+            rules={{
+              required: 'กรุณาระบุกว้าง (ม.)'
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -198,6 +250,9 @@ const FormInfo: React.FC<Props> = (props) => {
                     name={field.name}
                     placeholder='กรุณาระบุ'
                   />
+                  {!!errors.long_unit &&
+                    <p className='text-red-500'>{errors.long_unit.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -205,6 +260,9 @@ const FormInfo: React.FC<Props> = (props) => {
           <Controller
             name='tall_unit'
             control={control}
+            rules={{
+              required: 'กรุณาระบุสูง (ม.)'
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -214,6 +272,9 @@ const FormInfo: React.FC<Props> = (props) => {
                     name={field.name}
                     placeholder='กรุณาระบุ'
                   />
+                  {!!errors.tall_unit &&
+                    <p className='text-red-500'>{errors.tall_unit.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -221,22 +282,37 @@ const FormInfo: React.FC<Props> = (props) => {
         </div>
       </section>
       <section className='mt-5'>
-        <fieldset>
-          <label className='block'>เอกสารเล่มทะเบียน</label>
-          <Upload
-            uploadLimit={1}
-            onChange={(file) => uploadFile(file)}
-          >
-            <Button
-              variant="solid"
-              icon={<HiOutlineCloudUpload />}
-              size='sm'
-              type='button'
-            >
-              เพิ่มไฟล์ .pdf
-            </Button>
-          </Upload>
-        </fieldset>
+        <Controller
+          name='file_registered_document_id'
+          control={control}
+          rules={{
+            required: 'กรุณาอัปโหลดเอกสารเล่มทะเบียน'
+          }}
+          render={() => {
+            return (
+              <fieldset>
+                <label className='block'>เอกสารเล่มทะเบียน</label>
+                <Upload
+                  uploadLimit={1}
+                  onChange={(file) => uploadFile(file)}
+                >
+                  <Button
+                    variant="solid"
+                    icon={<HiOutlineCloudUpload />}
+                    size='sm'
+                    type='button'
+                  >
+                    เพิ่มไฟล์ .pdf
+                  </Button>
+                </Upload>
+                {!!errors.file_registered_document_id &&
+                  <p className='text-red-500'>{errors.file_registered_document_id.message}</p>
+                }
+              </fieldset>
+            )
+          }}
+        />
+
       </section>
     </div>
   )

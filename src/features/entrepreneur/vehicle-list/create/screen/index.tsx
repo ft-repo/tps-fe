@@ -45,7 +45,12 @@ const CreateScreen: React.FC<Props> = (props) => {
     }
   })
 
-  const { handleSubmit, control, setValue } = form;
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors }
+  } = form;
 
   const onSubmit = useCallback(async (value: FieldType) => {
     // BUILD BODY
@@ -144,10 +149,12 @@ const CreateScreen: React.FC<Props> = (props) => {
             <FormInfo
               control={control}
               setValue={setValue}
+              errors={errors}
             />
             <FormDocument
               control={control}
               setValue={setValue}
+              errors={errors}
             />
           </div>
           <button ref={submitRef} hidden type='submit' />

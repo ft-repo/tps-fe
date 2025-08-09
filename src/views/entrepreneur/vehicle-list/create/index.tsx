@@ -3,9 +3,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useEffect } from 'react'
 import CreateScreen from '@/features/entrepreneur/vehicle-list/create/screen'
-import { getVehicleType, useAppDispatch } from '@/store'
+import { getVehicleType, useAppDispatch, useAppSelector } from '@/store'
 import { Loading } from '@/components/shared'
-import { useAppSelector } from '@/store'
 
 interface Props {
 }
