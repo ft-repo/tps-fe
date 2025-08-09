@@ -5,13 +5,13 @@ import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { Button, Input, Select, Upload } from '@/components/ui'
 import { postUploadFile } from '@/services/entrepreneur/VehicleListService'
 import React, { useCallback } from 'react'
-import { Control, Controller } from 'react-hook-form'
+import { Control, Controller, UseFormSetValue } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
 
 interface Props {
   control: Control<FieldType>;
-  setValue: any;
+  setValue: UseFormSetValue<FieldType>;
 }
 
 const FormInfo: React.FC<Props> = (props) => {

@@ -4,6 +4,8 @@
 import React, { useEffect } from 'react'
 import CreateScreen from '@/features/entrepreneur/vehicle-list/create/screen'
 import { getVehicleType, useAppDispatch } from '@/store'
+import { Loading } from '@/components/shared'
+import { useAppSelector } from '@/store'
 
 interface Props {
 }
@@ -11,15 +13,16 @@ interface Props {
 const VehicleListIndex: React.FC<Props> = (props) => {
   const { } = props
   const dispatch = useAppDispatch()
+  const loading = useAppSelector(state => state.layout.loading)
 
   useEffect(() => {
     dispatch(getVehicleType())
   }, [dispatch])
 
   return (
-    <div>
+    <Loading loading={loading}>
       <CreateScreen />
-    </div>
+    </Loading>
   )
 }
 

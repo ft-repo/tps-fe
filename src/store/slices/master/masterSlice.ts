@@ -1,6 +1,7 @@
 import { EntityState, SubDistrictState, ThailandState } from '@/@types/shared';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getContactTypeAPI, getDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI } from '@/services/master/MasterService';
+import { SLICE_BASE_NAME } from './constants';
+import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI } from '@/services/master/MasterService';
 
 export type MasterState = {
   entity: EntityState[];
@@ -22,38 +23,43 @@ const initialState: MasterState = {
   loading: false
 }
 
-export const SLICE_NAME = 'masterSlice';
+// export const SLICE_NAME = 'masterSlice';
 
-export const getEntity = createAsyncThunk(SLICE_NAME + '/apiGetEntity', async () => {
+export const getEntity = createAsyncThunk(SLICE_BASE_NAME + '/apiGetEntity', async () => {
   // assume someService required reesponse & require type as generic
   const response = await getEntityAPI()
   return response.data
 })
 
-export const getContactType = createAsyncThunk(SLICE_NAME + '/apiGetContactType', async () => {
+export const getContactType = createAsyncThunk(SLICE_BASE_NAME + '/apiGetContactType', async () => {
   // assume someService required reesponse & require type as generic
   const response = await getContactTypeAPI()
   return response.data
 })
 
-export const getVehicleType = createAsyncThunk(SLICE_NAME + '/apiGetVehicleType', async () => {
+export const getVehicleType = createAsyncThunk(SLICE_BASE_NAME + '/apiGetVehicleType', async () => {
   // assume someService required reesponse & require type as generic
   const response = await getVechicleTypeAPI()
   return response.data
 })
 
-export const getProvince = createAsyncThunk(SLICE_NAME + '/apiGetProvince', async () => {
+export const getProvince = createAsyncThunk(SLICE_BASE_NAME + '/apiGetProvince', async () => {
   const response = await getProvinceAPI('', '', '')
   return response.data
 })
 
-export const getDistrict = createAsyncThunk(SLICE_NAME + '/apiGetDistrict', async (provinceId: string) => {
+export const getDistrict = createAsyncThunk(SLICE_BASE_NAME + '/apiGetDistrict', async (provinceId: string) => {
   const response = await getDistrictAPI(provinceId, '', '')
-  return response.data
+   return response.data
+})
+
+export const getSubDistrict = createAsyncThunk(SLICE_BASE_NAME + '/apiGetSubDistrict', async (districtId:string) => {
+  const response = await getSubDistrictAPI('', districtId, '')
+   return response.data
 })
 
 const masterSlice = createSlice({
-  name: SLICE_NAME,
+  name: SLICE_BASE_NAME,
   initialState,
   reducers: {
     getEntity: (state, action) => {
@@ -70,6 +76,9 @@ const masterSlice = createSlice({
     },
     getDistrict: (state, action) => {
       state.district = action.payload
+    },
+    getSubDistrict: (state, action)=>{
+      state.sub_district = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -128,7 +137,19 @@ const masterSlice = createSlice({
       .addCase(getDistrict.rejected, (state) => {
         state.loading = false
       })
+    // GET SUBDISTRICT
+    builder.addCase(getSubDistrict.fulfilled, (state, action) => {
+      state.sub_district = action.payload
+      state.loading = false
+    })
+    .addCase(getSubDistrict.pending, (state) => {
+      state.loading = true
+    })
+    .addCase(getSubDistrict.rejected, (state) => {
+      state.loading = false
+    })
   },
 })
+
 
 export default masterSlice.reducer
