@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import SignUpForm from './SignUpForm'
 import { SignUpCredential } from '@/@types/auth'
 import { useAppDispatch } from '@/store'
-import { getDistrict, getProvince } from '@/store/slices/master/masterSlice'
+import { getDistrict, getProvince, getSubDistrict } from '@/store/slices/master/masterSlice'
 import { Button } from '@/components/ui'
 import useTimeOutMessage from '@/utils/hooks/useTimeOutMessage'
 import { ActionLink } from '@/components/shared'
@@ -12,6 +12,7 @@ const SignUp = () => {
     const dispatch = useAppDispatch()
     const [message, setMessage] = useTimeOutMessage()
     const [provinceId, setProvinceId] = useState<string | number>('')
+    const [districtId, setDistrictId] = useState<string | number>('')
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     const form = useForm<SignUpCredential>({
@@ -52,6 +53,12 @@ const SignUp = () => {
         }
     }, [dispatch, provinceId])
 
+    useEffect(() => {
+        if (districtId) {
+            dispatch(getSubDistrict(districtId.toString()))
+        }
+    }, [dispatch, districtId])
+
     const onSubmit = useCallback(async (value: SignUpCredential) => {
         console.log(value)
     }, [])
@@ -63,7 +70,7 @@ const SignUp = () => {
                 <p>ลงทะเบียนผู้ประกอบการสำหรับการประเมินและขอใช้เส้นทาง</p>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <SignUpForm control={control} setValue={setValue} setProvinceId={setProvinceId} />
+                <SignUpForm control={control} setValue={setValue} setProvinceId={setProvinceId} setDistrictId={setDistrictId} />
 
                 <div className="mt-4">
                     <Button

@@ -1,7 +1,7 @@
 import { EntityState, SubDistrictState, ThailandState } from '@/@types/shared';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getContactTypeAPI, getDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI } from '@/services/master/MasterService';
 import { SLICE_BASE_NAME } from './constants';
+import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI } from '@/services/master/MasterService';
 
 export type MasterState = {
   entity: EntityState[];
@@ -50,7 +50,12 @@ export const getProvince = createAsyncThunk(SLICE_BASE_NAME + '/apiGetProvince',
 
 export const getDistrict = createAsyncThunk(SLICE_BASE_NAME + '/apiGetDistrict', async (provinceId: string) => {
   const response = await getDistrictAPI(provinceId, '', '')
-  return response.data
+   return response.data
+})
+
+export const getSubDistrict = createAsyncThunk(SLICE_BASE_NAME + '/apiGetSubDistrict', async (districtId:string) => {
+  const response = await getSubDistrictAPI('', districtId, '')
+   return response.data
 })
 
 const masterSlice = createSlice({
@@ -71,6 +76,9 @@ const masterSlice = createSlice({
     },
     getDistrict: (state, action) => {
       state.district = action.payload
+    },
+    getSubDistrict: (state, action)=>{
+      state.sub_district = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -129,7 +137,19 @@ const masterSlice = createSlice({
       .addCase(getDistrict.rejected, (state) => {
         state.loading = false
       })
+    // GET SUBDISTRICT
+    builder.addCase(getSubDistrict.fulfilled, (state, action) => {
+      state.sub_district = action.payload
+      state.loading = false
+    })
+    .addCase(getSubDistrict.pending, (state) => {
+      state.loading = true
+    })
+    .addCase(getSubDistrict.rejected, (state) => {
+      state.loading = false
+    })
   },
 })
+
 
 export default masterSlice.reducer
