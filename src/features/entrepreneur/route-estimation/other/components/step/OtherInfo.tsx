@@ -1,12 +1,14 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FormPetition, FormVehicleContent } from '../../components'
 import { Button, Notification, toast } from '@/components/ui'
 import { useNavigate } from 'react-router-dom'
 import { useOtherContext } from '../../context'
 import { useForm } from 'react-hook-form'
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation'
+import { useAppDispatch } from '@/store'
+import { getDistrict, getProvince, getSubDistrict } from '@/store/slices/master/masterSlice'
 
 interface Props {
 
@@ -14,8 +16,11 @@ interface Props {
 
 const OtherInfo: React.FC<Props> = (props) => {
   const { } = props
+  const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { setStep, setDataParser } = useOtherContext()
+  const [provinceId, setProvinceId] = useState<string | number>('')
+  const [districtId, setDistrictId] = useState<string | number>('')
   const refSubmit = useRef<HTMLButtonElement>(null)
 
   const form = useForm<FieldTypeForOther>({
@@ -67,7 +72,22 @@ const OtherInfo: React.FC<Props> = (props) => {
     }
   })
 
-  const { handleSubmit, control } = form
+  const { handleSubmit, control, setValue } = form
+  useEffect(() => {
+    dispatch(getProvince())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (provinceId) {
+      dispatch(getDistrict(provinceId.toString()))
+    }
+  }, [dispatch, provinceId])
+
+  useEffect(() => {
+    if (districtId) {
+      dispatch(getSubDistrict(districtId.toString()))
+    }
+  }, [dispatch, districtId])
 
   const onSubmit = useCallback((data: FieldTypeForOther) => {
     toast.push(
@@ -96,7 +116,7 @@ const OtherInfo: React.FC<Props> = (props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className='block xl:grid grid-cols-2 gap-5 mt-5'>
           <FormPetition
-            control={control}
+            control={control} setValue={setValue} setProvinceId={setProvinceId} setDistrictId={setDistrictId}
           />
           <FormVehicleContent
             control={control}

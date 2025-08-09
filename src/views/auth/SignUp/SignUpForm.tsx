@@ -88,7 +88,7 @@ function SignUpForm(props: Props) {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>ตำบล</label>
+                <label>แขวง / ตำบล</label>
                 <Select
                   {...field}
                   name={field.name}
