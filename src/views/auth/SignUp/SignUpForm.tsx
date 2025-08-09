@@ -11,11 +11,12 @@ interface Props {
   control: Control<SignUpCredential>
   setValue: UseFormSetValue<SignUpCredential>
   setProvinceId: (provinceId: string) => void
+  setDistrictId: (districtId: string) => void
 }
 
 function SignUpForm(props: Props) {
-  const { control, setValue, setProvinceId } = props
-  const { province, district } = useAppSelector((state) => state.master)
+  const { control, setValue, setProvinceId, setDistrictId } = props
+  const { province, district, sub_district } = useAppSelector((state) => state.master)
 
   return (
     <section className="mt-5">
@@ -72,9 +73,40 @@ function SignUpForm(props: Props) {
                       'business_address.district_id',
                       e.value,
                     )
+                    setDistrictId(e.value)
                     field.onChange(e)
                   }}
                   isDisabled={district.length === 0}
+                />
+              </fieldset>
+            )
+          }}
+        />
+        <Controller
+          name="business_address.sub_district_id"
+          control={control}
+          render={({ field }) => {
+            return (
+              <fieldset>
+                <label>ตำบล</label>
+                <Select
+                  {...field}
+                  name={field.name}
+                  placeholder="กรุณาเลือก"
+                  options={sub_district.map((item) => {
+                    return {
+                      label: item.name_th,
+                      value: item.id,
+                    }
+                  })}
+                  onChange={(e: any) => {
+                    setValue(
+                      'business_address.sub_district_id',
+                      e.value,
+                    )
+                    field.onChange(e)
+                  }}
+                  isDisabled={sub_district.length === 0}
                 />
               </fieldset>
             )

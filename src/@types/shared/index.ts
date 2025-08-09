@@ -34,5 +34,5 @@ export interface ThailandState {
 }
 
 export interface SubDistrictState extends ThailandState {
-  zip_code: string;
+  zip_code: string;  
 }
