@@ -1,6 +1,9 @@
 export interface FieldType {
   // vehicle_type: string;
-  vehicle_type: string | number | null;
+  vehicle_type: {
+    label: string | null;
+    value: number | string | null;
+  } | null;
   license_plate: string;
   vehicle_model: string;
   province: string;

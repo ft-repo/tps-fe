@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { APIPostBody } from '@/@types/services/vehicle';
 import { postVehicleList } from '@/services/entrepreneur/VehicleListService';
+import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 
 interface Props {
 
@@ -18,10 +19,12 @@ const CreateScreen: React.FC<Props> = (props) => {
   const { } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const loading = useAppSelector(state => state.layout.loading)
 
   const form = useForm<FieldType>({
     defaultValues: {
-      vehicle_type: '',
+      vehicle_type: null,
       license_plate: '',
       vehicle_model: '',
       province: '',
@@ -48,7 +51,7 @@ const CreateScreen: React.FC<Props> = (props) => {
     // BUILD BODY
     const body: APIPostBody = {
       vehicle_detail: {
-        vehicle_type_id: value.vehicle_type || '',
+        vehicle_type_id: value.vehicle_type?.value || '',
         plate_no: value.license_plate || '',
         plate_province: value.province || '',
         brand: value.vehicle_model || '',
@@ -72,6 +75,8 @@ const CreateScreen: React.FC<Props> = (props) => {
         back_rear_url: value.file_back_image_id
       }
     }
+    // INIT LOADING
+    dispatch(setLoading(true))
     // CREATING REQUEST
     try {
       const response = await postVehicleList(body)
@@ -105,16 +110,32 @@ const CreateScreen: React.FC<Props> = (props) => {
         </Notification>, {
         placement: 'top-center',
       })
+    } finally {
+      dispatch(setLoading(false))
     }
-  }, [navigate])
+  }, [navigate, dispatch])
 
   return (
     <div>
       <section className='flex justify-between items-center flex-wrap gap-5'>
         <h3>เพิ่มรายการรถ</h3>
         <div className='flex items-center gap-3'>
-          <Button variant='default' size='sm' onClick={() => navigate(-1)}>ย้อนกลับ</Button>
-          <Button variant='solid' size='sm' onClick={() => submitRef.current?.click()}>บันทึก</Button>
+          <Button
+            variant='default'
+            size='sm'
+            disabled={loading}
+            onClick={() => navigate(-1)}
+          >
+            ย้อนกลับ
+          </Button>
+          <Button
+            variant='solid'
+            size='sm'
+            loading={loading}
+            onClick={() => submitRef.current?.click()}
+          >
+            บันทึก
+          </Button>
         </div>
       </section>
       <section className='mt-5'>
