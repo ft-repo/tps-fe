@@ -1,13 +1,13 @@
 import { SignUpCredential } from '@/@types/auth'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
-import { Upload } from '@/components/ui/Upload'
+import { Upload } from '@/components/ui/NewUpload'
 import {
   postUploadFile,
   postUploadImage,
 } from '@/services/entrepreneur/VehicleListService'
 import { useAppSelector } from '@/store'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { Control, Controller, UseFormSetValue } from 'react-hook-form'
 import { FaUpload as UploadIcon } from 'react-icons/fa6'
 
@@ -22,7 +22,6 @@ function SignUpForm(props: Props) {
   const { control, setValue, setProvinceId, setDistrictId } = props
   const { province, district, sub_district, entity_type, contact_type } =
     useAppSelector((state) => state.master)
-  const [password, setPassword] = useState('');
 
   const uploadFile = useCallback(
     async (fieldName: string, file: any, isImage: boolean = false) => {
@@ -34,9 +33,9 @@ function SignUpForm(props: Props) {
       }
       try {
         // POST
-        const response = await uploadAPI({ upload: file[0] })
+        const response = await uploadAPI({ upload: file })
         if (response.status === 200) {
-          setValue([fieldName] as any, response.data?.url)
+          setValue(fieldName, response.data?.url)
         } else {
           console.log('Error')
         }
@@ -87,10 +86,15 @@ function SignUpForm(props: Props) {
             return (
               <fieldset>
                 <label>เลขทะเบียนนิติบุคคล</label>
-                <Input {...field} name={field.name} placeholder="กรุณาระบุ" onChange={(e) => {
-                  setValue('business_detail.registration_no', e.target.value)
-                  field.onChange(e)
-                }} />
+                <Input
+                  {...field}
+                  name={field.name}
+                  placeholder="กรุณาระบุ"
+                  onChange={(e) => {
+                    setValue('business_detail.registration_no', e.target.value)
+                    field.onChange(e)
+                  }}
+                />
               </fieldset>
             )
           }}
@@ -102,10 +106,15 @@ function SignUpForm(props: Props) {
             return (
               <fieldset className="col-span-2">
                 <label>ชื่อบริษัท/ห้าง/ร้าน</label>
-                <Input {...field} name={field.name} placeholder="กรุณาระบุ" onChange={(e) => {
-                  setValue('business_detail.business_name', e.target.value)
-                  field.onChange(e)
-                }} />
+                <Input
+                  {...field}
+                  name={field.name}
+                  placeholder="กรุณาระบุ"
+                  onChange={(e) => {
+                    setValue('business_detail.business_name', e.target.value)
+                    field.onChange(e)
+                  }}
+                />
               </fieldset>
             )
           }}
@@ -149,7 +158,10 @@ function SignUpForm(props: Props) {
                       name={field.name}
                       placeholder="กรุณาระบุ"
                       onChange={(e) => {
-                        setValue('business_address.house_number', e.target.value)
+                        setValue(
+                          'business_address.house_number',
+                          e.target.value,
+                        )
                         field.onChange(e)
                       }}
                     />
@@ -423,84 +435,49 @@ function SignUpForm(props: Props) {
           <Controller
             name="business_document.business_file_url"
             control={control}
-            render={() => {
-              return (
-                <fieldset>
-                  <label className="block">
-                    หนังสือรับรองนิติบุคคล (รองรับไฟล์ .pdf เท่านั้น)
-                  </label>
-                  <Upload
-                    draggable
-                    uploadLimit={1}
-                    onChange={(file) =>
-                      uploadFile('business_document.business_file_url', file)
-                    }
-                  >
-                    <div className=" text-center">
-                      <div className="text-xl flex justify-center">
-                        <UploadIcon />
-                        &nbsp;เพิ่มไฟล์
-                      </div>
-                    </div>
-                  </Upload>
-                </fieldset>
-              )
-            }}
+            rules={{ required: 'หนังสือรับรองนิติบุคคลต้องมี' }}
+            render={({ field, fieldState }) => (
+              <Upload
+                name="business_document.business_file_url"
+                label="หนังสือรับรองนิติบุคคล"
+                accept=".pdf"
+                maxSize={10}
+                error={fieldState.error?.message}
+                control={control}
+                fieldName="business_document.business_file_url"
+              />
+            )}
           />
           <Controller
             name="business_document.cid_card_file_url"
             control={control}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label className="block">
-                    รูปบัตรประชาชน (รองรับไฟล์ .pdf .png .jpeg .jpg)
-                  </label>
-                  <Upload
-                    draggable
-                    uploadLimit={1}
-                    onChange={(file) =>
-                      uploadFile('business_document.cid_card_file_url', file)
-                    }
-                  >
-                    <div className=" text-center">
-                      <div className="text-xl flex justify-center">
-                        <UploadIcon />
-                        &nbsp;เพิ่มไฟล์
-                      </div>
-                    </div>
-                  </Upload>
-                </fieldset>
-              )
-            }}
+            rules={{ required: 'รูปบัตรประชาชนต้องมี' }}
+            render={({ field, fieldState }) => (
+              <Upload
+                name="business_document.cid_card_file_url"
+                label="รูปบัตรประชาชน"
+                accept=".pdf,.png,.jpeg,.jpg"
+                maxSize={10}
+                error={fieldState.error?.message}
+                control={control}
+                fieldName="business_document.cid_card_file_url"
+              />
+            )}
           />
           <Controller
             name="business_document.certificate_file_url"
             control={control}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label className="block">
-                    รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ (รองรับไฟล์ .pdf .png
-                    .jpeg .jpg)
-                  </label>
-                  <Upload
-                    draggable
-                    uploadLimit={1}
-                    onChange={(file) =>
-                      uploadFile('business_document.certificate_file_url', file)
-                    }
-                  >
-                    <div className=" text-center">
-                      <div className="text-xl flex justify-center">
-                        <UploadIcon />
-                        &nbsp;เพิ่มไฟล์
-                      </div>
-                    </div>
-                  </Upload>
-                </fieldset>
-              )
-            }}
+            render={({ field, fieldState }) => (
+              <Upload
+                name="business_document.certificate_file_url"
+                label="รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ"
+                accept=".pdf,.png,.jpeg,.jpg"
+                maxSize={10}
+                error={fieldState.error?.message}
+                control={control}
+                fieldName="business_document.certificate_file_url"
+              />
+            )}
           />
         </div>
 
@@ -519,7 +496,6 @@ function SignUpForm(props: Props) {
                   autoComplete="off"
                   onChange={(e) => {
                     setValue('password', e.target.value)
-                    setPassword(e.target.value)
                     field.onChange(e)
                   }}
                 />
@@ -539,7 +515,7 @@ function SignUpForm(props: Props) {
                   name={field.name}
                   placeholder="กรุณาระบุ"
                   type="password"
-                  autoComplete="off"  
+                  autoComplete="off"
                   onChange={(e) => {
                     setValue('password_confirmation', e.target.value)
                     field.onChange(e)
