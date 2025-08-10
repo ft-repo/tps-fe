@@ -65,6 +65,7 @@ export type SignUpResponse = SignInResponse
 
 export type SignUpCredential = {
   password: string
+  password_confirmation: string
   business_detail: {
     business_name: string
     registration_no: string
@@ -91,6 +92,7 @@ export type SignUpCredential = {
     phone_number: string
     cid: string
   }
+  [key: string]: any;
 }
 
 export type ForgotPassword = {
