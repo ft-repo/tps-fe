@@ -28,12 +28,12 @@ const CreateScreen: React.FC<Props> = (props) => {
       license_plate: '',
       vehicle_model: '',
       province: '',
-      vehicle_weight: '',
+      vehicle_weight: 0,
       vehicle_color: '',
-      vehicle_distance: '',
-      wide_unit: '',
-      long_unit: '',
-      tall_unit: '',
+      vehicle_distance: 0,
+      wide_unit: 0,
+      long_unit: 0,
+      tall_unit: 0,
       file_registered_document_id: '',
       file_property_document_id: '',
       file_hire_contact_document_id: '',
@@ -45,13 +45,18 @@ const CreateScreen: React.FC<Props> = (props) => {
     }
   })
 
-  const { handleSubmit, control, setValue } = form;
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors }
+  } = form;
 
   const onSubmit = useCallback(async (value: FieldType) => {
     // BUILD BODY
     const body: APIPostBody = {
       vehicle_detail: {
-        vehicle_type_id: value.vehicle_type?.value || '',
+        vehicle_type_id: value.vehicle_type || '',
         plate_no: value.license_plate || '',
         plate_province: value.province || '',
         brand: value.vehicle_model || '',
@@ -144,10 +149,12 @@ const CreateScreen: React.FC<Props> = (props) => {
             <FormInfo
               control={control}
               setValue={setValue}
+              errors={errors}
             />
             <FormDocument
               control={control}
               setValue={setValue}
+              errors={errors}
             />
           </div>
           <button ref={submitRef} hidden type='submit' />

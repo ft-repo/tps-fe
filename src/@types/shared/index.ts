@@ -1,5 +1,8 @@
+import { APIPostBody } from "../services/vehicle";
+
 export interface DialogProps {
   open: boolean;
+  data: APIPostBody | null;
 }
 
 export interface StatusColor {

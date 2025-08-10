@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { getVehicleType } from '@/store/slices/master';
 import { getVehicleList, getVehicleListByID } from '@/services/entrepreneur/VehicleListService';
 import { setVehicleList } from '@/store/slices/entrepreneur';
-import { APIPostBody } from '@/@types/services/vehicle';
+import { VehicleListByIDResponse } from '@/@types/services/vehicle';
 
 interface Props {
 
@@ -18,7 +18,7 @@ interface Props {
 
 export interface OpenDialogProps {
   open: boolean;
-  data: APIPostBody;
+  data: VehicleListByIDResponse | null;
 }
 
 export const INIT_VEHICLE_MODAL: OpenDialogProps = {
@@ -26,6 +26,7 @@ export const INIT_VEHICLE_MODAL: OpenDialogProps = {
   data: {
     vehicle_detail: {
       vehicle_type_id: '',
+      vehicle_type_name: '',
       plate_no: '',
       plate_province: '',
       brand: '',
@@ -37,13 +38,13 @@ export const INIT_VEHICLE_MODAL: OpenDialogProps = {
       width: '',
       registration_document_url: ''
     },
-    vehicle_owner_document: {
+    vehicle_owner_documents: {
       owner_document_url: '',
       employment_contact_url: '',
       assignment_contact_url: '',
       buyer_contact_url: ''
     },
-    vehicle_picture: {
+    vehicle_pictures: {
       front_rear_url: '',
       side_rear_url: '',
       back_rear_url: ''

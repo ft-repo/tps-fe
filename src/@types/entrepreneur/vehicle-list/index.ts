@@ -1,18 +1,18 @@
 export interface FieldType {
-  // vehicle_type: string;
-  vehicle_type: {
-    label: string | null;
-    value: number | string | null;
-  } | null;
+  vehicle_type: string | number | null;
+  // vehicle_type: {
+  //   label: string | null;
+  //   value: number | string | null;
+  // } | string | number | null;
   license_plate: string;
   vehicle_model: string;
   province: string;
-  vehicle_weight: string;
+  vehicle_weight: number;
   vehicle_color: string;
-  vehicle_distance: string;
-  wide_unit: string;
-  long_unit: string;
-  tall_unit: string;
+  vehicle_distance: number
+  wide_unit: number
+  long_unit: number;
+  tall_unit: number;
   // DOCUMENT ID
   file_registered_document_id: string;
   file_property_document_id: string;
