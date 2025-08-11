@@ -1,54 +1,36 @@
-import { SignUpCredential } from '@/@types/auth'
+import { SignUpFieldType } from '@/@types/auth'
 import { Input } from '@/components/ui/Input'
 import { Select } from '@/components/ui/Select'
 import { Upload } from '@/components/ui/NewUpload'
-import {
-  postUploadFile,
-  postUploadImage,
-} from '@/services/entrepreneur/VehicleListService'
 import { useAppSelector } from '@/store'
 import { useCallback } from 'react'
-import { Control, Controller, UseFormSetValue } from 'react-hook-form'
-import { FaUpload as UploadIcon } from 'react-icons/fa6'
+import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
+import { Notification, toast } from '@/components/ui'
 
 interface Props {
-  control: Control<SignUpCredential>
-  setValue: UseFormSetValue<SignUpCredential>
+  control: Control<SignUpFieldType>
+  setValue: UseFormSetValue<SignUpFieldType>
+  errors: FieldErrors<SignUpFieldType>
   setProvinceId: (provinceId: string) => void
   setDistrictId: (districtId: string) => void
 }
 
 function SignUpForm(props: Props) {
-  const { control, setValue, setProvinceId, setDistrictId } = props
+  const { control, setValue, setProvinceId, setDistrictId, errors } = props
   const { province, district, sub_district, entity_type, contact_type } =
     useAppSelector((state) => state.master)
 
-  const uploadFile = useCallback(
-    async (fieldName: string, file: any, isImage: boolean = false) => {
-      let uploadAPI
-      if (isImage) {
-        uploadAPI = postUploadImage
-      } else {
-        uploadAPI = postUploadFile
-      }
-      try {
-        // POST
-        const response = await uploadAPI({ upload: file })
-        if (response.status === 200) {
-          setValue(fieldName, response.data?.url)
-        } else {
-          console.log('Error')
-        }
-      } catch (error) {
-        if (error instanceof Error) {
-          console.error(error.message)
-        } else {
-          console.error(error)
-        }
-      }
-    },
-    [setValue],
-  )
+  const handleUploadError = useCallback((error: string) => {
+    toast.push(
+      <Notification
+        type="danger"
+        title="ผิดพลาด"
+      >
+        {error}
+      </Notification>, {
+      placement: 'top-center',
+    })
+  }, [])
 
   return (
     <section className="mt-5">
@@ -56,6 +38,7 @@ function SignUpForm(props: Props) {
         <Controller
           name="business_detail.entity_type_id"
           control={control}
+          rules={{ required: 'กรุณาระบุ' }}
           render={({ field }) => {
             return (
               <fieldset>
@@ -75,6 +58,9 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
+                {!!errors.business_detail?.entity_type_id &&
+                  <p className='text-red-500'>{errors.business_detail.entity_type_id.message}</p>
+                }
               </fieldset>
             )
           }}
@@ -82,6 +68,7 @@ function SignUpForm(props: Props) {
         <Controller
           name="business_detail.registration_no"
           control={control}
+          rules={{ required: 'กรุณาระบุ' }}
           render={({ field }) => {
             return (
               <fieldset>
@@ -95,6 +82,9 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
+                {!!errors.business_detail?.registration_no &&
+                  <p className='text-red-500'>{errors.business_detail.registration_no.message}</p>
+                }
               </fieldset>
             )
           }}
@@ -102,6 +92,7 @@ function SignUpForm(props: Props) {
         <Controller
           name="business_detail.business_name"
           control={control}
+          rules={{ required: 'กรุณาระบุ' }}
           render={({ field }) => {
             return (
               <fieldset className="col-span-2">
@@ -115,6 +106,9 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
+                {!!errors.business_detail?.business_name &&
+                  <p className='text-red-500'>{errors.business_detail.business_name.message}</p>
+                }
               </fieldset>
             )
           }}
@@ -122,6 +116,7 @@ function SignUpForm(props: Props) {
         <Controller
           name="contact_info.phone_number"
           control={control}
+          rules={{ required: 'กรุณาระบุ' }}
           render={({ field }) => {
             return (
               <fieldset className="col-span-2">
@@ -137,6 +132,9 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
+                {!!errors.contact_info?.phone_number &&
+                  <p className='text-red-500'>{errors.contact_info.phone_number.message}</p>
+                }
               </fieldset>
             )
           }}
@@ -341,6 +339,7 @@ function SignUpForm(props: Props) {
             <Controller
               name="contact_info.contact_name"
               control={control}
+              rules={{ required: 'กรุณาระบุ' }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -354,6 +353,9 @@ function SignUpForm(props: Props) {
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.contact_info?.contact_name &&
+                      <p className='text-red-500'>{errors.contact_info.contact_name.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -361,6 +363,7 @@ function SignUpForm(props: Props) {
             <Controller
               name="contact_info.contact_type_id"
               control={control}
+              rules={{ required: 'กรุณาระบุ' }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -380,6 +383,9 @@ function SignUpForm(props: Props) {
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.contact_info?.contact_name &&
+                      <p className='text-red-500'>{errors.contact_info.contact_name.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -387,6 +393,7 @@ function SignUpForm(props: Props) {
             <Controller
               name="contact_info.phone_number"
               control={control}
+              rules={{ required: 'กรุณาระบุ' }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -402,6 +409,9 @@ function SignUpForm(props: Props) {
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.contact_info?.phone_number &&
+                      <p className='text-red-500'>{errors.contact_info.phone_number.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -409,6 +419,7 @@ function SignUpForm(props: Props) {
             <Controller
               name="contact_info.cid"
               control={control}
+              rules={{ required: 'กรุณาระบุ' }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -424,6 +435,9 @@ function SignUpForm(props: Props) {
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.contact_info?.cid &&
+                      <p className='text-red-500'>{errors.contact_info.cid.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -445,6 +459,9 @@ function SignUpForm(props: Props) {
                 error={fieldState.error?.message}
                 control={control}
                 fieldName="business_document.business_file_url"
+                onUploadError={(error) => {
+                  handleUploadError(error)
+                }}
               />
             )}
           />
@@ -461,6 +478,9 @@ function SignUpForm(props: Props) {
                 error={fieldState.error?.message}
                 control={control}
                 fieldName="business_document.cid_card_file_url"
+                onUploadError={(error) => {
+                  handleUploadError(error)
+                }}
               />
             )}
           />
@@ -476,6 +496,9 @@ function SignUpForm(props: Props) {
                 error={fieldState.error?.message}
                 control={control}
                 fieldName="business_document.certificate_file_url"
+                onUploadError={(error) => {
+                  handleUploadError(error)
+                }}
               />
             )}
           />
@@ -484,6 +507,7 @@ function SignUpForm(props: Props) {
         <Controller
           name="password"
           control={control}
+          rules={{ required: 'กรุณาระบุ' }}
           render={({ field }) => {
             return (
               <fieldset>
@@ -499,6 +523,9 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
+                {!!errors.password &&
+                  <p className='text-red-500'>{errors.password.message}</p>
+                }
               </fieldset>
             )
           }}
@@ -506,6 +533,7 @@ function SignUpForm(props: Props) {
         <Controller
           name="password_confirmation"
           control={control}
+          rules={{ required: 'กรุณาระบุ' }}
           render={({ field }) => {
             return (
               <fieldset>
@@ -521,6 +549,9 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
+                {!!errors.password_confirmation &&
+                  <p className='text-red-500'>{errors.password_confirmation.message}</p>
+                }
               </fieldset>
             )
           }}

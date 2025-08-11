@@ -103,11 +103,14 @@ function useAuth() {
 					)
 				}
 				const redirectUrl = query.get(REDIRECT_URL_KEY)
-				navigate(
-					redirectUrl
-						? redirectUrl
-						: appConfig.authenticatedEntryPath,
-				)
+
+				setTimeout(() => {
+					navigate(
+						redirectUrl
+							? redirectUrl
+							: appConfig.authenticatedEntryPath,
+					)
+				}, 3000)
 				return {
 					status: 'success',
 					message: '',
