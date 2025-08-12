@@ -54,7 +54,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
       <section className='mt-3'>
         <div className='block sm:grid sm:grid-cols-2 xl:grid-cols-4 gap-3'>
           <Controller
-            disabled
             name='file_property_document_id'
             control={control}
             rules={{
@@ -65,7 +64,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                 <fieldset>
                   <label>เอกสารถือครองสิทธิ์</label>
                   <CustomUpload
-                    disabled
                     {...field}
                     name={field.name}
                     listType='picture-card'
@@ -74,7 +72,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                     fileList={[defaultFileList[1]]}
                   />
                   {/* <Upload
-                    disabled
                     draggable
                     className='block'
                     uploadLimit={1}
@@ -100,7 +97,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             }}
           />
           <Controller
-            disabled
             name='file_hire_contact_document_id'
             control={control}
             rules={{
@@ -111,7 +107,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                 <fieldset>
                   <label>สัญญาจ้างหรือเช่า</label>
                   <CustomUpload
-                    disabled
                     {...field}
                     name={field.name}
                     listType='picture-card'
@@ -120,7 +115,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                     fileList={[defaultFileList[2]]}
                   />
                   {/* <Upload
-                    disabled
                     draggable
                     className='block'
                     uploadLimit={1}
@@ -147,7 +141,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             }}
           />
           <Controller
-            disabled
             name='file_purchase_contact_document_id'
             control={control}
             rules={{
@@ -158,7 +151,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                 <fieldset>
                   <label>สัญญาเช่าซื้อ</label>
                   <CustomUpload
-                    disabled
                     {...field}
                     name={field.name}
                     listType='picture-card'
@@ -167,7 +159,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                     fileList={[defaultFileList[3]]}
                   />
                   {/* <Upload
-                    disabled
                     draggable
                     className='block'
                     uploadLimit={1}
@@ -193,7 +184,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             }}
           />
           <Controller
-            disabled
             name='file_transfer_contact_document_id'
             control={control}
             rules={{
@@ -204,7 +194,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                 <fieldset>
                   <label>สัญญามอบสิทธิ์</label>
                   <CustomUpload
-                    disabled
                     {...field}
                     name={field.name}
                     listType='picture-card'
@@ -213,7 +202,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                     fileList={[defaultFileList[4]]}
                   />
                   {/* <Upload
-                    disabled
                     draggable
                     className='block'
                     uploadLimit={1}
@@ -284,7 +272,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             }}
           />
           <Controller
-            disabled
             name='file_side_image_id'
             control={control}
             rules={{
@@ -295,7 +282,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                 <fieldset>
                   <label>รูปด้านข้าง</label>
                   <CustomUpload
-                    disabled
                     {...field}
                     name={field.name}
                     listType='picture-card'
@@ -304,7 +290,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                     fileList={[defaultFileList[6]]}
                   />
                   {/* <Upload
-                    disabled
                     draggable
                     className='block'
                     uploadLimit={1}
@@ -340,7 +325,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                 <fieldset>
                   <label>รูปด้านหลัง</label>
                   <CustomUpload
-                    disabled
                     {...field}
                     name={field.name}
                     listType='picture-card'
@@ -349,7 +333,6 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                     fileList={[defaultFileList[7]]}
                   />
                   {/* <Upload
-                    disabled
                     draggable
                     className='block'
                     uploadLimit={1}

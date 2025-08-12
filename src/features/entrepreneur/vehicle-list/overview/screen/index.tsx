@@ -2,15 +2,17 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button } from '@/components/ui';
+import { Button, Notification, toast } from '@/components/ui';
 import { ModalUpdateVehicle, TableVehicleList, FormSearchVehicleList } from '../components';
 import { FaPlus as PlusIcon } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { getVehicleType } from '@/store/slices/master';
-import { getVehicleList, getVehicleListByID } from '@/services/entrepreneur/VehicleListService';
+import { deleteVehicleLst, getVehicleList, getVehicleListByID } from '@/services/entrepreneur/VehicleListService';
 import { setVehicleList } from '@/store/slices/entrepreneur';
 import { VehicleListByIDResponse } from '@/@types/services/vehicle';
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
+import { TableData } from '@/@types/entrepreneur/vehicle-list';
 
 interface Props {
 
@@ -19,9 +21,17 @@ interface Props {
 export interface OpenDialogProps {
   open: boolean;
   data: VehicleListByIDResponse | null;
+  id: string | number;
+}
+
+export interface OpenConfirmDialog {
+  open: boolean;
+  data: TableData;
+  id: string | number;
 }
 
 export const INIT_VEHICLE_MODAL: OpenDialogProps = {
+  id: '',
   open: false,
   data: {
     vehicle_detail: {
@@ -52,12 +62,26 @@ export const INIT_VEHICLE_MODAL: OpenDialogProps = {
   }
 }
 
+export const INIT_CONFIRM_DELETE: OpenConfirmDialog = {
+  open: false,
+  id: '',
+  data: {
+    id: '',
+    brand: '',
+    plate_no: '',
+    plate_province: '',
+    vehicle_type_name: '',
+    weight: ''
+  },
+}
+
 const OverviewScreen: React.FC<Props> = (props) => {
   const { } = props
-  const [open, setOpen] = useState<OpenDialogProps>(INIT_VEHICLE_MODAL)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
+  const [open, setOpen] = useState<OpenDialogProps>(INIT_VEHICLE_MODAL)
+  const [confirm, setConfirm] = useState<OpenConfirmDialog>(INIT_CONFIRM_DELETE)
   const [loading, setLoading] = useState<boolean>(false)
 
   const fetchAPI = useCallback(async () => {
@@ -150,7 +174,8 @@ const OverviewScreen: React.FC<Props> = (props) => {
       if (response.status === 200) {
         setOpen({
           open: true,
-          data: response.data
+          data: response.data,
+          id: id
         })
       } else {
         console.log('error')
@@ -163,6 +188,34 @@ const OverviewScreen: React.FC<Props> = (props) => {
       }
     }
   }, [])
+
+  const deleteRecord = useCallback(async (id: string | number) => {
+    setLoading(true)
+    try {
+      const response = await deleteVehicleLst(id)
+      if (response.status === 200) {
+        toast.push(
+          <Notification
+            type="success"
+            title="สำเร็จ"
+          >
+            บันทึกข้อมูลสำเร็จ
+          </Notification>, {
+          placement: 'top-center',
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+      setConfirm(INIT_CONFIRM_DELETE)
+      fetchAPI()
+    }
+  }, [fetchAPI])
 
   return (
     <>
@@ -184,7 +237,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
         <TableVehicleList
           data={vehicle.overview.data}
           loading={loading}
-          setOpen={setOpen}
+          setOpen={setConfirm}
           openModalWithData={openModalWithData}
           onChangeTable={onChangeTable}
         />
@@ -192,7 +245,16 @@ const OverviewScreen: React.FC<Props> = (props) => {
       <ModalUpdateVehicle
         open={open.open}
         data={open.data}
+        id={open.id}
         setOpen={setOpen}
+        refetch={fetchAPI}
+      />
+      <ConfirmDeleteModal
+        open={confirm.open}
+        id={confirm.id}
+        data={confirm.data}
+        setOpen={setConfirm}
+        deleteRecord={deleteRecord}
       />
     </>
   )

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   APIPostBody,
-  APIPutBody,
   GetVehicleListParams,
   UploadRequest,
   UploadResponse,
@@ -36,12 +35,19 @@ export const postVehicleList = async (data: APIPostBody) => {
   })
 }
 
-export const putVehicleList = async (id: string, data: APIPutBody) => {
-  return ApiService.fetchData<any, APIPutBody>({
+export const putVehicleList = async (id: string | number, data: APIPostBody) => {
+  return ApiService.fetchData<any, APIPostBody>({
     url: `/client/vehicle/${id}`,
-    method: 'post',
+    method: 'put',
     // data = body
     data: { ...data }
+  })
+}
+
+export const deleteVehicleLst = async (id: string | number) => {
+    return ApiService.fetchData({
+    url: `/client/vehicle/${id}`,
+    method: 'delete',
   })
 }
 

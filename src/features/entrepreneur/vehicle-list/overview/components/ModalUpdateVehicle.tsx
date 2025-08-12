@@ -3,30 +3,36 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react'
-import { Button, Dialog } from '@/components/ui'
+import { Button, Dialog, Notification, toast } from '@/components/ui'
 import { useForm } from 'react-hook-form';
 import { FormUpdateData, FormUpdateDocument } from '.';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
-import { APIPutBody, VehicleListByIDResponse } from '@/@types/services/vehicle';
+import { APIPostBody, VehicleListByIDResponse } from '@/@types/services/vehicle';
 import { INIT_VEHICLE_MODAL } from '../screen';
-import { getUpload } from '@/services/entrepreneur/VehicleListService';
+import { getUpload, putVehicleList } from '@/services/entrepreneur/VehicleListService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { UploadFile } from 'antd';
 
 interface Props {
   open: boolean;
   data: VehicleListByIDResponse | null;
-  setOpen: ({ open, data }: { open: boolean, data: VehicleListByIDResponse | null }) => void;
+  setOpen: ({ open, data, id }: { open: boolean, data: VehicleListByIDResponse | null, id: string | number }) => void;
+  id: string | number;
+  refetch: () => void;
 }
 
 interface DialogContentProps {
   ref: RefObject<HTMLButtonElement | null>;
   initValue: VehicleListByIDResponse | any;
   fileList: UploadFile[];
+  id: string | number;
+  refetch: () => void;
+  setOpen: ({ open, data, id }: { open: boolean, data: VehicleListByIDResponse | null, id: string | number }) => void;
 }
 
 const DialogContent = (props: DialogContentProps) => {
-  const { ref, initValue, fileList } = props;
+  const { ref, initValue, fileList, id, refetch, setOpen } = props;
+  const dispatch = useAppDispatch()
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -58,21 +64,74 @@ const DialogContent = (props: DialogContentProps) => {
     formState: { errors }
   } = form;
 
-  const onSubmit = useCallback((value: FieldType) => {
-    const body: APIPutBody = {
+  const onSubmit = useCallback(async (value: FieldType) => {
+    const body: APIPostBody = {
       vehicle_detail: {
+        vehicle_type_id: value.vehicle_type || '',
+        plate_no: value.license_plate || '',
+        plate_province: value.province || '',
         brand: value.vehicle_model || '',
+        weight: Number(value.vehicle_weight) || 0,
         color: value.vehicle_color || '',
-        kingpin_distance: value.vehicle_distance || 0,
-        width: value.wide_unit || 0
+        kingpin_distance: Number(value.vehicle_distance) || 0,
+        width: Number(value.wide_unit) || 0,
+        length: Number(value.long_unit) || 0,
+        height: Number(value.tall_unit) || 0,
+        registration_document_url: value.file_registered_document_id
+      },
+      vehicle_owner_document: {
+        owner_document_url: value.file_property_document_id,
+        employment_contact_url: value.file_hire_contact_document_id,
+        buyer_contact_url: value.file_purchase_contact_document_id,
+        assignment_contact_url: value.file_transfer_contact_document_id
       },
       vehicle_picture: {
-        front_rear_url: value.file_front_image_id || ''
+        front_rear_url: value.file_front_image_id,
+        side_rear_url: value.file_side_image_id,
+        back_rear_url: value.file_back_image_id
       }
     }
 
-    console.log(body)
-  }, [])
+    // INIT LOADING
+    dispatch(setLoading(true))
+    // CREATING REQUEST
+    try {
+      const response = await putVehicleList(id, body)
+      if (response.status === 200) {
+        toast.push(
+          <Notification
+            type="success"
+            title="สำเร็จ"
+          >
+            บันทึกข้อมูลสำเร็จ
+          </Notification>, {
+          placement: 'top-center',
+        })
+      } else {
+        console.log(response)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+
+      toast.push(
+        <Notification
+          type="danger"
+          title="ผิดพลาด"
+        >
+          ไม่สามารถบันทึกข้อมูลได้
+        </Notification>, {
+        placement: 'top-center',
+      })
+    } finally {
+      dispatch(setLoading(false))
+      setOpen(INIT_VEHICLE_MODAL)
+      refetch()
+    }
+  }, [id, dispatch, refetch, setOpen])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -96,7 +155,7 @@ const DialogContent = (props: DialogContentProps) => {
 }
 
 const ModalUpdateVehicle: React.FC<Props> = (props) => {
-  const { open, data, setOpen } = props
+  const { open, data, id, setOpen, refetch } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const [fileList, setFileList] = useState<UploadFile[]>([])
   const loading = useAppSelector(state => state.layout.loading)
@@ -183,6 +242,9 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
             ref={submitRef}
             initValue={data}
             fileList={fileList}
+            id={id}
+            refetch={refetch}
+            setOpen={setOpen}
           />
           : 'Loading...'}
       </section>
