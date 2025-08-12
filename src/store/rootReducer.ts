@@ -9,6 +9,7 @@ import RtkQueryService from '@/services/RtkQueryService'
 import entrepreneur, { EntrepreneurState } from './slices/entrepreneur'
 
 export type RootState = {
+  permit: any
 	auth: AuthState;
 	base: BaseState;
 	locale: LocaleState;
