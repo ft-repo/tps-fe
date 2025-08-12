@@ -71,5 +71,6 @@ export const getUpload = async (params: string) => {
   return ApiService.fetchData<File>({
     url: `/upload/${params}`,
     method: 'get',
+    responseType: 'blob'
   })
 }
