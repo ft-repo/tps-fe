@@ -1,22 +1,27 @@
-/* eslint-disable no-empty-pattern */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable react-refresh/only-export-components */
-import React from 'react'
+import React, { useEffect } from 'react'
 import PermitListScreen from '@/features/entrepreneur/permit-list/overview/screen'
-import { PermitProvider } from '@/features/entrepreneur/permit-list/overview/context'
+import { useAppDispatch, useAppSelector } from '@/store'
+import { fetchPermitList } from "@/store/slices/entrepreneur/permitSlice"
 
-interface Props {
+import { Loading } from '@/components/shared'
 
-}
+const OverviewIndex: React.FC = () => {
+  const dispatch = useAppDispatch()
+  // use your actual slice's loading flag:
+  const loading = useAppSelector((s) => s.permit?.loading ?? false)
 
-const OverviewIndex: React.FC<Props> = (props) => {
-  const { } = props
+
+ // or s.layout.loading if that's your pattern
+
+  useEffect(() => {
+    dispatch(fetchPermitList({ page: 1, limit: 10 }))
+  }, [dispatch])
 
   return (
-    <PermitProvider>
+    <Loading loading={loading}>
       <PermitListScreen />
-    </PermitProvider>
+    </Loading>
   )
 }
 
-export default React.memo<Props>(OverviewIndex)
+export default React.memo(OverviewIndex)
