@@ -28,7 +28,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
       </section>
       <div className='block sm:grid sm:grid-cols-2 gap-3'>
         <Controller
-          disabled
           name='vehicle_type'
           control={control}
           rules={{
@@ -39,7 +38,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>ประเภทรถ</label>
                 <Select
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาเลือก'
@@ -62,7 +60,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='license_plate'
           control={control}
           rules={{
@@ -73,7 +70,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>เลขทะเบียน / เลขตัวรถ</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -108,7 +104,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='province'
           control={control}
           rules={{
@@ -119,7 +114,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>จังหวัด</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -132,7 +126,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='vehicle_weight'
           control={control}
           rules={{
@@ -143,7 +136,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>น้ำหนักรถเปล่า (กก.)</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -226,7 +218,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='long_unit'
           control={control}
           rules={{
@@ -237,7 +228,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>ยาว (ม.)</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -250,7 +240,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='tall_unit'
           control={control}
           rules={{
@@ -261,7 +250,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>สูง (ม.)</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -276,7 +264,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
       </div>
       <div className='mt-3'>
         <Controller
-          disabled
           name='file_registered_document_id'
           control={control}
           rules={{
@@ -288,7 +275,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
                 <label>เอกสารเล่มทะเบียน</label>
                 <div className='block'>
                   <CustomUpload
-                    disabled
                     {...field}
                     name={field.name}
                     listType='picture-card'
@@ -298,13 +284,11 @@ const FormUpdateData: React.FC<Props> = (props) => {
                   />
                 </div>
                 {/* <Upload
-                  disabled
                   className='block'
                   uploadLimit={1}
                   // fileList={[fileList[0]]}
                 >
                   <Button
-                    disabled
                     variant="solid"
                     icon={<HiOutlineCloudUpload />}
                     size='sm'

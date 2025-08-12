@@ -11,13 +11,13 @@ import { Data } from '@/@types/reducer/vehicle';
 interface Props {
   data: Data;
   loading: boolean;
-  setOpen: (open: any) => void;
+  setOpen: ({ open, data, id }: { open: boolean, data: TableData, id: string | number }) => void;
   onChangeTable: (page: number | string | null, pageSize: number | string | null) => void;
   openModalWithData: (id: number) => void;
 }
 
 const TableVehicleList: React.FC<Props> = (props) => {
-  const { data, loading, onChangeTable, openModalWithData } = props
+  const { data, loading, onChangeTable, openModalWithData, setOpen } = props
 
   const columns: ColumnDef<TableData>[] = useMemo(() => {
     return [
@@ -63,13 +63,18 @@ const TableVehicleList: React.FC<Props> = (props) => {
                 variant='solid'
                 icon={<DeleteIcon />}
                 color='red-600'
+                onClick={() => setOpen({
+                  open: true,
+                  id: row.original.id,
+                  data: { ...row.original }
+                })}
               />
             </div>
           )
         }
       },
     ]
-  }, [openModalWithData])
+  }, [openModalWithData, setOpen])
 
   // const mockData: TableData[] = [
   //   {
