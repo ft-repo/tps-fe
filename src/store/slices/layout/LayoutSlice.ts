@@ -9,6 +9,7 @@ export type LayoutState = {
 const initialState: LayoutState = {
   loading: false,
   fullscreen_loading: false
+ 
 }
 
 // export const SLICE_NAME = 'layoutSlice';
@@ -17,6 +18,7 @@ const layoutSlice = createSlice({
   name: SLICE_BASE_NAME,
   initialState,
   reducers: {
+      
     setLoading: (state, action) => {
       state.loading = action.payload
     },
