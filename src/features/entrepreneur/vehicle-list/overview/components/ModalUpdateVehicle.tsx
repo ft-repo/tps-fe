@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
@@ -10,6 +11,7 @@ import { APIPutBody, VehicleListByIDResponse } from '@/@types/services/vehicle';
 import { INIT_VEHICLE_MODAL } from '../screen';
 import { getUpload } from '@/services/entrepreneur/VehicleListService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
+import { UploadFile } from 'antd';
 
 interface Props {
   open: boolean;
@@ -20,7 +22,7 @@ interface Props {
 interface DialogContentProps {
   ref: RefObject<HTMLButtonElement | null>;
   initValue: VehicleListByIDResponse | any;
-  fileList: File[];
+  fileList: UploadFile[];
 }
 
 const DialogContent = (props: DialogContentProps) => {
@@ -79,13 +81,13 @@ const DialogContent = (props: DialogContentProps) => {
           control={control}
           setValue={setValue}
           errors={errors}
-          fileList={fileList}
+          defaultFileList={fileList}
         />
         <FormUpdateDocument
           control={control}
           setValue={setValue}
           errors={errors}
-          fileList={fileList}
+          defaultFileList={fileList}
         />
       </div>
       <button ref={ref} hidden type='submit' />
@@ -96,7 +98,7 @@ const DialogContent = (props: DialogContentProps) => {
 const ModalUpdateVehicle: React.FC<Props> = (props) => {
   const { open, data, setOpen } = props
   const submitRef = useRef<HTMLButtonElement>(null)
-  const [fileList, setFileList] = useState<File[]>([])
+  const [fileList, setFileList] = useState<UploadFile[]>([])
   const loading = useAppSelector(state => state.layout.loading)
   const dispatch = useAppDispatch()
 
@@ -105,6 +107,11 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
     const match = pathname.match(/\/(business_certificate|business_picture)\/.*/);
     return match ? match[0] : null;
   }, []);
+
+  const extractFileName = useCallback((url: string | null) => {
+    const match = url?.match(/\/([^\/]+)$/);
+    return match ? match[1] : '';
+  }, [])
 
   const getUploadList = useCallback(async () => {
     // CHECK IF DATA EXISTED
@@ -121,13 +128,25 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
       extractUrl(data?.vehicle_pictures.side_rear_url || ''),
       extractUrl(data?.vehicle_pictures.back_rear_url || ''),
     ]
-
     try {
       const response = await Promise.all(uploadArr.map(item => getUpload(item as string)))
       const result = response.every(item => item.status === 200)
       if (result) {
-        setFileList(response.map((item) => {
-          return new File([item.data], `${item.data.name}.png`, { type: "image/png"})
+        setFileList(response.map((item, index) => {
+          const blobFile = new Blob([item.data], { type: item.data.type })
+          const url = URL.createObjectURL(blobFile)
+          // RETURN VALUE
+          return {
+            // crossOrigin: 'use-credentials',
+            name: item.data.name || extractFileName(uploadArr[index]),
+            // percent: 100,
+            uid: String(index),
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: item.data.type,
+            originFileObj: blobFile as any
+          }
         }))
       }
     } catch (error) {
@@ -139,7 +158,7 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [data, extractUrl, dispatch])
+  }, [data, extractUrl, dispatch, extractFileName])
 
   useEffect(() => {
     if (open) {

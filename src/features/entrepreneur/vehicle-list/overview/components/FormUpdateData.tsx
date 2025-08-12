@@ -1,24 +1,24 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
-import { Button, Input, Select, Upload } from '@/components/ui';
+import { Input, Select } from '@/components/ui';
 import { useAppSelector } from '@/store';
 import React from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
-import { HiOutlineCloudUpload } from 'react-icons/hi';
+// import { HiOutlineCloudUpload } from 'react-icons/hi';
+import { Upload as CustomUpload } from '@/components/custom/upload';
+import { UploadFile } from 'antd';
 
 interface Props {
   control: Control<FieldType>;
   setValue: UseFormSetValue<FieldType>;
   errors: FieldErrors<FieldType>;
-  fileList: File[];
+  defaultFileList: UploadFile[];
 }
 
 const FormUpdateData: React.FC<Props> = (props) => {
-  const { control, setValue, errors, fileList } = props
+  const { control, setValue, errors, defaultFileList } = props
   const { vehicle_type } = useAppSelector(state => state.master)
-
-  console.log(fileList[0])
 
   return (
     <div className='mt-5'>
@@ -282,15 +282,26 @@ const FormUpdateData: React.FC<Props> = (props) => {
           rules={{
             required: 'กรุณาอัปโหลดเอกสารเล่มทะเบียน'
           }}
-          render={() => {
+          render={({ field }) => {
             return (
               <fieldset>
                 <label>เอกสารเล่มทะเบียน</label>
-                <Upload
+                <div className='block'>
+                  <CustomUpload
+                    disabled
+                    {...field}
+                    name={field.name}
+                    listType='picture-card'
+                    maxCount={1}
+                    defaultFileList={[defaultFileList[0]]}
+                    fileList={[defaultFileList[0]]}
+                  />
+                </div>
+                {/* <Upload
                   disabled
                   className='block'
                   uploadLimit={1}
-                  fileList={[fileList[0]]}
+                  // fileList={[fileList[0]]}
                 >
                   <Button
                     disabled
@@ -301,7 +312,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
                   >
                     เพิ่มไฟล์ .pdf
                   </Button>
-                </Upload>
+                </Upload> */}
                 {!!errors.file_registered_document_id &&
                   <p className='text-red-500'>{errors.file_registered_document_id.message}</p>
                 }

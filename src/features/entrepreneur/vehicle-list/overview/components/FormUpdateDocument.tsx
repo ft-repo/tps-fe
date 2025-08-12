@@ -1,24 +1,26 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
-import { Upload } from '@/components/ui';
+// import { Upload } from '@/components/ui';
 import React, { useCallback } from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
-import { FaUpload as UploadIcon } from "react-icons/fa6";
+// import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { postUploadFile, postUploadImage } from '@/services/entrepreneur/VehicleListService';
+import { Upload as CustomUpload } from '@/components/custom/upload';
+import { UploadFile } from 'antd';
 
 interface Props {
   control: Control<FieldType>;
   setValue: UseFormSetValue<FieldType>;
   errors: FieldErrors<FieldType>;
-  fileList: File[];
+  defaultFileList: UploadFile[];
 }
 
 const FormUpdateDocument: React.FC<Props> = (props) => {
-  const { control, setValue, errors, fileList } = props
+  const { control, setValue, errors, defaultFileList } = props
 
   const uploadFile = useCallback(async (fieldName: string, file: any, isImage: boolean = false) => {
-    console.log(file)
+    // console.log(file)
     let uploadAPI
     if (isImage) {
       uploadAPI = postUploadImage
@@ -27,7 +29,8 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
     }
     try {
       // POST
-      const response = await uploadAPI({ upload: file[0] })
+      // const response = await uploadAPI({ upload: file[0] })
+      const response = await uploadAPI({ upload: file.file })
       if (response.status === 200) {
         setValue([fieldName] as any, response.data?.url)
       } else {
@@ -57,11 +60,20 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             rules={{
               required: 'กรุณาอัปโหลดเอกสารถือครองสิทธิ์'
             }}
-            render={() => {
+            render={({ field }) => {
               return (
                 <fieldset>
                   <label>เอกสารถือครองสิทธิ์</label>
-                  <Upload
+                  <CustomUpload
+                    disabled
+                    {...field}
+                    name={field.name}
+                    listType='picture-card'
+                    maxCount={1}
+                    defaultFileList={[defaultFileList[1]]}
+                    fileList={[defaultFileList[1]]}
+                  />
+                  {/* <Upload
                     disabled
                     draggable
                     className='block'
@@ -79,7 +91,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         กรุณาอัปโหลดไฟล์ประเภท PDF
                       </p>
                     </div>
-                  </Upload>
+                  </Upload> */}
                   {!!errors.file_property_document_id &&
                     <p className='text-red-500'>{errors.file_property_document_id.message}</p>
                   }
@@ -94,11 +106,20 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             rules={{
               required: 'กรุณาอัปโหลดสัญญาจ้างหรือเช่า'
             }}
-            render={() => {
+            render={({ field }) => {
               return (
                 <fieldset>
                   <label>สัญญาจ้างหรือเช่า</label>
-                  <Upload
+                  <CustomUpload
+                    disabled
+                    {...field}
+                    name={field.name}
+                    listType='picture-card'
+                    maxCount={1}
+                    defaultFileList={[defaultFileList[2]]}
+                    fileList={[defaultFileList[2]]}
+                  />
+                  {/* <Upload
                     disabled
                     draggable
                     className='block'
@@ -117,7 +138,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         กรุณาอัปโหลดไฟล์ประเภท PDF
                       </p>
                     </div>
-                  </Upload>
+                  </Upload> */}
                   {!!errors.file_hire_contact_document_id &&
                     <p className='text-red-500'>{errors.file_hire_contact_document_id.message}</p>
                   }
@@ -132,11 +153,20 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             rules={{
               required: 'กรุณาอัปโหลดสัญญาเช่าซื้อ'
             }}
-            render={() => {
+            render={({ field }) => {
               return (
                 <fieldset>
                   <label>สัญญาเช่าซื้อ</label>
-                  <Upload
+                  <CustomUpload
+                    disabled
+                    {...field}
+                    name={field.name}
+                    listType='picture-card'
+                    maxCount={1}
+                    defaultFileList={[defaultFileList[3]]}
+                    fileList={[defaultFileList[3]]}
+                  />
+                  {/* <Upload
                     disabled
                     draggable
                     className='block'
@@ -154,7 +184,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         กรุณาอัปโหลดไฟล์ประเภท PDF
                       </p>
                     </div>
-                  </Upload>
+                  </Upload> */}
                   {!!errors.file_purchase_contact_document_id &&
                     <p className='text-red-500'>{errors.file_purchase_contact_document_id.message}</p>
                   }
@@ -169,11 +199,20 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             rules={{
               required: 'กรุณาระบุสัญญามอบสิทธิ์'
             }}
-            render={() => {
+            render={({ field }) => {
               return (
                 <fieldset>
                   <label>สัญญามอบสิทธิ์</label>
-                  <Upload
+                  <CustomUpload
+                    disabled
+                    {...field}
+                    name={field.name}
+                    listType='picture-card'
+                    maxCount={1}
+                    defaultFileList={[defaultFileList[4]]}
+                    fileList={[defaultFileList[4]]}
+                  />
+                  {/* <Upload
                     disabled
                     draggable
                     className='block'
@@ -191,7 +230,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         กรุณาอัปโหลดไฟล์ประเภท PDF
                       </p>
                     </div>
-                  </Upload>
+                  </Upload> */}
                   {!!errors.file_transfer_contact_document_id &&
                     <p className='text-red-500'>{errors.file_transfer_contact_document_id.message}</p>
                   }
@@ -205,11 +244,20 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             rules={{
               required: 'กรุณาระบุรูปด้านหน้า'
             }}
-            render={() => {
+            render={({ field }) => {
               return (
                 <fieldset>
                   <label>รูปด้านหน้า</label>
-                  <Upload
+                  <CustomUpload
+                    {...field}
+                    name={field.name}
+                    listType='picture-card'
+                    maxCount={1}
+                    defaultFileList={[defaultFileList[5]]}
+                    fileList={[defaultFileList[5]]}
+                    onChange={(file) => uploadFile('file_front_image_id', file, true)}
+                  />
+                  {/* <Upload
                     draggable
                     className='block'
                     uploadLimit={1}
@@ -227,7 +275,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         กรุณาอัปโหลดไฟล์ประเภท PDF
                       </p>
                     </div>
-                  </Upload>
+                  </Upload> */}
                   {!!errors.file_front_image_id &&
                     <p className='text-red-500'>{errors.file_front_image_id.message}</p>
                   }
@@ -242,11 +290,20 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             rules={{
               required: 'กรุณาอัปโหลดรูปด้านข้าง'
             }}
-            render={() => {
+            render={({ field }) => {
               return (
                 <fieldset>
                   <label>รูปด้านข้าง</label>
-                  <Upload
+                  <CustomUpload
+                    disabled
+                    {...field}
+                    name={field.name}
+                    listType='picture-card'
+                    maxCount={1}
+                    defaultFileList={[defaultFileList[6]]}
+                    fileList={[defaultFileList[6]]}
+                  />
+                  {/* <Upload
                     disabled
                     draggable
                     className='block'
@@ -264,7 +321,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         กรุณาอัปโหลดไฟล์ประเภท PDF
                       </p>
                     </div>
-                  </Upload>
+                  </Upload> */}
                   {!!errors.file_side_image_id &&
                     <p className='text-red-500'>{errors.file_side_image_id.message}</p>
                   }
@@ -278,11 +335,20 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
             rules={{
               required: 'กรุณาอัปโหลดรูปด้านหลัง'
             }}
-            render={() => {
+            render={({ field }) => {
               return (
                 <fieldset>
                   <label>รูปด้านหลัง</label>
-                  <Upload
+                  <CustomUpload
+                    disabled
+                    {...field}
+                    name={field.name}
+                    listType='picture-card'
+                    maxCount={1}
+                    defaultFileList={[defaultFileList[7]]}
+                    fileList={[defaultFileList[7]]}
+                  />
+                  {/* <Upload
                     disabled
                     draggable
                     className='block'
@@ -300,7 +366,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         กรุณาอัปโหลดไฟล์ประเภท PDF
                       </p>
                     </div>
-                  </Upload>
+                  </Upload> */}
                   {!!errors.file_back_image_id &&
                     <p className='text-red-500'>{errors.file_back_image_id.message}</p>
                   }
