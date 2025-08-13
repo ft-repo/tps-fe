@@ -1,102 +1,130 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from "react";
-import Table from '@/components/ui/Table'
-import { FaPenToSquare as EditIcon, FaTrash as DeleteIcon } from "react-icons/fa6";
-import { Button } from '@/components/ui';
-
-const { Tr, Th, Td, THead, TBody } = Table
+import React from 'react'
+import {
+  FaPenToSquare as EditIcon,
+  FaTrash as DeleteIcon,
+} from 'react-icons/fa6'
+import { Button } from '@/components/ui'
+import { StaffList, StaffListsResponse } from '@/@types/staff/user-info'
+import { useNavigate } from 'react-router-dom'
+import { Table, TableProps } from 'antd'
 
 interface Props {
-
+  userLists: StaffListsResponse
+  handleTableChange: (page: number, pageSize: number) => void
+  confirmDelete: (id: string | number, data: StaffList) => void
+  loading: boolean
 }
 
 const SeachTable: React.FC<Props> = (props) => {
-	const { } = props;
+  const { userLists, loading, handleTableChange, confirmDelete } = props
 
-	return (
-		<div>
-			<Table>
-				<THead>
-					<Tr>
-						<Th>Username</Th>
-						<Th>ชื่อ - นามสกุล</Th>
-						<Th>หน่วยงาน</Th>
-						<Th>สิทธิ์การเข้าใช้งาน</Th>
-						<Th>จัดการ</Th>
-					</Tr>
-				</THead>
-				<TBody>
-					<Tr>
-						<Td>Bloodedge</Td>
-						<Td>Ragna</Td>
-						<Td>Blazblue</Td>
-						<Td>ผู้ดูแลระบบ</Td>
-						<Td>
-							<div className='flex items-center gap-2'>
-								<Button
-									size='xs'
-									variant='solid'
-									icon={<EditIcon />}
-								//onClick={() => setOpen({ open: true })}
-								/>
-								<Button
-									size='xs'
-									variant='solid'
-									icon={<DeleteIcon />}
-									color='red-600'
-								/>
-							</div>
-						</Td>
-					</Tr>
-					<Tr>
-						<Td>Bloodedge</Td>
-						<Td>Ragna</Td>
-						<Td>Blazblue</Td>
-						<Td>ผู้ดูแลระบบ</Td>
-						<Td>
-							<div className='flex items-center gap-2'>
-								<Button
-									size='xs'
-									variant='solid'
-									icon={<EditIcon />}
-								//onClick={() => setOpen({ open: true })}
-								/>
-								<Button
-									size='xs'
-									variant='solid'
-									icon={<DeleteIcon />}
-									color='red-600'
-								/>
-							</div>
-						</Td>
-					</Tr>
-					<Tr>
-						<Td>Bloodedge</Td>
-						<Td>Ragna</Td>
-						<Td>Blazblue</Td>
-						<Td>ผู้ดูแลระบบ</Td>
-						<Td>
-							<div className='flex items-center gap-2'>
-								<Button
-									size='xs'
-									variant='solid'
-									icon={<EditIcon />}
-								//onClick={() => setOpen({ open: true })}
-								/>
-								<Button
-									size='xs'
-									variant='solid'
-									icon={<DeleteIcon />}
-									color='red-600'
-								/>
-							</div>
-						</Td>
-					</Tr>
-				</TBody>
-			</Table>
-		</div>
-	)
+  const navigate = useNavigate()
+
+  const columns: TableProps<StaffList>['columns'] = [
+    {
+      title: 'Username',
+      dataIndex: 'username',
+      key: 'username',
+      width: 300,
+      align: 'center',
+    },
+    {
+      title: 'ชื่อ - นามสกุล',
+      dataIndex: 'name',
+      key: 'name',
+      width: 200,
+      align: 'center',
+      render: (item, record) => {
+        return (
+          <div className="flex items-center justify-center gap-2">
+            <span>{record.title} {record.first_name} {record.last_name}</span>
+          </div>
+        )
+      },
+    },
+    {
+      title: 'หน่วยงาน',
+      dataIndex: 'department',
+      key: 'department',
+      width: 200,
+      align: 'center',
+      render: (item, record) => {
+        return (
+          <div className="flex items-center justify-center gap-2">
+            <span>{record.department.dept_name}</span>
+          </div>
+        )
+      },
+    },
+    {
+      title: 'สิทธิ์การเข้าใช้งาน',
+      dataIndex: 'role',
+      key: 'role',
+      width: 200,
+      align: 'center',
+      render: (item, record) => {
+        return (
+          <div className="flex items-center justify-center gap-2">
+            <span>{record.role.name}</span>
+          </div>
+        )
+      },
+    },
+    {
+      title: 'จัดการ',
+      dataIndex: 'action',
+      key: 'action',
+      fixed: 'right',
+      width: 140,
+      align: 'center',
+      render: (item, record) => {
+        return (
+          <div className="flex items-center justify-center gap-2">
+            <Button
+              size="xs"
+              variant="solid"
+              icon={<EditIcon />}
+              color="yellow-600"
+              // onClick={() => navigate(`/user-info/staff/edit/${record.id}`)}
+            />
+            <Button
+              size="xs"
+              variant="solid"
+              icon={<DeleteIcon />}
+              color="red-600"
+              onClick={() => confirmDelete(record.id, record)}
+            />
+          </div>
+        )
+      },
+    },
+  ]
+
+  return (
+    <Table
+      columns={columns}
+      dataSource={userLists?.data || []}
+      loading={loading}
+      pagination={{
+        defaultCurrent: 1,
+        defaultPageSize: 10,
+        current: userLists?.page,
+        pageSize: userLists?.limit,
+        total: Number(userLists?.total) || 0,
+        onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
+        showSizeChanger: true,
+        position: ['bottomRight'],
+        showTotal: (total, range) => {
+          const totalPage = (range[1] + 1) - range[0]
+          return `ทั้งหมด ${totalPage || total} รายการ`
+        },
+        locale: { items_per_page: '/ หน้า' },
+      }}
+      scroll={{ x: 1000 }}
+    />
+  )
 }
 
 export default React.memo<Props>(SeachTable)

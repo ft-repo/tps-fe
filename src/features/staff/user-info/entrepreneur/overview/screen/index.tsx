@@ -79,9 +79,9 @@ const OverviewScreen: FC = () => {
 
   const handleTableChange = useCallback(
     (page: number, pageSize: number) => {
-      fetchClientLists('', page, pageSize)
+      fetchClientLists(form.getValues('username'), page, pageSize)
     },
-    [fetchClientLists],
+    [fetchClientLists, form],
   )
 
   const confirmDelete = useCallback(
