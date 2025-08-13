@@ -1,13 +1,19 @@
-import { ClientList, StaffList } from '@/@types/staff/user-info'
+import { ClientListsResponse, StaffListsResponse } from '@/@types/staff/user-info'
 import { createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants'
 
 export type StaffState = {
-  userLists: ClientList[] | StaffList[]
+  userLists: ClientListsResponse | StaffListsResponse
 }
 
 const initialState: StaffState = {
-  userLists: [],
+  userLists: {
+    data: [],
+    page: 1,
+    limit: 10,
+    total_pages: 0,
+    total: 0,
+  },
 }
 
 const UserManageSlice = createSlice({

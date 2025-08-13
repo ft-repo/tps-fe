@@ -2,6 +2,10 @@ export interface SearchUserName {
   username: string;
 }
 
+export interface DeleteClientListsResponse {
+  message: string;
+}
+
 export interface TableCategoryData {
   business_name: string;
   road_code: string;

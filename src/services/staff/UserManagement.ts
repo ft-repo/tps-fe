@@ -1,5 +1,5 @@
 import ApiService from '@/services/ApiService'
-import { ClientListsResponse, StaffListsResponse } from '@/@types/staff/user-info'
+import { ClientListsResponse, DeleteClientListsResponse, StaffListsResponse } from '@/@types/staff/user-info'
 
 export interface UserListsParams {
   limit: number
@@ -20,6 +20,14 @@ export const getClientLists = async (params: UserListsParams) => {
     },
   })
   return response.data
+}
+
+export const deleteClientLists = async (id: string | number) => {
+  const response = await ApiService.fetchData<DeleteClientListsResponse>({
+    url: `/admin/manage/user/${id}`,
+    method: 'DELETE',
+  })
+  return response
 }
 
 export const getStaffLists = async (params: UserListsParams) => {

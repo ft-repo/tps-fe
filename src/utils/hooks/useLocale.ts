@@ -16,10 +16,10 @@ function useLocale() {
 		// 	i18n.changeLanguage(formattedLang)
 		// }
 		i18n.changeLanguage('th')
-		
-		dateLocales[formattedLang]().then(() => {
-			dayjs.locale(formattedLang)
-		})
+		dayjs.locale('th')
+		// dateLocales[formattedLang]().then(() => {
+		// 	dayjs.locale(formattedLang)
+		// })
 	}, [locale])
 
 	return locale

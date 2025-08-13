@@ -14,7 +14,7 @@ const appConfig: AppConfig = {
     authenticatedAdminEntryPath: '/request-list/overview',
     unAuthenticatedEntryPath: '/sign-in',
     tourPath: '/',
-    locale: 'en',
+    locale: 'th',
     enableMock: false,
 }
 
