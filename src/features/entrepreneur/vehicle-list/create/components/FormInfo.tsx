@@ -2,12 +2,13 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
-import { Button, Input, Select, Upload } from '@/components/ui'
-import { postUploadFile } from '@/services/entrepreneur/VehicleListService'
+import { Button, Upload } from '@/components/ui'
+import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService'
 import React, { useCallback } from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
+import { Input, Select } from 'antd'
 
 interface Props {
   control: Control<FieldType>;
@@ -22,7 +23,7 @@ const FormInfo: React.FC<Props> = (props) => {
   const uploadFile = useCallback(async (file: any) => {
     try {
       // POST
-      const response = await postUploadFile({ upload: file[0] })
+      const response = await postUploadFileAPI({ upload: file[0] })
       if (response.status === 200) {
         setValue('file_registered_document_id', response.data?.url)
       } else {
@@ -57,6 +58,20 @@ const FormInfo: React.FC<Props> = (props) => {
                   <label>ประเภทรถ</label>
                   <Select
                     {...field}
+                    placeholder='กรุณาเลือก'
+                    options={vehicle_type}
+                    fieldNames={{
+                      label: 'name',
+                      value: 'id'
+                    }}
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
+                  />
+                  {/* <Select
+                    {...field}
                     name={field.name}
                     placeholder='กรุณาเลือก'
                     options={vehicle_type.map((item) => {
@@ -69,7 +84,7 @@ const FormInfo: React.FC<Props> = (props) => {
                       setValue('vehicle_type', e.value)
                       field.onChange(e)
                     }}
-                  />
+                  /> */}
                   {!!errors.vehicle_type &&
                     <p className='text-red-500'>{errors.vehicle_type.message}</p>
                   }
@@ -91,6 +106,11 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
                   />
                   {!!errors.license_plate &&
                     <p className='text-red-500'>{errors.license_plate.message}</p>
@@ -113,6 +133,11 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
                   />
                   {!!errors.vehicle_model &&
                     <p className='text-red-500'>{errors.vehicle_model.message}</p>
@@ -135,6 +160,11 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
                   />
                   {!!errors.province &&
                     <p className='text-red-500'>{errors.province.message}</p>
@@ -157,6 +187,14 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
+                    onChange={(e) => {
+                      field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                    }}
                   />
                   {!!errors.vehicle_weight &&
                     <p className='text-red-500'>{errors.vehicle_weight.message}</p>
@@ -179,6 +217,11 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
                   />
                   {!!errors.vehicle_color &&
                     <p className='text-red-500'>{errors.vehicle_color.message}</p>
@@ -202,6 +245,14 @@ const FormInfo: React.FC<Props> = (props) => {
                       {...field}
                       name={field.name}
                       placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                      }}
                     />
                     {!!errors.vehicle_distance &&
                       <p className='text-red-500'>{errors.vehicle_distance.message}</p>
@@ -227,6 +278,14 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
+                    onChange={(e) => {
+                      field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                    }}
                   />
                   {!!errors.wide_unit &&
                     <p className='text-red-500'>{errors.wide_unit.message}</p>
@@ -249,6 +308,14 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
+                    onChange={(e) => {
+                      field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                    }}
                   />
                   {!!errors.long_unit &&
                     <p className='text-red-500'>{errors.long_unit.message}</p>
@@ -271,6 +338,14 @@ const FormInfo: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
+                    onChange={(e) => {
+                      field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                    }}
                   />
                   {!!errors.tall_unit &&
                     <p className='text-red-500'>{errors.tall_unit.message}</p>

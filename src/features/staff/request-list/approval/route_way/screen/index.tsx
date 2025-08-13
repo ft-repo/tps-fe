@@ -1,9 +1,8 @@
 import React from 'react';
-import Left from '../components/left'
-import Right from '../components/right'
+import Top from '../components/top';
+import Bottom from '../components/bottom';
 
-// Component หลัก
-const ApprovalDocumentPage  = () => {
+const ApprovalRoutePage = () => {
     return (
         // Container หลักของหน้า (พื้นหลังสีเทาอ่อน)
         <div style={{
@@ -29,14 +28,14 @@ const ApprovalDocumentPage  = () => {
                     display: 'flex',
                     alignItems: 'center',
                     width: '100%',
-                    padding: '15px 20px 0px 20px',
+                    padding: '15px 20px 15px 20px',
                 }}>
-                    <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1F74AA', width: '90%' }}>
+                    <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1F74AA', width: '85%' }}>
                         ตรวจสอบเอกสาร
                     </div>
 
                     {/* ปุ่ม Export to PDF */}
-                    <div style={{ width: '10%', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
+                    <div style={{ width: '15%', display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
                         <button style={{
                             backgroundColor: '#1F74AA',
                             color: 'white',
@@ -51,18 +50,14 @@ const ApprovalDocumentPage  = () => {
                     </div>
                 </div>
 
-                {/* Content Area (แบ่งเป็น Sidebar ซ้าย และ Main Content ขวา) */}
-                <div style={{ display: 'flex', flexGrow: 1 }}>
-                    {/* Left Sidebar */}
-                    <Left/>
+                { /* top */ }
+                <Top/>
 
-                    {/* Main Form Content (หนังสือมอบอำนาจ) */}
-                    <Right/>
-                </div>
+                {/* รายการประเมินเส้นทาง */}
+                <Bottom/>
             </div>
         </div>
     );
 }
 
-// ใช้ React.memo เพื่อป้องกันการ re-render โดยไม่จำเป็น หาก props ไม่ได้เปลี่ยน
-export default ApprovalDocumentPage;
+export default ApprovalRoutePage

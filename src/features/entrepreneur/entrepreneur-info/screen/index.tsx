@@ -4,9 +4,13 @@
 import React, { useCallback, useRef } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '../components';
 import { useForm } from 'react-hook-form';
-import { FieldType } from '@/@types/entrepreneur/executive-data';
-import dayjs from 'dayjs';
+import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
 import { Button } from '@/components/ui';
+import { setLoading, useAppDispatch, useAppSelector } from '@/store';
+import { getUserData } from '@/store/slices/entrepreneur';
+import dayjs from 'dayjs';
+import { putUserAPI } from '@/services/entrepreneur/UserService';
+import { message } from 'antd';
 
 interface Props {
 }
@@ -14,39 +18,121 @@ interface Props {
 const ExecutiveDataScreen: React.FC<Props> = (props) => {
   const { } = props
   const submitRef = useRef<HTMLButtonElement>(null)
+  const dispatch = useAppDispatch()
+  const userData = useAppSelector(state => state.entrepreneur.user)
+  const loading = useAppSelector(state => state.layout.loading)
+
+  const renderBusinessAddress = useCallback((
+    houseNumber: string,
+    village: string,
+    lane: string,
+    road: string,
+    province: string,
+    district: string,
+    subDistrict: string,
+    zipCode: string
+  ) => {
+    const addressArr = [
+      houseNumber || null,
+      village || null,
+      lane || null,
+      road || null,
+      province || null,
+      district || null,
+      subDistrict || null,
+      zipCode || null
+    ]
+    return addressArr.join(' ').trim()
+  }, [])
 
   const form = useForm<FieldType>({
     defaultValues: {
-      business_type: 'ห้างหุ้นส่วนสามัญนิติบุคคล',
-      business_name: 'ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด',
-      business_address: 'บ้านเลขที่ 99/1 หมู่ที่ 5 ตำบลคลองหนึ่ง อำเภอคลองหลวง จังหวัดปทุมธานี 12120',
-      office_tel: '02-123-4567',
-      business_no: '0105557001234',
-      contact_name: 'ชญานิษฐ์ พงศ์เกษมชัย',
-      contact_type: 'ผู้มอบอำนาจ',
-      citizen_id: '1 2345 67890 12 3',
-      contact_tel: '',
+      business_type: userData.important_info.entity_name,
+      business_name: userData.important_info.business_name,
+      business_address: renderBusinessAddress(
+        userData.important_info.business_address.house_number,
+        userData.important_info.business_address.village,
+        userData.important_info.business_address.lane,
+        userData.important_info.business_address.road,
+        userData.important_info.business_address.province,
+        userData.important_info.business_address.district,
+        userData.important_info.business_address.sub_district,
+        userData.important_info.business_address.zip_code
+      ),
+      office_tel: userData.important_info.business_phone_number,
+      business_no: userData.important_info.registration_no,
+      contact_name: userData.important_info.contact_name,
+      contact_type: userData.important_info.contact_type.name,
+      citizen_id: userData.important_info.cid,
+      contact_tel: userData.important_info.contact_phone_number,
       file_id: '',
-      approved_date: dayjs().format('YYYY-MM-DD'),
-      file_copied_of_citizen_id: '',
-      file_legal_entity_id: '',
-      file_trasfer_ownership_image_id: '',
+      approved_date: dayjs(userData.important_info.permission_date),
+      file_copied_of_citizen_id: userData.business_document.cid_card_file_url,
+      file_legal_entity_id: userData.business_document.business_file_url,
+      file_trasfer_ownership_image_id: userData.business_document.certificate_file_url,
     },
   })
 
-  const { handleSubmit, control } = form
+  const {
+    handleSubmit,
+    control,
+    formState: { errors }
+  } = form
 
-  const onSubmit = useCallback((value: FieldType) => {
-    console.log(value)
-  }, [])
+  const onSubmit = useCallback(async (value: FieldType) => {
+    const body: APIPutBody = {
+      important_info: {
+        business_phone_number: value.office_tel,
+        contact_name: value.contact_name,
+        contact_type_id: Number(value.contact_type),
+        cid: value.citizen_id,
+        contact_phone_number: value.contact_tel
+      },
+      business_document: {
+        cid_card_file_url: value.file_copied_of_citizen_id,
+        certificate_file_url: value.file_trasfer_ownership_image_id,
+        business_file_url: value.file_legal_entity_id,
+      }
+    }
+
+    dispatch(setLoading(true))
+    try {
+      const response = await putUserAPI(body)
+      if (response.status === 200) {
+        message.success(response.data?.message)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch])
 
   return (
     <>
       <section className='flex justify-between items-center flex-wrap'>
         <h3>ข้อมูลผู้ประกอบการ</h3>
         <div className='flex items-center gap-3'>
-          <Button variant='default' size='sm'>ย้อนกลับข้อมูลก่อนหน้า</Button>
-          <Button variant='solid' size='sm' onClick={() => submitRef.current?.click()}>บันทึกข้อมูลใหม่</Button>
+          <Button
+            variant='default'
+            size='sm'
+            loading={loading}
+            onClick={() => dispatch(getUserData())}
+          >
+            ย้อนกลับข้อมูลก่อนหน้า
+          </Button>
+          <Button
+            variant='solid'
+            size='sm'
+            loading={loading}
+            onClick={() => submitRef.current?.click()}
+          >
+            บันทึกข้อมูลใหม่
+          </Button>
         </div>
       </section>
       <section className='mt-5'>
@@ -54,9 +140,11 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
           <div className='block xl:grid grid-cols-2 gap-5'>
             <FormExecutiveData
               control={control}
+              errors={errors}
             />
             <FormExecutiveDocument
               control={control}
+              errors={errors}
             />
           </div>
           <button ref={submitRef} hidden type='submit' />

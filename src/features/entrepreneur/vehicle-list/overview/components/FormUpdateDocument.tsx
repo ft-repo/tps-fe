@@ -5,7 +5,7 @@ import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import React, { useCallback } from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
 // import { FaUpload as UploadIcon } from "react-icons/fa6";
-import { postUploadFile, postUploadImage } from '@/services/entrepreneur/VehicleListService';
+import { postUploadFileAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 import { Upload as CustomUpload } from '@/components/custom/upload';
 import { UploadFile } from 'antd';
 
@@ -23,9 +23,9 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
     // console.log(file)
     let uploadAPI
     if (isImage) {
-      uploadAPI = postUploadImage
+      uploadAPI = postUploadImageAPI
     } else {
-      uploadAPI = postUploadFile
+      uploadAPI = postUploadFileAPI
     }
     try {
       // POST

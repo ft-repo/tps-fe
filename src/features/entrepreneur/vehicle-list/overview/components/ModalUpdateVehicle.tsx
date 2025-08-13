@@ -9,7 +9,7 @@ import { FormUpdateData, FormUpdateDocument } from '.';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { APIPostBody, VehicleListByIDResponse } from '@/@types/services/vehicle';
 import { INIT_VEHICLE_MODAL } from '../screen';
-import { getUpload, putVehicleList } from '@/services/entrepreneur/VehicleListService';
+import { getUploadAPI, putVehicleAPI } from '@/services/entrepreneur/VehicleListService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { UploadFile } from 'antd';
 
@@ -96,7 +96,7 @@ const DialogContent = (props: DialogContentProps) => {
     dispatch(setLoading(true))
     // CREATING REQUEST
     try {
-      const response = await putVehicleList(id, body)
+      const response = await putVehicleAPI(id, body)
       if (response.status === 200) {
         toast.push(
           <Notification
@@ -172,7 +172,7 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
     return match ? match[1] : '';
   }, [])
 
-  const getUploadList = useCallback(async () => {
+  const getUploadAPIList = useCallback(async () => {
     // CHECK IF DATA EXISTED
     if (!data) return
     dispatch(setLoading(true))
@@ -188,7 +188,7 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
       extractUrl(data?.vehicle_pictures.back_rear_url || ''),
     ]
     try {
-      const response = await Promise.all(uploadArr.map(item => getUpload(item as string)))
+      const response = await Promise.all(uploadArr.map(item => getUploadAPI(item as string)))
       const result = response.every(item => item.status === 200)
       if (result) {
         setFileList(response.map((item, index) => {
@@ -204,7 +204,7 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
             url: url,
             // thumbUrl: url,
             type: item.data.type,
-            originFileObj: blobFile as any
+            originFileObj: blobFile as any,
           }
         }))
       }
@@ -221,7 +221,7 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (open) {
-      getUploadList()
+      getUploadAPIList()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])

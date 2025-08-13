@@ -6,7 +6,7 @@ import { Upload } from '@/components/ui'
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
-import { postUploadFile, postUploadImage } from '@/services/entrepreneur/VehicleListService';
+import { postUploadFileAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
   control: Control<FieldType>;
@@ -20,9 +20,9 @@ const FormDocument: React.FC<Props> = (props) => {
   const uploadFile = useCallback(async (fieldName: string, file: any, isImage: boolean = false) => {
     let uploadAPI
     if (isImage) {
-      uploadAPI = postUploadImage
+      uploadAPI = postUploadImageAPI
     } else {
-      uploadAPI = postUploadFile
+      uploadAPI = postUploadFileAPI
     }
     try {
       // POST

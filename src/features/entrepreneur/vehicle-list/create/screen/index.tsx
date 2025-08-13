@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { APIPostBody } from '@/@types/services/vehicle';
-import { postVehicleList } from '@/services/entrepreneur/VehicleListService';
+import { postVehicleAPI } from '@/services/entrepreneur/VehicleListService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 
 interface Props {
@@ -84,7 +84,7 @@ const CreateScreen: React.FC<Props> = (props) => {
     dispatch(setLoading(true))
     // CREATING REQUEST
     try {
-      const response = await postVehicleList(body)
+      const response = await postVehicleAPI(body)
       if (response.status === 200) {
         toast.push(
           <Notification

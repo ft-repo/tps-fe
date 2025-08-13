@@ -16,3 +16,28 @@ export interface FieldType {
   file_legal_entity_id: string;
   file_trasfer_ownership_image_id: string;
 }
+
+// PUT USER
+export interface APIPutBody {
+  important_info: ImportantInfo;
+  business_document: BusinessDocument;
+}
+
+export interface ImportantInfo {
+  business_phone_number: string;
+  contact_name: string;
+  contact_type_id: number;
+  cid: string;
+  contact_phone_number: string;
+}
+
+export interface BusinessDocument {
+  cid_card_file_url: string;
+  certificate_file_url: string;
+  business_file_url: string;
+}
+
+export interface APIChangePasswordBody {
+  new_password: string;
+  confirm_password: string;
+}

@@ -7,6 +7,7 @@ import Layout from '@/components/layouts'
 import mockServer from './mock'
 import appConfig from '@/configs/app.config'
 import './locales'
+import '@ant-design/v5-patch-for-react-19';
 
 const environment = process.env.NODE_ENV
 
