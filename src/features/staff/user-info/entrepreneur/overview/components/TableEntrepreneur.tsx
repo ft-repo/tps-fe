@@ -5,16 +5,17 @@ import Table from '@/components/ui/Table'
 import { FaTrash as DeleteIcon } from "react-icons/fa6";
 import { useNavigate } from "react-router";
 import { Button } from '@/components/ui';
+import { ClientList } from '@/@types/staff/user-info';
 
 const { Tr, Th, Td, THead, TBody } = Table
 
 
 interface Props {
-
+  userLists?: ClientList[]
 }
 
 const TableEntrepreneur: React.FC<Props> = (props) => {
-  const { } = props
+  const { userLists } = props
   const navigate = useNavigate();
 
   return (
