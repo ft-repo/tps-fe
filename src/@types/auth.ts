@@ -3,6 +3,11 @@ export type SignInCredential = {
   password: string
 }
 
+export type SignInStaffCredential = {
+  userName: string
+  password: string
+}
+
 export type SignInResponse = {
   access_token: string;
   details: {
@@ -59,6 +64,29 @@ export type SignInResponse = {
   };
   refresh_token: string;
   role: string;
+}
+
+export type SignInStaffResponse = {
+  access_token: string
+  details: {
+    id: string
+    username: string
+    title: string
+    first_name: string
+    last_name: string
+    department_id: number
+    role_id: number
+    department: {
+      dept_name: string
+      dept_type: number
+      dept_group: number
+      dept_province: string
+    }
+    role: {
+      name: string
+    }
+  }
+  refresh_token: string
 }
 
 export type SignUpResponse = SignInResponse

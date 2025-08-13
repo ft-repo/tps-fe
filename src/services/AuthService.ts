@@ -6,11 +6,21 @@ import type {
     ResetPassword,
     SignInResponse,
     SignUpResponse,
+    SignInStaffCredential,
+    SignInStaffResponse,
 } from '@/@types/auth'
 
 export async function apiSignIn(data: SignInCredential) {
     return ApiService.fetchData<SignInResponse>({
         url: '/client/auth/login',
+        method: 'post',
+        data,
+    })
+}
+
+export async function apiSignInStaff(data: SignInStaffCredential) {
+    return ApiService.fetchData<SignInStaffResponse>({
+        url: '/admin/auth/login',
         method: 'post',
         data,
     })
