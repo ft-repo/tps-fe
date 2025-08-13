@@ -204,7 +204,7 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
             url: url,
             // thumbUrl: url,
             type: item.data.type,
-            originFileObj: blobFile as any
+            originFileObj: blobFile as any,
           }
         }))
       }
