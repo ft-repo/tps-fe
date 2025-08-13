@@ -9,12 +9,17 @@ export interface FieldType {
   contact_type: string;
   citizen_id: string;
   contact_tel: string;
-  file_id: string;
+  file_id: FileType;
   approved_date: Date | string | null | any;
   // DOCUMENT
-  file_copied_of_citizen_id: string;
-  file_legal_entity_id: string;
-  file_trasfer_ownership_image_id: string;
+  file_copied_of_citizen_id: FileType;
+  file_legal_entity_id: FileType;
+  file_trasfer_ownership_image_id: FileType;
+}
+
+export interface FileType {
+  file: any[];
+  url: string;
 }
 
 // PUT USER

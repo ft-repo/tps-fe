@@ -10,7 +10,7 @@ import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getUserData } from '@/store/slices/entrepreneur';
 import dayjs from 'dayjs';
 import { putUserAPI } from '@/services/entrepreneur/UserService';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 
 interface Props {
 }
@@ -65,11 +65,23 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
       contact_type: userData.important_info.contact_type.name,
       citizen_id: userData.important_info.cid,
       contact_tel: userData.important_info.contact_phone_number,
-      file_id: '',
+      file_id: {
+        file: [],
+        url: ''
+      },
       approved_date: dayjs(userData.important_info.permission_date),
-      file_copied_of_citizen_id: userData.business_document.cid_card_file_url,
-      file_legal_entity_id: userData.business_document.business_file_url,
-      file_trasfer_ownership_image_id: userData.business_document.certificate_file_url,
+      file_copied_of_citizen_id: {
+        file: [],
+        url: userData.business_document.cid_card_file_url
+      },
+      file_legal_entity_id: {
+        file: [],
+        url: userData.business_document.business_file_url
+      },
+      file_trasfer_ownership_image_id: {
+        file: [],
+        url: userData.business_document.certificate_file_url
+      },
     },
   })
 
@@ -89,9 +101,9 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         contact_phone_number: value.contact_tel
       },
       business_document: {
-        cid_card_file_url: value.file_copied_of_citizen_id,
-        certificate_file_url: value.file_trasfer_ownership_image_id,
-        business_file_url: value.file_legal_entity_id,
+        cid_card_file_url: value.file_copied_of_citizen_id.url,
+        certificate_file_url: value.file_trasfer_ownership_image_id.url,
+        business_file_url: value.file_legal_entity_id.url,
       }
     }
 
@@ -99,11 +111,37 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     try {
       const response = await putUserAPI(body)
       if (response.status === 200) {
-        message.success(response.data?.message)
+        Modal.success({
+          title: 'สำเร็จ',
+          content: 'บันทึกข้อมูลสำเร็จ',
+          okText: 'ตกลง',
+          onOk: () => dispatch(getUserData()),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message)
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
       } else {
         console.error(error)
       }
