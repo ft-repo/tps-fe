@@ -1,26 +1,27 @@
 
+import { APIChangePasswordBody, APIPutBody } from "@/@types/entrepreneur/executive-data"
 import ApiService from "../ApiService"
+import { UserState } from "@/@types/reducer/user"
 
-export const getUser = async () => {
-  return ApiService.fetchData<any>({
+export const getUserAPI = async () => {
+  return ApiService.fetchData<UserState, any>({
     url: '/client/user/me',
     method: 'get',
   })
 }
 
-export const putUser = async (data: any) => {
-  return ApiService.fetchData<any>({
+export const putUserAPI = async (data: APIPutBody) => {
+  return ApiService.fetchData<any, APIPutBody>({
     url: `/client/user/me`,
-    method: 'post',
+    method: 'put',
     data: { ...data }
   })
 }
 
-// export const postUser = async (data: APIPostBody) => {
-//   return ApiService.fetchData<any, APIPostBody>({
-//     url: '/client/vehicle',
-//     method: 'post',
-//     // data = body
-//     data: { ...data }
-//   })
-// }
+export const putChangePassword = async (data: APIChangePasswordBody) => {
+  return ApiService.fetchData<any, APIChangePasswordBody>({
+    url: `/client/user/me/password`,
+    method: 'put',
+    data: { ...data }
+  })
+}
