@@ -1,4 +1,4 @@
-import { postUploadFile, postUploadImage } from '@/services/entrepreneur/VehicleListService'
+import { postUploadFileAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService'
 import { FaUpload as UploadIcon } from 'react-icons/fa6'
 import { useCallback, useState } from 'react'
 import { useFormContext, Controller, Control, FieldPath, FieldValues } from 'react-hook-form'
@@ -57,9 +57,9 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
     async (fileName: string, file: File, setFieldValue?: (value: any) => void) => {
       let uploadAPI
       if (isImage) {
-        uploadAPI = postUploadImage
+        uploadAPI = postUploadImageAPI
       } else {
-        uploadAPI = postUploadFile
+        uploadAPI = postUploadFileAPI
       }
       
       try {
