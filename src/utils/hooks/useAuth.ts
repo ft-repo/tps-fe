@@ -174,7 +174,7 @@ function useAuth() {
 				navigate(
 					redirectUrl
 						? redirectUrl
-						: appConfig.authenticatedEntryPath,
+						: appConfig.authenticatedAdminEntryPath,
 				)
 				return {
 					status: 'success',
