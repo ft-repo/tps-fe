@@ -58,3 +58,9 @@ export interface ListOptions {
   /** Abort controller signal for canceling requests */
   signal?: AbortSignal;
 }
+
+
+// NEW
+export interface FieldType {
+  search: string;
+}

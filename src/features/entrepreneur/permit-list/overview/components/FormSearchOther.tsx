@@ -1,40 +1,47 @@
+/* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/permit-list'
-import { Button, Input } from '@/components/ui'
+import { Button } from '@/components/ui'
+import { Input } from 'antd';
 import React, { useCallback } from 'react'
 import { useForm, Controller } from "react-hook-form"
 
 interface Props {
-
+  handleSearch: (value: FieldType) => void;
 }
 
 const FormSearchOther: React.FC<Props> = (props) => {
-  const { } = props
+  const { handleSearch } = props
 
 
   const form = useForm<FieldType>({
     defaultValues: {
-      permit_list: ''
+      search: ''
     }
   })
 
   const { handleSubmit, control } = form
 
-  const onSubmit = useCallback((data: FieldType) => {
-    console.log(data)
-  }, [])
+  const onSubmit = useCallback((value: any) => {
+    handleSearch(value.search)
+  }, [handleSearch])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className='flex items-center gap-3 xl:w-1/3'>
         <Controller
-          name='permit_list'
+          name='search'
           control={control}
           render={({ field }) => {
             return (
               <Input
                 {...field}
                 name={field.name}
-                placeholder="พิมพ์เพื่อค้นหา..."
+                placeholder='พิมพ์เพื่อค้นหา...'
+                className='w-full'
+                size='large'
+                style={{
+                  fontFamily: 'Noto Sans Thai'
+                }}
               />
             )
           }}
