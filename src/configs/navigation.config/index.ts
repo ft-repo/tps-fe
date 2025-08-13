@@ -50,6 +50,26 @@ const navigationConfig: NavigationTree[] = [
     // STAFF ARE HERE
     // IF STAFF LOGIN IS READY, REMOVE USER FROM AUTHORITY
     {
+        key: 'request_list',
+        path: '/request-list/overview',
+        title: 'Request List',
+        translateKey: 'nav.request_list',
+        icon: 'request_list',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: ['USER','ADMIN'],
+        subMenu: [],
+    },
+    {
+        key: 'request_history',
+        path: '/request-history/overview',
+        title: 'Request History',
+        translateKey: 'nav.request_history',
+        icon: 'request_history',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: ['USER','ADMIN'],
+        subMenu: [],
+    },
+    {
         key: 'user_info',
         path: '',
         title: 'User Info',
@@ -80,26 +100,6 @@ const navigationConfig: NavigationTree[] = [
                 subMenu: []
             },
         ],
-    },
-    {
-        key: 'request_list',
-        path: '/request-list/overview',
-        title: 'Request List',
-        translateKey: 'nav.request_list',
-        icon: 'request_list',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: ['USER','ADMIN'],
-        subMenu: [],
-    },
-    {
-        key: 'request_history',
-        path: '/request-history/overview',
-        title: 'Request History',
-        translateKey: 'nav.request_history',
-        icon: 'request_history',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: ['USER','ADMIN'],
-        subMenu: [],
     },
 ]
 
