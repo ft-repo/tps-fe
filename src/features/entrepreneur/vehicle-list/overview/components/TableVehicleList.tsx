@@ -1,120 +1,115 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useMemo } from 'react'
+import React from 'react'
 import { FaPenToSquare as EditIcon, FaTrash as DeleteIcon } from "react-icons/fa6";
 import { Button } from '@/components/ui';
-import { ColumnDef, DataTable } from '@/components/shared';
 import { TableData } from '@/@types/entrepreneur/vehicle-list';
 import { Data } from '@/@types/reducer/vehicle';
+import { Table, TableProps } from 'antd';
 
 interface Props {
   data: Data;
   loading: boolean;
-  setOpen: ({ open, data, id }: { open: boolean, data: TableData, id: string | number }) => void;
-  onChangeTable: (page: number | string | null, pageSize: number | string | null) => void;
-  openModalWithData: (id: number) => void;
+  handleTableChange: (page: number, pageSize: number) => void;
+  confirmDelete: (id: string | number, data: TableData) => void;
 }
 
 const TableVehicleList: React.FC<Props> = (props) => {
-  const { data, loading, onChangeTable, openModalWithData, setOpen } = props
+  const { data, loading, handleTableChange, confirmDelete } = props
 
-  const columns: ColumnDef<TableData>[] = useMemo(() => {
-    return [
-      {
-        header: 'เลขที่',
-        accessorKey: 'id',
-      },
-      {
-        header: 'ประเภท',
-        accessorKey: 'vehicle_type_name',
-      },
-      {
-        header: 'ยี่ห้อ',
-        accessorKey: 'brand',
-      },
-      {
-        header: 'เลขทะเบียน / เลขตัวรถ',
-        accessorKey: 'plate_no',
-      },
-      {
-        header: 'จังหวัด',
-        accessorKey: 'plate_province',
-      },
-      {
-        header: 'น้ำหนัก (กิโลกรัม)',
-        accessorKey: 'weight',
-      },
-      {
-        header: 'จัดการ',
-        accessorKey: 'action',
-        cell: ({ row }) => {
-          return (
-            <div className='flex items-center gap-2'>
-              <Button
-                size='xs'
-                variant='solid'
-                icon={<EditIcon />}
-                // onClick={() => setOpen({ open: true })}
-                onClick={() => openModalWithData(row.original.id)}
-              />
-              <Button
-                size='xs'
-                variant='solid'
-                icon={<DeleteIcon />}
-                color='red-600'
-                onClick={() => setOpen({
-                  open: true,
-                  id: row.original.id,
-                  data: { ...row.original }
-                })}
-              />
-            </div>
-          )
-        }
-      },
-    ]
-  }, [openModalWithData, setOpen])
+  const columns: TableProps<TableData>['columns'] = [
+    {
+      title: 'เลขที่',
+      dataIndex: 'id',
+      key: 'id',
+      width: 100,
+      align: 'center'
+    },
+    {
+      title: 'ประเภท',
+      dataIndex: 'vehicle_type_name',
+      key: 'vehicle_type_name',
+      width: 300,
+      align: 'center'
+    },
+    {
 
-  // const mockData: TableData[] = [
-  //   {
-  //     no: '0016',
-  //     vehicle_type: 'รถลากจูง',
-  //     brand: 'ISUZU',
-  //     license_plate: '56 - 2256',
-  //     province: 'กรุงเทพมหานคร',
-  //     weight: '800'
-  //   },
-  //   {
-  //     no: '0016',
-  //     vehicle_type: 'รถลากจูง',
-  //     brand: 'ISUZU',
-  //     license_plate: '56 - 2256',
-  //     province: 'กรุงเทพมหานคร',
-  //     weight: '800'
-  //   },
-  // ]
-
-  const handlePaginationChange = useCallback((pageIndex: number) => {
-    onChangeTable(pageIndex, null)
-  }, [onChangeTable])
-
-  const handleSelectChange = useCallback((pageSize: number) => {
-    onChangeTable(null, pageSize)
-  }, [onChangeTable])
+      title: 'ยี่ห้อ',
+      dataIndex: 'brand',
+      key: 'brand',
+      width: 300,
+      align: 'center'
+    },
+    {
+      title: 'เลขทะเบียน / เลขตัวรถ',
+      dataIndex: 'plate_no',
+      key: 'plate_no',
+      width: 300,
+      align: 'center'
+    },
+    {
+      title: 'จังหวัด',
+      dataIndex: 'plate_province',
+      key: 'plate_province',
+      width: 300,
+      align: 'center'
+    },
+    {
+      title: 'น้ำหนัก (กิโลกรัม)',
+      dataIndex: 'weight',
+      key: 'weight',
+      width: 300,
+      align: 'center'
+    },
+    {
+      title: '',
+      dataIndex: 'action',
+      key: 'action',
+      width: 150,
+      align: 'center',
+      render: (item, record) => {
+        return (
+          <div className='flex items-center gap-2'>
+            <Button
+              size='xs'
+              variant='solid'
+              icon={<EditIcon />}
+            />
+            <Button
+              size='xs'
+              variant='solid'
+              icon={<DeleteIcon />}
+              color='red-600'
+              onClick={() => confirmDelete(record.id, record)}
+            />
+          </div>
+        )
+      }
+    },
+  ]
 
   return (
-    <DataTable
-      data={data.data}
+    <Table
       columns={columns}
+      dataSource={data.data || []}
       loading={loading}
-      pagingData={{
-        total: data.total,
-        pageIndex: data.page,
+      pagination={{
+        defaultCurrent: 1,
+        defaultPageSize: 10,
+        current: data.page,
         pageSize: data.limit,
+        total: Number(data.total) || 0,
+        onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
+        showSizeChanger: true,
+        position: ['bottomRight'],
+        showTotal: (total, range) => {
+          const totalPage = (range[1] + 1) - range[0]
+          return `ทั้งหมด ${totalPage || total} รายการ`
+        },
+        locale: { items_per_page: "/ หน้า" }
       }}
-      onPaginationChange={handlePaginationChange}
-      onSelectChange={handleSelectChange}
+      scroll={{ x: 1000 }}
     />
   )
 }

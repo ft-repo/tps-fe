@@ -3,7 +3,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { Button, Upload } from '@/components/ui'
-import { postUploadFile } from '@/services/entrepreneur/VehicleListService'
+import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService'
 import React, { useCallback } from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
@@ -23,7 +23,7 @@ const FormInfo: React.FC<Props> = (props) => {
   const uploadFile = useCallback(async (file: any) => {
     try {
       // POST
-      const response = await postUploadFile({ upload: file[0] })
+      const response = await postUploadFileAPI({ upload: file[0] })
       if (response.status === 200) {
         setValue('file_registered_document_id', response.data?.url)
       } else {
