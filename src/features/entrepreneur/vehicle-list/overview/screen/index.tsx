@@ -1,13 +1,13 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui';
-import { TableVehicleList, FormSearchVehicleList } from '../components';
+import { TableVehicleList, FormSearchVehicleList, ModalUpdateVehicle } from '../components';
 import { FaPlus as PlusIcon } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
-import { deleteVehicleAPI } from '@/services/entrepreneur/VehicleListService';
+import { deleteVehicleAPI, getVehicleByIDAPI } from '@/services/entrepreneur/VehicleListService';
 import { getVehicleData, setVehicleList } from '@/store/slices/entrepreneur';
 import { VehicleListByIDResponse } from '@/@types/services/vehicle';
 import { TableData } from '@/@types/entrepreneur/vehicle-list';
@@ -20,7 +20,7 @@ interface Props {
 
 export interface OpenDialogProps {
   open: boolean;
-  data: VehicleListByIDResponse | null;
+  data: VehicleListByIDResponse;
   id: string | number;
 }
 
@@ -62,25 +62,13 @@ export const INIT_VEHICLE_MODAL: OpenDialogProps = {
   }
 }
 
-export const INIT_CONFIRM_DELETE: OpenConfirmDialog = {
-  open: false,
-  id: '',
-  data: {
-    id: '',
-    brand: '',
-    plate_no: '',
-    plate_province: '',
-    vehicle_type_name: '',
-    weight: ''
-  },
-}
-
 const OverviewScreen: React.FC<Props> = (props) => {
   const { } = props
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
   const loading = useAppSelector(state => state.layout.loading)
+  const [open, setOpen] = useState<OpenDialogProps>(INIT_VEHICLE_MODAL)
 
   useEffect(() => {
     dispatch(getVehicleData(vehicle.overview.search))
@@ -158,6 +146,29 @@ const OverviewScreen: React.FC<Props> = (props) => {
     })
   }, [deleteRecord, loading])
 
+
+  const openDataModal = useCallback(async (id: string | number) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await getVehicleByIDAPI(id)
+      if (response.status === 200) {
+        setOpen({
+          open: true,
+          id: id,
+          data: { ...response.data }
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch])
+
   return (
     <>
       <section className='flex justify-between items-center flex-wrap'>
@@ -180,15 +191,15 @@ const OverviewScreen: React.FC<Props> = (props) => {
           loading={loading}
           handleTableChange={handleTableChange}
           confirmDelete={confirmDeleteRecord}
+          openDataModal={openDataModal}
         />
       </section>
-      {/* <ModalUpdateVehicle
+      <ModalUpdateVehicle
         open={open.open}
         data={open.data}
         id={open.id}
         setOpen={setOpen}
-        refetch={fetchAPI}
-      /> */}
+      />
     </>
   )
 }

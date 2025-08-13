@@ -6,17 +6,18 @@ import { FaPenToSquare as EditIcon, FaTrash as DeleteIcon } from "react-icons/fa
 import { Button } from '@/components/ui';
 import { TableData } from '@/@types/entrepreneur/vehicle-list';
 import { Data } from '@/@types/reducer/vehicle';
-import { Table, TableProps } from 'antd';
+import { Table, type TableProps } from 'antd';
 
 interface Props {
   data: Data;
   loading: boolean;
   handleTableChange: (page: number, pageSize: number) => void;
   confirmDelete: (id: string | number, data: TableData) => void;
+  openDataModal: (id: string | number) => void;
 }
 
 const TableVehicleList: React.FC<Props> = (props) => {
-  const { data, loading, handleTableChange, confirmDelete } = props
+  const { data, loading, handleTableChange, confirmDelete, openDataModal } = props
 
   const columns: TableProps<TableData>['columns'] = [
     {
@@ -75,6 +76,7 @@ const TableVehicleList: React.FC<Props> = (props) => {
               size='xs'
               variant='solid'
               icon={<EditIcon />}
+              onClick={() => openDataModal(record.id)}
             />
             <Button
               size='xs'

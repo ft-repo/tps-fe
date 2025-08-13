@@ -3,13 +3,15 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useRef } from 'react'
 import { FormInfo, FormDocument } from '../components'
-import { Button, Notification, toast } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { APIPostBody } from '@/@types/services/vehicle';
 import { postVehicleAPI } from '@/services/entrepreneur/VehicleListService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
+import { Modal } from 'antd';
+import { getVehicleData } from '@/store/slices/entrepreneur';
 
 interface Props {
 
@@ -21,6 +23,7 @@ const CreateScreen: React.FC<Props> = (props) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const loading = useAppSelector(state => state.layout.loading)
+  const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -34,14 +37,38 @@ const CreateScreen: React.FC<Props> = (props) => {
       wide_unit: 0,
       long_unit: 0,
       tall_unit: 0,
-      file_registered_document_id: '',
-      file_property_document_id: '',
-      file_hire_contact_document_id: '',
-      file_purchase_contact_document_id: '',
-      file_transfer_contact_document_id: '',
-      file_front_image_id: '',
-      file_side_image_id: '',
-      file_back_image_id: '',
+      file_registered_document_id: {
+        file: [],
+        url: ''
+      },
+      file_property_document_id: {
+        file: [],
+        url: ''
+      },
+      file_hire_contact_document_id: {
+        file: [],
+        url: ''
+      },
+      file_purchase_contact_document_id: {
+        file: [],
+        url: ''
+      },
+      file_transfer_contact_document_id: {
+        file: [],
+        url: ''
+      },
+      file_front_image_id: {
+        file: [],
+        url: ''
+      },
+      file_side_image_id: {
+        file: [],
+        url: ''
+      },
+      file_back_image_id: {
+        file: [],
+        url: ''
+      },
     }
   })
 
@@ -66,18 +93,18 @@ const CreateScreen: React.FC<Props> = (props) => {
         width: Number(value.wide_unit) || 0,
         length: Number(value.long_unit) || 0,
         height: Number(value.tall_unit) || 0,
-        registration_document_url: value.file_registered_document_id
+        registration_document_url: value.file_registered_document_id.url
       },
       vehicle_owner_document: {
-        owner_document_url: value.file_property_document_id,
-        employment_contact_url: value.file_hire_contact_document_id,
-        buyer_contact_url: value.file_purchase_contact_document_id,
-        assignment_contact_url: value.file_transfer_contact_document_id
+        owner_document_url: value.file_property_document_id.url,
+        employment_contact_url: value.file_hire_contact_document_id.url,
+        buyer_contact_url: value.file_purchase_contact_document_id.url,
+        assignment_contact_url: value.file_transfer_contact_document_id.url
       },
       vehicle_picture: {
-        front_rear_url: value.file_front_image_id,
-        side_rear_url: value.file_side_image_id,
-        back_rear_url: value.file_back_image_id
+        front_rear_url: value.file_front_image_id.url,
+        side_rear_url: value.file_side_image_id.url,
+        back_rear_url: value.file_back_image_id.url
       }
     }
     // INIT LOADING
@@ -86,39 +113,49 @@ const CreateScreen: React.FC<Props> = (props) => {
     try {
       const response = await postVehicleAPI(body)
       if (response.status === 200) {
-        toast.push(
-          <Notification
-            type="success"
-            title="สำเร็จ"
-            onClose={() => navigate('/vehicle-list/overview')}
-          >
-            บันทึกข้อมูลสำเร็จ
-          </Notification>, {
-          placement: 'top-center',
+        Modal.success({
+          title: 'สำเร็จ',
+          content: 'บันทึกข้อมูลสำเร็จ',
+          okText: 'ตกลง',
+          onOk: () => {
+            navigate('/vehicle-list/overview')
+            dispatch(getVehicleData(vehicle.overview.search))
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
         })
       } else {
         console.log(response)
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message)
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
       } else {
         console.error(error)
       }
-
-      toast.push(
-        <Notification
-          type="danger"
-          title="ผิดพลาด"
-        >
-          ไม่สามารถบันทึกข้อมูลได้
-        </Notification>, {
-        placement: 'top-center',
-      })
     } finally {
       dispatch(setLoading(false))
     }
-  }, [navigate, dispatch])
+  }, [navigate, dispatch, vehicle.overview.search])
 
   return (
     <div>
