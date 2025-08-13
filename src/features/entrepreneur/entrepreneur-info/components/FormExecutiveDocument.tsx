@@ -1,19 +1,19 @@
+/* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
 import { FieldType } from '@/@types/entrepreneur/executive-data'
 import { Upload } from '@/components/ui'
-import { Control } from 'react-hook-form'
+import { Control, FieldErrors } from 'react-hook-form'
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 
 interface Props {
-  control: Control<FieldType>
+  control: Control<FieldType>;
+  errors: FieldErrors<FieldType>;
 }
 
 const FormExecutiveDocument: React.FC<Props> = (props) => {
-  const { control } = props
-
-  console.log(control)
+  const { } = props
 
   return (
     <div>
