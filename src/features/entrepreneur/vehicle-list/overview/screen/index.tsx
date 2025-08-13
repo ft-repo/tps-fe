@@ -75,24 +75,48 @@ const OverviewScreen: React.FC<Props> = (props) => {
   }, [dispatch, vehicle.overview.search])
 
   const handleTableChange = useCallback((page: number, limit: number) => {
-    dispatch(setVehicleList({
-      params: {
-        ...vehicle.overview.search,
-        page,
-        limit
-      },
-      data: { ...vehicle.overview.data }
-    }))
+    dispatch(setLoading(true))
+    try {
+      dispatch(setVehicleList({
+        params: {
+          ...vehicle.overview.search,
+          page,
+          limit
+        },
+        data: { ...vehicle.overview.data }
+      }))
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
   }, [dispatch, vehicle.overview])
 
   const handleSearch = useCallback((value: FieldType) => {
-    dispatch(setVehicleList({
-      params: {
-        ...vehicle.overview.search,
-        vehicle_type_id: value || 0
-      },
-      data: { ...vehicle.overview.data }
-    }))
+    dispatch(setLoading(true))
+
+    try {
+      dispatch(setVehicleList({
+        params: {
+          ...vehicle.overview.search,
+          vehicle_type_id: value || 0
+        },
+        data: { ...vehicle.overview.data }
+      }))
+
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
   }, [dispatch, vehicle.overview])
 
   const deleteRecord = useCallback(async (id: string | number) => {
@@ -100,14 +124,45 @@ const OverviewScreen: React.FC<Props> = (props) => {
     try {
       const response = await deleteVehicleAPI(id)
       if (response.status === 200) {
-        message.success('ลบข้อมูลสำเร็จ')
+        Modal.success({
+          title: 'สำเร็จ',
+          content: 'บันทึกข้อมูลสำเร็จ',
+          okText: 'ตกลง',
+          onOk: () => {
+            dispatch(getVehicleData(vehicle.overview.search))
+            Modal.destroyAll()
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
       }
     } catch (error) {
-      message.error('ไม่สามารถลบข้อมูลได้')
+      if (error instanceof Error) {
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      } else {
+        console.error(error)
+      }
     } finally {
-      dispatch(getVehicleData(vehicle.overview.search))
       dispatch(setLoading(false))
-      Modal.destroyAll()
     }
   }, [dispatch, vehicle.overview])
 
