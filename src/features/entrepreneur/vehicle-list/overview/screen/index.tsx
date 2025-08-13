@@ -158,7 +158,6 @@ const OverviewScreen: React.FC<Props> = (props) => {
     })
   }, [deleteRecord, loading])
 
-
   return (
     <>
       <section className='flex justify-between items-center flex-wrap'>
