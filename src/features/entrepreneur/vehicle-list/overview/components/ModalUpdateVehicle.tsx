@@ -1,59 +1,81 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-empty-pattern */
-/* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import React, { RefObject, useCallback, useEffect, useRef, useState } from 'react'
-import { Button, Dialog, Notification, toast } from '@/components/ui'
-import { useForm } from 'react-hook-form';
-import { FormUpdateData, FormUpdateDocument } from '.';
-import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { APIPostBody, VehicleListByIDResponse } from '@/@types/services/vehicle';
+import { Col, Modal, Row, UploadFile } from 'antd'
+import React, { Ref, useCallback, useEffect, useRef, useState } from 'react'
 import { INIT_VEHICLE_MODAL } from '../screen';
-import { getUploadAPI, putVehicleAPI } from '@/services/entrepreneur/VehicleListService';
+import { useForm } from 'react-hook-form';
+import { FieldType } from '@/@types/entrepreneur/vehicle-list';
+import { FormUpdateData, FormUpdateDocument } from '../components';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
-import { UploadFile } from 'antd';
+import { getUploadAPI, putVehicleAPI } from '@/services/entrepreneur/VehicleListService';
+import { getVehicleData } from '@/store/slices/entrepreneur';
 
 interface Props {
   open: boolean;
-  data: VehicleListByIDResponse | null;
-  setOpen: ({ open, data, id }: { open: boolean, data: VehicleListByIDResponse | null, id: string | number }) => void;
+  data: VehicleListByIDResponse;
+  setOpen: ({ open, data, id }: { open: boolean, data: VehicleListByIDResponse, id: string | number }) => void;
   id: string | number;
-  refetch: () => void;
 }
 
-interface DialogContentProps {
-  ref: RefObject<HTMLButtonElement | null>;
-  initValue: VehicleListByIDResponse | any;
+interface ContentProps {
+  id: string | number;
+  data: VehicleListByIDResponse,
+  submitRef: Ref<HTMLButtonElement>;
   fileList: UploadFile[];
-  id: string | number;
-  refetch: () => void;
-  setOpen: ({ open, data, id }: { open: boolean, data: VehicleListByIDResponse | null, id: string | number }) => void;
+  setOpen: ({ open, data, id }: { open: boolean, data: VehicleListByIDResponse, id: string | number }) => void;
 }
 
-const DialogContent = (props: DialogContentProps) => {
-  const { ref, initValue, fileList, id, refetch, setOpen } = props;
+const Content = (props: ContentProps) => {
+  const { id, data, submitRef, fileList, setOpen } = props
   const dispatch = useAppDispatch()
+  const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
 
   const form = useForm<FieldType>({
     defaultValues: {
-      vehicle_type: initValue.vehicle_detail.vehicle_type_id || null,
-      license_plate: initValue.vehicle_detail.plate_no || '',
-      vehicle_model: initValue.vehicle_detail.brand || '',
-      province: initValue.vehicle_detail.plate_province || '',
-      vehicle_weight: initValue.vehicle_detail.weight || 0,
-      vehicle_distance: initValue.vehicle_detail.kingpin_distance || 0,
-      vehicle_color: initValue.vehicle_detail.color || '',
-      wide_unit: initValue.vehicle_detail.width || 0,
-      long_unit: initValue.vehicle_detail.length || 0,
-      tall_unit: initValue.vehicle_detail.height || 0,
-      file_registered_document_id: initValue.vehicle_detail.registration_document_url || '',
-      file_property_document_id: initValue.vehicle_owner_documents.owner_document_url || '',
-      file_hire_contact_document_id: initValue.vehicle_owner_documents.employment_contact_url || '',
-      file_purchase_contact_document_id: initValue.vehicle_owner_documents.buyer_contact_url || '',
-      file_transfer_contact_document_id: initValue.vehicle_owner_documents.assignment_contact_url || '',
-      file_front_image_id: initValue.vehicle_pictures.front_rear_url || '',
-      file_side_image_id: initValue.vehicle_pictures.side_rear_url || '',
-      file_back_image_id: initValue.vehicle_pictures.back_rear_url || '',
+      vehicle_type: data.vehicle_detail.vehicle_type_id || null,
+      license_plate: data.vehicle_detail.plate_no || '',
+      vehicle_model: data.vehicle_detail.brand || '',
+      province: data.vehicle_detail.plate_province || '',
+      vehicle_weight: data.vehicle_detail.weight || 0,
+      vehicle_distance: data.vehicle_detail.kingpin_distance || 0,
+      vehicle_color: data.vehicle_detail.color || '',
+      wide_unit: data.vehicle_detail.width || 0,
+      long_unit: data.vehicle_detail.length || 0,
+      tall_unit: data.vehicle_detail.height || 0,
+      file_registered_document_id: {
+        file: fileList.length ? [fileList[0]] : [],
+        url: data.vehicle_detail.registration_document_url || ''
+      },
+      file_property_document_id: {
+        file: fileList.length ? [fileList[1]] : [],
+        url: data.vehicle_owner_documents.owner_document_url || ''
+      },
+      file_hire_contact_document_id: {
+        file: fileList.length ? [fileList[2]] : [],
+        url: data.vehicle_owner_documents.employment_contact_url || ''
+      },
+      file_purchase_contact_document_id: {
+        file: fileList.length ? [fileList[3]] : [],
+        url: data.vehicle_owner_documents.buyer_contact_url || ''
+      },
+      file_transfer_contact_document_id: {
+        file: fileList.length ? [fileList[4]] : [],
+        url: data.vehicle_owner_documents.assignment_contact_url || ''
+      },
+      file_front_image_id: {
+        file: fileList.length ? [fileList[5]] : [],
+        url: data.vehicle_pictures.front_rear_url || ''
+      },
+      file_side_image_id: {
+        file: fileList.length ? [fileList[6]] : [],
+        url: data.vehicle_pictures.side_rear_url || ''
+      },
+      file_back_image_id: {
+        file: fileList.length ? [fileList[7]] : [],
+        url: data.vehicle_pictures.back_rear_url || ''
+      },
     }
   })
 
@@ -77,18 +99,18 @@ const DialogContent = (props: DialogContentProps) => {
         width: Number(value.wide_unit) || 0,
         length: Number(value.long_unit) || 0,
         height: Number(value.tall_unit) || 0,
-        registration_document_url: value.file_registered_document_id
+        registration_document_url: value.file_registered_document_id.url
       },
       vehicle_owner_document: {
-        owner_document_url: value.file_property_document_id,
-        employment_contact_url: value.file_hire_contact_document_id,
-        buyer_contact_url: value.file_purchase_contact_document_id,
-        assignment_contact_url: value.file_transfer_contact_document_id
+        owner_document_url: value.file_property_document_id.url,
+        employment_contact_url: value.file_hire_contact_document_id.url,
+        buyer_contact_url: value.file_purchase_contact_document_id.url,
+        assignment_contact_url: value.file_transfer_contact_document_id.url
       },
       vehicle_picture: {
-        front_rear_url: value.file_front_image_id,
-        side_rear_url: value.file_side_image_id,
-        back_rear_url: value.file_back_image_id
+        front_rear_url: value.file_front_image_id.url,
+        side_rear_url: value.file_side_image_id.url,
+        back_rear_url: value.file_back_image_id.url
       }
     }
 
@@ -98,68 +120,80 @@ const DialogContent = (props: DialogContentProps) => {
     try {
       const response = await putVehicleAPI(id, body)
       if (response.status === 200) {
-        toast.push(
-          <Notification
-            type="success"
-            title="สำเร็จ"
-          >
-            บันทึกข้อมูลสำเร็จ
-          </Notification>, {
-          placement: 'top-center',
+        Modal.success({
+          title: 'สำเร็จ',
+          content: 'บันทึกข้อมูลสำเร็จ',
+          okText: 'ตกลง',
+          onOk: () => {
+            dispatch(getVehicleData(vehicle.overview.search))
+            setOpen(INIT_VEHICLE_MODAL)
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
         })
       } else {
         console.log(response)
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message)
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
       } else {
         console.error(error)
       }
-
-      toast.push(
-        <Notification
-          type="danger"
-          title="ผิดพลาด"
-        >
-          ไม่สามารถบันทึกข้อมูลได้
-        </Notification>, {
-        placement: 'top-center',
-      })
     } finally {
       dispatch(setLoading(false))
-      setOpen(INIT_VEHICLE_MODAL)
-      refetch()
     }
-  }, [id, dispatch, refetch, setOpen])
+
+  }, [dispatch, vehicle.overview.search, id, setOpen])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className='block lg:grid grid-cols-2 gap-5'>
-        <FormUpdateData
-          control={control}
-          setValue={setValue}
-          errors={errors}
-          defaultFileList={fileList}
-        />
-        <FormUpdateDocument
-          control={control}
-          setValue={setValue}
-          errors={errors}
-          defaultFileList={fileList}
-        />
-      </div>
-      <button ref={ref} hidden type='submit' />
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={24} lg={12} xl={12} xxl={12}>
+          <FormUpdateData
+            control={control}
+            setValue={setValue}
+            errors={errors}
+          />
+        </Col>
+        <Col xs={24} sm={24} lg={12} xl={12} xxl={12}>
+          <FormUpdateDocument
+            control={control}
+            setValue={setValue}
+            errors={errors}
+          />
+        </Col>
+      </Row>
+      <button ref={submitRef} hidden type='submit' />
     </form>
   )
 }
 
 const ModalUpdateVehicle: React.FC<Props> = (props) => {
-  const { open, data, id, setOpen, refetch } = props
+  const { open, data, setOpen, id } = props
   const submitRef = useRef<HTMLButtonElement>(null)
-  const [fileList, setFileList] = useState<UploadFile[]>([])
   const loading = useAppSelector(state => state.layout.loading)
   const dispatch = useAppDispatch()
+  const [fileList, setFileList] = useState<any[]>([])
 
   const extractUrl = useCallback((url: string) => {
     const pathname = new URL(url).pathname;
@@ -226,48 +260,41 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
+  useEffect(() => {
+    if (!open) {
+      setFileList([])
+    }
+  }, [open])
+
   if (!data) return
 
   return (
-    <Dialog
-      isOpen={open}
-      width={1400}
-      // height={800}
-      onClose={() => setOpen(INIT_VEHICLE_MODAL)}
+    <Modal
+      destroyOnHidden
+      width={1600}
+      open={open}
+      title='แก้ไขข้อมูล'
+      okText='บันทึก'
+      cancelText='ยกเลิก'
+      okButtonProps={{
+        loading: loading
+      }}
+      cancelButtonProps={{
+        loading: loading
+      }}
+      onOk={() => submitRef.current?.click()}
+      onCancel={() => setOpen(INIT_VEHICLE_MODAL)}
     >
-      <section className='h-[40rem] overflow-y-scroll'>
-        <h3>แก้ไขข้อมูล</h3>
-        {!loading ?
-          <DialogContent
-            ref={submitRef}
-            initValue={data}
-            fileList={fileList}
-            id={id}
-            refetch={refetch}
-            setOpen={setOpen}
-          />
-          : 'Loading...'}
-      </section>
-      <section className='text-right'>
-        <Button
-          size='sm'
-          variant='default'
-          className='mr-3'
-          onClick={() => setOpen(INIT_VEHICLE_MODAL)}
-        >
-          ยกเลิก
-        </Button>
-        <Button
-          type='submit'
-          size='sm'
-          variant='solid'
-          color='blue-500'
-          onClick={() => submitRef.current?.click()}
-        >
-          บันทึก
-        </Button>
-      </section>
-    </Dialog >
+      {!loading ?
+        <Content
+          id={id}
+          data={data}
+          submitRef={submitRef}
+          fileList={fileList}
+          setOpen={setOpen}
+        />
+        : 'Loading...'}
+    </Modal>
   )
 }
 

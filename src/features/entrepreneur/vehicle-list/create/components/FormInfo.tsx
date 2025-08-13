@@ -2,13 +2,13 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
-import { Button, Upload } from '@/components/ui'
+import { Button } from '@/components/ui'
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService'
 import React, { useCallback } from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
-import { Input, Select } from 'antd'
+import { Input, message, Select, Upload } from 'antd'
 
 interface Props {
   control: Control<FieldType>;
@@ -23,17 +23,17 @@ const FormInfo: React.FC<Props> = (props) => {
   const uploadFile = useCallback(async (file: any) => {
     try {
       // POST
-      const response = await postUploadFileAPI({ upload: file[0] })
+      const response = await postUploadFileAPI({ upload: file[0].originFileObj })
       if (response.status === 200) {
-        setValue('file_registered_document_id', response.data?.url)
+        setValue('file_registered_document_id.url', response.data?.url)
       } else {
-        console.log('Error')
+        console.log(response)
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message)
+        message.error(error.message)
       } else {
-        console.error(error)
+        console.log(error)
       }
     }
   }, [setValue])
@@ -70,21 +70,6 @@ const FormInfo: React.FC<Props> = (props) => {
                       fontFamily: 'Noto Sans Thai'
                     }}
                   />
-                  {/* <Select
-                    {...field}
-                    name={field.name}
-                    placeholder='กรุณาเลือก'
-                    options={vehicle_type.map((item) => {
-                      return {
-                        label: item.name,
-                        value: item.id,
-                      }
-                    }) as any}
-                    onChange={(e: any) => {
-                      setValue('vehicle_type', e.value)
-                      field.onChange(e)
-                    }}
-                  /> */}
                   {!!errors.vehicle_type &&
                     <p className='text-red-500'>{errors.vehicle_type.message}</p>
                   }
@@ -358,36 +343,65 @@ const FormInfo: React.FC<Props> = (props) => {
       </section>
       <section className='mt-5'>
         <Controller
-          name='file_registered_document_id'
+          name='file_registered_document_id.file'
           control={control}
           rules={{
             required: 'กรุณาอัปโหลดเอกสารเล่มทะเบียน'
           }}
-          render={() => {
+          render={({ field }) => {
             return (
               <fieldset>
                 <label className='block'>เอกสารเล่มทะเบียน</label>
                 <Upload
-                  uploadLimit={1}
-                  onChange={(file) => uploadFile(file)}
+                  {...field}
+                  fileList={field.value || []}
+                  maxCount={1}
+                  listType='picture'
+                  accept='application/pdf'
+                  beforeUpload={(file) => {
+                    // DEFAULT VALUES
+                    const allowList = ['application/pdf']
+                    const maxFileSize = 10000000
+                    // CHECK
+                    const isListAvailable = allowList.some(item => item === file.type)
+                    const isLt10 = file.size < maxFileSize
+                    if (!isListAvailable) {
+                      message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                      return Upload.LIST_IGNORE
+                    }
+                    if (!isLt10) {
+                      message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                      return Upload.LIST_IGNORE
+                    }
+                    return false
+                  }}
+                  onChange={(e) => {
+                    field.onChange(e.fileList);
+                    if (e.fileList.length) {
+                      uploadFile(e.fileList)
+                    } else {
+                      setValue('file_registered_document_id.url', '')
+                    }
+                  }}
                 >
-                  <Button
-                    variant="solid"
-                    icon={<HiOutlineCloudUpload />}
-                    size='sm'
-                    type='button'
-                  >
-                    เพิ่มไฟล์ .pdf
-                  </Button>
+                  {field.value.length ? null :
+                    <Button
+                      variant="solid"
+                      icon={<HiOutlineCloudUpload />}
+                      size='sm'
+                      type='button'
+                    >
+                      เพิ่มไฟล์ .pdf
+                    </Button>
+                  }
                 </Upload>
-                {!!errors.file_registered_document_id &&
-                  <p className='text-red-500'>{errors.file_registered_document_id.message}</p>
+                {!!errors.file_registered_document_id?.file &&
+                  <p className='text-red-500'>{errors.file_registered_document_id.file.message}</p>
                 }
               </fieldset>
             )
           }}
         />
-
       </section>
     </div>
   )

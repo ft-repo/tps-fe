@@ -4,9 +4,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useEffect } from 'react'
 import ExecutiveDataScreen from '@/features/entrepreneur/entrepreneur-info/screen'
-import { Loading } from '@/components/shared'
-import { getContactType, getEntityType, useAppDispatch, useAppSelector } from '@/store'
+import { getContactType, getEntityType, useAppDispatch } from '@/store'
 import { getUserData } from '@/store/slices/entrepreneur'
+import { ConfigProvider } from 'antd'
 
 interface Props {
 }
@@ -14,8 +14,6 @@ interface Props {
 const ExecutiveDataIndex: React.FC<Props> = (props) => {
   const { } = props
   const dispatch = useAppDispatch()
-  const { loading } = useAppSelector(state => state.entrepreneur.user)
-  const localLoad = useAppSelector(state => state.layout.loading)
 
   useEffect(() => {
     dispatch(getUserData())
@@ -24,9 +22,15 @@ const ExecutiveDataIndex: React.FC<Props> = (props) => {
   }, [])
 
   return (
-    <Loading loading={loading || localLoad}>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Noto Sans Thai"
+        }
+      }}
+    >
       <ExecutiveDataScreen />
-    </Loading>
+    </ConfigProvider>
   )
 }
 
