@@ -71,7 +71,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
         }
         
         // POST
-        const response = await uploadAPI({ upload: file })
+        const response = await uploadAPI({ upload: file as any })
         if (response.status === 200) {
           const fileUrl = response.data?.url
           if (setFieldValue) {

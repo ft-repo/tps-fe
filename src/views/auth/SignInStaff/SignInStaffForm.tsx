@@ -20,13 +20,11 @@ interface SignInStaffFormProps extends CommonProps {
 type SignInStaffFormSchema = {
     userName: string
     password: string
-    rememberMe: boolean
 }
 
 const validationSchema = Yup.object().shape({
-    userName: Yup.string().required('Please enter your user name'),
-    password: Yup.string().required('Please enter your password'),
-    rememberMe: Yup.bool(),
+    userName: Yup.string().required('กรุณากรอกชื่อผู้ใช้งาน'),
+    password: Yup.string().required('กรุณากรอกรหัสผ่าน'),
 })
 
 const SignInStaffForm = (props: SignInStaffFormProps) => {
@@ -39,7 +37,7 @@ const SignInStaffForm = (props: SignInStaffFormProps) => {
 
     const [message, setMessage] = useTimeOutMessage()
 
-    const { signIn } = useAuth()
+    const { signInStaff } = useAuth()
 
     const onSignIn = async (
         values: SignInStaffFormSchema,
@@ -48,7 +46,7 @@ const SignInStaffForm = (props: SignInStaffFormProps) => {
         const { userName, password } = values
         setSubmitting(true)
 
-        const result = await signIn({ userName, password })
+        const result = await signInStaff({ userName, password })
 
         if (result?.status === 'failed') {
             setMessage(result.message)
@@ -67,8 +65,7 @@ const SignInStaffForm = (props: SignInStaffFormProps) => {
             <Formik
                 initialValues={{
                     userName: 'admin',
-                    password: '123Qwe',
-                    rememberMe: true,
+                    password: 'DRR@dm1n',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values, { setSubmitting }) => {
@@ -83,7 +80,7 @@ const SignInStaffForm = (props: SignInStaffFormProps) => {
                     <Form>
                         <FormContainer>
                             <FormItem
-                                label="เลขทะเบียนนิติบุคคล"
+                                label="ชื่อผู้ใช้งาน"
                                 invalid={
                                     (errors.userName &&
                                         touched.userName) as boolean
@@ -94,7 +91,7 @@ const SignInStaffForm = (props: SignInStaffFormProps) => {
                                     type="text"
                                     autoComplete="off"
                                     name="userName"
-                                    placeholder="เลขทะเบียนนิติบุคคล"
+                                    placeholder="ชื่อผู้ใช้งาน"
                                     component={Input}
                                 />
                             </FormItem>
@@ -114,13 +111,6 @@ const SignInStaffForm = (props: SignInStaffFormProps) => {
                                 />
                             </FormItem>
                             <div className="flex justify-end mb-6">
-                                {/* <Field
-                                    className="mb-0"
-                                    name="rememberMe"
-                                    component={Checkbox}
-                                >
-                                    Remember Me
-                                </Field> */}
                                 <ActionLink to={forgotPasswordUrl}>
                                     ลืมรหัสผ่าน?
                                 </ActionLink>
@@ -134,10 +124,10 @@ const SignInStaffForm = (props: SignInStaffFormProps) => {
                             >
                                 {isSubmitting ? 'กำลังลงชื่อเข้าใช้...' : 'ลงชื่อเข้าใช้'}
                             </Button>
-                            <div className="mt-4 text-center">
+                            {/* <div className="mt-4 text-center">
                                 <span>{`ยังไม่มีบัญชี?`} </span>
                                 <ActionLink to={signUpUrl}>สมัครสมาชิก</ActionLink>
-                            </div>
+                            </div> */}
                         </FormContainer>
                     </Form>
                 )}

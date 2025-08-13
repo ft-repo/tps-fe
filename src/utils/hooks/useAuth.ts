@@ -1,4 +1,4 @@
-import { apiSignIn, apiSignUp } from '@/services/AuthService'
+import { apiSignIn, apiSignInStaff, apiSignUp } from '@/services/AuthService'
 import {
 	setUser,
 	signInSuccess,
@@ -10,7 +10,7 @@ import appConfig from '@/configs/app.config'
 import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
-import type { SignInCredential, SignUpCredential } from '@/@types/auth'
+import type { SignInCredential, SignInStaffCredential, SignUpCredential } from '@/@types/auth'
 
 type Status = 'success' | 'failed'
 
@@ -42,10 +42,9 @@ function useAuth() {
 						setUser(
 							{
 								id: resp.data.details.id,
-								registration_no: resp.data.details.registration_no,
-								business_details: {
-									entity_type_id: resp.data.details.business_details.entity_type_id,
-									business_name: resp.data.details.business_details.business_name,
+								userName: resp.data.details.registration_no,
+								name: resp.data.details.business_details.business_name,
+								details: {
 									entity_type: {
 										id: resp.data.details.business_details.entity_type.id,
 										name: resp.data.details.business_details.entity_type.name,
@@ -88,10 +87,9 @@ function useAuth() {
 						setUser(
 							{
 								id: resp.data.details.id,
-								registration_no: resp.data.details.registration_no,
-								business_details: {
-									entity_type_id: resp.data.details.business_details.entity_type_id,
-									business_name: resp.data.details.business_details.business_name,
+								userName: resp.data.details.registration_no,
+								name: resp.data.details.business_details.business_name,
+								details: {
 									entity_type: {
 										id: resp.data.details.business_details.entity_type.id,
 										name: resp.data.details.business_details.entity_type.name,
@@ -103,11 +101,14 @@ function useAuth() {
 					)
 				}
 				const redirectUrl = query.get(REDIRECT_URL_KEY)
-				navigate(
-					redirectUrl
-						? redirectUrl
-						: appConfig.authenticatedEntryPath,
-				)
+
+				setTimeout(() => {
+					navigate(
+						redirectUrl
+							? redirectUrl
+							: appConfig.authenticatedEntryPath,
+					)
+				}, 3000)
 				return {
 					status: 'success',
 					message: '',
@@ -127,19 +128,65 @@ function useAuth() {
 		dispatch(
 			setUser({
 				id: '',
-				registration_no: '',
-				business_details: {
-					entity_type_id: 0,
-					business_name: '',
-					entity_type: {
-						id: 0,
-						name: '',
-					},
+				userName: '',
+				name: '',
+				details: {
+					department: undefined,
+					role: undefined,
+					entity_type: undefined,
 				},
 				authority: [],
 			}),
 		)
 		navigate(appConfig.unAuthenticatedEntryPath)
+	}
+
+	const signInStaff = async (values: SignInStaffCredential) => {
+		try {
+			const resp = await apiSignInStaff(values)
+			if (resp.data) {
+				const { access_token } = resp.data
+				dispatch(signInSuccess(access_token))
+				if (resp.data.details) {
+					dispatch(
+						setUser(
+							{
+								id: resp.data.details.id,
+								userName: resp.data.details.username,
+								name: resp.data.details.title + ' ' + resp.data.details.first_name + ' ' + resp.data.details.last_name,
+								details: {
+									department: {
+										dept_name: resp.data.details.department.dept_name,
+										dept_type: resp.data.details.department.dept_type,
+										dept_group: resp.data.details.department.dept_group,
+										dept_province: resp.data.details.department.dept_province,
+									},
+									role: {
+										name: resp.data.details.role.name,
+									},
+								},
+								authority: ['ADMIN'],
+							},	
+						),
+					)
+				}
+				const redirectUrl = query.get(REDIRECT_URL_KEY)
+				navigate(
+					redirectUrl
+						? redirectUrl
+						: appConfig.authenticatedEntryPath,
+				)
+				return {
+					status: 'success',
+					message: '',
+				}
+			}
+		} catch (errors: any) {
+			return {
+				status: 'failed',
+				message: errors?.response?.data?.res_data?.message || errors.toString(),
+			}
+		}
 	}
 
 	const signOut = async () => {
@@ -152,6 +199,7 @@ function useAuth() {
 		signIn,
 		signUp,
 		signOut,
+		signInStaff,
 	}
 }
 
