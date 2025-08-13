@@ -6,6 +6,8 @@ import type {
     ResetPassword,
     SignInResponse,
     SignUpResponse,
+    SignInStaffCredential,
+    SignInStaffResponse,
 } from '@/@types/auth'
 
 export async function apiSignIn(data: SignInCredential) {
@@ -16,9 +18,17 @@ export async function apiSignIn(data: SignInCredential) {
     })
 }
 
+export async function apiSignInStaff(data: SignInStaffCredential) {
+    return ApiService.fetchData<SignInStaffResponse>({
+        url: '/admin/auth/login',
+        method: 'post',
+        data,
+    })
+}
+
 export async function apiSignUp(data: SignUpCredential) {
     return ApiService.fetchData<SignUpResponse>({
-        url: '/sign-up',
+        url: '/client/auth/register',
         method: 'post',
         data,
     })

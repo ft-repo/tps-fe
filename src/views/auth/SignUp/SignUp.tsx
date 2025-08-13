@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import SignUpForm from './SignUpForm'
-import { SignUpCredential } from '@/@types/auth'
-import { useAppDispatch } from '@/store'
+import { SignUpCredential, SignUpFieldType } from '@/@types/auth'
+import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import {
   getDistrict,
   getEntityType,
@@ -10,18 +10,18 @@ import {
   getSubDistrict,
   getContactType,
 } from '@/store/slices/master/masterSlice'
-import { Button } from '@/components/ui'
-import useTimeOutMessage from '@/utils/hooks/useTimeOutMessage'
+import { Button, Notification, toast } from '@/components/ui'
 import { ActionLink } from '@/components/shared'
+import useAuth from '@/utils/hooks/useAuth'
 
 const SignUp = () => {
   const dispatch = useAppDispatch()
-  const [message, setMessage] = useTimeOutMessage()
   const [provinceId, setProvinceId] = useState<string | number>('')
   const [districtId, setDistrictId] = useState<string | number>('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const form = useForm<SignUpCredential>({
+  const loading = useAppSelector(state => state.layout.loading)
+  const { signUp } = useAuth()
+  
+  const form = useForm<SignUpFieldType>({
     defaultValues: {
       password: '',
       password_confirmation: '',
@@ -51,11 +51,10 @@ const SignUp = () => {
         phone_number: '',
         cid: '',
       },
-    },
-    mode: 'onSubmit', // Change to onSubmit mode
+    }
   })
 
-  const { handleSubmit, control, setValue } = form
+  const { handleSubmit, control, setValue, formState: { errors } } = form
 
   useEffect(() => {
     dispatch(getProvince())
@@ -67,47 +66,96 @@ const SignUp = () => {
     if (provinceId) {
       dispatch(getDistrict(provinceId.toString()))
     }
-  }, [dispatch, provinceId])
 
-  useEffect(() => {
     if (districtId) {
       dispatch(getSubDistrict(districtId.toString()))
     }
-  }, [dispatch, districtId])
+  }, [dispatch, provinceId, districtId])
 
   const onSubmit = useCallback(async (value: SignUpCredential) => {
-    setIsSubmitting(true)
-    try {
-      console.log('Submitting form with values:', value)
-      // Add your API call here
-      // const response = await signUpAPI(value)
-      // Handle success response
-      setMessage('ลงทะเบียนสำเร็จ')
-    } catch (error) {
-      console.error('Sign up error:', error)
-      setMessage('เกิดข้อผิดพลาดในการลงทะเบียน')
-    } finally {
-      setIsSubmitting(false)
+    const body: SignUpCredential = {
+      password: value.password,
+      business_detail: {
+        business_name: value.business_detail.business_name,
+        registration_no: value.business_detail.registration_no,
+        entity_type_id: Number(value.business_detail.entity_type_id.value),
+      },
+      business_address: {
+        house_number: value.business_address.house_number,
+        village: value.business_address.village,
+        lane: value.business_address.lane,
+        road: value.business_address.road,
+        sub_district_id: Number(value.business_address.sub_district_id?.value),
+        district_id: Number(value.business_address.district_id?.value),
+        province_id: Number(value.business_address.province_id?.value),
+        zip_code: value.business_address.zip_code,
+      },
+      contact_info: {
+        contact_name: value.contact_info.contact_name,
+        contact_type_id: Number(value.contact_info.contact_type_id?.value),
+        phone_number: value.contact_info.phone_number,
+        cid: value.contact_info.cid,
+      },
+      business_document: {
+        certificate_file_url: value.business_document.certificate_file_url,
+        cid_card_file_url: value.business_document.cid_card_file_url,
+        business_file_url: value.business_document.business_file_url,
+      },
     }
-  }, [setMessage])
+
+    // INIT LOADING
+    dispatch(setLoading(true))
+    try {
+      console.log('Submitting form with values:', body)
+      // const response = await signUp(body)
+
+      // if (response?.status === 'success') {
+      //   toast.push(
+      //     <Notification
+      //       type="success"
+      //       title="ลงทะเบียนสำเร็จ"
+      //     >
+      //       ลงทะเบียนสำเร็จ
+      //     </Notification>, {
+      //     placement: 'top-center',
+      //   })
+      // } else {
+      //   console.log(response)
+      // }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+
+      const errorMessage = error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการลงทะเบียน'
+      
+      toast.push(
+        <Notification
+          type="danger"
+          title="ผิดพลาด"
+        >
+          {errorMessage}
+        </Notification>, {
+        placement: 'top-center',
+      })
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch])
 
   return (
     <div className="m-auto xl:max-w-[600px] max-w-[450px]">
       <div className="mb-8">
         <h3 className="mb-1">ลงทะเบียนผู้ประกอบการ</h3>
         <p>ลงทะเบียนผู้ประกอบการสำหรับการประเมินและขอใช้เส้นทาง</p>
-      </div>
-      
-      {message && (
-        <div className={`mb-4 p-3 rounded ${message.includes('สำเร็จ') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-          {message}
-        </div>
-      )}
-      
+      </div>      
       <form onSubmit={handleSubmit(onSubmit)}>
         <SignUpForm
           control={control}
           setValue={setValue}
+          errors={errors}
           setProvinceId={setProvinceId}
           setDistrictId={setDistrictId}
         />
@@ -115,11 +163,11 @@ const SignUp = () => {
         <div className="mt-4">
           <Button 
             block 
-            loading={isSubmitting} 
+            loading={loading} 
             variant="solid" 
             type="submit"
           >
-            {isSubmitting ? 'กำลังสร้างบัญชี...' : 'ลงทะเบียน'}
+            {loading ? 'กำลังสร้างบัญชี...' : 'ลงทะเบียน'}
           </Button>
         </div>
         
