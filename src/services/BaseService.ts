@@ -35,6 +35,10 @@ BaseService.interceptors.request.use(
 			config.headers[API_KEY] = import.meta.env.VITE_API_KEY
 		}
 
+		const base = (config.baseURL ?? '').replace(/\/+$/, '')
+		const path = (config.url ?? '').replace(/^\/+/, '')
+		console.log('[REQ]', `${base}/${path}`, config.params ?? {}, config.method)
+
 		return config
 	},
 	(error) => {

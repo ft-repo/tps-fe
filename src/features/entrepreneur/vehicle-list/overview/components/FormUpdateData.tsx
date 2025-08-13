@@ -1,24 +1,24 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
-import { Button, Input, Select, Upload } from '@/components/ui';
+import { Input, Select } from '@/components/ui';
 import { useAppSelector } from '@/store';
 import React from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
-import { HiOutlineCloudUpload } from 'react-icons/hi';
+// import { HiOutlineCloudUpload } from 'react-icons/hi';
+import { Upload as CustomUpload } from '@/components/custom/upload';
+import { UploadFile } from 'antd';
 
 interface Props {
   control: Control<FieldType>;
   setValue: UseFormSetValue<FieldType>;
   errors: FieldErrors<FieldType>;
-  fileList: File[];
+  defaultFileList: UploadFile[];
 }
 
 const FormUpdateData: React.FC<Props> = (props) => {
-  const { control, setValue, errors, fileList } = props
+  const { control, setValue, errors, defaultFileList } = props
   const { vehicle_type } = useAppSelector(state => state.master)
-
-  console.log(fileList[0])
 
   return (
     <div className='mt-5'>
@@ -28,7 +28,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
       </section>
       <div className='block sm:grid sm:grid-cols-2 gap-3'>
         <Controller
-          disabled
           name='vehicle_type'
           control={control}
           rules={{
@@ -39,7 +38,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>ประเภทรถ</label>
                 <Select
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาเลือก'
@@ -62,7 +60,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='license_plate'
           control={control}
           rules={{
@@ -73,7 +70,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>เลขทะเบียน / เลขตัวรถ</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -108,7 +104,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='province'
           control={control}
           rules={{
@@ -119,7 +114,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>จังหวัด</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -132,7 +126,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='vehicle_weight'
           control={control}
           rules={{
@@ -143,7 +136,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>น้ำหนักรถเปล่า (กก.)</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -226,7 +218,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='long_unit'
           control={control}
           rules={{
@@ -237,7 +228,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>ยาว (ม.)</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -250,7 +240,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
           }}
         />
         <Controller
-          disabled
           name='tall_unit'
           control={control}
           rules={{
@@ -261,7 +250,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
               <fieldset>
                 <label>สูง (ม.)</label>
                 <Input
-                  disabled
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -276,24 +264,31 @@ const FormUpdateData: React.FC<Props> = (props) => {
       </div>
       <div className='mt-3'>
         <Controller
-          disabled
           name='file_registered_document_id'
           control={control}
           rules={{
             required: 'กรุณาอัปโหลดเอกสารเล่มทะเบียน'
           }}
-          render={() => {
+          render={({ field }) => {
             return (
               <fieldset>
                 <label>เอกสารเล่มทะเบียน</label>
-                <Upload
-                  disabled
+                <div className='block'>
+                  <CustomUpload
+                    {...field}
+                    name={field.name}
+                    listType='picture-card'
+                    maxCount={1}
+                    defaultFileList={[defaultFileList[0]]}
+                    fileList={[defaultFileList[0]]}
+                  />
+                </div>
+                {/* <Upload
                   className='block'
                   uploadLimit={1}
-                  fileList={[fileList[0]]}
+                  // fileList={[fileList[0]]}
                 >
                   <Button
-                    disabled
                     variant="solid"
                     icon={<HiOutlineCloudUpload />}
                     size='sm'
@@ -301,7 +296,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
                   >
                     เพิ่มไฟล์ .pdf
                   </Button>
-                </Upload>
+                </Upload> */}
                 {!!errors.file_registered_document_id &&
                   <p className='text-red-500'>{errors.file_registered_document_id.message}</p>
                 }
