@@ -1,6 +1,7 @@
 export type AppConfig = {
     apiPrefix: string
     authenticatedEntryPath: string
+    authenticatedAdminEntryPath: string
     unAuthenticatedEntryPath: string
     tourPath: string
     locale: string
@@ -10,9 +11,10 @@ export type AppConfig = {
 const appConfig: AppConfig = {
     apiPrefix: '/api/v1/',
     authenticatedEntryPath: '/route-estimation/route',
+    authenticatedAdminEntryPath: '/request-list/overview',
     unAuthenticatedEntryPath: '/sign-in',
     tourPath: '/',
-    locale: 'en',
+    locale: 'th',
     enableMock: false,
 }
 
