@@ -6,7 +6,7 @@ export interface FieldType {
   office_tel: string;
   business_no: string;
   contact_name: string;
-  contact_type: string;
+  contact_type: number;
   citizen_id: string;
   contact_tel: string;
   file_id: FileType;

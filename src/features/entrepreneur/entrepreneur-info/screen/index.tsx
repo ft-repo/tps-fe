@@ -10,7 +10,7 @@ import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getUserData } from '@/store/slices/entrepreneur';
 import dayjs from 'dayjs';
 import { putUserAPI } from '@/services/entrepreneur/UserService';
-import { message, Modal } from 'antd';
+import { Modal } from 'antd';
 
 interface Props {
 }
@@ -21,6 +21,8 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   const userData = useAppSelector(state => state.entrepreneur.user)
   const loading = useAppSelector(state => state.layout.loading)
+
+  console.log(userData)
 
   const renderBusinessAddress = useCallback((
     houseNumber: string,
@@ -62,7 +64,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
       office_tel: userData.important_info.business_phone_number,
       business_no: userData.important_info.registration_no,
       contact_name: userData.important_info.contact_name,
-      contact_type: userData.important_info.contact_type.name,
+      contact_type: userData.important_info.contact_type.id,
       citizen_id: userData.important_info.cid,
       contact_tel: userData.important_info.contact_phone_number,
       file_id: {
