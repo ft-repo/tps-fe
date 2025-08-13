@@ -1,10 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import vehicleList from './vehicleListSlice'
+import user from './userSlice'
 import permitReducer from '@/store/slices/entrepreneur/permitSlice'
 // TYPE
 import { VehicleListState } from '@/@types/reducer/vehicle'
-import user from './userSlice'
-import { UserState } from '../auth'
+import { UserState } from '@/@types/reducer/user'
+
 const reducer = combineReducers({
   vehicleList,
   user
