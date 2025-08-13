@@ -9,7 +9,7 @@ import {
 } from "@/@types/services/vehicle";
 import ApiService from "../ApiService"
 
-export const getVehicleList = async (params: GetVehicleListParams) => {
+export const getVehicleAPI = async (params: GetVehicleListParams) => {
   return ApiService.fetchData<VehicleListResponse>({
     url: '/client/vehicle',
     method: 'get',
@@ -18,7 +18,7 @@ export const getVehicleList = async (params: GetVehicleListParams) => {
   })
 }
 
-export const getVehicleListByID = async (id: number | string | null | any) => {
+export const getVehicleByIDAPI = async (id: number | string | null | any) => {
   return ApiService.fetchData<VehicleListByIDResponse>({
     url: `/client/vehicle/${id}`,
     method: 'get',
@@ -26,7 +26,7 @@ export const getVehicleListByID = async (id: number | string | null | any) => {
   })
 }
 
-export const postVehicleList = async (data: APIPostBody) => {
+export const postVehicleAPI = async (data: APIPostBody) => {
   return ApiService.fetchData<any, APIPostBody>({
     url: '/client/vehicle',
     method: 'post',
@@ -35,7 +35,7 @@ export const postVehicleList = async (data: APIPostBody) => {
   })
 }
 
-export const putVehicleList = async (id: string | number, data: APIPostBody) => {
+export const putVehicleAPI = async (id: string | number, data: APIPostBody) => {
   return ApiService.fetchData<any, APIPostBody>({
     url: `/client/vehicle/${id}`,
     method: 'put',
@@ -44,14 +44,14 @@ export const putVehicleList = async (id: string | number, data: APIPostBody) => 
   })
 }
 
-export const deleteVehicleLst = async (id: string | number) => {
+export const deleteVehicleAPI = async (id: string | number) => {
     return ApiService.fetchData({
     url: `/client/vehicle/${id}`,
     method: 'delete',
   })
 }
 
-export const postUploadFile = async (data: UploadRequest) => {
+export const postUploadFileAPI = async (data: UploadRequest) => {
   return ApiService.fetchData<UploadResponse, UploadRequest>({
     url: '/upload/business_certificate',
     method: 'post',
@@ -62,7 +62,7 @@ export const postUploadFile = async (data: UploadRequest) => {
   })
 }
 
-export const postUploadImage = async (data: any) => {
+export const postUploadImageAPI = async (data: any) => {
   return ApiService.fetchData<UploadResponse, UploadRequest>({
     url: '/upload/business_picture',
     method: 'post',
@@ -73,7 +73,7 @@ export const postUploadImage = async (data: any) => {
   })
 }
 
-export const getUpload = async (params: string) => {
+export const getUploadAPI = async (params: string) => {
   return ApiService.fetchData<File>({
     url: `/upload/${params}`,
     method: 'get',
