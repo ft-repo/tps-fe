@@ -2,6 +2,7 @@
 export interface VehicleListState {
   overview: Overview;
   detail: Detail;
+  loading: boolean;
 }
 
 export interface Overview {
@@ -10,7 +11,7 @@ export interface Overview {
 }
 
 export interface Search {
-  vehicle_type_id: string | number | null | any;
+  vehicle_type_id?: string | number | null | any;
   page: number | string | null | any;
   limit: number | string | null | any;
 }
