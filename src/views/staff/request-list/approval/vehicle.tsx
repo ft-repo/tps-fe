@@ -1,12 +1,9 @@
 import React from 'react'
 import ApprovalVehiclePage from '@/features/staff/request-list/approval/vehicle/screen'
 
-interface Props {
-
-}
+interface Props {}
 
 const ApprovalVehicleIndex: React.FC<Props> = () => {
-
   return (
     <ApprovalVehiclePage/>
   )
