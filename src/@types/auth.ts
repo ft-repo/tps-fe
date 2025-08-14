@@ -108,6 +108,7 @@ export type SignUpFieldType = {
     district_id: number
     province_id: number
     zip_code: string
+    phone_number: string
   },
   business_document: {
     certificate_file_url: string
@@ -138,6 +139,7 @@ export type SignUpCredential = {
     district_id: number
     province_id: number
     zip_code: string
+    phone_number: string
   },
   business_document: {
     certificate_file_url: string
