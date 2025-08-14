@@ -56,7 +56,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.request_list',
         icon: 'request_list',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: ['USER','ADMIN'],
+        authority: ['ADMIN'],
         subMenu: [],
     },
     {
@@ -66,7 +66,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.request_history',
         icon: 'request_history',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: ['USER','ADMIN'],
+        authority: ['ADMIN'],
         subMenu: [],
     },
     {
@@ -77,7 +77,7 @@ const navigationConfig: NavigationTree[] = [
         icon: 'user_info',
         // type: NAV_ITEM_TYPE_ITEM,
         type: 'collapse',
-        authority: ['USER','ADMIN'],
+        authority: ['ADMIN'],
         subMenu: [
             {
                 key: 'entrepreneur_overview',
@@ -86,7 +86,7 @@ const navigationConfig: NavigationTree[] = [
                 translateKey: 'nav.entrepreneur_overview',
                 icon: 'entrepreneur_overview',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: ['USER','ADMIN'],
+                authority: ['ADMIN'],
                 subMenu: []
             },
             {
@@ -96,7 +96,7 @@ const navigationConfig: NavigationTree[] = [
                 translateKey: 'nav.staff_overview',
                 icon: 'staff_overview',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: ['USER','ADMIN'],
+                authority: ['ADMIN'],
                 subMenu: []
             },
         ],
