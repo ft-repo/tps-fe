@@ -29,7 +29,7 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       render: (item, record) => {
         return (
           <div className='flex items-center justify-center gap-2'>
-            <span>{record.business_details.business_name}</span>
+            <span>{record.business_details?.business_name}</span>
           </div>
         )
       }
@@ -43,7 +43,7 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       render: (item, record) => {
         return (
           <div className='flex items-center justify-center gap-2'>
-            <span>{record.business_details.entity_type.name}</span>
+            <span>{record.business_details?.entity_type?.name}</span>
           </div>
         )
       }

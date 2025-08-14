@@ -27,7 +27,7 @@ const SeachTable: React.FC<Props> = (props) => {
       title: 'Username',
       dataIndex: 'username',
       key: 'username',
-      width: 300,
+      width: 150,
       align: 'center',
     },
     {
@@ -48,12 +48,12 @@ const SeachTable: React.FC<Props> = (props) => {
       title: 'หน่วยงาน',
       dataIndex: 'department',
       key: 'department',
-      width: 200,
+      width: 150,
       align: 'center',
       render: (item, record) => {
         return (
           <div className="flex items-center justify-center gap-2">
-            <span>{record.department.dept_name}</span>
+            <span>{record.department?.dept_name}</span>
           </div>
         )
       },
@@ -62,12 +62,12 @@ const SeachTable: React.FC<Props> = (props) => {
       title: 'สิทธิ์การเข้าใช้งาน',
       dataIndex: 'role',
       key: 'role',
-      width: 200,
+      width: 150,
       align: 'center',
       render: (item, record) => {
         return (
           <div className="flex items-center justify-center gap-2">
-            <span>{record.role.name}</span>
+            <span>{record.role?.name}</span>
           </div>
         )
       },
@@ -77,7 +77,7 @@ const SeachTable: React.FC<Props> = (props) => {
       dataIndex: 'action',
       key: 'action',
       fixed: 'right',
-      width: 140,
+      width: 70,
       align: 'center',
       render: (item, record) => {
         return (
