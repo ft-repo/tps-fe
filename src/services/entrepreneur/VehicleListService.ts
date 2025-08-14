@@ -62,7 +62,7 @@ export const postUploadFileAPI = async (data: UploadRequest) => {
   })
 }
 
-export const postUploadImageAPI = async (data: any) => {
+export const postUploadImageAPI = async (data: UploadRequest) => {
   return ApiService.fetchData<UploadResponse, UploadRequest>({
     url: '/upload/business_picture',
     method: 'post',

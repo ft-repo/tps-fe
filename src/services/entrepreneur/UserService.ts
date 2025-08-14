@@ -2,6 +2,7 @@
 import { APIChangePasswordBody, APIPutBody } from "@/@types/entrepreneur/executive-data"
 import ApiService from "../ApiService"
 import { UserState } from "@/@types/reducer/user"
+import { UploadRequest, UploadResponse } from "@/@types/services/vehicle"
 
 export const getUserAPI = async () => {
   return ApiService.fetchData<UserState, any>({
@@ -23,5 +24,16 @@ export const putChangePassword = async (data: APIChangePasswordBody) => {
     url: `/client/user/me/password`,
     method: 'put',
     data: { ...data }
+  })
+}
+
+export const postUploadProfileImageAPI = async (data: UploadRequest) => {
+  return ApiService.fetchData<UploadResponse, UploadRequest>({
+    url: '/upload/profile',
+    method: 'post',
+    data: { ...data },
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 }
