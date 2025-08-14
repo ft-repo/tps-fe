@@ -6,7 +6,7 @@ import {
   TableOther as TablePetitionExtended
 } from '../components'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
-import { getPetitionData, setPetitionData } from '@/store/slices/entrepreneur'
+import { getPetitionData, getPetitionExtendedData, setPetitionData, setPetitionExtendedData } from '@/store/slices/entrepreneur'
 import { FieldType } from '@/@types/entrepreneur/permit-list'
 
 interface Props {
@@ -16,23 +16,23 @@ interface Props {
 const ContentSearchOther: React.FC<Props> = (props) => {
   const { } = props
   const dispatch = useAppDispatch()
-  const petition = useAppSelector(state => state.entrepreneur.permitList.petition)
+  const petition_extended = useAppSelector(state => state.entrepreneur.permitList.petition_extended)
   const loading = useAppSelector(state => state.layout.loading)
 
   useEffect(() => {
-    dispatch(getPetitionData(petition.overview.search))
-  }, [dispatch, petition.overview.search])
+    dispatch(getPetitionExtendedData(petition_extended.overview.search))
+  }, [dispatch, petition_extended.overview.search])
 
   const handleTableChange = useCallback((page: number, limit: number) => {
     dispatch(setLoading(true))
     try {
-      dispatch(setPetitionData({
+      dispatch(setPetitionExtendedData({
         params: {
-          ...petition.overview.search,
+          ...petition_extended.overview.search,
           page,
           limit
         },
-        data: { ...petition.overview.data }
+        data: { ...petition_extended.overview.data }
       }))
     } catch (error) {
       if (error instanceof Error) {
@@ -43,17 +43,17 @@ const ContentSearchOther: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch, petition.overview])
+  }, [dispatch, petition_extended.overview])
 
   const handleSearch = useCallback((value: FieldType) => {
     dispatch(setLoading(true))
     try {
-      dispatch(setPetitionData({
+      dispatch(setPetitionExtendedData({
         params: {
-          ...petition.overview.search,
+          ...petition_extended.overview.search,
           search: value
         },
-        data: { ...petition.overview.data }
+        data: { ...petition_extended.overview.data }
       }))
 
     } catch (error) {
@@ -65,7 +65,7 @@ const ContentSearchOther: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch, petition.overview])
+  }, [dispatch, petition_extended.overview])
 
   return (
     <div>
@@ -77,7 +77,7 @@ const ContentSearchOther: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <TablePetitionExtended
-          data={petition.overview.data}
+          data={petition_extended.overview.data}
           loading={loading}
           handleTableChange={handleTableChange}
         />

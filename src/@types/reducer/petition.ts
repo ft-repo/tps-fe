@@ -47,7 +47,7 @@ export interface PetitionExtendedSearch {
 }
 
 export interface PetitionExtendedData {
-  data: any[];
+  data: PetitionExtendedTableData[];
   total: number;
   page: number;
   limit: number;
@@ -84,4 +84,63 @@ export interface PetitionFlow {
 
 export interface PetitionStatus {
   status_name: string;
+}
+
+//petition extended
+
+export interface PetitionExtendedTableData {
+  id: number
+  status_id: number
+  cert_date: string
+  created_by: string
+  poa_name: string
+  phone_number: string
+  ref_form_no: number
+  remark: string
+  created_at: string
+  status: Status
+  petition_extended_flow: PetitionExtendedFlow[]
+  user_created: UserCreated
+}
+
+export interface Status {
+  status_name: string
+}
+
+export interface PetitionExtendedFlow {
+  id: number
+  petition_exid: number
+  status_id: number
+  is_approved: boolean
+  created_by: string
+  created_at: string
+  status: Status2
+  admin_creaded: AdminCreaded
+}
+
+export interface Status2 {
+  status_name: string
+}
+
+export interface AdminCreaded {
+  id: string
+  username: string
+  title: string
+  first_name: string
+  last_name: string
+  department_id: any
+  role_id: any
+}
+
+export interface UserCreated {
+  id: string
+  registration_no: string
+  created_at: string
+  profile_url: string
+  business_details: BusinessDetails
+}
+
+export interface BusinessDetails {
+  entity_type_id: number
+  business_name: string
 }

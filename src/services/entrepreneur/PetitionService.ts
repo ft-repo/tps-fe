@@ -12,7 +12,7 @@ export const getPetitionAPI = async (params: GetPetitionParams) => {
 
 export const getPetitionExtendedAPI = async (params: GetPetitionParams) => {
   return ApiService.fetchData<GetPetitionResponse>({
-    url: '/admin/petition_extended',
+    url: '/client/petition_extended',
     method: 'get',
     // params = query/parameter
     params: { ...params }

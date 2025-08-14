@@ -12,8 +12,34 @@ interface Props {
   handleTableChange: (page: number, limit: number) => void;
 }
 
-const TableCategory: React.FC<Props> = (props) => {
-  const { data, loading, handleTableChange } = props
+// ---------- Helpers ----------
+/** หา flow ล่าสุดของ status_id นั้น ๆ โดยใช้ created_date เป็นหลัก, เสมอกันค่อยดู message_id */
+type FlowItem = {
+  message_id: number
+  status_id: number
+  is_approved: boolean
+}
+
+const latestFlowByStatus = (
+  flow: FlowItem[] | undefined,
+  statusId: number
+): FlowItem | null => {
+  const items = (flow ?? []).filter(f => f.status_id === statusId)
+  if (items.length === 0) return null
+  // เลือก message_id ที่มากที่สุด
+  return items.reduce((acc, cur) => cur.message_id > acc.message_id ? cur : acc)
+}
+
+type ApprovalKey = keyof typeof APPROVAL_STATUS
+
+const toApprovalKey = (flowItem: FlowItem | null): ApprovalKey => {
+  if (!flowItem) return 'WAIT_APPROVAL'
+  return flowItem.is_approved ? 'APPROVED' : 'IN_PROGRESS'
+}
+
+
+
+const TableCategory: React.FC<Props> = ({ data, loading, handleTableChange }) => {
 
   const columns: TableProps<PetitionTableData>['columns'] = [
     {
@@ -58,68 +84,72 @@ const TableCategory: React.FC<Props> = (props) => {
       width: 150,
       align: 'center'
     },
-    // PETITION FLOW
+
+    // ------- PETITION FLOW (ใช้ render จาก record) -------
     {
       title: 'ตรวจเอกสาร',
-      dataIndex: '',
-      key: '',
+      key: 'validate_document',
       width: 150,
       align: 'center',
-      render: () => {
-        return (
-          <Tag className={APPROVAL_STATUS['APPROVED'].className}>{APPROVAL_STATUS['APPROVED'].text}</Tag>)
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_flow, 1)
+        const key: ApprovalKey = toApprovalKey(latest)
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
       }
     },
     {
       title: 'ตรวจเส้นทาง',
-      dataIndex: '',
-      key: '',
+      key: 'validate_route',
       width: 150,
       align: 'center',
-      render: () => {
-        return (
-          <Tag className={APPROVAL_STATUS['APPROVED'].className}>{APPROVAL_STATUS['APPROVED'].text}</Tag>)
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_flow, 2)
+        const key: ApprovalKey = toApprovalKey(latest)
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
       }
     },
     {
       title: 'ตรวจยานพาหนะ',
-      dataIndex: '',
-      key: '',
+      key: 'validate_vehicle',
       width: 150,
       align: 'center',
-      render: () => {
-        return (
-          <Tag className={APPROVAL_STATUS['APPROVED'].className}>{APPROVAL_STATUS['APPROVED'].text}</Tag>)
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_flow, 3)
+        const key: ApprovalKey = toApprovalKey(latest)
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
       }
     },
     {
       title: 'รอลงนาม',
-      dataIndex: '',
-      key: '',
+      key: 'wait_signed',
       width: 150,
       align: 'center',
-      render: () => {
-        return (
-          <Tag className={APPROVAL_STATUS['APPROVED'].className}>{APPROVAL_STATUS['APPROVED'].text}</Tag>)
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_flow, 5)
+        const key: ApprovalKey = toApprovalKey(latest)
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
       }
     },
     {
       title: 'ออกใบอนุญาต',
-      dataIndex: '',
-      key: '',
+      key: 'permit',
       width: 150,
       align: 'center',
-      render: () => {
-        return (
-          <Tag className={APPROVAL_STATUS['APPROVED'].className}>{APPROVAL_STATUS['APPROVED'].text}</Tag>)
+      render: (_val, record) => {
+        // ถ้าระบบมี status_id = 6 ให้ใช้ 6; ถ้ายังไม่มี ให้อนุมานจาก 5 ว่าถ้า approved แล้วถือว่าออกใบอนุญาตเสร็จ
+        const latest6 = latestFlowByStatus(record.petition_flow, 6)
+        const key: ApprovalKey = latest6
+          ? toApprovalKey(latest6)
+          : (toApprovalKey(latestFlowByStatus(record.petition_flow, 5)) === 'APPROVED' ? 'APPROVED' : 'WAIT_APPROVAL')
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
       }
     },
   ]
 
-
   return (
     <Table
       columns={columns}
+      rowKey="petition_id"
       dataSource={data.data || []}
       loading={loading}
       pagination={{
