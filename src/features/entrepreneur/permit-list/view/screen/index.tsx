@@ -3,6 +3,8 @@
 import React from 'react'
 import PDFContent from '../components/PDFContent'
 import { useNavigate } from 'react-router-dom'
+import { Button } from 'antd'
+import { AiOutlineLeft } from "react-icons/ai";
 
 interface Props {
 
@@ -15,12 +17,13 @@ const ViewScreen: React.FC<Props> = (props) => {
   return (
     <>
       <section>
-        <p
-          className='cursor-pointer'
+        <Button
+          type='text'
+          icon={<AiOutlineLeft />}
           onClick={() => navigate(-1)}
         >
-          &lt; ย้อนกลับ
-        </p>
+          ย้อนกลับ
+        </Button>
       </section>
       <section className='mt-5'>
         <PDFContent />

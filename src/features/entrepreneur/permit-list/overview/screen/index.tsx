@@ -2,39 +2,38 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useState } from 'react'
-import Tabs from '@/components/ui/Tabs'
-import { ContentSearchCategory, ContentSearchOther } from '../components'
-
-const { TabNav, TabList, TabContent } = Tabs
+import {
+  ContentSearchCategory as ContentPetition,
+  ContentSearchOther as ContentPetitionExtended
+} from '../components'
+import { Tabs, TabsProps } from 'antd'
 
 interface Props {
 }
 
 const PermitListScreen: React.FC<Props> = (props) => {
   const { } = props
-  const [tabKey, setTabKey] = useState<string>('tab1')
+  const [tabKey, setTabKey] = useState<string>('1')
+
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: 'รถหมวด 2 (4 - 7 เพลา)',
+      children: <ContentPetition />,
+    },
+    {
+      key: '2',
+      label: 'นอกเหนือ (4 - 7 เพลา)',
+      children: <ContentPetitionExtended />,
+    },
+  ];
 
   return (
-    <div>
-      <Tabs
-        defaultValue={tabKey}
-        variant="pill"
-        onChange={(tabKey) => setTabKey(tabKey)}
-      >
-        <TabList>
-          <TabNav value='tab1'>รถหมวด 2 (4 - 7 เพลา)</TabNav>
-          <TabNav value="tab2">นอกเหนือ (4 - 7 เพลา)</TabNav>
-        </TabList>
-        <div className="p-4">
-          <TabContent value="tab1">
-            <ContentSearchCategory />
-          </TabContent>
-          <TabContent value="tab2">
-            <ContentSearchOther />
-          </TabContent>
-        </div>
-      </Tabs>
-    </div>
+    <Tabs
+      defaultActiveKey={tabKey}
+      items={items}
+      onChange={(tabKey) => setTabKey(tabKey)}
+    />
   )
 }
 

@@ -3,6 +3,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
 import ViewScreen from '@/features/entrepreneur/permit-list/view/screen'
+import { ConfigProvider } from 'antd'
 
 interface Props {
 
@@ -12,9 +13,15 @@ const ViewIndex: React.FC<Props> = (props) => {
   const { } = props
 
   return (
-    <div>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Noto Sans Thai"
+        }
+      }}
+    >
       <ViewScreen />
-    </div>
+    </ConfigProvider>
   )
 }
 

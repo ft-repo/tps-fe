@@ -98,7 +98,6 @@ const OverviewScreen: React.FC<Props> = (props) => {
 
   const handleSearch = useCallback((value: FieldType) => {
     dispatch(setLoading(true))
-
     try {
       dispatch(setVehicleList({
         params: {
