@@ -7,8 +7,6 @@ import { Tag } from '@/components/ui';
 import { APPROVAL_STATUS } from '@/utils/constant';
 import dayjs from 'dayjs';
 
-type ApprovalKey = keyof typeof APPROVAL_STATUS
-
 interface Props {
   data: PetitionData;
   loading: boolean;
@@ -17,27 +15,26 @@ interface Props {
 
 // ---------- Helpers ----------
 /** เลือกรายการ flow ล่าสุดของ status_id ที่กำหนด */
+// ---------- Helpers ----------
+// เลือกรายการล่าสุดของ statusId โดยใช้ "id" มากที่สุด (ไม่ดูเวลา)
 const latestFlowByStatus = (
   flow: PetitionExtendedTableData['petition_extended_flow'] | undefined,
   statusId: number
 ) => {
   const items = (flow ?? []).filter(f => f.status_id === statusId)
   if (items.length === 0) return null
-  return items.reduce((acc, cur) => {
-    const ta = new Date(acc.created_at).getTime()
-    const tb = new Date(cur.created_at).getTime()
-    if (tb > ta) return cur
-    if (tb < ta) return acc
-    // เวลาเท่ากัน → ใช้ id มากกว่า
-    return cur.id > acc.id ? cur : acc
-  })
+  // ใช้ id มากที่สุด = ล่าสุด
+  return items.reduce((acc, cur) => (cur.id > acc.id ? cur : acc))
 }
 
-/** แปลง flow ล่าสุดให้เป็น key ของป้าย */
+type ApprovalKey = keyof typeof APPROVAL_STATUS
+
+// แปลงรายการล่าสุดเป็น key ของป้าย
 const toApprovalKey = (flowItem: ReturnType<typeof latestFlowByStatus>): ApprovalKey => {
   if (!flowItem) return 'WAIT_APPROVAL'
   return flowItem.is_approved ? 'APPROVED' : 'IN_PROGRESS'
 }
+
 
 const TableOther: React.FC<Props> = ({ data, loading, handleTableChange }) => {
 

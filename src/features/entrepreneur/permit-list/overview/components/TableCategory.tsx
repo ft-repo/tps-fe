@@ -6,8 +6,6 @@ import { PetitionData, PetitionTableData } from '@/@types/reducer/petition';
 import { Tag } from '@/components/ui';
 import { APPROVAL_STATUS } from '@/utils/constant';
 
-type ApprovalKey = keyof typeof APPROVAL_STATUS
-
 interface Props {
   data: PetitionData;
   loading: boolean;
@@ -16,32 +14,30 @@ interface Props {
 
 // ---------- Helpers ----------
 /** หา flow ล่าสุดของ status_id นั้น ๆ โดยใช้ created_date เป็นหลัก, เสมอกันค่อยดู message_id */
-const latestFlowByStatus = (
-  flow: Array<{
-    message_id: number
-    status_id: number
-    created_date: string
-    is_approved: boolean
-  }> | undefined,
-  statusId: number
-) => {
-  const items = (flow ?? []).filter(f => f.status_id === statusId)
-  if (items.length === 0) return null
-  return items.reduce((acc, cur) => {
-    const ta = new Date(acc.created_date).getTime()
-    const tb = new Date(cur.created_date).getTime()
-    if (tb > ta) return cur
-    if (tb < ta) return acc
-    // เวลาเท่ากัน → เอา message_id มากกว่า (ใหม่กว่า)
-    return cur.message_id > acc.message_id ? cur : acc
-  })
+type FlowItem = {
+  message_id: number
+  status_id: number
+  is_approved: boolean
 }
 
-/** แปลง flow ล่าสุดให้เป็น ApprovalKey สำหรับ Tag */
-const toApprovalKey = (flowItem: ReturnType<typeof latestFlowByStatus>): ApprovalKey => {
+const latestFlowByStatus = (
+  flow: FlowItem[] | undefined,
+  statusId: number
+): FlowItem | null => {
+  const items = (flow ?? []).filter(f => f.status_id === statusId)
+  if (items.length === 0) return null
+  // เลือก message_id ที่มากที่สุด
+  return items.reduce((acc, cur) => cur.message_id > acc.message_id ? cur : acc)
+}
+
+type ApprovalKey = keyof typeof APPROVAL_STATUS
+
+const toApprovalKey = (flowItem: FlowItem | null): ApprovalKey => {
   if (!flowItem) return 'WAIT_APPROVAL'
   return flowItem.is_approved ? 'APPROVED' : 'IN_PROGRESS'
 }
+
+
 
 const TableCategory: React.FC<Props> = ({ data, loading, handleTableChange }) => {
 
