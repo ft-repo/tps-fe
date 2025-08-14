@@ -45,35 +45,35 @@ const Content = (props: ContentProps) => {
       long_unit: data.vehicle_detail.length || 0,
       tall_unit: data.vehicle_detail.height || 0,
       file_registered_document_id: {
-        file: fileList.length ? [fileList[0]] : [],
+        file: fileList.length ? [fileList[0] || { uid: '', name: '', url: '' }] : [],
         url: data.vehicle_detail.registration_document_url || ''
       },
       file_property_document_id: {
-        file: fileList.length ? [fileList[1]] : [],
+        file: fileList.length ? [fileList[1] || { uid: '', name: '', url: '' }] : [],
         url: data.vehicle_owner_documents.owner_document_url || ''
       },
       file_hire_contact_document_id: {
-        file: fileList.length ? [fileList[2]] : [],
+        file: fileList.length ? [fileList[2] || { uid: '', name: '', url: '' }] : [],
         url: data.vehicle_owner_documents.employment_contact_url || ''
       },
       file_purchase_contact_document_id: {
-        file: fileList.length ? [fileList[3]] : [],
+        file: fileList.length ? [fileList[3] || { uid: '', name: '', url: '' }] : [],
         url: data.vehicle_owner_documents.buyer_contact_url || ''
       },
       file_transfer_contact_document_id: {
-        file: fileList.length ? [fileList[4]] : [],
+        file: fileList.length ? [fileList[4] || { uid: '', name: '', url: '' }] : [],
         url: data.vehicle_owner_documents.assignment_contact_url || ''
       },
       file_front_image_id: {
-        file: fileList.length ? [fileList[5]] : [],
+        file: fileList.length ? [fileList[5] || { uid: '', name: '', url: '' }] : [],
         url: data.vehicle_pictures.front_rear_url || ''
       },
       file_side_image_id: {
-        file: fileList.length ? [fileList[6]] : [],
+        file: fileList.length ? [fileList[6] || { uid: '', name: '', url: '' }] : [],
         url: data.vehicle_pictures.side_rear_url || ''
       },
       file_back_image_id: {
-        file: fileList.length ? [fileList[7]] : [],
+        file: fileList.length ? [fileList[7] || { uid: '', name: '', url: '' }] : [],
         url: data.vehicle_pictures.back_rear_url || ''
       },
     }
@@ -197,7 +197,6 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
 
   const extractUrl = useCallback((url: string) => {
     const pathname = new URL(url).pathname;
-    console.log(pathname)
     const match = pathname.match(/\/(business_certificate|business_picture)\/.*/);
     return match ? match[0] : null;
   }, []);

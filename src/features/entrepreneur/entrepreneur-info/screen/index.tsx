@@ -13,16 +13,15 @@ import { putUserAPI } from '@/services/entrepreneur/UserService';
 import { Modal } from 'antd';
 
 interface Props {
+  fileList: any[];
 }
 
 const ExecutiveDataScreen: React.FC<Props> = (props) => {
-  const { } = props
+  const { fileList } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const dispatch = useAppDispatch()
   const userData = useAppSelector(state => state.entrepreneur.user)
   const loading = useAppSelector(state => state.layout.loading)
-
-  console.log(userData)
 
   const renderBusinessAddress = useCallback((
     houseNumber: string,
@@ -68,44 +67,20 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
       citizen_id: userData.important_info.cid,
       contact_tel: userData.important_info.contact_phone_number,
       file_id: {
-        file: [
-          {
-            uid: '1',
-            name: userData.profile_url,
-            url: userData.profile_url
-          }
-        ],
+        file: fileList.length ? [fileList[0] || { uid: '', name: '', url: '' }] : [],
         url: userData.profile_url
       },
       approved_date: dayjs(userData.important_info.permission_date),
       file_copied_of_citizen_id: {
-        file: [
-          {
-            uid: '2',
-            name: userData.business_document.cid_card_file_url,
-            url: userData.business_document.cid_card_file_url
-          }
-        ],
+        file: fileList.length ? [fileList[1] || { uid: '', name: '', url: '' }] : [],
         url: userData.business_document.cid_card_file_url
       },
       file_legal_entity_id: {
-        file: [
-          {
-            uid: '3',
-            name: userData.business_document.business_file_url,
-            url: userData.business_document.business_file_url
-          }
-        ],
+        file: fileList.length ? [fileList[2] || { uid: '', name: '', url: '' }] : [],
         url: userData.business_document.business_file_url
       },
       file_trasfer_ownership_image_id: {
-        file: [
-          {
-            uid: '4',
-            name: userData.business_document.certificate_file_url,
-            url: userData.business_document.certificate_file_url
-          }
-        ],
+        file: fileList.length ? [fileList[3] || { uid: '', name: '', url: '' }] : [],
         url: userData.business_document.certificate_file_url
       },
     },
