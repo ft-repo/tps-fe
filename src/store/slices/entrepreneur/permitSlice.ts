@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constant'
 import { PetitionState } from '@/@types/reducer/petition'
-import { getPetitionAPI } from '@/services/entrepreneur/PetitionService'
+import { getPetitionAPI, getPetitionExtendedAPI } from '@/services/entrepreneur/PetitionService'
 import { GetPetitionParams } from '@/@types/services/petition'
 
 const initialState: PetitionState = {
@@ -50,6 +50,12 @@ export const getPetitionData = createAsyncThunk(`${SLICE_BASE_NAME}/petition` + 
 	return response.data
 })
 
+export const getPetitionExtendedData = createAsyncThunk(`${SLICE_BASE_NAME}/petition` + '/apiGetPetitionExtendedData', async (params: GetPetitionParams) => {
+	// assume someService required reesponse & require type as generic
+	const response = await getPetitionExtendedAPI(params)
+	return response.data
+})
+
 const petitionSlice = createSlice({
 	name: `${SLICE_BASE_NAME}/petition`,
 	initialState,
@@ -80,8 +86,20 @@ const petitionSlice = createSlice({
 			.addCase(getPetitionData.rejected, (state) => {
 				state.loading = false
 			})
+		builder.addCase(getPetitionExtendedData.fulfilled, (state, action) => {
+			state.petition_extended.overview.data = action.payload,
+				state.loading = false
+		})
+			.addCase(getPetitionExtendedData.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getPetitionExtendedData.rejected, (state) => {
+				state.loading = false
+			})
 	}
 })
+
+
 
 export const {
 	setPetitionData,
