@@ -4,6 +4,7 @@ import { SLICE_BASE_NAME } from './constant'
 import { getUserAPI } from '@/services/entrepreneur/UserService'
 
 const initialState: UserState = {
+	profile_url: '',
 	important_info: {
 		entity_name: '',
 		business_name: '',
@@ -49,15 +50,17 @@ const userSlice = createSlice({
 	initialState,
 	reducers: {
 		setClient: (state, action) => {
-			state.business_document = action.payload.business_document,
-			state.important_info = action.payload.important_info
+			state.profile_url = action.payload.profile_url,
+				state.business_document = action.payload.business_document,
+				state.important_info = action.payload.important_info
 		},
 	},
 	extraReducers: (builder) => {
 		builder.addCase(getUserData.fulfilled, (state, action) => {
-			state.business_document = action.payload.business_document,
-			state.important_info = action.payload.important_info,
-			state.loading = false
+			state.profile_url = action.payload.profile_url,
+				state.business_document = action.payload.business_document,
+				state.important_info = action.payload.important_info,
+				state.loading = false
 		})
 			.addCase(getUserData.pending, (state) => {
 				state.loading = true

@@ -19,7 +19,8 @@ const PDFViewer: React.FC<Props> = (props) => {
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
       <Viewer
-        fileUrl={'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf'}
+        // fileUrl={'https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf'}
+        fileUrl={'/mock/c4611_sample_explain.pdf'}
         plugins={[
           defaultLayoutPluginInstance,
         ]}

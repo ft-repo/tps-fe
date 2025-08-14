@@ -10,7 +10,6 @@ import entrepreneur, { EntrepreneurState } from './slices/entrepreneur'
 import staff, { StaffState } from './slices/staff/staffSlice'
 
 export type RootState = {
-  permit: any
 	auth: AuthState;
 	base: BaseState;
 	locale: LocaleState;

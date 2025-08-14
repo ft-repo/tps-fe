@@ -24,6 +24,7 @@ export interface FileType {
 
 // PUT USER
 export interface APIPutBody {
+  profile_url: string;
   important_info: ImportantInfo;
   business_document: BusinessDocument;
 }

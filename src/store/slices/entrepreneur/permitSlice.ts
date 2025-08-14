@@ -1,56 +1,111 @@
-// src/store/slices/entrepreneur/permitSlice.ts
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import PermitListService from '@/services/entrepreneur/PermitListService'
-import type { PetitionListResponse, Petition } from '@/@types/entrepreneur/permit-list'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { SLICE_BASE_NAME } from './constant'
+import { PetitionState } from '@/@types/reducer/petition'
+import { getPetitionAPI, getPetitionExtendedAPI } from '@/services/entrepreneur/PetitionService'
+import { GetPetitionParams } from '@/@types/services/petition'
 
-interface PermitState {
-    data: Petition[]            // <-- explicit
-    total: number
-    loading: boolean
-    error: string | null
+const initialState: PetitionState = {
+	petition: {
+		overview: {
+			search: {
+				search: '',
+				page: 1,
+				limit: 10
+			},
+			data: {
+				data: [],
+				total: 0,
+				page: 1,
+				limit: 10,
+				total_pages: 0
+			},
+		},
+		detail: {}
+	},
+	petition_extended: {
+		overview: {
+			search: {
+				search: '',
+				page: 1,
+				limit: 10
+			},
+			data: {
+				data: [],
+				total: 0,
+				page: 1,
+				limit: 10,
+				total_pages: 0
+			},
+		},
+		detail: {},
+	},
+	loading: false
 }
 
-const initialState: PermitState = {
-    data: [],                   // <-- now typed as Petition[] (because of PermitState)
-    total: 0,
-    loading: false,
-    error: null,
-}
+// export const SLICE_NAME = 'yourSliceName';
 
-export const fetchPermitList = createAsyncThunk<
-    PetitionListResponse,
-    { page: number; limit: number }
->('permit/fetchPermitList', async (params, { rejectWithValue }) => {
-    try {
-        const { data } = await PermitListService.getPermitList(params) // unwrap .data
-        return data
-    } catch (e: any) {
-        return rejectWithValue(e?.response?.data ?? e?.message ?? 'Request failed')
-    }
+export const getPetitionData = createAsyncThunk(`${SLICE_BASE_NAME}/petition` + '/apiGetPetitionData', async (params: GetPetitionParams) => {
+	// assume someService required reesponse & require type as generic
+	const response = await getPetitionAPI(params)
+	return response.data
 })
 
-const permitSlice = createSlice({
-    name: 'permit',
-    initialState,
-    reducers: {},
-    extraReducers: (b) => {
-        b.addCase(fetchPermitList.pending, (s) => {
-            s.loading = true
-            s.error = null
-        })
-            .addCase(
-                fetchPermitList.fulfilled,
-                (s, a: PayloadAction<PetitionListResponse>) => {
-                    s.loading = false
-                    s.data = a.payload.data        // Petition[]
-                    s.total = a.payload.total
-                }
-            )
-            .addCase(fetchPermitList.rejected, (s, a) => {
-                s.loading = false
-                s.error = (a.payload as any)?.message ?? a.error.message ?? 'Error'
-            })
-    },
+export const getPetitionExtendedData = createAsyncThunk(`${SLICE_BASE_NAME}/petition` + '/apiGetPetitionExtendedData', async (params: GetPetitionParams) => {
+	// assume someService required reesponse & require type as generic
+	const response = await getPetitionExtendedAPI(params)
+	return response.data
 })
 
-export default permitSlice.reducer
+const petitionSlice = createSlice({
+	name: `${SLICE_BASE_NAME}/petition`,
+	initialState,
+	reducers: {
+		setPetitionData: (state, action) => {
+			state.petition.overview.search = action.payload.params,
+				state.petition.overview.data = action.payload.data
+		},
+		setPetitionDetail: (state, action) => {
+			state.petition.detail = action.payload
+		},
+		setPetitionExtendedData: (state, action) => {
+			state.petition_extended.overview.search = action.payload.params,
+				state.petition_extended.overview.data = action.payload.data
+		},
+		setPetitionExtendedDetail: (state, action) => {
+			state.petition_extended.detail = action.payload
+		},
+	},
+	extraReducers: (builder) => {
+		builder.addCase(getPetitionData.fulfilled, (state, action) => {
+			state.petition.overview.data = action.payload,
+				state.loading = false
+		})
+			.addCase(getPetitionData.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getPetitionData.rejected, (state) => {
+				state.loading = false
+			})
+		builder.addCase(getPetitionExtendedData.fulfilled, (state, action) => {
+			state.petition_extended.overview.data = action.payload,
+				state.loading = false
+		})
+			.addCase(getPetitionExtendedData.pending, (state) => {
+				state.loading = true
+			})
+			.addCase(getPetitionExtendedData.rejected, (state) => {
+				state.loading = false
+			})
+	}
+})
+
+
+
+export const {
+	setPetitionData,
+	setPetitionDetail,
+	setPetitionExtendedData,
+	setPetitionExtendedDetail
+} = petitionSlice.actions
+
+export default petitionSlice.reducer

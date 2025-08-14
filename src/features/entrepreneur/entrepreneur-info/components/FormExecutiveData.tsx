@@ -1,22 +1,42 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import { Button, Upload } from '@/components/ui'
-import React from 'react'
+import { Button } from '@/components/ui'
+import React, { useCallback } from 'react'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
-import { Control, Controller, FieldErrors } from 'react-hook-form'
+import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
 import { FieldType } from '@/@types/entrepreneur/executive-data';
-import { DatePicker, Select, Input } from 'antd';
+import { DatePicker, Select, Input, Upload, message } from 'antd';
 import { useAppSelector } from '@/store';
+import { postUploadProfileImageAPI } from '@/services/entrepreneur/UserService';
 
 interface Props {
   control: Control<FieldType>;
   errors: FieldErrors<FieldType>;
+  setValue: UseFormSetValue<FieldType>;
 }
 
 const FormExecutiveData: React.FC<Props> = (props) => {
-  const { control, errors } = props
+  const { control, errors, setValue } = props
   const { entity_type, contact_type } = useAppSelector(state => state.master)
+
+  const uploadFile = useCallback(async (file: any) => {
+    try {
+      // POST
+      const response = await postUploadProfileImageAPI({ upload: file[0].originFileObj })
+      if (response.status === 200) {
+        setValue('file_id.url', response.data?.url)
+      } else {
+        console.log(response)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.log(error)
+      }
+    }
+  }, [setValue])
 
   return (
     <div>
@@ -294,21 +314,66 @@ const FormExecutiveData: React.FC<Props> = (props) => {
             )
           }}
         />
-        <fieldset>
-          <label>อัปโหลดรูป</label>
-          <Upload
-            className='block mt-1'
-          >
-            <Button
-              variant="solid"
-              icon={<HiOutlineCloudUpload />}
-              size='sm'
-              type='button'
-            >
-              อัปโหลดไฟล์
-            </Button>
-          </Upload>
-        </fieldset>
+        <Controller
+          name='file_id.file'
+          control={control}
+          rules={{
+            required: 'กรุณาอัปโหลดรูป'
+          }}
+          render={({ field }) => {
+            return (
+              <fieldset>
+                <label className='block'>อัปโหลดรูป</label>
+                <Upload
+                  {...field}
+                  fileList={field.value || []}
+                  maxCount={1}
+                  listType='picture'
+                  accept='image/jpg,image/jpeg,image/png'
+                  beforeUpload={(file) => {
+                    // DEFAULT VALUES
+                    const allowList = ['image/jpg', 'image/jpeg', 'image/png']
+                    const maxFileSize = 10000000
+                    // CHECK
+                    const isListAvailable = allowList.some(item => item === file.type)
+                    const isLt10 = file.size < maxFileSize
+                    if (!isListAvailable) {
+                      message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                      return Upload.LIST_IGNORE
+                    }
+                    if (!isLt10) {
+                      message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                      return Upload.LIST_IGNORE
+                    }
+                    return false
+                  }}
+                  onChange={(e) => {
+                    field.onChange(e.fileList);
+                    if (e.fileList.length) {
+                      uploadFile(e.fileList)
+                    } else {
+                      setValue('file_id.url', '')
+                    }
+                  }}
+                >
+                  {field.value.length ? null :
+                    <Button
+                      variant="solid"
+                      icon={<HiOutlineCloudUpload />}
+                      size='sm'
+                      type='button'
+                    >
+                      เพิ่มไฟล์ .pdf
+                    </Button>
+                  }
+                </Upload>
+                {!!errors.file_id?.file &&
+                  <p className='text-red-500'>{errors.file_id.file.message}</p>
+                }
+              </fieldset>
+            )
+          }}
+        />
         <Controller
           disabled
           name='approved_date'

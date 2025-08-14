@@ -1,139 +1,152 @@
-/* eslint-disable import/no-unresolved */
+/* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useEffect, useMemo, useState, useCallback } from 'react'
-import { Table } from '@/components/custom/table'
-import dayjs from 'dayjs'
-import { APPROVAL_STATUS } from '@/utils/constant'
-import { Tag } from '@/components/ui'
-import { ColumnDef } from '@tanstack/react-table'
-import PetitionExtendedService, {
-  PetitionExtendedItem,
-  PetitionExtendedListResponse,
-} from '@/services/entrepreneur/PermitListExtendService'
+import React from 'react'
+import { Table, type TableProps } from 'antd';
+import { PetitionData, PetitionExtendedTableData } from '@/@types/reducer/petition';
+import { Tag } from '@/components/ui';
+import { APPROVAL_STATUS } from '@/utils/constant';
+import dayjs from 'dayjs';
+
+interface Props {
+  data: PetitionData;
+  loading: boolean;
+  handleTableChange: (page: number, limit: number) => void;
+}
+
+// ---------- Helpers ----------
+/** เลือกรายการ flow ล่าสุดของ status_id ที่กำหนด */
+// ---------- Helpers ----------
+// เลือกรายการล่าสุดของ statusId โดยใช้ "id" มากที่สุด (ไม่ดูเวลา)
+const latestFlowByStatus = (
+  flow: PetitionExtendedTableData['petition_extended_flow'] | undefined,
+  statusId: number
+) => {
+  const items = (flow ?? []).filter(f => f.status_id === statusId)
+  if (items.length === 0) return null
+  // ใช้ id มากที่สุด = ล่าสุด
+  return items.reduce((acc, cur) => (cur.id > acc.id ? cur : acc))
+}
 
 type ApprovalKey = keyof typeof APPROVAL_STATUS
 
-interface TableData {
-  business_name: string
-  petition_date: string
-  validate_document: ApprovalKey
-  committee_conside: ApprovalKey
-  wait_signed: ApprovalKey
-  petition_approved: ApprovalKey
+// แปลงรายการล่าสุดเป็น key ของป้าย
+const toApprovalKey = (flowItem: ReturnType<typeof latestFlowByStatus>): ApprovalKey => {
+  if (!flowItem) return 'WAIT_APPROVAL'
+  return flowItem.is_approved ? 'APPROVED' : 'IN_PROGRESS'
 }
 
-interface Props { }
 
-const TableOther: React.FC<Props> = () => {
-  const [rows, setRows] = useState<TableData[]>([])
-  const [total, setTotal] = useState<number>(0)
-  const [error, setError] = useState<string | null>(null)
+const TableOther: React.FC<Props> = ({ data, loading, handleTableChange }) => {
 
-  const fmt = (d?: string | null) => (d ? dayjs(d).format('DD MMM YYYY') : '-')
+  const columns: TableProps<PetitionExtendedTableData>['columns'] = [
+    {
+      title: 'ชื่อบริษัท / ห้าง / ร้าน',
+      dataIndex: 'user_created',
+      key: 'user_created.business_details.business_name',
+      width: 180,
+      align: 'center',
+      render: (_value, record) => (
+        <p>{record.user_created?.business_details?.business_name ?? '-'}</p>
+      )
+    },
+    {
+      title: 'วันที่ขออนุญาต',
+      dataIndex: 'created_at',
+      key: 'created_at',
+      width: 160,
+      align: 'center',
+      render: (_value, record) => (
+        <p>{record.created_at ? dayjs(record.created_at).format('DD-MM-YYYY') : '-'}</p>
+      )
+    },
 
-  // reuse logic from previous table: latest by status_id, approved => APPROVED, else IN_PROGRESS
-  const computeStepStatus = (flow: PetitionExtendedItem['petition_extended_flow'], targetStatusId: number): ApprovalKey => {
-    const items = (flow || []).filter(f => f.status_id === targetStatusId)
-    if (items.length === 0) return 'WAIT_APPROVAL'
-    const latest = [...items].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    )[0]
-    return latest.is_approved ? 'APPROVED' : 'IN_PROGRESS'
-  }
+    // ---------- PETITION EXTENDED FLOW ----------
+    {
+      title: 'ตรวจเอกสาร',
+      key: 'validate_document',
+      width: 150,
+      align: 'center',
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_extended_flow, 1)
+        const key: ApprovalKey = toApprovalKey(latest)
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
+      }
+    },
+    {
+      title: 'ตรวจเส้นทาง',
+      key: 'validate_route',
+      width: 150,
+      align: 'center',
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_extended_flow, 2)
+        const key: ApprovalKey = toApprovalKey(latest)
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
+      }
+    },
+    {
+      title: 'ตรวจยานพาหนะ',
+      key: 'validate_vehicle',
+      width: 150,
+      align: 'center',
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_extended_flow, 3)
+        const key: ApprovalKey = toApprovalKey(latest)
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
+      }
+    },
+    {
+      title: 'คณะกรรมการพิจารณา',
+      key: 'committee_conside',
+      width: 170,
+      align: 'center',
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_extended_flow, 4)
+        const key: ApprovalKey = toApprovalKey(latest)
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
+      }
+    },
 
-  const mapToRow = (it: PetitionExtendedItem): TableData => {
-    const business = it.user_created?.business_details?.business_name ?? '-'
-    // ใช้ created_at เป็น "วันที่ขออนุญาต" (ถ้าต้องการ cert_date แทน เปลี่ยนเป็น it.cert_date)
-    const petitionDate = fmt(it.created_at)
-
-    return {
-      business_name: business,
-      petition_date: petitionDate,
-      // mapping ตามสถานะในระบบ:
-      // 1 ตรวจเอกสาร, 4 คณะกรรมการพิจารณา, 5 รอลงนาม
-      validate_document: computeStepStatus(it.petition_extended_flow, 1),
-      committee_conside: computeStepStatus(it.petition_extended_flow, 4),
-      wait_signed: computeStepStatus(it.petition_extended_flow, 5),
-
-      // ออกใบอนุญาต: ถือว่าอนุมัติเมื่อผ่าน "รอลงนาม" แล้ว (status_id 5 approved)
-      petition_approved:
-        computeStepStatus(it.petition_extended_flow, 5) === 'APPROVED'
+    // ถ้าต้องการ “ออกใบอนุญาต”: ไม่มี status_id=6 ใน extended_flow
+    // ให้ถือว่า "อนุมัติ" เมื่อขั้น 4 ผ่านแล้ว หรือมี cert_date
+    {
+      title: 'ออกใบอนุญาต',
+      key: 'permit',
+      width: 150,
+      align: 'center',
+      render: (_val, record) => {
+        const latest4 = latestFlowByStatus(record.petition_extended_flow, 4)
+        const approvedByCommittee = toApprovalKey(latest4) === 'APPROVED'
+        const key: ApprovalKey = (approvedByCommittee || !!record.cert_date)
           ? 'APPROVED'
-          : 'WAIT_APPROVAL',
-    }
-  }
-
-  const fetchList = useCallback(async () => {
-    try {
-      setError(null)
-      const { data: res } = await PetitionExtendedService.getPetitionExtendedList({ page: 1, limit: 10, search: '' })
-      const mapped = res.data.map(mapToRow)
-      setRows(mapped)
-      setTotal(res.total)
-    } catch (e: any) {
-      setError(e?.message ?? 'โหลดข้อมูลไม่สำเร็จ')
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchList()
-  }, [fetchList])
-
-  const columns = useMemo<ColumnDef<TableData>[]>(() => [
-    { header: 'ชื่อบริษัท / ห้าง / ร้าน', accessorKey: 'business_name' },
-    { header: 'วันที่ขออนุญาต', accessorKey: 'petition_date' },
-    {
-      header: 'ตรวจเอกสาร',
-      accessorKey: 'validate_document',
-      cell: ({ getValue }) => {
-        const key = getValue<ApprovalKey>()
+          : 'WAIT_APPROVAL'
         return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
-      },
+      }
     },
-    {
-      header: 'คณะกรรมการพิจารณา',
-      accessorKey: 'committee_conside',
-      cell: ({ getValue }) => {
-        const key = getValue<ApprovalKey>()
-        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
-      },
-    },
-    {
-      header: 'รอลงนาม',
-      accessorKey: 'wait_signed',
-      cell: ({ getValue }) => {
-        const key = getValue<ApprovalKey>()
-        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
-      },
-    },
-    {
-      header: 'ออกใบอนุญาต',
-      accessorKey: 'petition_approved',
-      cell: ({ getValue }) => {
-        const key = getValue<ApprovalKey>()
-        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>
-      },
-    },
-  ], [])
+  ]
 
   return (
-    <div>
-      {error && <div className="text-red-600 mb-2">{error}</div>}
-
-      <Table
-        showPagination
-        data={rows}
-        columns={columns}
-        totalData={total}
-        pageSizeOption={[
-          { label: '10 / หน้า', value: 10 },
-          { label: '20 / หน้า', value: 20 },
-          { label: '30 / หน้า', value: 30 },
-          { label: '40 / หน้า', value: 40 },
-          { label: '50 / หน้า', value: 50 },
-        ]}
-      />
-    </div>
+    <Table
+      columns={columns}
+      rowKey="id"
+      dataSource={data.data || []}
+      loading={loading}
+      pagination={{
+        defaultCurrent: 1,
+        defaultPageSize: 10,
+        current: data.page,
+        pageSize: data.limit,
+        total: Number(data.total) || 0,
+        onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
+        showSizeChanger: true,
+        position: ['bottomRight'],
+        showTotal: (total, range) => {
+          const totalPage = (range[1] + 1) - range[0]
+          return `ทั้งหมด ${totalPage || total} รายการ`
+        },
+        locale: { items_per_page: "/ หน้า" }
+      }}
+      scroll={{ x: 1100 }}
+    />
   )
 }
 

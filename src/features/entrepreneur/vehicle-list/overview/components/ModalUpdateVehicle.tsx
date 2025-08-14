@@ -197,6 +197,7 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
 
   const extractUrl = useCallback((url: string) => {
     const pathname = new URL(url).pathname;
+    console.log(pathname)
     const match = pathname.match(/\/(business_certificate|business_picture)\/.*/);
     return match ? match[0] : null;
   }, []);

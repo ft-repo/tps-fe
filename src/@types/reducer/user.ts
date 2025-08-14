@@ -1,5 +1,6 @@
 // GET USER
 export interface UserState {
+  profile_url: string;
   important_info: ImportantInfo;
   business_document: BusinessDocument;
   loading: boolean;

@@ -13,6 +13,7 @@ import {
 import { Button, Notification, toast } from '@/components/ui'
 import { ActionLink } from '@/components/shared'
 import useAuth from '@/utils/hooks/useAuth'
+import { message } from 'antd'
 
 const SignUp = () => {
   const dispatch = useAppDispatch()
@@ -89,6 +90,7 @@ const SignUp = () => {
         district_id: Number(value.business_address.district_id?.value),
         province_id: Number(value.business_address.province_id?.value),
         zip_code: value.business_address.zip_code,
+        phone_number: value.business_address.phone_number,
       },
       contact_info: {
         contact_name: value.contact_info.contact_name,
@@ -107,26 +109,26 @@ const SignUp = () => {
     dispatch(setLoading(true))
     try {
       console.log('Submitting form with values:', body)
-      // const response = await signUp(body)
+      const response = await signUp(body)
 
-      // if (response?.status === 'success') {
-      //   toast.push(
-      //     <Notification
-      //       type="success"
-      //       title="ลงทะเบียนสำเร็จ"
-      //     >
-      //       ลงทะเบียนสำเร็จ
-      //     </Notification>, {
-      //     placement: 'top-center',
-      //   })
-      // } else {
-      //   console.log(response)
-      // }
+      if (response?.status === 'success') {
+        toast.push(
+          <Notification
+            type="success"
+            title="ลงทะเบียนสำเร็จ"
+          >
+            ลงทะเบียนสำเร็จ
+          </Notification>, {
+          placement: 'top-center',
+        })
+      } else {
+        message.error(response?.message)
+      }
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message)
+        message.error(error.message)
       } else {
-        console.error(error)
+        message.error(error as string)
       }
 
       const errorMessage = error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการลงทะเบียน'

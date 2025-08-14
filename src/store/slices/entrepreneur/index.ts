@@ -1,30 +1,26 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { combineReducers } from '@reduxjs/toolkit'
 import vehicleList from './vehicleListSlice'
 import user from './userSlice'
-import permitReducer from '@/store/slices/entrepreneur/permitSlice'
+import permitList from './permitSlice'
 // TYPE
 import { VehicleListState } from '@/@types/reducer/vehicle'
 import { UserState } from '@/@types/reducer/user'
+import { PetitionState } from '@/@types/reducer/petition'
 
 const reducer = combineReducers({
   vehicleList,
-  user
+  user,
+  permitList
 })
 
 export type EntrepreneurState = {
-  vehicleList: VehicleListState,
-  user: UserState
+  vehicleList: VehicleListState;
+  user: UserState;
+  permitList: PetitionState;
 }
-
-export const store = configureStore({
-  reducer: {
-    entrepreneur: combineReducers({
-      permit: permitReducer,
-    }),
-  }
-})
 
 export * from './vehicleListSlice'
 export * from './userSlice'
+export * from './permitSlice'
 
 export default reducer
