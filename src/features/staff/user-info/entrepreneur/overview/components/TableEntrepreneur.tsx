@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import { FaTrash as DeleteIcon } from "react-icons/fa6";
+import { FaTrash as DeleteIcon, FaEye as EyeIcon } from "react-icons/fa6";
 import { useNavigate } from "react-router";
 import { ClientList, ClientListsResponse } from '@/@types/staff/user-info';
 import { Table, TableProps } from 'antd';
@@ -74,11 +74,18 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       dataIndex: 'action',
       key: 'action',
       fixed: 'right',
-      width: 70,
+      width: 80,
       align: 'center',
       render: (item, record) => {
         return (
           <div className='flex items-center justify-center gap-2'>
+            <Button
+              size='xs'
+              variant='solid'
+              icon={<EyeIcon />}
+              color='blue-600'
+              onClick={() => navigate(`/user-info/entrepreneur/view/${record.id}`)}
+            />
             <Button
               size='xs'
               variant='solid'
@@ -97,9 +104,6 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       columns={columns}
       dataSource={userLists?.data || []}
       loading={loading}
-      onRow={(record) => ({
-        onClick: () => navigate(`/user-info/entrepreneur/view/${record.id}`),
-      })}
       pagination={{
         defaultCurrent: 1,
         defaultPageSize: 10,

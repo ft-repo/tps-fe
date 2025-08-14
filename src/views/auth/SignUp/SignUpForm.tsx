@@ -114,7 +114,7 @@ function SignUpForm(props: Props) {
           }}
         />
         <Controller
-          name="contact_info.phone_number"
+          name="business_address.phone_number"
           control={control}
           rules={{ required: 'กรุณาระบุ' }}
           render={({ field }) => {
@@ -128,12 +128,12 @@ function SignUpForm(props: Props) {
                   type="tel"
                   autoComplete="off"
                   onChange={(e) => {
-                    setValue('contact_info.phone_number', e.target.value)
+                    setValue('business_address.phone_number', e.target.value)
                     field.onChange(e)
                   }}
                 />
-                {!!errors.contact_info?.phone_number &&
-                  <p className='text-red-500'>{errors.contact_info.phone_number.message}</p>
+                {!!errors.business_address?.phone_number &&
+                  <p className='text-red-500'>{errors.business_address.phone_number.message}</p>
                 }
               </fieldset>
             )
@@ -473,7 +473,9 @@ function SignUpForm(props: Props) {
               <Upload
                 name="business_document.cid_card_file_url"
                 label="รูปบัตรประชาชน"
-                accept=".pdf,.png,.jpeg,.jpg"
+                accept=".png,.jpeg,.jpg"
+                isImage={true}
+                value={field.value}
                 maxSize={10}
                 error={fieldState.error?.message}
                 control={control}

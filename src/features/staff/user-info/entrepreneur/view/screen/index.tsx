@@ -1,42 +1,109 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useRef } from 'react'
-import { FormExecutiveData, FormExecutiveDocument } from '../components';
+import { FC, memo, useCallback, useRef } from 'react'
 import { useForm } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/executive-data';
 import dayjs from 'dayjs';
 import { Button } from '@/components/ui';
 import { useNavigate } from 'react-router-dom';
+import { FormExecutiveData, FormExecutiveDocument } from '@/features/entrepreneur/entrepreneur-info/components';
+import { useAppSelector } from '@/store/hook';
 
-interface Props {
-}
-
-const ViewScreen: React.FC<Props> = (props) => {
-  const { } = props
+const ViewScreen: FC = () => {
   const submitRef = useRef<HTMLButtonElement>(null)
   const navigate = useNavigate()
+  const userData = useAppSelector(state => state.staff.userData)
+
+  const renderBusinessAddress = useCallback((
+    houseNumber: string,
+    village: string,
+    lane: string,
+    road: string,
+    province: string,
+    district: string,
+    subDistrict: string,
+    zipCode: string
+  ) => {
+    const addressArr = [
+      houseNumber || null,
+      village || null,
+      lane || null,
+      road || null,
+      province || null,
+      district || null,
+      subDistrict || null,
+      zipCode || null
+    ]
+    return addressArr.join(' ').trim()
+  }, [])
 
   const form = useForm<FieldType>({
     defaultValues: {
-      business_type: 'ห้างหุ้นส่วนสามัญนิติบุคคล',
-      business_name: 'ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด',
-      business_address: 'บ้านเลขที่ 99/1 หมู่ที่ 5 ตำบลคลองหนึ่ง อำเภอคลองหลวง จังหวัดปทุมธานี 12120',
-      office_tel: '02-123-4567',
-      business_no: '0105557001234',
-      contact_name: 'ชญานิษฐ์ พงศ์เกษมชัย',
-      contact_type: 'ผู้มอบอำนาจ',
-      citizen_id: '1 2345 67890 12 3',
-      contact_tel: '',
-      file_id: '',
-      approved_date: dayjs().format('YYYY-MM-DD'),
-      file_copied_of_citizen_id: '',
-      file_legal_entity_id: '',
-      file_trasfer_ownership_image_id: '',
+      business_type: userData?.business_details?.entity_type?.name,
+      business_name: userData?.business_details?.business_name,
+      business_address: renderBusinessAddress(
+        userData?.business_address?.house_number ?? '',
+        userData?.business_address?.village ?? '',
+        userData?.business_address?.lane ?? '',
+        userData?.business_address?.road ?? '',
+        userData?.business_address?.province?.name_th ?? '',
+        userData?.business_address?.district?.name_th ?? '',
+        userData?.business_address?.sub_district?.name_th ?? '',
+        userData?.business_address?.zip_codes ?? ''
+      ),
+      office_tel: userData?.business_address?.phone_number,
+      business_no: userData?.registration_no,
+      contact_name: userData?.contact_info?.contact_name,
+      contact_type: userData?.contact_info?.contact_type.id,
+      citizen_id: userData?.contact_info?.cid,
+      contact_tel: userData?.contact_info?.phone_number,
+      file_id: {
+        file: [
+          {
+            uid: '1',
+            name: userData?.profile_url,
+            url: userData?.profile_url
+          }
+        ],
+        url: userData?.profile_url
+      },
+      approved_date: dayjs(userData?.created_at),
+      file_copied_of_citizen_id: {
+        file: [
+          {
+            uid: '2',
+            name: userData?.documents?.cid_card_file_url,
+            url: userData?.documents?.cid_card_file_url
+          }
+        ],
+        url: userData?.documents?.cid_card_file_url
+      },
+      file_legal_entity_id: {
+        file: [
+          {
+            uid: '3',
+            name: userData?.documents?.business_file_url,
+            url: userData?.documents?.business_file_url
+          }
+        ],
+        url: userData?.documents?.business_file_url
+      },
+      file_trasfer_ownership_image_id: {
+        file: [
+          {
+            uid: '4',
+            name: userData?.documents?.certificate_file_url,
+            url: userData?.documents?.certificate_file_url
+          }
+        ],
+        url: userData?.documents?.certificate_file_url
+      },
     },
+    disabled: true,
   })
 
-  const { handleSubmit, control } = form
+  const { handleSubmit, control, formState: { errors }, setValue } = form
 
   const onSubmit = useCallback((value: FieldType) => {
     console.log(value)
@@ -62,9 +129,13 @@ const ViewScreen: React.FC<Props> = (props) => {
           <div className='block xl:grid grid-cols-2 gap-5'>
             <FormExecutiveData
               control={control}
+              errors={errors}
+              setValue={setValue}
             />
             <FormExecutiveDocument
               control={control}
+              errors={errors}
+              setValue={setValue}
             />
           </div>
           <button ref={submitRef} hidden type='submit' />
@@ -74,4 +145,4 @@ const ViewScreen: React.FC<Props> = (props) => {
   )
 }
 
-export default React.memo<Props>(ViewScreen)
+export default memo(ViewScreen)

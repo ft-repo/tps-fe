@@ -47,6 +47,7 @@ export interface StaffListsResponse {
 export interface ClientList {
   id: string
   registration_no: string
+  profile_url: string
   created_at: string
   business_details: BusinessDetails
   business_address: BusinessAddress

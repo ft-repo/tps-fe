@@ -1,7 +1,8 @@
-import { postUploadFileAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService'
-import { FaUpload as UploadIcon } from 'react-icons/fa6'
-import { useCallback, useState } from 'react'
+import { postUploadFileAPI, postUploadImageAPI, getUploadAPI } from '@/services/entrepreneur/VehicleListService'
+import { FaUpload as UploadIcon, FaExpand as MaximizeIcon  } from 'react-icons/fa6'
+import { useCallback, useState, useEffect } from 'react'
 import { useFormContext, Controller, Control, FieldPath, FieldValues } from 'react-hook-form'
+import { Modal } from 'antd'
 
 export interface UploadProps<T extends FieldValues = FieldValues> {
   name: string
@@ -12,6 +13,8 @@ export interface UploadProps<T extends FieldValues = FieldValues> {
   disabled?: boolean
   className?: string
   error?: string
+  value?: string
+  onChange?: (value: string) => void
   onUploadSuccess?: (url: string) => void
   onUploadError?: (error: string) => void
   // Controller props
@@ -29,10 +32,12 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
     disabled = false,
     className = "",
     error,
+    value,
+    onChange,
     onUploadSuccess,
     onUploadError,
     control,
-    fieldName
+    fieldName,
   } = props
   
   // Use Controller if control is provided, otherwise use useFormContext
@@ -41,6 +46,10 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
 
   // Actual file name from the file input for display
   const [fileName, setFileName] = useState<string>('')
+  // URL preview state
+  const [urlPreview, setUrlPreview] = useState<string | null>(null)
+  // Image preview state
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
   
   const { setValue, watch } = isControllerMode ? {} : formContext
   
@@ -52,6 +61,70 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
     }
     return watch ? watch(name) : undefined
   }
+
+  // Fetch image preview when URL changes
+  useEffect(() => {
+    const fetchImagePreview = async (url: string) => {
+      if (!isImage || !url) {
+        setImagePreview(null)
+        return
+      }
+
+      try {
+        // Extract the file path from the URL
+        const urlParts = url.split('/')
+        const fileName = urlParts[urlParts.length - 2] + '/' + urlParts[urlParts.length - 1]
+        
+        if (fileName) {
+          const response = await getUploadAPI(fileName)
+          if (response.status === 200 && response.data) {
+            // Create blob URL for preview
+            const blob = new Blob([response.data], { type: 'image/*' })
+            const previewUrl = URL.createObjectURL(blob)
+            setImagePreview(previewUrl)
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching image preview:', error)
+        setImagePreview(null)
+      }
+    }
+
+    if (urlPreview) {
+      fetchImagePreview(urlPreview)
+    }
+
+    // Cleanup function to revoke blob URLs
+    return () => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview)
+      }
+    }
+  }, [urlPreview, isImage])
+
+  // Handle value prop changes for existing data
+  useEffect(() => {
+    if (value) {
+      setUrlPreview(value)
+      // Extract filename from URL for display
+      const urlParts = value.split('/')
+      const extractedFileName = urlParts[urlParts.length - 1] || 'ไฟล์ที่อัปโหลด'
+      setFileName(extractedFileName)
+    } else {
+      setUrlPreview(null)
+      setFileName('')
+      setImagePreview(null)
+    }
+  }, [value])
+
+  // Cleanup image preview when component unmounts
+  useEffect(() => {
+    return () => {
+      if (imagePreview) {
+        URL.revokeObjectURL(imagePreview)
+      }
+    }
+  }, [imagePreview])
   
   const uploadFile = useCallback(
     async (fileName: string, file: File, setFieldValue?: (value: any) => void) => {
@@ -78,9 +151,15 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
             // For Controller mode, use the provided setFieldValue
             setFileName(file.name)
             setFieldValue(fileUrl)
+            setUrlPreview(fileUrl)
           } else if (setValue) {
             setFileName(file.name)
             setValue(fileName, fileUrl)
+            setUrlPreview(fileUrl)
+          }
+          // Call external onChange if provided
+          if (onChange) {
+            onChange(fileUrl)
           }
           onUploadSuccess?.(fileUrl)
         } else {
@@ -92,7 +171,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
         onUploadError?.(errorMsg)
       }
     },
-    [setValue, maxSize, isImage, onUploadSuccess, onUploadError],
+    [setValue, maxSize, isImage, onUploadSuccess, onUploadError, onChange],
   )
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setFieldValue?: (value: any) => void) => {
@@ -108,6 +187,49 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
       setFieldValue('')
     } else if (setValue) {
       setValue(name, '')
+    }
+    // Call external onChange if provided
+    if (onChange) {
+      onChange('')
+    }
+    // Clear image preview and local state
+    if (imagePreview) {
+      URL.revokeObjectURL(imagePreview)
+    }
+    setUrlPreview(null)
+    setImagePreview(null)
+    setFileName('')
+  }
+
+  const handleImageClick = () => {
+    let size = '60%';
+
+    if (imagePreview) {
+      Modal.confirm({
+        title: 'รูปภาพที่อัปโหลด',
+        centered: true,
+        content: <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />,
+        cancelText: 'ปิด',
+        okText: 'ขยาย',
+        okType: 'primary',
+        width: size,
+        onOk: () => {
+          size = '100%';
+        },
+        okButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        },
+        cancelButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        },
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        }
+      })
     }
   }
 
@@ -127,7 +249,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
         name={fieldName as FieldPath<T>}
         control={control}
         render={({ field, fieldState }) => {
-          const fieldValue = field.value
+          const fieldValue = field.value || value
           const fieldError = fieldState.error?.message
           
           return (
@@ -167,21 +289,41 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
                   />
                 </label>
               ) : (
-                <div className="flex items-center justify-between w-full p-4 border rounded-lg bg-gray-50">
-                  <div className="flex items-center overflow-hidden">
-                    <UploadIcon className="w-5 h-5 mr-2 text-gray-400 flex-shrink-0" />
-                    <span className="text-sm text-gray-600 truncate" title={fileName}>
-                      {fileName}
-                    </span>
+                <div className="space-y-3">
+                  {/* File info */}
+                  <div className="flex items-center justify-between w-full p-4 border rounded-lg bg-gray-50">
+                    <div className="flex items-center overflow-hidden cursor-pointer" onClick={handleImageClick}>
+                      {isImage && imagePreview && (
+                        <img src={imagePreview} alt="Preview" className="w-10 h-10 mr-2 object-cover" />
+                      )}
+                      {!isImage && (
+                        <UploadIcon className="w-5 h-5 mr-2 text-gray-400 flex-shrink-0" />
+                      )}
+                      <span className="text-sm text-gray-600 truncate" title={fileName}>
+                        {fileName}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      className="text-red-500 hover:text-red-700 transition-colors flex-shrink-0 ml-2"
+                      onClick={() => handleRemoveFile(field.onChange)}
+                      disabled={disabled}
+                    >
+                      ลบ
+                    </button>
                   </div>
-                  <button
-                    type="button"
-                    className="text-red-500 hover:text-red-700 transition-colors flex-shrink-0 ml-2"
-                    onClick={() => handleRemoveFile(field.onChange)}
-                    disabled={disabled}
-                  >
-                    ลบ
-                  </button>
+                  
+                  {/* Image preview */}
+                  {/* {isImage && imagePreview && (
+                    <div className="border rounded-lg overflow-hidden cursor-pointer hover:opacity-50">
+                      <img 
+                        src={imagePreview} 
+                        alt="Preview" 
+                        className="w-full h-48 object-cover"
+                        onError={() => setImagePreview(null)}
+                      />
+                    </div>
+                  )} */}
                 </div>
               )}
               
@@ -198,7 +340,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
   }
 
   // Default mode with useFormContext
-  const fieldValue = getFieldValue()
+  const fieldValue = getFieldValue() || value
   
   return (
     <div className={className}>
@@ -237,21 +379,36 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
           />
         </label>
       ) : (
-        <div className="flex items-center justify-between w-full p-4 border rounded-lg bg-gray-50">
-          <div className="flex items-center">
-            <UploadIcon className="w-5 h-5 mr-2 text-gray-400" />
-            <span className="text-sm text-gray-600">
-              {getFileDisplayName(fieldValue)}
-            </span>
+        <div className="space-y-3">
+          {/* File info */}
+          <div className="flex items-center justify-between w-full p-4 border rounded-lg bg-gray-50">
+            <div className="flex items-center">
+              <UploadIcon className="w-5 h-5 mr-2 text-gray-400" />
+              <span className="text-sm text-gray-600">
+                {getFileDisplayName(fieldValue)}
+              </span>
+            </div>
+            <button
+              type="button"
+              className="text-red-500 hover:text-red-700 transition-colors"
+              onClick={() => handleRemoveFile()}
+              disabled={disabled}
+            >
+              ลบ
+            </button>
           </div>
-          <button
-            type="button"
-            className="text-red-500 hover:text-red-700 transition-colors"
-            onClick={() => handleRemoveFile()}
-            disabled={disabled}
-          >
-            ลบ
-          </button>
+          
+          {/* Image preview */}
+          {isImage && imagePreview && (
+            <div className="border rounded-lg overflow-hidden">
+              <img 
+                src={imagePreview} 
+                alt="Preview" 
+                className="w-full h-48 object-cover"
+                onError={() => setImagePreview(null)}
+              />
+            </div>
+          )}
         </div>
       )}
       
