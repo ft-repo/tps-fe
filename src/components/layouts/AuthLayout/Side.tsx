@@ -26,8 +26,8 @@ const Side = ({ children, content, ...rest }: SideProps) => {
                     <div className="mb-8">{content}</div>
                     {children
                         ? cloneElement(children as React.ReactElement, {
-                              ...rest,
-                          })
+                            ...rest,
+                        })
                         : null}
                 </div>
             </div>
