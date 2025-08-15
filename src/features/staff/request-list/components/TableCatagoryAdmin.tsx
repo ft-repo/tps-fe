@@ -1,16 +1,18 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Table, type TableProps } from 'antd';
-import { PetitionData, PetitionTableData } from '@/@types/reducer/petition';
+import { PetitionTableData } from '@/@types/reducer/petition';
 import { Tag } from '@/components/ui';
 import { APPROVAL_STATUS } from '@/utils/constant';
 import ConfirmModal from './ConfirmPermitModal';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { getStaffPetitionData } from '@/store/slices/staff/staffPetitionSlice';
+import { useNavigate } from 'react-router-dom';
 
 const TableCatagoryAdmin: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const loading = useAppSelector((state) => state.staffPetition.loading);
   const data = useAppSelector((state) => state.staffPetition.petition.overview.data);
@@ -23,12 +25,30 @@ const TableCatagoryAdmin: React.FC = () => {
     dispatch(getStaffPetitionData({ page, limit }));
   };
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<PetitionTableData | null>(null);
+
+  const handleTagClick = (record: PetitionTableData, type: 'DOCUMENT' | 'ROUTE' | 'VEHICLE' | 'SIGN' | 'PERMIT') => {
+    setSelectedRow(record);
+    if (type === 'PERMIT') {
+      setModalOpen(true);
+    } else {
+      const routeMap = {
+        DOCUMENT: '/request-list/approval/document',
+        ROUTE: '/request-list/approval/route',
+        VEHICLE: '/request-list/approval/vehicle',
+        SIGN: '/request-list/approval/sign',
+      };
+      navigate(routeMap[type]);
+    }
+  };
+
   const columns: TableProps<PetitionTableData>['columns'] = [
     {
-      title: 'เลขที่',
-      dataIndex: 'petition_no',
-      key: 'petition_no',
-      width: 100,
+      title: 'เลขที่ชื่อบริษัท / ห้าง / ร้าน',
+      dataIndex: 'business_name',
+      key: 'business_name',
+      width: 500,
       align: 'center'
     },
     {
@@ -74,7 +94,7 @@ const TableCatagoryAdmin: React.FC = () => {
       render: (_val, record) => {
         const latest = latestFlowByStatus(record.petition_flow, 1);
         const key: ApprovalKey = toApprovalKey(latest);
-        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+        return <Tag className={APPROVAL_STATUS[key].className} onClick={() => handleTagClick(record, 'DOCUMENT')}>{APPROVAL_STATUS[key].text}</Tag>;
       }
     },
     {
@@ -85,7 +105,7 @@ const TableCatagoryAdmin: React.FC = () => {
       render: (_val, record) => {
         const latest = latestFlowByStatus(record.petition_flow, 2);
         const key: ApprovalKey = toApprovalKey(latest);
-        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+        return <Tag className={APPROVAL_STATUS[key].className} onClick={() => handleTagClick(record, 'ROUTE')}>{APPROVAL_STATUS[key].text}</Tag>;
       }
     },
     {
@@ -96,7 +116,7 @@ const TableCatagoryAdmin: React.FC = () => {
       render: (_val, record) => {
         const latest = latestFlowByStatus(record.petition_flow, 3);
         const key: ApprovalKey = toApprovalKey(latest);
-        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+        return <Tag className={APPROVAL_STATUS[key].className} onClick={() => handleTagClick(record, 'VEHICLE')}>{APPROVAL_STATUS[key].text}</Tag>;
       }
     },
     {
@@ -107,7 +127,7 @@ const TableCatagoryAdmin: React.FC = () => {
       render: (_val, record) => {
         const latest = latestFlowByStatus(record.petition_flow, 5);
         const key: ApprovalKey = toApprovalKey(latest);
-        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+        return <Tag className={APPROVAL_STATUS[key].className} onClick={() => handleTagClick(record, 'SIGN')}>{APPROVAL_STATUS[key].text}</Tag>;
       }
     },
     {
@@ -120,13 +140,10 @@ const TableCatagoryAdmin: React.FC = () => {
         const key: ApprovalKey = latest6
           ? toApprovalKey(latest6)
           : (toApprovalKey(latestFlowByStatus(record.petition_flow, 5)) === 'APPROVED' ? 'APPROVED' : 'WAIT_APPROVAL');
-        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+        return <Tag className={APPROVAL_STATUS[key].className} onClick={() => handleTagClick(record, 'PERMIT')}>{APPROVAL_STATUS[key].text}</Tag>;
       }
     },
   ];
-
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedRow, setSelectedRow] = React.useState<PetitionTableData | null>(null);
 
   return (
     <>
@@ -141,19 +158,13 @@ const TableCatagoryAdmin: React.FC = () => {
           current: data?.page ?? 1,
           pageSize: data?.limit ?? 10,
           total: Number(data?.total ?? 0),
-          onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
+          onChange: handleTableChange,
           showSizeChanger: true,
           position: ['bottomRight'],
           showTotal: (total, range) => `ทั้งหมด ${(range[1] + 1) - range[0] || total} รายการ`,
           locale: { items_per_page: "/ หน้า" }
         }}
         scroll={{ x: 1000 }}
-        onRow={(record) => ({
-          onClick: () => {
-            setSelectedRow(record);
-            setModalOpen(true);
-          },
-        })}
       />
 
       <ConfirmModal
