@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { DepartmentState, RoleState } from "@/@types/shared";
 import ApiService from "../ApiService"
 
 export type ProvinceAPI = ProvinceAPIResponse[];
@@ -13,11 +14,11 @@ export interface APIResponse {
 export interface ProvinceAPIResponse {
   id: string;
   name_th: string;
-  name_en: string;  
+  name_en: string;
 }
 
 export interface SubDistrictAPIResponse {
-   id: string;
+  id: string;
   name_th: string;
   name_en: string;
   zip_code: string;
@@ -69,6 +70,20 @@ export const getSubDistrictAPI = async (provinceId?: string, districtId?: string
 export const getEntityTypeAPI = async () => {
   return ApiService.fetchData<TestAPIResponse>({
     url: '/lists/entity',
+    method: 'get',
+  })
+}
+
+export const getDepartmentAPI = async () => {
+  return ApiService.fetchData<DepartmentState[]>({
+    url: '/lists/department',
+    method: 'get',
+  })
+}
+
+export const getRoleAPI = async () => {
+  return ApiService.fetchData<RoleState[]>({
+    url: '/lists/role',
     method: 'get',
   })
 }

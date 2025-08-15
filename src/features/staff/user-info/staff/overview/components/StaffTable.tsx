@@ -6,20 +6,19 @@ import {
   FaTrash as DeleteIcon,
 } from 'react-icons/fa6'
 import { Button } from '@/components/ui'
-import { StaffList, StaffListsResponse } from '@/@types/staff/user-info'
-import { useNavigate } from 'react-router-dom'
 import { Table, TableProps } from 'antd'
+import { StaffList, StaffListsResponse } from '@/@types/services/user';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
-  userLists: StaffListsResponse
-  handleTableChange: (page: number, pageSize: number) => void
-  confirmDelete: (id: string | number, data: StaffList) => void
-  loading: boolean
+  data: StaffListsResponse;
+  loading: boolean;
+  handleTableChange: (page: number, pageSize: number) => void;
+  confirmDelete: (id: string | number, data: StaffList) => void;
 }
 
 const SeachTable: React.FC<Props> = (props) => {
-  const { userLists, loading, handleTableChange, confirmDelete } = props
-
+  const { data, loading, handleTableChange, confirmDelete } = props
   const navigate = useNavigate()
 
   const columns: TableProps<StaffList>['columns'] = [
@@ -87,7 +86,7 @@ const SeachTable: React.FC<Props> = (props) => {
               variant="solid"
               icon={<EditIcon />}
               color="yellow-600"
-              // onClick={() => navigate(`/user-info/staff/edit/${record.id}`)}
+              onClick={() => navigate(`/user-info/staff/edit/${record.id}`)}
             />
             <Button
               size="xs"
@@ -105,14 +104,14 @@ const SeachTable: React.FC<Props> = (props) => {
   return (
     <Table
       columns={columns}
-      dataSource={userLists?.data || []}
+      dataSource={data.data || []}
       loading={loading}
       pagination={{
         defaultCurrent: 1,
         defaultPageSize: 10,
-        current: userLists?.page,
-        pageSize: userLists?.limit,
-        total: Number(userLists?.total) || 0,
+        current: data.page,
+        pageSize: data.limit,
+        total: Number(data.total) || 0,
         onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
         showSizeChanger: true,
         position: ['bottomRight'],
@@ -120,7 +119,7 @@ const SeachTable: React.FC<Props> = (props) => {
           const totalPage = (range[1] + 1) - range[0]
           return `ทั้งหมด ${totalPage || total} รายการ`
         },
-        locale: { items_per_page: '/ หน้า' },
+        locale: { items_per_page: "/ หน้า" }
       }}
       scroll={{ x: 1000 }}
     />
