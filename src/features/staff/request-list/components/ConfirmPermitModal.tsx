@@ -1,5 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import type { PetitionTableData } from '@/@types/reducer/petition'
+
+interface ConfirmModalProps {
+  open: boolean;
+  data: PetitionTableData | null;
+  onClose: () => void;
+  onConfirm: () => void;
+}
 
 interface TableData {
     no: string;
@@ -15,12 +23,12 @@ interface TableData {
     permit: any;
 }
 
-interface ConfirmModalProps {
-    open: boolean;
-    onClose: () => void;
-    onConfirm: () => void;
-    data: TableData | null;
-}
+// interface ConfirmModalProps {
+//     open: boolean;
+//     onClose: () => void;
+//     onConfirm: () => void;
+//     // data: TableData | null;
+// }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({ open, onClose, onConfirm }) => {
     const navigate = useNavigate();

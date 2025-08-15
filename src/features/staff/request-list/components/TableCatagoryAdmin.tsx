@@ -1,319 +1,197 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-empty-pattern */
-/* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import { ColumnDef } from '@tanstack/react-table'
-import React, { useMemo } from 'react'
-// import Table from '@/components/ui/Table'
-import dayjs from 'dayjs'
-// import { Tag } from '@/components/ui'
-// import { useNavigate } from 'react-router-dom'
-import { Table } from '@/components/custom/table'
-import ConfirmModal from './ConfirmPermitModal'
-import { useNavigate } from 'react-router-dom';
-// const { Tr, Th, Td, THead, TBody } = Table
+import React, { useEffect } from 'react'
+import { Table, type TableProps } from 'antd';
+import { PetitionData, PetitionTableData } from '@/@types/reducer/petition';
+import { Tag } from '@/components/ui';
+import { APPROVAL_STATUS } from '@/utils/constant';
+import ConfirmModal from './ConfirmPermitModal';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { getStaffPetitionData } from '@/store/slices/staff/staffPetitionSlice';
 
-interface Props {
+const TableCatagoryAdmin: React.FC = () => {
+  const dispatch = useAppDispatch();
 
-}
+  const loading = useAppSelector((state) => state.staffPetition.loading);
+  const data = useAppSelector((state) => state.staffPetition.petition.overview.data);
 
-interface TableData {
-  no: string;
-  road_code: string;
-  road_name: string;
-  start_date: string;
-  end_date: string;
-  permit_date: string;
-  validate_document: any;
-  validate_route: any;
-  validate_vehicle: any;
-  wait_signed: any;
-  permit: any;
-}
+  useEffect(() => {
+    dispatch(getStaffPetitionData({ page: 1, limit: 10 }));
+  }, [dispatch]);
 
-const TableCategoryAdmin: React.FC<Props> = (props) => {
-  const { } = props
-  const navigate = useNavigate()
+  const handleTableChange = (page: number, limit: number) => {
+    dispatch(getStaffPetitionData({ page, limit }));
+  };
+
+  const columns: TableProps<PetitionTableData>['columns'] = [
+    {
+      title: 'เลขที่',
+      dataIndex: 'petition_no',
+      key: 'petition_no',
+      width: 100,
+      align: 'center'
+    },
+    {
+      title: 'รหัสสายทาง',
+      dataIndex: 'road_code',
+      key: 'road_code',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'ชื่อสายทาง',
+      dataIndex: 'road_name',
+      key: 'road_name',
+      width: 200,
+      align: 'center'
+    },
+    {
+      title: 'วันที่เริ่มต้น',
+      dataIndex: 'start_date',
+      key: 'start_date',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'วันที่สิ้นสุด',
+      dataIndex: 'end_date',
+      key: 'end_date',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'วันที่ขออนุญาต',
+      dataIndex: 'petition_date',
+      key: 'petition_date',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'ตรวจเอกสาร',
+      key: 'validate_document',
+      width: 150,
+      align: 'center',
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_flow, 1);
+        const key: ApprovalKey = toApprovalKey(latest);
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+      }
+    },
+    {
+      title: 'ตรวจเส้นทาง',
+      key: 'validate_route',
+      width: 150,
+      align: 'center',
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_flow, 2);
+        const key: ApprovalKey = toApprovalKey(latest);
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+      }
+    },
+    {
+      title: 'ตรวจยานพาหนะ',
+      key: 'validate_vehicle',
+      width: 150,
+      align: 'center',
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_flow, 3);
+        const key: ApprovalKey = toApprovalKey(latest);
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+      }
+    },
+    {
+      title: 'รอลงนาม',
+      key: 'wait_signed',
+      width: 150,
+      align: 'center',
+      render: (_val, record) => {
+        const latest = latestFlowByStatus(record.petition_flow, 5);
+        const key: ApprovalKey = toApprovalKey(latest);
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+      }
+    },
+    {
+      title: 'ออกใบอนุญาต',
+      key: 'permit',
+      width: 150,
+      align: 'center',
+      render: (_val, record) => {
+        const latest6 = latestFlowByStatus(record.petition_flow, 6);
+        const key: ApprovalKey = latest6
+          ? toApprovalKey(latest6)
+          : (toApprovalKey(latestFlowByStatus(record.petition_flow, 5)) === 'APPROVED' ? 'APPROVED' : 'WAIT_APPROVAL');
+        return <Tag className={APPROVAL_STATUS[key].className}>{APPROVAL_STATUS[key].text}</Tag>;
+      }
+    },
+  ];
+
   const [modalOpen, setModalOpen] = React.useState(false);
-  const [selectedRow, setSelectedRow] = React.useState<TableData | null>(null);
-
-  const columns = useMemo<ColumnDef<any>[]>(() => [
-    {
-      header: 'เลขที่',
-      accessorKey: 'no'
-    },
-    {
-      header: 'รหัสสายทาง',
-      accessorKey: 'road_code'
-    },
-    {
-      header: 'ชื่อสายทาง',
-      accessorKey: 'road_name'
-    },
-    {
-      header: 'วันที่เริ่มต้น',
-      accessorKey: 'start_date'
-    },
-    {
-      header: 'วันที่สิ้นสุด',
-      accessorKey: 'end_date'
-    },
-    {
-      header: 'วันที่ขออนุญาต',
-      accessorKey: 'permit_date'
-    },
-    {
-      header: 'ตรวจเอกสาร',
-      accessorKey: 'validate_document',
-      cell: ({ getValue, row }) => {
-        const status = (getValue() as string).trim();
-        const isDisabled = status.includes("ยุติ");
-
-        return (
-          <span
-            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
-              }`}
-            onClick={() => {
-              if (!isDisabled) {
-                setSelectedRow(row.original);
-                navigate('/request-list/approval/document');
-              }
-            }}
-          >
-            {status}
-          </span>
-        );
-      }
-    },
-    {
-      header: 'ตรวจเส้นทาง',
-      accessorKey: 'validate_route',
-      cell: ({ getValue, row }) => {
-        const status = (getValue() as string).trim();
-        const isDisabled = status.includes("ยุติ");
-
-        return (
-          <span
-            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
-              }`}
-            onClick={() => {
-              if (!isDisabled) {
-                setSelectedRow(row.original);
-                navigate('/request-list/approval/route');
-              }
-            }}
-          >
-            {status}
-          </span>
-        );
-      }
-    },
-    {
-      header: 'ตรวจยานพาหนะ',
-      accessorKey: 'validate_vehicle',
-      cell: ({ getValue, row }) => {
-        const status = (getValue() as string).trim();
-        const isDisabled = status.includes("ยุติ");
-
-        return (
-          <span
-            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
-              }`}
-            onClick={() => {
-              if (!isDisabled) {
-                setSelectedRow(row.original);
-                navigate('/request-list/approval/vehicle');
-              }
-            }}
-          >
-            {status}
-          </span>
-        );
-      }
-    },
-    {
-      header: 'รอลงนาม',
-      accessorKey: 'wait_signed',
-      cell: ({ getValue, row }) => {
-        const status = (getValue() as string).trim();
-        const isDisabled = status.includes("ยุติ");
-
-        return (
-          <span
-            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
-              }`}
-            onClick={() => {
-              if (!isDisabled) {
-                setSelectedRow(row.original);
-                navigate('/request-list/approval/permit');
-              }
-            }}
-          >
-            {status}
-          </span>
-        );
-      }
-    },
-    {
-      header: 'ออกใบอนุญาต',
-      accessorKey: 'permit',
-      cell: ({ getValue, row }) => {
-        const status = (getValue() as string).trim();
-        const isDisabled = status.includes("ยุติ");
-
-        return (
-          <span
-            className={`w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight cursor-pointer ${isDisabled ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-yellow-400 text-black'
-              }`}
-            onClick={() => {
-              if (!isDisabled) {
-                setSelectedRow(row.original);
-                setModalOpen(true);
-              }
-            }}
-          >
-            {status}
-          </span>
-        );
-      }
-    },
-  ], [navigate])
-
-  // const renderStatusBadge = (status: string) => {
-  //   if (!status) return null;
-
-  //   const cleanStatus = status.trim();
-  //   const parts = cleanStatus.split(' ');
-  //   const main = parts.slice(0, -3).join(' ') || cleanStatus;
-  //   const maybeDate = parts.slice(-3).join(' ');
-  //   const isDate = maybeDate.match(/\d{1,2}\s(ม\.ค\.|ก\.พ\.|มี\.ค\.|เม\.ย\.|พ\.ค\.|มิ\.ย\.|ก\.ค\.|ส\.ค\.|ก\.ย\.|ต\.ค\.|พ\.ย\.|ธ\.ค\.)\s\d{2,4}/);
-
-  //   const baseClass =
-  //     'w-32 h-[48px] flex flex-col items-center justify-center text-sm font-medium rounded text-center px-2 leading-tight';
-  //   let colorClass = 'bg-slate-200 text-black';
-
-  //   if (cleanStatus.includes('ไม่ผ่าน')) {
-  //     colorClass = 'bg-red-500 text-white';
-  //   } else if (cleanStatus.includes('ผ่านการตรวจ')) {
-  //     colorClass = 'bg-green-500 text-white';
-  //   } else if (cleanStatus.includes('รอดำเนินการ') || cleanStatus.includes('กำลังดำเนินการ')) {
-  //     colorClass = 'bg-yellow-400 text-black';
-  //   } else if (cleanStatus.includes('ยุติ')) {
-  //     colorClass = 'bg-gray-500 text-white';
-  //   }
-
-  //   return (
-  //     <span className={`${baseClass} ${colorClass}`}>
-  //       {isDate ? (
-  //         <>
-  //           <div>{main}</div>
-  //           <div>{maybeDate}</div>
-  //         </>
-  //       ) : (
-  //         <div>{cleanStatus}</div>
-  //       )}
-  //     </span>
-  //   );
-  // };
-
-  const data = useMemo<TableData[]>(() => [
-    {
-      no: '007',
-      road_code: 'ชม. 3005',
-      road_name: 'ถนนอบจ.ชม.3005 (บ้านหนองบัวคำ - บ้านโป่ง)',
-      start_date: dayjs().format('DD MMM YYYY'),
-      end_date: dayjs().format('DD MMM YYYY'),
-      permit_date: dayjs().format('DD MMM YYYY'),
-      validate_document: 'รอดำเนินการ',
-      validate_route: 'รอดำเนินการ',
-      validate_vehicle: 'รอดำเนินการ',
-      wait_signed: 'รอดำเนินการ',
-      permit: 'รอดำเนินการ'
-    },
-    {
-      no: '001',
-      road_code: 'ชม. 3001',
-      road_name: 'ถนนสาย A',
-      start_date: '20 Jul 2025',
-      end_date: '25 Jul 2025',
-      permit_date: '18 Jul 2025',
-      validate_document: 'รอดำเนินการ',
-      validate_route: 'ผ่านการตรวจ 22 ก.พ. 64',
-      validate_vehicle: 'ผ่านการตรวจ 22 ก.พ. 64',
-      wait_signed: 'รอดำเนินการ',
-      permit: 'รอดำเนินการ',
-    },
-    {
-      no: '002',
-      road_code: 'ชม. 3002',
-      road_name: 'ถนนสาย B',
-      start_date: '21 Jul 2025',
-      end_date: '26 Jul 2025',
-      permit_date: '19 Jul 2025',
-      validate_document: 'ผ่านการตรวจ 18 ก.พ. 64',
-      validate_route: 'ยุติคำขออนุญาต',
-      validate_vehicle: 'ผ่านการตรวจ 22 ก.พ. 64',
-      wait_signed: 'ยุติคำขออนุญาต',
-      permit: 'ยุติคำขออนุญาต',
-    },
-    {
-      no: '003',
-      road_code: 'ชม. 3003',
-      road_name: 'ถนนสาย C',
-      start_date: '22 Jul 2025',
-      end_date: '27 Jul 2025',
-      permit_date: '20 Jul 2025',
-      validate_document: 'ผ่านการตรวจ 18 ก.พ. 64',
-      validate_route: 'ผ่านการตรวจ 18 ก.พ. 64',
-      validate_vehicle: 'ไม่ผ่านการตรวจ 18 ก.พ. 64',
-      wait_signed: 'รอดำเนินการ',
-      permit: 'รอดำเนินการ',
-    },
-  ], [])
+  const [selectedRow, setSelectedRow] = React.useState<PetitionTableData | null>(null);
 
   return (
-    <div>
+    <>
       <Table
-        showPagination
-        data={data}
         columns={columns}
-        totalData={data.length || 0}
-        pageSizeOption={[
-          {
-            label: '10 / หน้า',
-            value: 10,
+        rowKey="petition_id"
+        dataSource={data?.data ?? []}
+        loading={loading}
+        pagination={{
+          defaultCurrent: 1,
+          defaultPageSize: 10,
+          current: data?.page ?? 1,
+          pageSize: data?.limit ?? 10,
+          total: Number(data?.total ?? 0),
+          onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
+          showSizeChanger: true,
+          position: ['bottomRight'],
+          showTotal: (total, range) => `ทั้งหมด ${(range[1] + 1) - range[0] || total} รายการ`,
+          locale: { items_per_page: "/ หน้า" }
+        }}
+        scroll={{ x: 1000 }}
+        onRow={(record) => ({
+          onClick: () => {
+            setSelectedRow(record);
+            setModalOpen(true);
           },
-          {
-            label: '20 / หน้า',
-            value: 20,
-          },
-          {
-            label: '30 / หน้า',
-            value: 30,
-          },
-          {
-            label: '40 / หน้า',
-            value: 40,
-          },
-          {
-            label: '50 / หน้า',
-            value: 50,
-          },
-        ]}
+        })}
       />
+
       <ConfirmModal
         open={modalOpen}
         data={selectedRow}
         onClose={() => setModalOpen(false)}
         onConfirm={() => {
           if (selectedRow) {
-            console.log("อนุมัติใบอนุญาตสำหรับ", selectedRow.no);
+            console.log("อนุมัติใบอนุญาตสำหรับ", selectedRow.petition_no);
           }
           setModalOpen(false);
         }}
       />
-    </div>
-  )
-}
+    </>
+  );
+};
 
-export default React.memo<Props>(TableCategoryAdmin)
+// ---------- Helpers ----------
+type FlowItem = {
+  message_id: number;
+  status_id: number;
+  is_approved: boolean;
+};
+
+const latestFlowByStatus = (
+  flow: FlowItem[] | undefined,
+  statusId: number
+): FlowItem | null => {
+  const items = (flow ?? []).filter(f => f.status_id === statusId);
+  if (items.length === 0) return null;
+  return items.reduce((acc, cur) => cur.message_id > acc.message_id ? cur : acc);
+};
+
+type ApprovalKey = keyof typeof APPROVAL_STATUS;
+
+const toApprovalKey = (flowItem: FlowItem | null): ApprovalKey => {
+  if (!flowItem) return 'WAIT_APPROVAL';
+  return flowItem.is_approved ? 'APPROVED' : 'REJECTED';
+};
+
+export default React.memo(TableCatagoryAdmin);

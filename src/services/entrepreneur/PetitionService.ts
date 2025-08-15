@@ -19,3 +19,13 @@ export const getPetitionExtendedAPI = async (params: GetPetitionParams) => {
   })
 }
 
+export const getPetitionAdminAPI = async (params: GetPetitionParams) => {
+  return ApiService.fetchData<GetPetitionResponse>({
+    url: '/admin/petition',
+    method: 'get',
+    params: { 
+      ...params,
+    is_finish: true,
+   }
+  })
+}

@@ -8,8 +8,10 @@ import layout, { LayoutState } from './slices/layout/LayoutSlice'
 import RtkQueryService from '@/services/RtkQueryService'
 import entrepreneur, { EntrepreneurState } from './slices/entrepreneur'
 import staff, { StaffState } from './slices/staff/staffSlice'
+import staffPetitionReducer from './slices/staff/staffPetitionSlice'
 
 export type RootState = {
+  staffPetition: any
 	auth: AuthState;
 	base: BaseState;
 	locale: LocaleState;
@@ -35,6 +37,7 @@ const staticReducers = {
 	entrepreneur,
 	layout,
 	staff,
+	staffPetition: staffPetitionReducer,
 	[RtkQueryService.reducerPath]: RtkQueryService.reducer,
 }
 

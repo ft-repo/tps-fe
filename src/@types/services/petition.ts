@@ -2,6 +2,8 @@ export interface GetPetitionParams {
   search?: string;
   page: number;
   limit: number;
+  status_id?: string
+  is_finish?: boolean
 }
 
 export interface GetPetitionResponse {
