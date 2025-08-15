@@ -1,7 +1,7 @@
-import { EntityState, SubDistrictState, ThailandState } from '@/@types/shared';
+import { DepartmentState, EntityState, RoleState, SubDistrictState, ThailandState } from '@/@types/shared';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants';
-import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI, getEntityTypeAPI } from '@/services/master/MasterService';
+import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI, getEntityTypeAPI, getDepartmentAPI, getRoleAPI } from '@/services/master/MasterService';
 
 export type MasterState = {
   entity: EntityState[];
@@ -11,6 +11,8 @@ export type MasterState = {
   district: ThailandState[];
   sub_district: SubDistrictState[];
   entity_type: EntityState[];
+  department: DepartmentState[];
+  role: RoleState[];
   loading: boolean;
 }
 
@@ -22,6 +24,8 @@ const initialState: MasterState = {
   district: [],
   sub_district: [],
   entity_type: [],
+  role: [],
+  department: [],
   loading: false
 }
 
@@ -52,16 +56,26 @@ export const getProvince = createAsyncThunk(SLICE_BASE_NAME + '/apiGetProvince',
 
 export const getDistrict = createAsyncThunk(SLICE_BASE_NAME + '/apiGetDistrict', async (provinceId: string) => {
   const response = await getDistrictAPI(provinceId, '', '')
-   return response.data
+  return response.data
 })
 
-export const getSubDistrict = createAsyncThunk(SLICE_BASE_NAME + '/apiGetSubDistrict', async (districtId:string) => {
+export const getSubDistrict = createAsyncThunk(SLICE_BASE_NAME + '/apiGetSubDistrict', async (districtId: string) => {
   const response = await getSubDistrictAPI('', districtId, '')
-   return response.data
+  return response.data
 })
 
 export const getEntityType = createAsyncThunk(SLICE_BASE_NAME + '/apiGetEntityType', async () => {
   const response = await getEntityTypeAPI()
+  return response.data
+})
+
+export const getDepartment = createAsyncThunk(SLICE_BASE_NAME + '/apiGetDepartment', async () => {
+  const response = await getDepartmentAPI()
+  return response.data
+})
+
+export const getRole = createAsyncThunk(SLICE_BASE_NAME + '/apiGetRole', async () => {
+  const response = await getRoleAPI()
   return response.data
 })
 
@@ -84,11 +98,17 @@ const masterSlice = createSlice({
     getDistrict: (state, action) => {
       state.district = action.payload
     },
-    getSubDistrict: (state, action)=>{
+    getSubDistrict: (state, action) => {
       state.sub_district = action.payload
     },
     getEntityType: (state, action) => {
       state.entity_type = action.payload
+    },
+    getDepartment: (state, action) => {
+      state.department = action.payload
+    },
+    getRole: (state, action) => {
+      state.role = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -152,12 +172,12 @@ const masterSlice = createSlice({
       state.sub_district = action.payload
       state.loading = false
     })
-    .addCase(getSubDistrict.pending, (state) => {
-      state.loading = true
-    })
-    .addCase(getSubDistrict.rejected, (state) => {
-      state.loading = false
-    })
+      .addCase(getSubDistrict.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getSubDistrict.rejected, (state) => {
+        state.loading = false
+      })
     // GET ENTITY_TYPE
     builder.addCase(getEntityType.fulfilled, (state, action) => {
       state.entity_type = action.payload
@@ -167,6 +187,28 @@ const masterSlice = createSlice({
         state.loading = true
       })
       .addCase(getEntityType.rejected, (state) => {
+        state.loading = false
+      })
+    // GET DEPARTMENT
+    builder.addCase(getDepartment.fulfilled, (state, action) => {
+      state.department = action.payload
+      state.loading = false
+    })
+      .addCase(getDepartment.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getDepartment.rejected, (state) => {
+        state.loading = false
+      })
+    // GET ROLE
+    builder.addCase(getRole.fulfilled, (state, action) => {
+      state.role = action.payload
+      state.loading = false
+    })
+      .addCase(getRole.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getRole.rejected, (state) => {
         state.loading = false
       })
   },

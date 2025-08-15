@@ -1,38 +1,59 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback } from 'react'
-import Input from '@/components/ui/Input'
-import Button from '@/components/ui/Button'
-import { Control, Controller, UseFormHandleSubmit } from 'react-hook-form'
-import { SearchUserName } from '@/@types/staff/user-info'
+import { Button } from '@/components/ui'
+import { Controller, useForm } from 'react-hook-form'
+import { Input } from 'antd'
 
 interface Props {
-  control: Control<SearchUserName>
-  loading: boolean
+  handleSearch: (value: string) => void;
+}
+
+interface FieldType {
+  search: string;
 }
 
 const FormSearch: React.FC<Props> = (props) => {
-  const { control, loading } = props
+  const { handleSearch } = props
+
+  const form = useForm<FieldType>({
+    defaultValues: {
+      search: ''
+    }
+  })
+
+  const { handleSubmit, control } = form
+
+  const onSubmit = useCallback((value: FieldType) => { 
+    handleSearch(value.search)
+  }, [handleSearch])
 
   return (
-    <div className="flex items-center gap-3 xl:w-1/3">
-      <Controller
-        name="username"
-        control={control}
-        render={({ field }) => {
-          return (
-            <Input
-              {...field}
-              name={field.name}
-              placeholder="พิมพ์เพื่อค้นหา..."
-            />
-          )
-        }}
-      />
-      <Button type="submit" variant="solid" loading={loading}>
-        ค้นหา
-      </Button>
-    </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex items-center gap-3 xl:w-1/3">
+        <Controller
+          name="search"
+          control={control}
+          render={({ field }) => {
+            return (
+              <Input
+                {...field}
+                name={field.name}
+                placeholder="พิมพ์เพื่อค้นหา..."
+                className='w-full'
+                size='large'
+                style={{
+                  fontFamily: 'Noto Sans Thai'
+                }}
+              />
+            )
+          }}
+        />
+        <Button type="submit" variant="solid">
+          ค้นหา
+        </Button>
+      </div>
+    </form>
   )
 }
 

@@ -7,8 +7,7 @@ import master, { MasterState } from './slices/master/masterSlice'
 import layout, { LayoutState } from './slices/layout/LayoutSlice'
 import RtkQueryService from '@/services/RtkQueryService'
 import entrepreneur, { EntrepreneurState } from './slices/entrepreneur'
-import staff, { StaffState } from './slices/staff/staffSlice'
-import staffPetitionReducer from './slices/staff/staffPetitionSlice'
+import staff, { AdminState } from './slices/staff'
 
 export type RootState = {
   staffPetition: any
@@ -19,7 +18,7 @@ export type RootState = {
 	master: MasterState;
 	entrepreneur: EntrepreneurState;
 	layout: LayoutState;
-	staff: StaffState;
+	staff: AdminState;
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	[RtkQueryService.reducerPath]: any;
 }
@@ -37,7 +36,6 @@ const staticReducers = {
 	entrepreneur,
 	layout,
 	staff,
-	staffPetition: staffPetitionReducer,
 	[RtkQueryService.reducerPath]: RtkQueryService.reducer,
 }
 
