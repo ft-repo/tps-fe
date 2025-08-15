@@ -8,18 +8,17 @@ import {
 import { Button } from '@/components/ui'
 import { Table, TableProps } from 'antd'
 import { StaffList, StaffListsResponse } from '@/@types/services/user';
-import { useNavigate } from 'react-router-dom';
 
 interface Props {
   data: StaffListsResponse;
   loading: boolean;
   handleTableChange: (page: number, pageSize: number) => void;
   confirmDelete: (id: string | number, data: StaffList) => void;
+  setOpen: ({ open, data, id }: { id: string, open: boolean, data: StaffList }) => void;
 }
 
 const SeachTable: React.FC<Props> = (props) => {
-  const { data, loading, handleTableChange, confirmDelete } = props
-  const navigate = useNavigate()
+  const { data, loading, handleTableChange, confirmDelete, setOpen } = props
 
   const columns: TableProps<StaffList>['columns'] = [
     {
@@ -86,7 +85,7 @@ const SeachTable: React.FC<Props> = (props) => {
               variant="solid"
               icon={<EditIcon />}
               color="yellow-600"
-              onClick={() => navigate(`/user-info/staff/edit/${record.id}`)}
+              onClick={() => setOpen({ id: record.id, open: true, data: record })}
             />
             <Button
               size="xs"

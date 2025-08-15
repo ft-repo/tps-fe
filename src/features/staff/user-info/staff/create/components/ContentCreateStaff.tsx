@@ -13,10 +13,8 @@ const ContentCreateStaff: React.FC<Props> = (props) => {
   const { id, ldapPrefil } = props
   const [updateID, setUpdateID] = useState(false);
 
-  console.log('===', ldapPrefil)
-
   useEffect(() => {
-    if (id) {
+    if (String(id)) {
       setUpdateID(true);
 
       const timer = setTimeout(() => {

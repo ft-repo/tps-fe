@@ -15,8 +15,6 @@ interface Props {
 const CreateStaffTable: React.FC<Props> = (props) => {
 	const { search, data, loading, handleTableChange, onRowSelection } = props;
 
-	console.log(loading)
-
 	const remapData = useMemo(() => {
 		if (!data.length) return []
 		return data.map((item, index) => {

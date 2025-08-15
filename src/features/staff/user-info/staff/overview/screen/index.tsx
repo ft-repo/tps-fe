@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect } from 'react'
-import { SeachStaff, StaffTable } from '../components'
+import React, { useCallback, useEffect, useState } from 'react'
+import { SeachStaff, StaffTable, ModalUpdateStaff } from '../components'
 import { Button } from '@/components/ui'
 import { FaPlus as PlusIcon } from 'react-icons/fa6'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
@@ -13,12 +13,43 @@ import { useNavigate } from 'react-router-dom'
 
 interface Props { }
 
+interface ModalProps {
+  id: string;
+  open: boolean;
+  data: StaffList;
+}
+export const INIT_MODAL: ModalProps = {
+  id: '',
+  open: false,
+  data: {
+    id: '',
+    username: '',
+    title: '',
+    first_name: '',
+    last_name: '',
+    department_id: null,
+    role_id: null,
+    department: {
+      id: null,
+      dept_name: '',
+      dept_type: null,
+      dept_group: null,
+      dept_province: ''
+    },
+    role: {
+      id: null,
+      name: ''
+    }
+  }
+}
+
 const OverviewScreen: React.FC<Props> = (props) => {
   const { } = props
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const admin = useAppSelector(state => state.staff.staff.admin)
   const loading = useAppSelector(state => state.layout.loading)
+  const [open, setOpen] = useState(INIT_MODAL)
 
   useEffect(() => {
     dispatch(getAdminData(admin.overview.search))
@@ -67,7 +98,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
       dispatch(setLoading(false))
     }
   }, [dispatch, admin.overview])
-  
+
   const deleteRecord = useCallback(async (id: string | number) => {
     dispatch(setLoading(true))
     try {
@@ -172,8 +203,15 @@ const OverviewScreen: React.FC<Props> = (props) => {
           loading={loading}
           handleTableChange={handleTableChange}
           confirmDelete={confirmDeleteRecord}
+          setOpen={setOpen}
         />
       </section>
+      <ModalUpdateStaff
+        id={open.id}
+        data={open.data}
+        open={open.open}
+        setOpen={setOpen}
+      />
     </div>
   )
 }

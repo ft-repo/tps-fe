@@ -148,6 +148,9 @@ const UserManageSlice = createSlice({
     setLDAPData: (state, action) => {
       state.ldap.search = action.payload.params,
         state.ldap.data = action.payload.data
+    },
+    clearLDAPData: (state) => {
+      state.ldap = initialState.ldap
     }
   },
   extraReducers: (builder) => {
@@ -198,6 +201,6 @@ const UserManageSlice = createSlice({
   }
 })
 
-export const { setClientData, setAdminData, setLDAPData } = UserManageSlice.actions
+export const { setClientData, setAdminData, setLDAPData, clearLDAPData } = UserManageSlice.actions
 
 export default UserManageSlice.reducer

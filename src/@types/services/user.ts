@@ -113,25 +113,27 @@ export interface StaffListsResponse {
 }
 
 export interface StaffList {
-  id: string
-  username: string
-  title: string
-  first_name: string
-  last_name: string
-  department_id: number
-  role_id: number
-  department: Department
-  role: Role
+  id: string;
+  username: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  department_id: number | null;
+  role_id: number | null;
+  department: Department;
+  role: Role;
 }
 
 export interface Department {
+  id: number | null;
   dept_name: string
-  dept_type: number
-  dept_group: number
+  dept_type: number | null;
+  dept_group: number | null;
   dept_province: string
 }
 
 export interface Role {
+  id: number | null;
   name: string
 }
 
@@ -142,4 +144,14 @@ export interface DeleteClientListsResponse {
 
 export interface DeleteAdminListsResponse {
   message: string;
+}
+
+// POST
+export interface APIPostBody {
+  username: string;
+  department_id: number;
+  title: string;
+  first_name: string;
+  last_name: string;
+  role_id: number;
 }

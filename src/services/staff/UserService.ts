@@ -1,4 +1,4 @@
-import { ClientList, ClientListsResponse, DeleteAdminListsResponse, DeleteClientListsResponse, GetAdminParams, GetClientParams, GetLDAPParams, StaffListsResponse } from "@/@types/services/user"
+import { APIPostBody, ClientList, ClientListsResponse, DeleteAdminListsResponse, DeleteClientListsResponse, GetAdminParams, GetClientParams, GetLDAPParams, StaffListsResponse } from "@/@types/services/user"
 import ApiService from "../ApiService"
 
 export const getClientUserAPI = async (params: GetClientParams) => {
@@ -43,5 +43,21 @@ export const getLDAPUserAPI = async (params: GetLDAPParams) => {
     url: `/admin/manage/admin/ldap`,
     method: 'get',
     params: { ...params }
+  })
+}
+
+export const postRegisterAdminAPI = async (data: APIPostBody) => {
+  return ApiService.fetchData<APIPostBody, APIPostBody>({
+    url: `/admin/auth/register`,
+    method: 'post',
+    data: { ...data }
+  })
+}
+
+export const putUpdateUserAdminAPI = async (id: string, data: APIPostBody) => {
+  return ApiService.fetchData<APIPostBody, APIPostBody>({
+    url: `/admin/manage/admin/${id}`,
+    method: 'put',
+    data: { ...data }
   })
 } 
