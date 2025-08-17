@@ -83,19 +83,27 @@ const ContentForm: React.FC<Props> = (props) => {
         <Controller
           name='is_approved'
           control={control}
+          rules={{
+            required: 'กรุณาเลือกผลการตรวจสอบ'
+          }}
           render={({ field }) => {
             return (
-              <Radio.Group
-                {...field}
-                name={field.name}
-                value={field.value}
-                options={OPTIONS}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 8,
-                }}
-              />
+              <fieldset>
+                <Radio.Group
+                  {...field}
+                  name={field.name}
+                  value={field.value}
+                  options={OPTIONS}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 8,
+                  }}
+                />
+                {!!errors.is_approved &&
+                  <p className='text-red-500'>{errors.is_approved.message}</p>
+                }
+              </fieldset>
             )
           }}
         />
@@ -104,14 +112,23 @@ const ContentForm: React.FC<Props> = (props) => {
         <Controller
           name='remark'
           control={control}
+          rules={{
+            required: 'กรุณาระบุข้อความตอบกลับ'
+          }}
           render={({ field }) => {
             return (
-              <Input.TextArea
-                {...field}
-                name={field.name}
-                placeholder='ข้อความตอบกลับ...'
-                size='large'
-              />
+              <fieldset>
+                <label>ข้อความตอบกลับ</label>
+                <Input.TextArea
+                  {...field}
+                  name={field.name}
+                  placeholder='กรุณาระบุข้อความตอบกลับ'
+                  size='large'
+                />
+                {!!errors.remark &&
+                  <p className='text-red-500'>{errors.remark.message}</p>
+                }
+              </fieldset>
             )
           }}
         />
@@ -190,7 +207,7 @@ const ContentForm: React.FC<Props> = (props) => {
             variant='default'
             size='sm'
             className='w-full lg:w-auto'
-            >
+          >
             ล้างข้อมูล
           </Button>
           <Button

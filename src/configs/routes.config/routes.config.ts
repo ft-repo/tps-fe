@@ -125,7 +125,7 @@ export const protectedRoutes = [
     },
     {
         key: 'approval_other_document',
-        path: '/request-list/approval/other-document',
+        path: '/request-list/approval/other',
         component: lazy(() => import('@/views/staff/request-list/approval/other')),
         authority: ['ADMIN'],
     },
@@ -149,7 +149,7 @@ export const protectedRoutes = [
     },
     {
         key: 'approval_other_document',
-        path: '/request-history/approval/other-document',
+        path: '/request-history/approval/other',
         component: lazy(() => import('@/views/staff/request-history/approval/other-document')),
         authority: ['ADMIN'],
     },

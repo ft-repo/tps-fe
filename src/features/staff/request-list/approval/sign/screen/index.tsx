@@ -1,26 +1,38 @@
-import React, { useState } from 'react'
-import SignFormImport from '../components/SignFormImport'
-import PDFViewer from '../components/PDFviewer'
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
+import React from 'react'
+import { Button } from 'antd';
+import { ContentSection } from '../components';
+import { AiOutlineLeft } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 
-const ApprovalSignPage = () => {
-  const [file, setFile] = useState<File | null>(null)
-  const [note, setNote] = useState('')
+interface Props {
 
-  return (
-    <div className="flex w-full h-screen p-6 gap-6">
-      <div className="w-[35%] min-w-[300px] bg-white p-6">
-        <SignFormImport
-          file={file}
-          setFile={setFile}
-          note={note}
-          setNote={setNote}
-        />
-      </div>
-      <div className="flex-1 border-8 border-blue-500 rounded overflow-hidden">
-        <PDFViewer file={file} />
-      </div>
-    </div>
-  )
 }
 
-export default ApprovalSignPage
+const SignScreen: React.FC<Props> = (props) => {
+	const { } = props
+	const navigate = useNavigate()
+
+	return (
+		<>
+			<section>
+				<Button
+					type='text'
+					icon={<AiOutlineLeft />}
+					onClick={() => navigate(-1)}
+				>
+					ย้อนกลับ
+				</Button>
+			</section>
+			<section>
+				<h3>นำเข้าเอกสารลงนาม</h3>
+			</section>
+			<section className='mt-5'>
+				<ContentSection />
+			</section>
+		</>
+	)
+}
+
+export default React.memo<Props>(SignScreen)

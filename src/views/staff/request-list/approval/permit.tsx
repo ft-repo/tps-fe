@@ -1,17 +1,27 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
+import { ConfigProvider } from 'antd'
+import PermitScreen from '@/features/staff/request-list/approval/permit/screen'
 
 interface Props {
 
 }
 
-const PermitIndex: React.FC<Props> = (props) => {
+const RouteIndex: React.FC<Props> = (props) => {
   const { } = props
 
   return (
-    <div>index</div>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Noto Sans Thai"
+        }
+      }}
+    >
+      <PermitScreen />
+    </ConfigProvider>
   )
 }
 
-export default React.memo<Props>(PermitIndex)
+export default React.memo<Props>(RouteIndex)
