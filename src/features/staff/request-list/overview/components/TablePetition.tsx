@@ -1,91 +1,168 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import { Table, TableProps } from 'antd'
-import { AdminPetitionData, AdminPetitionTableData } from '@/@types/reducer/petition';
+import { Table, type TableProps, Tag, Tooltip } from 'antd'
+import dayjs from 'dayjs'
+import { useNavigate } from 'react-router-dom'
+import { ADMIN_PETITION_STATUS } from '@/utils/constant'
+import type { AdminPetitionData, AdminPetitionTableData } from '@/@types/reducer/petition'
 
-interface Props {
-  data: AdminPetitionData;
-  loading: boolean;
-  handleTableChange: (page: number, limit: number) => void;
+type ApprovalKey = keyof typeof ADMIN_PETITION_STATUS
+// สถานะที่ render ได้: รวม 'SKIPPED' แยกจาก ApprovalKey
+type StepStatus =
+  | { key: ApprovalKey; date?: string | null }
+  | { key: 'SKIPPED'; date?: string | null }
+
+// --- Step ids แบบ literal ---
+const STEP = {
+  DOCUMENT: 1,
+  ROUTE: 2,
+  VEHICLE: 3,
+  SIGN: 5,     // is_skipped มาที่ step นี้
+  PERMIT: 6,
+} as const
+type StepId = typeof STEP[keyof typeof STEP]
+
+type FlowItem = {
+  message_id: number
+  status_id: number
+  is_approved: boolean
+  created_date?: string | null
+  is_skipped?: boolean
+}
+type MaybeFlow = FlowItem | null
+
+// ---------- helpers ----------
+const isTrue = (v: unknown) =>
+  v === true || v === 1 || v === '1' || v === 'true' || v === 'TRUE' || v === 'Y' || v === 'y'
+
+const latestFlowByStatus = (flow: FlowItem[] | undefined, statusId: StepId): FlowItem | null => {
+  const items = (flow ?? []).filter(f => f.status_id === statusId)
+  if (!items.length) return null
+  return items.reduce((acc, cur) => (cur.message_id > acc.message_id ? cur : acc))
 }
 
-const TablePetition: React.FC<Props> = (props) => {
-  const { data, loading, handleTableChange } = props
+/** map flow -> status โดย APPROVE ต้องมี created_date */
+const toApproval = (flowItem: MaybeFlow): StepStatus => {
+  if (!flowItem) return { key: 'IN_PROGRESS' }
+  if (flowItem.is_approved === true) {
+    return flowItem.created_date
+      ? { key: 'APPROVE', date: flowItem.created_date }
+      : { key: 'IN_PROGRESS' }
+  }
+  if (flowItem.is_approved === false) {
+    return { key: 'NOT_APPROVE', date: flowItem.created_date ?? null }
+  }
+  return { key: 'IN_PROGRESS' }
+}
+
+// SIGN ถูก skip ?
+const isSignSkipped = (record: AdminPetitionTableData) =>
+  isTrue(latestFlowByStatus((record as any).petition_flow, STEP.SIGN)?.is_skipped)
+
+/** อ่านสถานะของแต่ละ step; ถ้า SIGN ถูก skip คืน 'SKIPPED' */
+const getStepStatus = (record: AdminPetitionTableData, stepId: StepId): StepStatus => {
+  if (stepId === STEP.SIGN && isSignSkipped(record)) {
+    return { key: 'SKIPPED', date: null }
+  }
+  return toApproval(latestFlowByStatus((record as any).petition_flow, stepId))
+}
+
+/** ปลดล็อก step:
+ * - ปกติ: ต้องให้ step ก่อนหน้า APPROVE
+ * - พิเศษ: ถ้า SIGN ถูก skip => PERMIT ปลดล็อกทันที
+ */
+const isStepUnlocked = (record: AdminPetitionTableData, stepId: StepId) => {
+  const ORDER: readonly StepId[] = [STEP.DOCUMENT, STEP.ROUTE, STEP.VEHICLE, STEP.SIGN, STEP.PERMIT] as const
+  const idx = ORDER.indexOf(stepId)
+  if (idx <= 0) return true
+  if (stepId === STEP.PERMIT && isSignSkipped(record)) return true
+
+  const prev = getStepStatus(record, ORDER[idx - 1])
+  return prev.key === 'APPROVE'
+}
+
+// render Tag ของแต่ละ step (handle SKIPPED ให้เรียบร้อย)
+const makeStepRenderer =
+  (stepId: StepId, path: string, navigate: ReturnType<typeof useNavigate>) =>
+    (_val: any, record: AdminPetitionTableData) => {
+      const st = getStepStatus(record, stepId)        // st: StepStatus
+      const unlocked = isStepUnlocked(record, stepId)
+
+      // กรณี SKIPPED -> เทา/คลิกไม่ได้ และไม่ index constant
+      if (st.key === 'SKIPPED') {
+        const content = (
+          <Tag color="default" style={{ cursor: 'not-allowed', opacity: 0.6, userSelect: 'none' }}>
+            ข้ามขั้นตอน
+          </Tag>
+        )
+        return <Tooltip title="ขั้นตอนนี้ถูกข้าม"><span>{content}</span></Tooltip>
+      }
+
+      // จากบรรทัดนี้ st.key ถูก narrowed เป็น ApprovalKey แล้ว ✅
+      const cfg = ADMIN_PETITION_STATUS[st.key]
+      const clickable = unlocked
+
+      const content = (
+        <Tag
+          color={clickable ? cfg.color : 'default'}
+          style={{ cursor: clickable ? 'pointer' : 'not-allowed', opacity: clickable ? 1 : 0.6, userSelect: 'none' }}
+          onClick={clickable ? () => navigate(`${path}?petition_id=${(record as any).id}`) : undefined}
+          role={clickable ? 'button' : undefined}
+          tabIndex={clickable ? 0 : -1}
+          onKeyDown={e => clickable && e.key === 'Enter' && navigate(`${path}?petition_id=${(record as any).id}`)}
+        >
+          {cfg.text}
+          {st.date ? (
+            <>
+              <br />
+              {dayjs(st.date).isValid() ? dayjs(st.date).format('DD MM YYYY') : st.date}
+            </>
+          ) : null}
+        </Tag>
+      )
+
+      return clickable ? content : <Tooltip title="ต้องอนุมัติขั้นก่อนหน้าก่อน"><span>{content}</span></Tooltip>
+    }
+
+// ---------- component ----------
+interface Props {
+  data: AdminPetitionData
+  loading: boolean
+  handleTableChange: (page: number, limit: number) => void
+}
+
+const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) => {
+  const navigate = useNavigate()
 
   const columns: TableProps<AdminPetitionTableData>['columns'] = [
+    { title: 'เลขที่ชื่อบริษัท / ห้าง / ร้าน', dataIndex: 'business_name', key: 'business_name', width: 500, align: 'center' },
+    { title: 'รหัสสายทาง', dataIndex: 'road_code', key: 'road_code', width: 150, align: 'center' },
+    { title: 'ชื่อสายทาง', dataIndex: 'road_name', key: 'road_name', width: 200, align: 'center' },
+    { title: 'วันที่เริ่มต้น', dataIndex: 'start_date', key: 'start_date', width: 150, align: 'center' },
+    { title: 'วันที่สิ้นสุด', dataIndex: 'end_date', key: 'end_date', width: 150, align: 'center' },
+    { title: 'วันที่ขออนุญาต', dataIndex: 'petition_date', key: 'petition_date', width: 150, align: 'center' },
+
     {
-      title: 'เลขที่ชื่อบริษัท / ห้าง / ร้าน',
-      dataIndex: 'business_name',
-      key: 'business_name',
-      width: 500,
-      align: 'center'
+      title: 'ตรวจเอกสาร', key: 'validate_document', width: 150, align: 'center',
+      render: makeStepRenderer(STEP.DOCUMENT, '/request-list/approval/document', navigate)
     },
     {
-      title: 'รหัสสายทาง',
-      dataIndex: 'road_code',
-      key: 'road_code',
-      width: 150,
-      align: 'center'
+      title: 'ตรวจเส้นทาง', key: 'validate_route', width: 150, align: 'center',
+      render: makeStepRenderer(STEP.ROUTE, '/request-list/approval/route', navigate)
     },
     {
-      title: 'ชื่อสายทาง',
-      dataIndex: 'road_name',
-      key: 'road_name',
-      width: 200,
-      align: 'center'
+      title: 'ตรวจยานพาหนะ', key: 'validate_vehicle', width: 150, align: 'center',
+      render: makeStepRenderer(STEP.VEHICLE, '/request-list/approval/vehicle', navigate)
     },
     {
-      title: 'วันที่เริ่มต้น',
-      dataIndex: 'start_date',
-      key: 'start_date',
-      width: 150,
-      align: 'center'
+      title: 'รอลงนาม', key: 'wait_signed', width: 150, align: 'center',
+      render: makeStepRenderer(STEP.SIGN, '/request-list/approval/sign', navigate)
     },
     {
-      title: 'วันที่สิ้นสุด',
-      dataIndex: 'end_date',
-      key: 'end_date',
-      width: 150,
-      align: 'center'
+      title: 'ออกใบอนุญาต', key: 'permit', width: 150, align: 'center',
+      render: makeStepRenderer(STEP.PERMIT, '/request-list/approval/permit', navigate)
     },
-    {
-      title: 'วันที่ขออนุญาต',
-      dataIndex: 'petition_date',
-      key: 'petition_date',
-      width: 150,
-      align: 'center'
-    },
-    {
-      title: 'ตรวจเอกสาร',
-      key: 'validate_document',
-      width: 150,
-      align: 'center',
-    },
-    {
-      title: 'ตรวจเส้นทาง',
-      key: 'validate_route',
-      width: 150,
-      align: 'center',
-    },
-    {
-      title: 'ตรวจยานพาหนะ',
-      key: 'validate_vehicle',
-      width: 150,
-      align: 'center',
-    },
-    {
-      title: 'รอลงนาม',
-      key: 'wait_signed',
-      width: 150,
-      align: 'center',
-    },
-    {
-      title: 'ออกใบอนุญาต',
-      key: 'permit',
-      width: 150,
-      align: 'center',
-    },
-  ];
+  ]
 
   return (
     <Table
@@ -98,16 +175,17 @@ const TablePetition: React.FC<Props> = (props) => {
         current: data.page,
         pageSize: data.limit,
         total: Number(data.total) || 0,
-        onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
+        onChange: (page, pageSize) => handleTableChange(page, pageSize),
         showSizeChanger: true,
         position: ['bottomRight'],
         showTotal: (total, range) => {
           const totalPage = (range[1] + 1) - range[0]
           return `ทั้งหมด ${totalPage || total} รายการ`
         },
-        locale: { items_per_page: "/ หน้า" }
+        locale: { items_per_page: '/ หน้า' },
       }}
       scroll={{ x: 1000 }}
+      rowKey={(r: any) => r.id ?? r.key ?? JSON.stringify(r)}
     />
   )
 }

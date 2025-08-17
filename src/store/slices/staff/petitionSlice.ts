@@ -9,7 +9,7 @@ const initialState: PetitionAdminState = {
     overview: {
       search: {
         search: '',
-        is_finish: true,
+        is_finish: false,
         status_id: '',
         page: 1,
         limit: 10

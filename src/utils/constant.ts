@@ -2,18 +2,37 @@ import { ApprovalStatusValue, StatusColor } from "@/@types/shared";
 
 export type ApprovalStatusKey = keyof typeof APPROVAL_STATUS;
 
-export const STATUS_COLOR: StatusColor = {
-  "APPROVE": {
-    "color": "#90EE90",
-    "text": "อนุมัติ"
+// export const STATUS_COLOR: StatusColor = {
+//   "APPROVE": {
+//     "color": "#90EE90",
+//     "text": "อนุมัติ"
+//   },
+//   "REJECTED": {
+//     "color": "#FFCCCC",
+//     "text": "ไม่อนุมัติ"
+//   },
+//   "IN_PROGRESS": {
+//     "color": "#FFFFE0",
+//     "text": "กำลังดำเนินการ"
+//   }
+// }
+
+export const ADMIN_PETITION_STATUS: StatusColor = {
+  "APPROVE":{
+    "color": "#32CD32",
+    "text": "ผ่านการตรวจ"
   },
-  "REJECTED": {
-    "color": "#FFCCCC",
-    "text": "ไม่อนุมัติ"
+  "NOT_APPROVE":{
+    "color": "red",
+    "text": "ผ่านการตรวจ"
   },
-  "IN_PROGRESS": {
-    "color": "#FFFFE0",
-    "text": "กำลังดำเนินการ"
+  "IN_PROGRESS":{
+    "color": "#FDDA0D",
+    "text": "รอดำเนินการ"
+  },
+  "SKIPPED":{
+    "color": "#A9A9A9",
+    "text": "ข้ามขั้นตอน"
   }
 }
 
