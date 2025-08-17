@@ -6,10 +6,10 @@ import React, { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
-
+  handleSearch: (value: FieldType) => void;
 }
 
-interface FieldType {
+export interface FieldType {
   search: string;
   status_id: string;
 }
@@ -38,7 +38,7 @@ const STATUS_OPTION = [
 ]
 
 const FormSearchPetition: React.FC<Props> = (props) => {
-  const { } = props
+  const { handleSearch } = props
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -50,8 +50,8 @@ const FormSearchPetition: React.FC<Props> = (props) => {
   const { handleSubmit, control } = form
 
   const onSubmit = useCallback((value: FieldType) => {
-    console.log(value)
-  }, [])
+    handleSearch(value)
+  }, [handleSearch])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

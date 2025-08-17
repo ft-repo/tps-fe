@@ -1,16 +1,17 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import ApprovalSignPage from '@/features/staff/request-list/approval/sign/screen'
 
 interface Props {
 
 }
 
-const ApprovalSignIndex: React.FC<Props> = (props) => {
+const SignIndex: React.FC<Props> = (props) => {
   const { } = props
 
   return (
-    <ApprovalSignPage/>
+    <div>index</div>
   )
 }
 
-export default React.memo<Props>(ApprovalSignIndex)
+export default React.memo<Props>(SignIndex)

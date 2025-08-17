@@ -1,16 +1,17 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import ApprovalPermitPage from '@/features/staff/request-list/approval/permit/screen'
 
 interface Props {
 
 }
 
-const ApprovalPermitIndex: React.FC<Props> = (props) => {
+const PermitIndex: React.FC<Props> = (props) => {
   const { } = props
 
   return (
-    <ApprovalPermitPage/>
+    <div>index</div>
   )
 }
 
-export default React.memo<Props>(ApprovalPermitIndex)
+export default React.memo<Props>(PermitIndex)

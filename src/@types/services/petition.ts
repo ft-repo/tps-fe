@@ -43,3 +43,5 @@ export interface PetitionFlow {
 export interface PetitionStatus {
   status_name: string;
 }
+
+// ADMIN

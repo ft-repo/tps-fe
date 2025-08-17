@@ -1,16 +1,18 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
 import { Table, TableProps } from 'antd'
-import { PetitionTableData } from '@/@types/reducer/petition';
+import { AdminPetitionData, AdminPetitionTableData } from '@/@types/reducer/petition';
 
 interface Props {
-  handleTableChange: (page: number, pageSize: number) => void;
+  data: AdminPetitionData;
+  loading: boolean;
+  handleTableChange: (page: number, limit: number) => void;
 }
 
 const TablePetition: React.FC<Props> = (props) => {
-  const { handleTableChange } = props
+  const { data, loading, handleTableChange } = props
 
-  const columns: TableProps<PetitionTableData>['columns'] = [
+  const columns: TableProps<AdminPetitionTableData>['columns'] = [
     {
       title: 'เลขที่ชื่อบริษัท / ห้าง / ร้าน',
       dataIndex: 'business_name',
@@ -85,19 +87,17 @@ const TablePetition: React.FC<Props> = (props) => {
     },
   ];
 
-  const data: any[] = []
-
   return (
     <Table
       columns={columns}
-      dataSource={data || []}
-      loading={false}
+      dataSource={data.data || []}
+      loading={loading}
       pagination={{
         defaultCurrent: 1,
         defaultPageSize: 10,
-        current: 1,
-        pageSize: 10,
-        total: Number(10) || 0,
+        current: data.page,
+        pageSize: data.limit,
+        total: Number(data.total) || 0,
         onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
         showSizeChanger: true,
         position: ['bottomRight'],

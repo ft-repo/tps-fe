@@ -24,6 +24,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
       children: <ContentPetitionExtended />,
     },
   ];
+  
   return (
     <Tabs
       defaultActiveKey={tabKey}

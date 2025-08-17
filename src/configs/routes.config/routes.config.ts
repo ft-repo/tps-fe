@@ -126,7 +126,7 @@ export const protectedRoutes = [
     {
         key: 'approval_other_document',
         path: '/request-list/approval/other-document',
-        component: lazy(() => import('@/views/staff/request-list/approval/other-document')),
+        component: lazy(() => import('@/views/staff/request-list/approval/other')),
         authority: ['ADMIN'],
     },
     {
