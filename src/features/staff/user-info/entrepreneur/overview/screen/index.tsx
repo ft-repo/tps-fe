@@ -15,8 +15,8 @@ interface Props { }
 const OverviewScreen: React.FC<Props> = (props) => {
   const { } = props
   const dispatch = useAppDispatch()
-  const client = useAppSelector(state => state.staff.staff.client)
-  const loading = useAppSelector(state => state.layout.loading)
+  const {client, loading} = useAppSelector(state => state.staff.staff)
+  // const loading = useAppSelector(state => state.layout.loading)
 
   useEffect(() => {
     dispatch(getClientData(client.overview.search))

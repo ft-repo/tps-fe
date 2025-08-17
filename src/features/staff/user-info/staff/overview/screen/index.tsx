@@ -47,8 +47,8 @@ const OverviewScreen: React.FC<Props> = (props) => {
   const { } = props
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const admin = useAppSelector(state => state.staff.staff.admin)
-  const loading = useAppSelector(state => state.layout.loading)
+  const { admin, loading } = useAppSelector(state => state.staff.staff)
+  // const loading = useAppSelector(state => state.layout.loading)
   const [open, setOpen] = useState(INIT_MODAL)
 
   useEffect(() => {
