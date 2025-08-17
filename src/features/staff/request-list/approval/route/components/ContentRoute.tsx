@@ -25,7 +25,7 @@ const ContentRoute: React.FC<Props> = (props) => {
             </section>
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-            <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[45vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
+            <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[58vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
               <MapRouteEstimation
                 firstPoint={null}
                 secondPoint={null}

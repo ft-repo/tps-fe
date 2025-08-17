@@ -13,7 +13,7 @@ interface Props {
 
 interface FieldType {
   is_approved: boolean;
-  remark: string;
+  reply_message: string;
   file_id: FileType;
 }
 
@@ -32,13 +32,14 @@ const OPTIONS = [
     value: false,
   },
 ]
+
 const ContentForm: React.FC<Props> = (props) => {
   const { } = props
 
   const form = useForm<FieldType>({
     defaultValues: {
       is_approved: false,
-      remark: '',
+      reply_message: '',
       file_id: {
         file: [],
         url: ''
@@ -110,7 +111,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
-          name='remark'
+          name='reply_message'
           control={control}
           rules={{
             required: 'กรุณาระบุข้อความตอบกลับ'
@@ -124,9 +125,10 @@ const ContentForm: React.FC<Props> = (props) => {
                   name={field.name}
                   placeholder='กรุณาระบุข้อความตอบกลับ'
                   size='large'
+                  rows={8}
                 />
-                {!!errors.remark &&
-                  <p className='text-red-500'>{errors.remark.message}</p>
+                {!!errors.reply_message &&
+                  <p className='text-red-500'>{errors.reply_message.message}</p>
                 }
               </fieldset>
             )
