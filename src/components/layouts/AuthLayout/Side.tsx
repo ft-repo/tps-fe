@@ -18,7 +18,7 @@ const Side = ({ children, content, ...rest }: SideProps) => {
                 }}
             >
                 <div className="fixed top-6 left-12 z-10">
-                    <img src="/img/logo/logo-dark-full.svg" className='w-100' alt="logo" />
+                    <img src="/img/logo/logo-light-full.svg" className='w-100' alt="logo" />
                 </div>
             </div>
             <div className="flex flex-col justify-center items-center bg-white dark:bg-gray-800">

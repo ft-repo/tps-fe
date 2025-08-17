@@ -6,6 +6,7 @@
 @config '../../../../tailwind.config.cjs';
 
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -14,9 +15,10 @@
     border-color: var(--color-gray-200, currentColor);
   }
 
-  button, [role=button] {
-		cursor: pointer;
-	}
+  button,
+  [role=button] {
+    cursor: pointer;
+  }
 
   body {
     @apply text-gray-500 dark:text-gray-400 text-sm bg-gray-100 dark:bg-gray-900 leading-normal;
@@ -175,6 +177,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
