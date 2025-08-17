@@ -10,7 +10,7 @@ const initialState: PetitionState = {
                 search: '',
                 page: 1,
                 limit: 10,
-                is_finish: true
+                is_finish: false
             },
             data: {
                 data: [],

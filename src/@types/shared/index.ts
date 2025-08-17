@@ -1,3 +1,4 @@
+import { color } from "framer-motion";
 import { APIPostBody } from "../services/vehicle";
 
 export interface DialogProps {
@@ -10,11 +11,15 @@ export interface StatusColor {
     color: string;
     text: string;
   };
-  REJECTED: {
+  NOT_APPROVE: {
     color: string;
     text: string;
   };
   IN_PROGRESS: {
+    color: string;
+    text: string;
+  };
+  SKIPPED: {
     color: string;
     text: string;
   };
