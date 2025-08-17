@@ -1,0 +1,8 @@
+export { default as ContentRoute } from './ContentRoute'
+export { default as TitleSection } from './TitleSection'
+export { default as ContentSection } from './ContentSection'
+export { default as ContentDetail } from './ContentDetail'
+export { default as FormSearchRoute } from './FormSearchRoute'
+export { default as TableRoute } from './TableRoute'
+export { default as ContentRouteList } from './ContentRouteList'
+export { default as ContentForm } from './ContentForm'
