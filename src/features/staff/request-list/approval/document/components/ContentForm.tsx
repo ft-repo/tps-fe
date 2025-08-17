@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Button } from '@/components/ui';
 import { postUploadProfileImageAPI } from '@/services/entrepreneur/UserService';
-import { Input, message, Radio, Upload } from 'antd';
+import { Flex, Input, message, Radio, Upload } from 'antd';
 import React, { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
@@ -179,12 +179,29 @@ const ContentForm: React.FC<Props> = (props) => {
         />
       </section>
       <section className='mt-5'>
-        <Button
-          variant='solid'
-          size='sm'
+        <Flex
+          wrap
+          justify={'space-between'}
+          align={'center'}
+          gap={5}
         >
-          บันทึกข้อมูล
-        </Button>
+          <Button
+            type='button'
+            variant='default'
+            size='sm'
+            className='w-full lg:w-auto'
+            >
+            ล้างข้อมูล
+          </Button>
+          <Button
+            type='submit'
+            variant='solid'
+            size='sm'
+            className='w-full lg:w-auto'
+          >
+            บันทึกข้อมูล
+          </Button>
+        </Flex>
       </section>
     </form>
   )

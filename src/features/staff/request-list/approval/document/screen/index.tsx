@@ -25,7 +25,7 @@ const DocumentScreen: React.FC<Props> = (props) => {
 					ย้อนกลับ
 				</Button>
 			</section>
-			<section className='mt-5'>
+			<section>
 				<TitleSection />
 			</section>
 			<section className='mt-5'>
