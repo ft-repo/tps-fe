@@ -1,13 +1,38 @@
-import React, { useState } from 'react'
-import ReviewResultForm from '../components/FormInput'
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
+import React from 'react'
+import { TitleSection, ContentSection } from '../components'
+import { Button } from 'antd'
+import { AiOutlineLeft } from 'react-icons/ai'
+import { useNavigate } from 'react-router-dom'
 
-const ApprovalEvaluationPage = () => {
-    return (
-        <div>
-            <h2 className="text-xl font-bold mb-6">บันทึกผลการพิจารณา</h2>
-            <ReviewResultForm/>
-        </div>
-    )
+interface Props {
+
 }
 
-export default ApprovalEvaluationPage
+const EvaluationScreen: React.FC<Props> = (props) => {
+	const { } = props
+	const navigate = useNavigate()
+
+	return (
+		<>
+			<section>
+				<Button
+					type='text'
+					icon={<AiOutlineLeft />}
+					onClick={() => navigate(-1)}
+				>
+					ย้อนกลับ
+				</Button>
+			</section>
+			<section>
+				<TitleSection />
+			</section>
+			<section className='mt-5'>
+				<ContentSection />
+			</section>
+		</>
+	)
+}
+
+export default React.memo<Props>(EvaluationScreen)
