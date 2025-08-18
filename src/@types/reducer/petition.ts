@@ -146,6 +146,8 @@ export interface BusinessDetails {
 export interface PetitionAdminState {
   petition: AdminPetition;
   petition_extended: AdminPetitionExtended;
+  petition_history: AdminPetition;
+  petition_history_extended: AdminPetitionExtended;
   loading: boolean;
 }
 
