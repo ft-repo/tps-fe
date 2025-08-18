@@ -6,6 +6,21 @@ export interface DialogProps {
   data: APIPostBody | null;
 }
 
+export interface HistoryPetitionColor{
+  APPROVE: {
+    color: string;
+    text: string;
+  }
+  NOT_APPROVE:{
+    color: string;
+    text: string;
+  }
+  REJECTED: {
+    color: string;
+    text: string;
+  }
+}
+
 export interface StatusColor {
   APPROVE: {
     color: string;
