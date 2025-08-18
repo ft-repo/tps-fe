@@ -8,7 +8,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 
 interface Props {
-
+  setUrl?: (value: string) => void;
 }
 
 interface FieldType {

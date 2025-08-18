@@ -47,7 +47,9 @@ const ContentForm: React.FC<Props> = (props) => {
       const response = await postUploadProfileImageAPI({ upload: file[0].originFileObj })
       if (response.status === 200) {
         setValue('file_id.url', response.data?.url)
-        setUrl(response.data.url)
+        // SET URL
+        const url = URL.createObjectURL(file[0].originFileObj)
+        setUrl(url)
       } else {
         console.log(response)
       }
@@ -107,6 +109,7 @@ const ContentForm: React.FC<Props> = (props) => {
                       uploadFile(e.fileList)
                     } else {
                       setValue('file_id.url', '')
+                      setUrl('')
                     }
                   }}
                 >
