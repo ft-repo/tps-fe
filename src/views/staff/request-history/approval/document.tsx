@@ -1,5 +1,6 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import HistoryDocument from '@/features/staff/request-history/document/screen'
 
 interface Props {
 
@@ -9,7 +10,7 @@ const DocumentIndex: React.FC<Props> = (props) => {
   const { } = props
 
   return (
-    <HistoryDocument/>
+    <div>index</div>
   )
 }
 
