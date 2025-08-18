@@ -6,7 +6,7 @@ interface Props {
 
 }
 
-const OtherVehicleIndex: React.FC<Props> = (props) => {
+const OtherIndex: React.FC<Props> = (props) => {
   const { } = props
 
   return (
@@ -14,4 +14,4 @@ const OtherVehicleIndex: React.FC<Props> = (props) => {
   )
 }
 
-export default React.memo<Props>(OtherVehicleIndex)
+export default React.memo<Props>(OtherIndex)
