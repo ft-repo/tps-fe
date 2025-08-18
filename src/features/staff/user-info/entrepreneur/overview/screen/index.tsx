@@ -1,155 +1,170 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { memo, FC, useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import FormSearch from '../components/FormSearchEntrepreneur'
 import TableEntrepreneur from '../components/TableEntrepreneur'
-import {
-  deleteClientLists,
-  getClientLists,
-} from '@/services/staff/UserManagement'
-import { useForm } from 'react-hook-form'
-import {
-  ClientList,
-  ClientListsResponse,
-  SearchUserName,
-} from '@/@types/staff/user-info'
-import { useDispatch } from 'react-redux'
-import { setLoading, useAppSelector } from '@/store'
-import { setUserLists } from '@/store/slices/staff'
-import { message, Modal } from 'antd'
+import { setLoading, useAppDispatch, useAppSelector } from '@/store'
+import { getClientData, setClientData } from '@/store/slices/staff'
+import { Modal } from 'antd'
+import { ClientList } from '@/@types/services/user'
+import { deleteClientAPI } from '@/services/staff/UserService'
 import dayjs from 'dayjs'
 
-const OverviewScreen: FC = () => {
-  const dispatch = useDispatch()
-  const userLists = useAppSelector((state) => state.staff.userLists)
-  const loading = useAppSelector((state) => state.layout.loading)
+interface Props { }
 
-  const form = useForm<SearchUserName>({
-    defaultValues: {
-      username: '',
-    },
-  })
-
-  const { control, handleSubmit } = form
-
-  const fetchClientLists = useCallback(
-    async (username: string, page: number = 1, limit: number = 10) => {
-      dispatch(setLoading(true))
-      try {
-        const resp = await getClientLists({ limit, page, search: username })
-        dispatch(setUserLists(resp))
-      } catch (error) {
-        message.error('ไม่สามารถดึงข้อมูลได้')
-      } finally {
-        dispatch(setLoading(false))
-      }
-    },
-    [dispatch],
-  )
-
-  const deleteRecord = useCallback(
-    async (id: string | number) => {
-      dispatch(setLoading(true))
-      try {
-        const response = await deleteClientLists(id)
-        if (response.status === 200) {
-          message.success('ลบข้อมูลสำเร็จ')
-        }
-      } catch (error) {
-        message.error('ไม่สามารถลบข้อมูลได้')
-      } finally {
-        fetchClientLists('')
-        dispatch(setLoading(false))
-        Modal.destroyAll()
-      }
-    },
-    [dispatch, fetchClientLists],
-  )
+const OverviewScreen: React.FC<Props> = (props) => {
+  const { } = props
+  const dispatch = useAppDispatch()
+  const {client, loading} = useAppSelector(state => state.staff.staff)
+  // const loading = useAppSelector(state => state.layout.loading)
 
   useEffect(() => {
-    fetchClientLists('')
-  }, [fetchClientLists])
+    dispatch(getClientData(client.overview.search))
+  }, [dispatch, client.overview.search])
 
-  const onSubmit = useCallback(
-    (value: SearchUserName) => {
-      fetchClientLists(value.username)
-    },
-    [fetchClientLists],
-  )
-
-  const handleTableChange = useCallback(
-    (page: number, pageSize: number) => {
-      fetchClientLists(form.getValues('username'), page, pageSize)
-    },
-    [fetchClientLists, form],
-  )
-
-  const confirmDelete = useCallback(
-    (id: string | number, data: ClientList) => {
-      Modal.confirm({
-        title: 'ยืนยันการลบข้อมูล',
-        content: (
-          <>
-            <p className="text-base">
-              <strong>ชื่อผู้ประกอบการ</strong> :{' '}
-              {data.business_details.business_name || '-'}
-            </p>
-            <p className="text-base">
-              <strong>ประเภทนิติบุคคล</strong> :{' '}
-              {data.business_details.entity_type.name || '-'}
-            </p>
-            <p className="text-base">
-              <strong>เลขทะเบียนนิติบุคคล</strong> : {data.registration_no}
-            </p>
-            <p className="text-base">
-              <strong>วันที่ได้รับอนุญาต</strong> :{' '}
-              {dayjs(data.created_at).locale('th').format('DD MMM YYYY')}
-            </p>
-          </>
-        ),
-        okText: 'ลบข้อมูล',
-        cancelText: 'ยกเลิก',
-        onOk: () => deleteRecord(id),
-        onCancel: () => Modal.destroyAll(),
-        okButtonProps: {
-          style: {
-            fontFamily: 'Noto Sans Thai',
-          },
-          danger: true,
-          loading: loading,
+  const handleTableChange = useCallback((page: number, limit: number) => {
+    dispatch(setLoading(true))
+    try {
+      dispatch(setClientData({
+        params: {
+          ...client.overview.search,
+          page,
+          limit
         },
-        cancelButtonProps: {
-          style: {
-            fontFamily: 'Noto Sans Thai',
-          },
-          disabled: loading,
+        data: { ...client.overview.data }
+      }))
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, client.overview])
+
+  const handleSearch = useCallback((value: string) => {
+    dispatch(setLoading(true))
+    try {
+      dispatch(setClientData({
+        params: {
+          ...client.overview.search,
+          search: value
         },
+        data: { ...client.overview.data }
+      }))
+
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, client.overview])
+
+    const deleteRecord = useCallback(async (id: string | number) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await deleteClientAPI(id)
+      if (response.status === 200) {
+        Modal.success({
+          title: 'สำเร็จ',
+          content: 'บันทึกข้อมูลสำเร็จ',
+          okText: 'ตกลง',
+          onOk: () => {
+            dispatch(getClientData(client.overview.search))
+            Modal.destroyAll()
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, client.overview])
+
+  const confirmDeleteRecord = useCallback((id: string | number, data: ClientList) => {
+    Modal.confirm({
+      title: 'ยืนยันการลบข้อมูล',
+      content: (
+        <>
+          <p className='text-base'><strong>ชื่อผู้ประกอบการ</strong> : {data.business_details.business_name || '-'}</p>
+          <p className='text-base'><strong>ประเภทนิติบุคคล</strong> : {data.business_details.entity_type.name || '-'}</p>
+          <p className='text-base'><strong>เลขทะเบียนนิติบุคคล</strong> : {data.registration_no}</p>
+          <p className='text-base'><strong>วันที่ได้รับอนุญาต</strong> : {dayjs(data.created_at).format('DD MMM YYYY')}</p>
+        </>
+      ),
+      okText: 'ลบข้อมูล',
+      cancelText: 'ยกเลิก',
+      onOk: () => deleteRecord(id),
+      onCancel: () => Modal.destroyAll(),
+      okButtonProps: {
         style: {
-          fontFamily: 'Noto Sans Thai',
+          fontFamily: 'Noto Sans Thai'
         },
-      })
-    },
-    [deleteRecord, loading],
-  )
-
-  console.log(userLists)
+        danger: true,
+        loading: loading
+      },
+      cancelButtonProps: {
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        },
+        disabled: loading
+      },
+      style: {
+        fontFamily: 'Noto Sans Thai'
+      }
+    })
+  }, [deleteRecord, loading])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <div>
       <h3>ข้อมูลผู้ประกอบการ</h3>
       <section className="mt-5">
-        <FormSearch control={control} loading={loading} />
+        <FormSearch
+          handleSearch={handleSearch}
+        />
       </section>
       <section className="mt-5">
         <TableEntrepreneur
-          userLists={userLists as ClientListsResponse}
-          handleTableChange={handleTableChange}
-          confirmDelete={confirmDelete}
+          data={client.overview.data}
           loading={loading}
+          handleTableChange={handleTableChange}
+          confirmDelete={confirmDeleteRecord}
         />
       </section>
-    </form>
+    </div>
   )
 }
 
-export default memo(OverviewScreen)
+export default React.memo<Props>(OverviewScreen)

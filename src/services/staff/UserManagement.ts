@@ -1,5 +1,5 @@
+import { ClientList, ClientListsResponse, DeleteClientListsResponse, StaffListsResponse } from '@/@types/services/user'
 import ApiService from '@/services/ApiService'
-import { ClientList, ClientListsResponse, DeleteClientListsResponse, StaffListsResponse } from '@/@types/staff/user-info'
 
 export interface UserListsParams {
   limit: number

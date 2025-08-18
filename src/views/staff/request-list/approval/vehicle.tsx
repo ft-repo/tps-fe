@@ -1,12 +1,27 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import ApprovalVehiclePage from '@/features/staff/request-list/approval/vehicle/screen'
+import { ConfigProvider } from 'antd'
+import VehicleScreen from '@/features/staff/request-list/approval/vehicle/screen'
 
-interface Props {}
+interface Props {
 
-const ApprovalVehicleIndex: React.FC<Props> = () => {
+}
+
+const VehicleIndex: React.FC<Props> = (props) => {
+  const { } = props
+
   return (
-    <ApprovalVehiclePage/>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Noto Sans Thai"
+        }
+      }}
+    >
+      <VehicleScreen />
+    </ConfigProvider>
   )
 }
 
-export default React.memo<Props>(ApprovalVehicleIndex)
+export default React.memo<Props>(VehicleIndex)

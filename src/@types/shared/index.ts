@@ -1,3 +1,4 @@
+import { color } from "framer-motion";
 import { APIPostBody } from "../services/vehicle";
 
 export interface DialogProps {
@@ -10,11 +11,15 @@ export interface StatusColor {
     color: string;
     text: string;
   };
-  REJECTED: {
+  NOT_APPROVE: {
     color: string;
     text: string;
   };
   IN_PROGRESS: {
+    color: string;
+    text: string;
+  };
+  SKIPPED: {
     color: string;
     text: string;
   };
@@ -37,5 +42,18 @@ export interface ThailandState {
 }
 
 export interface SubDistrictState extends ThailandState {
-  zip_code: string;  
+  zip_code: string;
+}
+
+export interface DepartmentState {
+  id: number;
+  dept_name: string;
+  dept_type: number;
+  dept_group: number;
+  dept_province: string;
+}
+
+export interface RoleState {
+  id: string;
+  name: string;
 }

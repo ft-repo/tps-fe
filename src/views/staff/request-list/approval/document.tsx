@@ -1,12 +1,27 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import ApprovalDocumentPage from '@/features/staff/request-list/approval/document/screen'
+import { ConfigProvider } from 'antd'
+import DocumentScreen from '@/features/staff/request-list/approval/document/screen'
 
-interface Props {}
+interface Props {
 
-const ApprovalDocumentIndex: React.FC<Props> = () => {
+}
+
+const DocumentIndex: React.FC<Props> = (props) => {
+  const { } = props
+
   return (
-    <ApprovalDocumentPage/>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Noto Sans Thai"
+        }
+      }}
+    >
+      <DocumentScreen />
+    </ConfigProvider>
   )
 }
 
-export default React.memo<Props>(ApprovalDocumentIndex)
+export default React.memo<Props>(DocumentIndex)

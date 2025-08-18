@@ -162,7 +162,6 @@ const Content = (props: ContentProps) => {
     } finally {
       dispatch(setLoading(false))
     }
-
   }, [dispatch, vehicle.overview.search, id, setOpen])
 
   return (

@@ -4,3 +4,13 @@ export { default as TableCategory } from './TableCategory'
 export { default as TableOther } from './TableOther'
 export { default as ContentSearchCategory } from './ContentSearchCategory'
 export { default as ContentSearchOther } from './ContentSearchOther'
+
+// CONTENT
+export { default as ContentPetition } from './ContentPetition'
+export { default as ContentPetitionExtended } from './ContentPetitionExtended'
+// FORM
+export { default as FormSearchPetition } from './FormSearchPetition'
+export { default as FormSearchPetitionExtended } from './FormSearchPetitionExtended'
+// TABLE
+export { default as TablePetition } from './TablePetition'
+export { default as TablePetitionExtended } from './TablePetitionExtended'

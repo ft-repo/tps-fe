@@ -13,10 +13,6 @@ interface Props {
   handleTableChange: (page: number, limit: number) => void;
 }
 
-// ---------- Helpers ----------
-/** เลือกรายการ flow ล่าสุดของ status_id ที่กำหนด */
-// ---------- Helpers ----------
-// เลือกรายการล่าสุดของ statusId โดยใช้ "id" มากที่สุด (ไม่ดูเวลา)
 const latestFlowByStatus = (
   flow: PetitionExtendedTableData['petition_extended_flow'] | undefined,
   statusId: number

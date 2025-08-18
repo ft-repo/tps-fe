@@ -125,8 +125,8 @@ export const protectedRoutes = [
     },
     {
         key: 'approval_other_document',
-        path: '/request-list/approval/other-document',
-        component: lazy(() => import('@/views/staff/request-list/approval/other-document')),
+        path: '/request-list/approval/other',
+        component: lazy(() => import('@/views/staff/request-list/approval/other')),
         authority: ['ADMIN'],
     },
     {
@@ -137,20 +137,20 @@ export const protectedRoutes = [
     },
     {
         key: 'view_normal_vehicle',
-        path: '/request-history/view/normal_vehicle',
-        component: lazy(() => import('@/views/staff/request-history/view/normal_vehicle')),
+        path: '/request-history/view/document',
+        component: lazy(() => import('@/views/staff/request-history/view/document')),
         authority: ['ADMIN'],
     },
     {
         key: 'view_other_vehicle',
-        path: '/request-history/view/other_vehicle',
-        component: lazy(() => import('@/views/staff/request-history/view/other_vehicle')),
+        path: '/request-history/view/other',
+        component: lazy(() => import('@/views/staff/request-history/view/other')),
         authority: ['ADMIN'],
     },
     {
         key: 'approval_other_document',
-        path: '/request-history/approval/other-document',
-        component: lazy(() => import('@/views/staff/request-history/approval/other-document')),
+        path: '/request-history/approval/other',
+        component: lazy(() => import('@/views/staff/request-history/approval/other')),
         authority: ['ADMIN'],
     },
     {

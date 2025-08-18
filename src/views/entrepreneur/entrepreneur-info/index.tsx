@@ -82,7 +82,7 @@ const ExecutiveDataIndex: React.FC<Props> = (props) => {
     getUploadAPIList()
   }, [getUploadAPIList])
 
-  if (!fileList.length) return <p>Loading...</p>
+  // if (!fileList.length) return <p>Loading...</p>
 
   return (
     <ConfigProvider

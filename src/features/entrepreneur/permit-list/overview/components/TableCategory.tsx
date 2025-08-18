@@ -34,7 +34,7 @@ type ApprovalKey = keyof typeof APPROVAL_STATUS
 
 const toApprovalKey = (flowItem: FlowItem | null): ApprovalKey => {
   if (!flowItem) return 'WAIT_APPROVAL'
-  return flowItem.is_approved ? 'APPROVED' : 'IN_PROGRESS'
+  return flowItem.is_approved ? 'APPROVED' : 'REJECTED'
 }
 
 

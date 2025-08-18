@@ -3,20 +3,20 @@
 import React from 'react'
 import { FaTrash as DeleteIcon, FaEye as EyeIcon } from "react-icons/fa6";
 import { useNavigate } from "react-router";
-import { ClientList, ClientListsResponse } from '@/@types/staff/user-info';
 import { Table, TableProps } from 'antd';
 import { Button } from '@/components/ui';
 import dayjs from 'dayjs';
+import { ClientList, ClientListsResponse } from '@/@types/services/user';
 
 interface Props {
-  userLists?: ClientListsResponse;
+  data: ClientListsResponse;
+  loading: boolean;
   handleTableChange: (page: number, pageSize: number) => void;
   confirmDelete: (id: string | number, data: ClientList) => void;
-  loading: boolean;
 }
 
 const TableEntrepreneur: React.FC<Props> = (props) => {
-  const { userLists, confirmDelete, handleTableChange, loading } = props
+  const { data, loading, handleTableChange, confirmDelete } = props
   const navigate = useNavigate();
 
   const columns: TableProps<ClientList>['columns'] = [
@@ -74,7 +74,7 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       dataIndex: 'action',
       key: 'action',
       fixed: 'right',
-      width: 80,
+      width: 100,
       align: 'center',
       render: (item, record) => {
         return (
@@ -102,14 +102,14 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
   return (
     <Table
       columns={columns}
-      dataSource={userLists?.data || []}
+      dataSource={data.data || []}
       loading={loading}
       pagination={{
         defaultCurrent: 1,
         defaultPageSize: 10,
-        current: userLists?.page,
-        pageSize: userLists?.limit,
-        total: Number(userLists?.total) || 0,
+        current: data.page,
+        pageSize: data.limit,
+        total: Number(data.total) || 0,
         onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
         showSizeChanger: true,
         position: ['bottomRight'],

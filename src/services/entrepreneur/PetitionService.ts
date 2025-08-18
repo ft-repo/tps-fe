@@ -18,4 +18,3 @@ export const getPetitionExtendedAPI = async (params: GetPetitionParams) => {
     params: { ...params }
   })
 }
-

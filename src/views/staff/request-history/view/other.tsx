@@ -1,0 +1,26 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
+import { ConfigProvider } from 'antd'
+import React from 'react'
+import OtherScreen from '@/features/staff/request-history/view/other/screen'
+
+interface Props {
+
+}
+
+const OtherIndex: React.FC<Props> = (props) => {
+  const { } = props
+
+  return (
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Noto Sans Thai"
+        }
+      }}
+    >
+      <OtherScreen />
+    </ConfigProvider>)
+}
+
+export default React.memo<Props>(OtherIndex)

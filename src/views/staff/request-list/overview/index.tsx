@@ -1,6 +1,8 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import RequestListScreen from '@/features/staff/request-list/screen/index'
-import { PermitProvider } from '@/features/entrepreneur/permit-list/overview/context'
+import { ConfigProvider } from 'antd'
+import OverviewScreen from '@/features/staff/request-list/overview/screen'
 
 interface Props {
 
@@ -10,9 +12,15 @@ const OverviewIndex: React.FC<Props> = (props) => {
   const { } = props
 
   return (
-   
-      <RequestListScreen />
-    
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Noto Sans Thai"
+        }
+      }}
+    >
+      <OverviewScreen />
+    </ConfigProvider>
   )
 }
 
