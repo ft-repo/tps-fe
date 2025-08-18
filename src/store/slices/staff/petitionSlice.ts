@@ -43,6 +43,44 @@ const initialState: PetitionAdminState = {
     },
     detail: {}
   },
+  petition_history: {
+    overview: {
+      search: {
+        search: '',
+        is_finish: true,
+        status_id: '',
+        page: 1,
+        limit: 10
+      },
+      data: {
+        data: [],
+        page: 1,
+        limit: 10,
+        total_pages: 0,
+        total: 0,
+      }
+    },
+    detail: {}
+  },
+  petition_history_extended: {
+    overview: {
+      search: {
+        search: '',
+        is_finish: true,
+        status_id: '',
+        page: 1,
+        limit: 10
+      },
+      data: {
+        data: [],
+        page: 1,
+        limit: 10,
+        total_pages: 0,
+        total: 0,
+      }
+    },
+    detail: {}
+  },
   loading: false
 }
 
@@ -60,6 +98,18 @@ export const getAdminPetitionExtendedData = createAsyncThunk(SLICE_BASE_NAME + '
   return response.data
 })
 
+export const getAdminPetitionHistoryData = createAsyncThunk(SLICE_BASE_NAME + '/apiGetAdminPetitionHistoryData', async (params: GetPetitionParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getAdminPetitionAPI(params)
+  return response.data
+})
+
+export const getAdminPetitionHistoryExtendedData = createAsyncThunk(SLICE_BASE_NAME + '/apiGetAdminPetitionHistoryExtendedData', async (params: GetPetitionParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getAdminPetitionExtendedAPI(params)
+  return response.data
+})
+
 const petitionSlice = createSlice({
   name: `${SLICE_BASE_NAME}/petition`,
   initialState,
@@ -71,6 +121,14 @@ const petitionSlice = createSlice({
     setAdminPetitionExtendedData: (state, action) => {
       state.petition_extended.overview.search = action.payload.params,
         state.petition_extended.overview.data = action.payload.data
+    },
+    setAdminPetitionHistoryData: (state, action) => {
+      state.petition_history.overview.search = action.payload.params,
+        state.petition_history.overview.data = action.payload.data
+    },
+    setAdminPetitionHistoryExtendedData: (state, action) => {
+      state.petition_history_extended.overview.search = action.payload.params,
+        state.petition_history_extended.overview.data = action.payload.data
     },
   },
   extraReducers: (builder) => {
@@ -96,9 +154,29 @@ const petitionSlice = createSlice({
       .addCase(getAdminPetitionExtendedData.rejected, (state) => {
         state.loading = false
       })
+    builder.addCase(getAdminPetitionHistoryData.fulfilled, (state, action) => {
+      state.petition_history.overview.data = action.payload,
+        state.loading = false
+    })
+      .addCase(getAdminPetitionHistoryData.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getAdminPetitionHistoryData.rejected, (state) => {
+        state.loading = false
+      })
+    builder.addCase(getAdminPetitionHistoryExtendedData.fulfilled, (state, action) => {
+      state.petition_history_extended.overview.data = action.payload,
+        state.loading = false
+    })
+      .addCase(getAdminPetitionHistoryExtendedData.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getAdminPetitionHistoryExtendedData.rejected, (state) => {
+        state.loading = false
+      })
   }
 })
 
-export const { setAdminPetitionData, setAdminPetitionExtendedData } = petitionSlice.actions
+export const { setAdminPetitionData, setAdminPetitionExtendedData, setAdminPetitionHistoryData, setAdminPetitionHistoryExtendedData } = petitionSlice.actions
 
 export default petitionSlice.reducer
