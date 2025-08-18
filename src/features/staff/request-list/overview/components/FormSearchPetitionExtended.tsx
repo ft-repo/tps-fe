@@ -6,7 +6,7 @@ import React, { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
-
+  handleSearch: (value: FieldType) => void;
 }
 
 interface FieldType {
@@ -30,7 +30,7 @@ const STATUS_OPTION = [
 ]
 
 const FormSearchPetitionExtended: React.FC<Props> = (props) => {
-  const { } = props
+  const { handleSearch } = props
 
   const form = useForm<FieldType>({
     defaultValues: {

@@ -216,6 +216,27 @@ export interface AdminPetitionExtendedSearch {
   limit: number
 }
 
-export interface AdminPetitionExtendedData { }
+export interface AdminPetitionExtendedTableData{
+  id: number
+  status_id: number
+  cert_date: string
+  created_by: string
+  poa_name: string
+  phone_number: string
+  ref_form_no: number
+  remark: string
+  created_at: string
+  status: Status
+  petition_extended_flow: PetitionExtendedFlow[]
+  user_created: UserCreated
+ }
+
+export interface AdminPetitionExtendedData {
+  data: AdminPetitionExtendedTableData[]
+  total: number
+  page: number
+  limit: number
+  total_pages: number
+ }
 
 export interface AdminPetitionExtendedDetail { }
