@@ -1,4 +1,4 @@
-import { ApprovalStatusValue, StatusColor } from "@/@types/shared";
+import { ApprovalStatusValue, StatusColor, HistoryPetitionColor } from "@/@types/shared";
 
 export type ApprovalStatusKey = keyof typeof APPROVAL_STATUS;
 
@@ -16,6 +16,25 @@ export type ApprovalStatusKey = keyof typeof APPROVAL_STATUS;
 //     "text": "กำลังดำเนินการ"
 //   }
 // }
+
+export const ADMIN_PETITION_HISTORY_STATUS: HistoryPetitionColor = {
+  "APPROVE":{
+    "color": "#32CD32",
+    "text": "ผ่านการตรวจ"
+  },
+  "NOT_APPROVE":{
+    "color": "#FF0000",
+    "text": "ไม่ผ่านการตรวจ"
+  },
+  "REJECTED":{
+    "color": "#A9A9A9",
+    "text": "ยุติคำขออนุญาต"
+  },
+  // "SKIPPED":{
+  //   "color": "#A9A9A9",
+  //   "text": "ข้ามขั้นตอน"
+  // }
+}
 
 export const ADMIN_PETITION_STATUS: StatusColor = {
   "APPROVE":{
