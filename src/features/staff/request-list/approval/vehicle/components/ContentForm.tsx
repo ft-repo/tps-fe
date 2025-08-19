@@ -3,7 +3,7 @@
 import { PetitionPostBody } from '@/@types/services/petition';
 import { Button } from '@/components/ui';
 import { postUploadFileAPI } from '@/services/entrepreneur/PetitionService';
-import { postPetitionApprove } from '@/services/staff/PetitionService';
+import { postPetitionApproveAPI } from '@/services/staff/PetitionService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getAdminPetitionData } from '@/store/slices/staff';
 import { Flex, Input, message, Modal, Radio, Upload } from 'antd';
@@ -115,7 +115,7 @@ const ContentForm: React.FC<Props> = (props) => {
 
     dispatch(setLoading(true))
     try {
-      const response = await postPetitionApprove(body)
+      const response = await postPetitionApproveAPI(body)
       if (response.status === 200) {
         Modal.success({
           title: 'สำเร็จ',

@@ -62,3 +62,7 @@ export interface PetitionExtendedPostBody {
   reply_message: string;
   document_url: string;
 }
+
+export interface GetPetitionDetailParams {
+  petition_id: string;
+}
