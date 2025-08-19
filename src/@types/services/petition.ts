@@ -45,3 +45,11 @@ export interface PetitionStatus {
 }
 
 // ADMIN
+export interface PetitionPostBody {
+  petition_id: number;
+  status_id: number;
+  is_approved: boolean;
+  remark: string;
+  document_url: string;
+  is_skipped: boolean;
+}

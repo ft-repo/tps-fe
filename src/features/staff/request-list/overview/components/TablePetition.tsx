@@ -106,10 +106,10 @@ const makeStepRenderer =
         <Tag
           color={clickable ? cfg.color : 'default'}
           style={{ cursor: clickable ? 'pointer' : 'not-allowed', opacity: clickable ? 1 : 0.6, userSelect: 'none' }}
-          onClick={clickable ? () => navigate(`${path}?petition_id=${(record as any).petition_id}`) : undefined}
+          onClick={clickable ? () => navigate(`${path}?petition_id=${(record as any).petition_id}&status_id=${(record as any).status_id}`) : undefined}
           role={clickable ? 'button' : undefined}
           tabIndex={clickable ? 0 : -1}
-          onKeyDown={e => clickable && e.key === 'Enter' && navigate(`${path}?petition_id=${(record as any).petition_id}`)}
+          onKeyDown={e => clickable && e.key === 'Enter' && navigate(`${path}?petition_id=${(record as any).petition_id}&status_id=${(record as any).status_id}`)}
         >
           {cfg.text}
           {st.date ? (
