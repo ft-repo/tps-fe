@@ -18,6 +18,7 @@ interface ModalProps {
   open: boolean;
   data: StaffList;
 }
+
 export const INIT_MODAL: ModalProps = {
   id: '',
   open: false,

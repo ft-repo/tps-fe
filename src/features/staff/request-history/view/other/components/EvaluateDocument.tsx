@@ -12,7 +12,7 @@ const EvaluationDocument: React.FC<Props> = (props) => {
 
   return (
     <div className='border-2 rounded-md p-4 mb-3'>
-      <h3>เอกสารลงนามและใบอนุญาต</h3>
+      <h3>ตรวจสอบเอกสาร</h3>
       <section className='mt-5'>
       </section>
     </div>

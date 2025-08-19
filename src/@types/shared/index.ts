@@ -72,3 +72,12 @@ export interface RoleState {
   id: string;
   name: string;
 }
+
+// UPLOAD
+export interface UploadRequest {
+  upload: ArrayBuffer
+}
+
+export interface UploadResponse {
+  url: string;
+}

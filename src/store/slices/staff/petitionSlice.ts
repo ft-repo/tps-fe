@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants'
 import { PetitionAdminState } from '@/@types/reducer/petition'
-import { getAdminPetitionAPI, getAdminPetitionExtendedAPI } from '@/services/staff/PetitionService'
-import { GetPetitionParams } from '@/@types/services/petition'
+import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionDocumentAPI } from '@/services/staff/PetitionService'
+import { GetPetitionDetailParams, GetPetitionParams } from '@/@types/services/petition'
 
 const initialState: PetitionAdminState = {
   petition: {
@@ -22,7 +22,27 @@ const initialState: PetitionAdminState = {
         total: 0,
       }
     },
-    detail: {}
+    detail: {
+      document: {
+        petition_id: 0,
+        business_name: '',
+        entity_type: '',
+        address: '',
+        business_phone_no: '',
+        contact_name: '',
+        contact_phone_no: '',
+        project_name: '',
+        petition_type: '',
+        start_date: '',
+        end_date: '',
+        start_point: '',
+        end_point: '',
+        poa_url: '',
+        mach_book_url: '',
+      },
+      estimate: {},
+      vehicle: {}
+    }
   },
   petition_extended: {
     overview: {
@@ -60,7 +80,27 @@ const initialState: PetitionAdminState = {
         total: 0,
       }
     },
-    detail: {}
+    detail: {
+      document: {
+        petition_id: 0,
+        business_name: '',
+        entity_type: '',
+        address: '',
+        business_phone_no: '',
+        contact_name: '',
+        contact_phone_no: '',
+        project_name: '',
+        petition_type: '',
+        start_date: '',
+        end_date: '',
+        start_point: '',
+        end_point: '',
+        poa_url: '',
+        mach_book_url: '',
+      },
+      estimate: {},
+      vehicle: {}
+    }
   },
   petition_history_extended: {
     overview: {
@@ -110,6 +150,12 @@ export const getAdminPetitionHistoryExtendedData = createAsyncThunk(SLICE_BASE_N
   return response.data
 })
 
+export const getPetitionDocument = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionDocument', async (params: GetPetitionDetailParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionDocumentAPI(params)
+  return response.data
+})
+
 const petitionSlice = createSlice({
   name: `${SLICE_BASE_NAME}/petition`,
   initialState,
@@ -130,6 +176,9 @@ const petitionSlice = createSlice({
       state.petition_history_extended.overview.search = action.payload.params,
         state.petition_history_extended.overview.data = action.payload.data
     },
+    setAdminPetitionDocument: (state, action) => {
+      state.petition.detail = action.payload.data
+    }
   },
   extraReducers: (builder) => {
     // CLIENT
@@ -172,6 +221,16 @@ const petitionSlice = createSlice({
         state.loading = true
       })
       .addCase(getAdminPetitionHistoryExtendedData.rejected, (state) => {
+        state.loading = false
+      })
+    builder.addCase(getPetitionDocument.fulfilled, (state, action) => {
+      state.petition.detail.document = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionDocument.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionDocument.rejected, (state) => {
         state.loading = false
       })
   }

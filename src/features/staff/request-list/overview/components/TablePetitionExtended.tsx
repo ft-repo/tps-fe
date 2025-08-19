@@ -22,7 +22,7 @@ type StepId = typeof STEP[keyof typeof STEP]
 type FlowItem = {
   id: number
   status_id: number
-  is_approved: boolean
+  is_approved: boolean | null
   created_at?: string | null
 }
 type MaybeFlow = FlowItem | null
@@ -69,7 +69,7 @@ const isStepUnlocked = (record: AdminPetitionExtendedTableData, stepId: StepId) 
   return prev.key === 'APPROVE'
 }
 
-// ① แก้ makeStepRenderer — stopPropagation เวลา click ที่ Tag
+// ✅ ส่ง is_approved (true/false/null) ไปกับ navigate
 const makeStepRenderer =
   (stepId: StepId, path: string, navigate: ReturnType<typeof useNavigate>) =>
     (_val: unknown, record: AdminPetitionExtendedTableData) => {
@@ -77,17 +77,25 @@ const makeStepRenderer =
       const cfg = ADMIN_PETITION_STATUS[st.key]
       const unlocked = isStepUnlocked(record, stepId)
       const clickable = unlocked
-      const href = `${path}?petition_id=${(record as any).id ?? ''}`
+
+      const flow = latestFlowByStatus(getFlows(record), stepId)
+      const approvedParam =
+        flow?.is_approved === true ? 'true' :
+          flow?.is_approved === false ? 'false' : 'null'
+
+      const pid = (record as any).id ?? ''
+      const href = `${path}?petition_id=${encodeURIComponent(String(pid))}&status_id=${record.status_id}&is_approved=${approvedParam}`
+
+      const go = (e?: React.MouseEvent) => {
+        e?.stopPropagation()
+        navigate(href)
+      }
 
       const content = (
         <Tag
           color={clickable ? cfg.color : 'default'}
           style={{ cursor: clickable ? 'pointer' : 'not-allowed', opacity: clickable ? 1 : 0.6, userSelect: 'none' }}
-          onClick={
-            clickable
-              ? (e) => { e.stopPropagation(); navigate(href) } // <<< หยุดไม่ให้เด้ง onRow
-              : undefined
-          }
+          onClick={clickable ? go : undefined}
           role={clickable ? 'button' : undefined}
           tabIndex={clickable ? 0 : -1}
           onKeyDown={(e) => {
@@ -114,7 +122,6 @@ const makeStepRenderer =
         </Tooltip>
       )
     }
-
 
 // ---------- component ----------
 const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChange }) => {
@@ -162,7 +169,7 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
       loading={loading}
       onRow={(record) => ({
         onClick: () => {
-          const href = `/request-list/view/document?petition_id=${(record as any).id ?? ''}`
+          const href = `/request-list/view/document?petition_id=${(record as any).id ?? ''}&status_id=${record.status_id}`
           navigate(href)
         },
       })}

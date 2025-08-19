@@ -196,7 +196,33 @@ export interface Estimate {
   sort: string;
 }
 
-export interface AdminPetitionDetail { }
+export interface AdminPetitionDetail {
+  document: DocumentDetail;
+  estimate: EstimateDetail;
+  vehicle: VehicleDetail;
+}
+
+export interface DocumentDetail {
+  petition_id: number;
+  business_name: string;
+  entity_type: string;
+  address: string;
+  business_phone_no: string;
+  contact_name: string;
+  contact_phone_no: string;
+  project_name: string;
+  petition_type: string;
+  start_date: string;
+  end_date: string;
+  start_point: string;
+  end_point: string;
+  poa_url: string;
+  mach_book_url: string;
+}
+
+export interface EstimateDetail {}
+
+export interface VehicleDetail {}
 
 // ADMIN PETITION EXTENDED
 
@@ -218,7 +244,7 @@ export interface AdminPetitionExtendedSearch {
   limit: number
 }
 
-export interface AdminPetitionExtendedTableData{
+export interface AdminPetitionExtendedTableData {
   id: number
   status_id: number
   cert_date: string
@@ -231,7 +257,7 @@ export interface AdminPetitionExtendedTableData{
   status: Status
   petition_extended_flow: PetitionExtendedFlow[]
   user_created: UserCreated
- }
+}
 
 export interface AdminPetitionExtendedData {
   data: AdminPetitionExtendedTableData[]
@@ -239,6 +265,6 @@ export interface AdminPetitionExtendedData {
   page: number
   limit: number
   total_pages: number
- }
+}
 
 export interface AdminPetitionExtendedDetail { }
