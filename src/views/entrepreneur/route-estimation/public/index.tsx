@@ -2,9 +2,17 @@ import { Button } from '@/components/ui'
 import { RouteProvider } from '@/features/entrepreneur/route-estimation/route/context'
 import RouteEstimationScreen from '@/features/entrepreneur/route-estimation/route/screen'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { getVehicleType, useAppDispatch } from '@/store'
 
 function RouteEstimationPublic() {
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(getVehicleType())
+    }, [dispatch])
+
     return (
         <div className="flex flex-col gap-5">
             <div className="flex justify-between items-center w-full bg-[linear-gradient(#1F74AA,#052940)] h-1/3 p-5">
