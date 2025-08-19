@@ -1,18 +1,32 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { Control, Controller } from 'react-hook-form'
-import { FieldType, FieldArray } from '@/@types/entrepreneur/route-estimation'
+import {
+  FieldType,
+  FieldArray,
+  SummaryData,
+  VehicleData,
+} from '@/@types/entrepreneur/route-estimation'
 import CardVehicleDetails from '../CardVehicleDetails'
 import VehicleSummary from '../VehicleSummary'
-import { SUMMARY_DATA, VEHICLE_DATA } from '../../../../mock'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { Input, Select } from 'antd'
+import { Input, Select, Spin } from 'antd'
 import {
   clearVehicleList,
+  getVehicleDetail,
   getVehicleData,
 } from '@/store/slices/entrepreneur/vehicleListSlice'
 import RecoveryVehicleForm from './RecoveryVehicleForm'
 import SemiTrailerForm from './SemiTrailerForm'
 import MechanicalVehicleForm from './MechanicalVehicleForm'
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
 
 interface Props {
   formItem: FieldArray
@@ -22,27 +36,38 @@ interface Props {
   setSecondPoint?: (point: [number, number]) => void
 }
 
-const FormRouteEstimation: React.FC<Props> = (props) => {
+const FormRouteEstimation: FC<Props> = (props) => {
   const { formItem, formIndex, control, setFirstPoint, setSecondPoint } = props
   const dispatch = useAppDispatch()
   const { vehicle_type } = useAppSelector((state) => state.master)
-  const { vehicleList } = useAppSelector((state) => state.entrepreneur)
+  const { overview, detail, loading } = useAppSelector(
+    (state) => state.entrepreneur.vehicleList,
+  )
   const firstPointTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const secondPointTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [vehicleType, setVehicleType] = useState<number>(0)
+  const [vehicleId, setVehicleId] = useState<string | null>(null)
+  const [summaryData, setSummaryData] = useState<SummaryData[]>([])
+  const [vehicleData, setVehicleData] = useState<VehicleData[]>([])
 
   console.log(formItem)
+  console.log('main ====> detail', detail)
 
   useEffect(() => {
     dispatch(clearVehicleList())
-    dispatch(
-      getVehicleData({
-        vehicle_type_id: vehicleType,
-        page: 1,
-        limit: 1000,
-      }),
-    )
-  }, [dispatch, vehicleType])
+    if (vehicleType !== 0) {
+      dispatch(
+        getVehicleData({
+          vehicle_type_id: vehicleType,
+          page: 1,
+          limit: 1000,
+        }),
+      )
+    }
+    if (vehicleId) {
+      dispatch(getVehicleDetail(vehicleId))
+    }
+  }, [dispatch, vehicleType, vehicleId])
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -64,7 +89,8 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
             <RecoveryVehicleForm
               formIndex={formIndex}
               control={control}
-              vehicleList={vehicleList}
+              vehicleList={overview}
+              setVehicleId={setVehicleId}
             />
           )
         case 2:
@@ -72,7 +98,8 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
             <SemiTrailerForm
               formIndex={formIndex}
               control={control}
-              vehicleList={vehicleList}
+              vehicleList={overview}
+              setVehicleId={setVehicleId}
             />
           )
         case 3:
@@ -80,14 +107,74 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
             <MechanicalVehicleForm
               formIndex={formIndex}
               control={control}
-              vehicleList={vehicleList}
+              vehicleList={overview}
+              setVehicleId={setVehicleId}
             />
           )
         default:
           return null
       }
     }
-  }, [vehicleType, vehicleList])
+  }, [vehicleType, formIndex, control, overview, setVehicleId])
+
+  const buildSummaryData = useCallback(async () => {
+    const getImageUrl = async (url: string) => {
+      const fileName = url.split('/').slice(-2).join('/')
+      const response = await getUploadAPI(fileName)
+      if (response.status === 200 && response.data) {
+        const blob = new Blob([response.data], { type: 'image/*' })
+        const previewUrl = URL.createObjectURL(blob)
+        return previewUrl
+      }
+      return ''
+    }
+
+    if (detail) {
+      const vehicleData: VehicleData[] = [
+        {
+          title: 'รูปภาพหน้ารถ',
+          description: 'รูปภาพหน้ารถ',
+          image: await getImageUrl(detail?.vehicle_pictures.front_rear_url),
+        },
+        {
+          title: 'รูปภาพด้านข้างรถ',
+          description: 'รูปภาพด้านข้างรถ',
+          image: await getImageUrl(detail?.vehicle_pictures.side_rear_url),
+        },
+        {
+          title: 'รูปภาพหลังรถ',
+          description: 'รูปภาพหลังรถ',
+          image: await getImageUrl(detail?.vehicle_pictures.back_rear_url),
+        },
+      ]
+
+      const summaryData: SummaryData[] = [
+        {
+          title: 'น้ำหนักรถเปล่ารวม',
+          description: String(detail?.vehicle_detail?.weight || 0) + ' กก.',
+        },
+        {
+          title: 'น้ำหนักรถเปล่ารวมน้ำหนักเพลา',
+          description: String(0) + ' กก.',
+        },
+        {
+          title: 'มิติรถเปล่า',
+          description: `กว้าง ${detail?.vehicle_detail?.width} X ยาว ${detail?.vehicle_detail?.length} X สูง ${detail?.vehicle_detail?.height}`,
+        },
+        {
+          title: 'มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.)',
+          description: `กว้าง ${detail?.vehicle_detail?.width} X ยาว ${detail?.vehicle_detail?.length} X สูง ${detail?.vehicle_detail?.height}`,
+        },
+      ]
+
+      setVehicleData(vehicleData)
+      setSummaryData(summaryData)
+    }
+  }, [detail])
+
+  useEffect(() => {
+    buildSummaryData()
+  }, [buildSummaryData, detail])
 
   return (
     <>
@@ -105,7 +192,6 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
                     <label>เลือกประเภทจับคู่</label>
                     <Select
                       {...field}
-                      allowClear
                       placeholder="กรุณาเลือก"
                       options={vehicle_type}
                       fieldNames={{
@@ -120,6 +206,7 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
                       onChange={async (value) => {
                         field.onChange(value)
                         setVehicleType(Number(value))
+                        setVehicleId(null)
                       }}
                     />
                   </fieldset>
@@ -154,8 +241,12 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
         </div>
       </section>
       <section className="mt-5">{renderVehicleType}</section>
-      <section className="mt-5"></section>
-      <section className="mt-5">
+      <section
+        className="mt-5"
+        style={{
+          display: vehicleId === null ? 'none' : 'block',
+        }}
+      >
         <h5>เส้นทาง</h5>
         <div className="grid grid-cols-2 xl:grid-cols-8 gap-4">
           <div className="xl:col-span-4">
@@ -240,17 +331,22 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
           </div>
         </div>
       </section>
-      <section className="mt-5">
-        <h5>รายละเอียด</h5>
-        <section className="mb-3">
-          <VehicleSummary data={SUMMARY_DATA} />
-        </section>
-        <section>
-          <CardVehicleDetails data={VEHICLE_DATA} />
-        </section>
-      </section>
+      {vehicleId &&
+        (loading ? (
+          <Spin />
+        ) : (
+          <section className="mt-5">
+            <h5>รายละเอียด</h5>
+            <section className="mb-3">
+              <VehicleSummary data={summaryData} />
+            </section>
+            <section>
+              <CardVehicleDetails data={vehicleData} />
+            </section>
+          </section>
+        ))}
     </>
   )
 }
 
-export default React.memo<Props>(FormRouteEstimation)
+export default memo<Props>(FormRouteEstimation)
