@@ -16,7 +16,7 @@ interface Props {
 }
 
 interface FieldType {
-  is_approved: boolean;
+  is_approved: string | null;
   reply_message: string;
   file_id: FileType;
 }
@@ -29,11 +29,11 @@ interface FileType {
 const OPTIONS = [
   {
     label: 'ผ่านการตรวจสอบ',
-    value: true,
+    value: '1',
   },
   {
     label: 'ไม่ผ่านการตรวจสอบ',
-    value: false,
+    value: '2',
   },
 ]
 
@@ -43,22 +43,25 @@ const ContentForm: React.FC<Props> = (props) => {
   const [params] = useSearchParams()
   const petitionId = params.get('petition_id')
   const statusId = params.get('status_id')
+  const isApproved = params.get('is_approved')
   // REDUX MANAGE
   const { petition } = useAppSelector(state => state.staff.petition)
+  const dispatch = useAppDispatch()
   // NAVIGATE
   const navigate = useNavigate()
-
-  const dispatch = useAppDispatch()
+  // IS DISABLED
+  const disabled = isApproved !== 'null' ? true : false
 
   const form = useForm<FieldType>({
     defaultValues: {
-      is_approved: false,
+      is_approved: null,
       reply_message: '',
       file_id: {
         file: [],
         url: ''
       }
-    }
+    },
+    disabled: disabled
   })
 
   const {
@@ -86,12 +89,11 @@ const ContentForm: React.FC<Props> = (props) => {
     }
   }, [setValue])
 
-
   const onSubmit = useCallback(async (value: FieldType) => {
     const body: PetitionPostBody = {
       petition_id: Number(petitionId),
       status_id: Number(statusId),
-      is_approved: value.is_approved,
+      is_approved: value.is_approved === '1' ? true : false,
       document_url: value.file_id.url,
       remark: value.reply_message,
       is_skipped: false
@@ -271,6 +273,7 @@ const ContentForm: React.FC<Props> = (props) => {
           gap={5}
         >
           <Button
+            disabled={disabled}
             type='button'
             variant='default'
             size='sm'
@@ -279,6 +282,7 @@ const ContentForm: React.FC<Props> = (props) => {
             ล้างข้อมูล
           </Button>
           <Button
+            disabled={disabled}
             type='submit'
             variant='solid'
             size='sm'

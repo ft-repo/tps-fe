@@ -1,10 +1,11 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import { TitleSection, ContentSection } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '@/store';
 
 interface Props {
 
@@ -13,9 +14,10 @@ interface Props {
 const RouteScreen: React.FC<Props> = (props) => {
   const { } = props
   const navigate = useNavigate()
+  const loading = useAppSelector(state => state.layout.loading)
 
   return (
-    <>
+    <Spin spinning={loading}>
       <section>
         <Button
           type='text'
@@ -29,7 +31,7 @@ const RouteScreen: React.FC<Props> = (props) => {
         <TitleSection />
         <ContentSection />
       </section>
-    </>
+    </Spin>
   )
 }
 
