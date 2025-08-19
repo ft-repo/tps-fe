@@ -2,7 +2,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { PetitionPostBody } from '@/@types/services/petition';
 import { Button } from '@/components/ui';
-import { postPetitionApprove, postUploadFileAPI } from '@/services/entrepreneur/PetitionService';
+import { postUploadFileAPI } from '@/services/entrepreneur/PetitionService';
+import { postPetitionApprove } from '@/services/staff/PetitionService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getAdminPetitionData } from '@/store/slices/staff';
 import { Flex, Input, message, Modal, Upload } from 'antd';

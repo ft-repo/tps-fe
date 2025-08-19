@@ -84,7 +84,7 @@ const makeStepRenderer =
           flow?.is_approved === false ? 'false' : 'null'
 
       const pid = (record as any).id ?? ''
-      const href = `${path}?petition_id=${encodeURIComponent(String(pid))}&is_approved=${approvedParam}`
+      const href = `${path}?petition_id=${encodeURIComponent(String(pid))}&status_id=${record.status_id}&is_approved=${approvedParam}`
 
       const go = (e?: React.MouseEvent) => {
         e?.stopPropagation()
@@ -169,7 +169,7 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
       loading={loading}
       onRow={(record) => ({
         onClick: () => {
-          const href = `/request-list/view/document?petition_id=${(record as any).id ?? ''}`
+          const href = `/request-list/view/document?petition_id=${(record as any).id ?? ''}&status_id=${record.status_id}`
           navigate(href)
         },
       })}

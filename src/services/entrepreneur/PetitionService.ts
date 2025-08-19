@@ -1,4 +1,4 @@
-import { GetPetitionParams, GetPetitionResponse, PetitionPostBody } from "@/@types/services/petition"
+import { GetPetitionParams, GetPetitionResponse } from "@/@types/services/petition"
 import ApiService from "../ApiService"
 import { UploadRequest, UploadResponse } from "@/@types/shared"
 
@@ -28,13 +28,5 @@ export const postUploadFileAPI = async (data: UploadRequest) => {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
-  })
-}
-
-export const postPetitionApprove = async (data: PetitionPostBody) => {
-  return ApiService.fetchData<UploadResponse, PetitionPostBody>({
-    url: '/admin/petition/approve',
-    method: 'post',
-    data: { ...data }
   })
 }
