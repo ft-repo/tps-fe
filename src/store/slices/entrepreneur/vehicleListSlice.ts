@@ -47,6 +47,10 @@ const vehicleListSlice = createSlice({
     },
     setVehicleListByID: (state, action) => {
       state.detail = action.payload
+    },
+    clearVehicleList: (state) => {
+      state.overview.search = initialState.overview.search
+      state.overview.data = initialState.overview.data
     }
   },
   extraReducers: (builder) => {
@@ -63,6 +67,6 @@ const vehicleListSlice = createSlice({
   }
 })
 
-export const { setVehicleList, setVehicleListByID } = vehicleListSlice.actions
+export const { setVehicleList, setVehicleListByID, clearVehicleList } = vehicleListSlice.actions
 
 export default vehicleListSlice.reducer
