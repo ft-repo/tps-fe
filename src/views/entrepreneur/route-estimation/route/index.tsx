@@ -1,15 +1,21 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
+import React, { useEffect } from 'react'
 import RouteEstimationScreen from '@/features/entrepreneur/route-estimation/route/screen'
 import { RouteProvider } from '@/features/entrepreneur/route-estimation/route/context'
+import { getVehicleType, useAppDispatch } from '@/store'
 
-interface Props { }
+interface Props {}
 
 const RouteIndex: React.FC<Props> = (props) => {
-  const { } = props;
-  
+  const {} = props
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(getVehicleType())
+  }, [dispatch])
+
   return (
     <RouteProvider>
       <RouteEstimationScreen />

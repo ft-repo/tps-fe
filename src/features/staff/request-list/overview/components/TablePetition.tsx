@@ -106,10 +106,34 @@ const makeStepRenderer =
         <Tag
           color={clickable ? cfg.color : 'default'}
           style={{ cursor: clickable ? 'pointer' : 'not-allowed', opacity: clickable ? 1 : 0.6, userSelect: 'none' }}
-          onClick={clickable ? () => navigate(`${path}?petition_id=${(record as any).petition_id}&status_id=${(record as any).status_id}`) : undefined}
+          onClick={
+            clickable
+              ? () => {
+                const flow = latestFlowByStatus((record as any).petition_flow, stepId);
+                const approved =
+                  flow?.is_approved === true ? 'true' :
+                    flow?.is_approved === false ? 'false' :
+                      'null';
+
+                navigate(
+                  `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`
+                );
+              }
+              : undefined
+          }
           role={clickable ? 'button' : undefined}
           tabIndex={clickable ? 0 : -1}
-          onKeyDown={e => clickable && e.key === 'Enter' && navigate(`${path}?petition_id=${(record as any).petition_id}&status_id=${(record as any).status_id}`)}
+          onKeyDown={e => {
+            if (!clickable || e.key !== 'Enter') return;
+            const flow = latestFlowByStatus((record as any).petition_flow, stepId);
+            const approved =
+              flow?.is_approved === true ? 'true' :
+                flow?.is_approved === false ? 'false' :
+                  'null';
+            navigate(
+              `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`
+            );
+          }}
         >
           {cfg.text}
           {st.date ? (
