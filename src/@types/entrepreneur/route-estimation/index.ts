@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// Old fucked up things
 export interface FieldType {
   form_template: FieldArray[];
 }
@@ -19,6 +19,40 @@ export interface FieldArray {
   start_route: string;
   end_route: string;
 }
+// End Old fucked up things
+
+// Estimation Route Body
+export interface Root {
+  vehicle: Vehicle[]
+  start_point: StartPoint
+  end_point: EndPoint
+  vehicle_route: VehicleRoute
+}
+
+export interface Vehicle {
+  turn_radius: number
+  towing_vehicle_id: number
+  semi_trailer_vehicle_id: number
+  etc_vehicle_id: any
+  towing_axis_weight: number[]
+  semi_trailer_axis_weight: number[]
+}
+
+export interface StartPoint {
+  type: string
+  coordinates: number[]
+}
+
+export interface EndPoint {
+  type: string
+  coordinates: number[]
+}
+
+export interface VehicleRoute {
+  type: string
+  coordinates: number[][]
+}
+// End Estimation Route Body
 
 export interface FieldTypeForOther {
   // 1. PETITOR INFO

@@ -1,128 +1,99 @@
-/* eslint-disable no-empty-pattern */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useState } from 'react'
-import Tabs from '@/components/ui/Tabs'
-import { TemplateForm } from '..'
-import { useForm, useFieldArray } from "react-hook-form";
-// import { HiX } from 'react-icons/hi';
-import { Button, Notification, toast } from '@/components/ui';
-import { useRouteContext } from '../../context';
-import { FieldType } from '@/@types/entrepreneur/route-estimation';
-import { initFormValue } from '../../mock';
-import { useNavigate } from 'react-router-dom';
+import { Root } from '@/@types/entrepreneur/route-estimation'
+import { Tabs } from 'antd'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { useCallback, useState } from 'react'
 
-const { TabNav, TabList, TabContent } = Tabs
+type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
-interface Props { }
+interface TabItem {
+  label: string
+  children: React.ReactNode
+  key: string
+  closable?: boolean
+}
 
-const RouteEstimation: React.FC<Props> = (props) => {
-  const { } = props;
-  const navigate = useNavigate()
-  const [tabKey, setTabKey] = useState<string>('tab0')
-  const { setStep, setDataParser } = useRouteContext()
-  const { control, handleSubmit } = useForm<FieldType>({
-    defaultValues: {
-      form_template: [initFormValue]
-    }
-  });
+const defaultValues: Root = {
+  vehicle: [],
+  start_point: {
+    type: '',
+    coordinates: [],
+  },
+  end_point: {
+    type: '',
+    coordinates: [],
+  },
+  vehicle_route: {
+    type: '',
+    coordinates: [],
+  },
+}
 
-  const { fields, remove } = useFieldArray({
+const initialTabItems: TabItem[] = [
+  {
+    label: 'รถคู่ที่ 1',
+    children: <div>รถคู่ที่ 1</div>,
+    key: '1',
+  },
+]
+
+function RouteEstimation() {
+  const [activeKey, setActiveKey] = useState(initialTabItems[0].key)
+  const { control, handleSubmit } = useForm<Root>({
+    defaultValues,
+  })
+
+  const [tabItems, setTabItems] = useState<TabItem[]>(initialTabItems)
+
+  const { fields, append, remove } = useFieldArray({
     control,
-    name: "form_template"
-  });
+    name: 'vehicle',
+  })
 
-  const onSubmit = useCallback((data: FieldType) => {
-    toast.push(
-      <Notification
-        title={'Success'}
-        type={'success'}
-        onClose={() => {
-          setStep(2)
-          setDataParser(data)
-        }}
-      >
-        <p className='break-all'>Successfully submit data</p>
-      </Notification>
-    )
-  }, [setDataParser, setStep])
+  const onAddedTab = useCallback(() => {
+    const newTabItem: TabItem = {
+      label: `รถคู่ที่ ${tabItems.length + 1}`,
+      children: <div>รถคู่ที่ {tabItems.length + 1}</div>,
+      key: `${tabItems.length + 1}`,
+    }
+
+    setTabItems([...tabItems, newTabItem])
+  }, [tabItems, setTabItems])
+
+  const onRemovedTab = useCallback((targetKey: TargetKey) => {
+    const newTabItems = tabItems.filter((item) => item.key !== targetKey)
+    setTabItems(newTabItems)
+  }, [tabItems, setTabItems])
+
+  const onTabsEdit = useCallback(
+    (targetKey: TargetKey, action: 'add' | 'remove') => {
+      if (action === 'add') {
+        onAddedTab()
+      } else {
+        onRemovedTab(targetKey)
+      }
+    },
+    [onAddedTab, onRemovedTab],
+  )
+
+  const onTabsChange = useCallback((newActiveKey: string) => {
+    setActiveKey(newActiveKey)
+  }, [setActiveKey])
+
+  const onSubmit = useCallback((values: Root) => {
+    console.log('values ======> ', values)
+  }, [])
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Tabs
-        defaultValue={tabKey}
-        variant='pill'
-        onChange={(tabKey) => setTabKey(tabKey)}
-      >
-        <div className='flex items-center justify-between flex-wrap gap-3'>
-          <div className='flex items-center gap-1'>
-            <TabList>
-              {fields.map((item, index) => {
-                return (
-                  <TabNav
-                    key={index}
-                    value={`tab` + index}
-                  >
-                    รถคู่ที่ {index + 1}
-                  </TabNav>
-                )
-              })}
-            </TabList>
-            {/* {fields.length < 4 ?
-              <Button
-                type='button'
-                size='sm'
-                variant='solid'
-                onClick={() => append(initFormValue)}
-              >
-                เพิ่มรถคู่
-              </Button>
-              : null} */}
-          </div>
-          <Button
-            variant='solid'
-            className='bg-yellow-500 hover:bg-yellow-300 active:bg-yellow-600 transition duration-300'
-            size='sm'
-            onClick={() => navigate('/route-estimation/other')}
-          >
-            ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)
-          </Button>
-        </div>
-        <div className="p-4">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {fields.map((item, index) => {
-              return (
-                <>
-                  <TabContent
-                    key={item.id}
-                    value={`tab` + index}
-                  >
-                    <TemplateForm
-                      formItem={item}
-                      formIndex={index}
-                      control={control}
-                    />
-                    <section className='mt-5'>
-                      <div className='flex items-center gap-5 '>
-                        <Button
-                          type='button'
-                          disabled={index === 0 ? true : false}
-                          onClick={() => remove(index)}
-                        >
-                          ลบข้อมูล
-                        </Button>
-                        <Button type='submit' variant='solid'>ประเมินเส้นทาง</Button>
-                      </div>
-                    </section>
-                  </TabContent>
-                </>
-              )
-            })}
-          </form>
-        </div>
-      </Tabs >
-    </>
+        type="editable-card"
+        items={tabItems}
+        activeKey={activeKey}
+        onEdit={onTabsEdit}
+        onChange={onTabsChange}
+      />
+    </form>
   )
 }
 
-export default React.memo<Props>(RouteEstimation)
+export default RouteEstimation
