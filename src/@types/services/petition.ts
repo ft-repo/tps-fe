@@ -66,3 +66,13 @@ export interface PetitionExtendedPostBody {
 export interface GetPetitionDetailParams {
   petition_id: string;
 }
+
+export interface GetEstimateParams {
+  estimate_id: string;
+}
+
+export interface GetEstimateDetailParams {
+  estimate_id: string;
+  page: number;
+  limit: number;
+}

@@ -4,13 +4,15 @@ import React from 'react'
 import { ContentDetail, ContentRouteList, ContentForm } from '../components'
 import { Col, Row } from 'antd'
 import MapRouteEstimation from '@/features/entrepreneur/route-estimation/route/components/route-estimate/initial/MapRouteEstimation'
+import { EstimateRouteSubDetail } from '@/@types/reducer/petition';
 
 interface Props {
-
+  index: number;
+  item: EstimateRouteSubDetail;
 }
 
 const ContentRoute: React.FC<Props> = (props) => {
-  const { } = props
+  const { index, item } = props
 
   return (
     <>
@@ -38,7 +40,10 @@ const ContentRoute: React.FC<Props> = (props) => {
       <section>
         <h3>รายการประเมินเส้นทาง</h3>
         <section className='mt-3'>
-          <ContentRouteList />
+          <ContentRouteList
+            index={index}
+            item={item}
+          />
         </section>
       </section>
     </>
