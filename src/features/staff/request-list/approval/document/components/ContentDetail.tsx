@@ -33,7 +33,7 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '4',
       label: 'เลขทะเบียนนิติบุคคล',
-      children: <p>{'-'}</p>,
+      children: <p>{document.registration_no || '-'}</p>,
     },
     {
       key: '5',

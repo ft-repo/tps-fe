@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
 import { Table, TableProps } from 'antd'
-import { SummaryTableData, TurnRadiusTableData } from '@/@types/reducer/petition';
+import { BridgeTableData, SummaryTableData, TurnRadiusTableData } from '@/@types/reducer/petition';
 
 // Define the union type for all possible data types
 type TableDataType = SummaryTableData | BridgeTableData | TurnRadiusTableData;
@@ -20,7 +20,6 @@ interface Props {
   handleTableChange: (page: number, pageSize: number) => void;
   loading: boolean;
 }
-interface BridgeTableData { }
 
 const TableRoute: React.FC<Props> = (props) => {
   const { keyId, data, loading, handleTableChange } = props
@@ -56,25 +55,71 @@ const TableRoute: React.FC<Props> = (props) => {
     },
   ];
 
-  const bridge_columns: TableProps<BridgeTableData>['columns'] = []
+  const bridge_columns: TableProps<BridgeTableData>['columns'] = [
+    {
+      title: 'รหัสสะพาน',
+      dataIndex: 'name_th',
+      key: 'name_th',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'ชื่อสะพาน',
+      dataIndex: 'name_th',
+      key: 'name_th',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'ความยาว (เมตร)',
+      dataIndex: 'length',
+      key: 'length',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'สภาพ',
+      dataIndex: 'bridge_status',
+      key: 'bridge_status',
+      width: 150,
+      align: 'center',
+      render: () => {
+        return <p>สภาพปกติ</p>
+      }
+    },
+    {
+      title: 'สถานะ',
+      dataIndex: 'is_pass',
+      key: 'is_pass',
+      width: 150,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return <p className='text-green-500'>ผ่านได้</p>
+        }
+
+        return <p className='text-red-500'>ผ่านไม่ได้</p>
+      }
+    },
+  ]
 
   const turn_radius_columns: TableProps<TurnRadiusTableData>['columns'] = [
     {
-      title: 'มุมโค้ง',
+      title: 'Curve Length',
       dataIndex: 'curvature_angle',
       key: 'curvature_angle',
       width: 150,
       align: 'center'
     },
     {
-      title: 'รัศมีความโค้ง',
+      title: 'Radius',
       dataIndex: 'curvature_radius',
       key: 'curvature_radius',
       width: 150,
       align: 'center'
     },
     {
-      title: 'ประเภทรัศมีมุมเลี้ยว',
+      title: 'Curve Type',
       dataIndex: 'curve_type',
       key: 'curve_type',
       width: 150,
@@ -88,10 +133,10 @@ const TableRoute: React.FC<Props> = (props) => {
       align: 'center',
       render: (item) => {
         if (item) {
-          return 'ผ่านได้'
+          return <p className='text-green-500'>ผ่านได้</p>
         }
 
-        return 'ผ่านไม่ได้'
+        return <p className='text-red-500'>ผ่านไม่ได้</p>
       }
     },
   ]
@@ -107,7 +152,7 @@ const TableRoute: React.FC<Props> = (props) => {
       columns={column_list[keyId]}
       dataSource={data.data || []}
       loading={loading}
-      pagination={{
+      pagination={keyId === 'summary' ? false : {
         defaultCurrent: 1,
         defaultPageSize: 10,
         current: data.page,

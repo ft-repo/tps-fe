@@ -218,6 +218,7 @@ export interface DocumentDetail {
   end_point: string;
   poa_url: string;
   mach_book_url: string;
+  registration_no: string;
 }
 
 export interface EstimateDetail {
@@ -232,6 +233,8 @@ export interface EstimateRouteDetail {
   vehicle_route: number[][];
   estimate: EstimateRouteSubDetail[];
   estimate_rural_roads: EstimateRuralRoad[];
+  start_point: string;
+  end_point: string;
 }
 
 export interface EstimateRouteSubDetail {
@@ -260,7 +263,6 @@ export interface EstimateSummaryData {
   page: number;
   limit: number;
   total_pages: number;
-
 }
 
 export interface SummaryTableData {
@@ -289,7 +291,9 @@ export interface EstimateBridgeDetailData {
 }
 
 export interface BridgeTableData {
-
+  is_pass: boolean;
+  length: number;
+  name_th: string;
 }
 
 export interface EstimateTurnRadiusDetail {
@@ -329,7 +333,7 @@ export interface VehicleList {
   turn_radius: number;
   towing_vehicle: TowingVehicle;
   semi_trailer_vehicle: SemiTrailerVehicle;
-  etc_vehicle: any;
+  etc_vehicle: ETCVehicle;
   truck_dimension_url: string;
   semi_trailer_dimension_url: string;
   combined_vehicle_url: string;
@@ -363,6 +367,17 @@ export interface SemiTrailerVehicle {
   vehicle_picture: VehiclePicture;
 }
 
+export interface ETCVehicle {
+  plate_no: string;
+  plate_province: string;
+  weight: number;
+  axis_weight: number[];
+  width: number;
+  length: number;
+  height: number;
+  vehicle_picture: VehiclePicture;
+}
+
 export interface VehiclePicture {
   front_rear_url: string;
   side_rear_url: string;
@@ -374,7 +389,7 @@ export interface VehiclePicture {
 
 export interface AdminPetitionExtended {
   overview: AdminPetitionExtendedOverview;
-  detail: AdminPetitionExtendedDetail;
+  detail: AdminPetitionExtendedDetail[];
 }
 
 export interface AdminPetitionExtendedOverview {
@@ -413,4 +428,164 @@ export interface AdminPetitionExtendedData {
   total_pages: number
 }
 
-export interface AdminPetitionExtendedDetail { }
+export interface AdminPetitionExtendedDetail {
+  id: number;
+  status_id: number;
+  cert_date: string;
+  created_by: string;
+  poa_name: string;
+  phone_number: string;
+  ref_form_no: number;
+  remark: string;
+  created_at: string;
+  status: Status;
+  address: PetitionExtendedAddress;
+  vehicle: PetitionExtendedVehicle;
+  user_document: UserDocument;
+  vehicle_document: VehicleDocument;
+  audit_document: AuditDocument;
+  petition_extended_flow: PetitionExtendedFlow[];
+  user_created: PetitionExtendedUserCreated;
+}
+
+export interface PetitionExtendedAddress {
+  id: number;
+  petition_exid: number;
+  contact_house_number: string;
+  contact_village: string;
+  contact_lane: string;
+  contact_road: string;
+  contact_sub_district_id: number;
+  contact_district_id: number;
+  contact_province_id: number;
+  contact_zip_code: string;
+  poa_house_number: string;
+  poa_village: string;
+  poa_lane: string;
+  poa_road: string;
+  poa_sub_district_id: number;
+  poa_district_id: number;
+  poa_province_id: number;
+  poa_zip_code: string;
+  poa_province: PoaProvince;
+  poa_district: PoaDistrict;
+  poa_sub_district: PoaSubDistrict;
+  contact_province: ContactProvince;
+  contact_district: ContactDistrict;
+  contact_sub_district: ContactSubDistrict;
+}
+
+export interface PoaProvince {
+  id: number;
+  name_th: string;
+  name_en: string;
+}
+
+export interface PoaDistrict {
+  id: number;
+  name_th: string;
+  name_en: string;
+  province_id: number;
+}
+
+export interface PoaSubDistrict {
+  id: number;
+  name_th: string;
+  name_en: string;
+  zip_code: string;
+  province_id: number;
+  district_id: number;
+}
+
+export interface ContactProvince {
+  id: number;
+  name_th: string;
+  name_en: string;
+}
+
+export interface ContactDistrict {
+  id: number;
+  name_th: string;
+  name_en: string;
+  province_id: number;
+}
+
+export interface ContactSubDistrict {
+  id: number;
+  name_th: string;
+  name_en: string;
+  zip_code: string;
+  province_id: number;
+  district_id: number;
+}
+
+export interface PetitionExtendedVehicle {
+  id: number;
+  petition_exid: number;
+  characteristic: string;
+  type: string;
+  plate_no: string;
+  plate_province: string;
+  color: string;
+  axis_number: number;
+  weight: number;
+  axis_weight: number[];
+}
+
+export interface UserDocument {
+  id: number;
+  petition_exid: number;
+  cid_url: string;
+  company_certificate_url: string;
+  vehicle_permit_url: string;
+  power_of_attorney_url: string;
+}
+
+export interface VehicleDocument {
+  id: number;
+  petition_exid: number;
+  vehicle_registration_url: string;
+  vehicle_photos_url: string;
+  vehicle_dimensions_empty_url: string;
+  vehicle_dimensions_loaded_url: string;
+  prefab_parts_details_url: string;
+  vehicle_turning_radius_url: string;
+}
+
+export interface AuditDocument {
+  id: number;
+  petition_exid: number;
+  bridge_structure_calculation_url: string;
+  road_structure_calculation_url: string;
+  bridge_engineer_certificate_url: string;
+  road_engineer_certificate_url: string;
+  mechanical_engineer_certificate_url: string;
+  safety_management_plan_url: string;
+  route_map_url: string;
+  operation_plan_url: string;
+  contact_info_url: string;
+}
+
+export interface PetitionExtendedUserCreated {
+  id: string;
+  registration_no: string;
+  created_at: string;
+  profile_url: string;
+  business_details: BusinessDetails;
+  business_address: BusinessAddress;
+}
+
+export interface BusinessAddress {
+  house_number: string;
+  village: string;
+  lane: string;
+  road: string;
+  sub_district_id: number;
+  district_id: number;
+  zip_codes: string;
+  province_id: number;
+  phone_number: string;
+  province: PoaProvince;
+  district: PoaDistrict;
+  sub_district: PoaSubDistrict;
+}

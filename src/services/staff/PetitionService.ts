@@ -84,3 +84,10 @@ export const getPetitionVehicleAPI = async (params: GetPetitionDetailParams) => 
   })
 }
 
+export const getPetitionExtendedDetailAPI = async (params: string) => {
+  return ApiService.fetchData<any, GetPetitionDetailParams>({
+    url: `/admin/petition_extended/details/${params}`,
+    method: 'get',
+  })
+}
+
