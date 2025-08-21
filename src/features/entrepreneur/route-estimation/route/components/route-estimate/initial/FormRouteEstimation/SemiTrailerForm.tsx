@@ -1,19 +1,37 @@
-import { memo } from 'react'
-import { Control, Controller } from 'react-hook-form'
-import { Input, Select } from 'antd'
+import { memo, useCallback, useState } from 'react'
+import { Controller } from 'react-hook-form'
+import { Button, Input, Select } from 'antd'
+import { FormProps } from './type'
 
-export interface SemiTrailerFormProps { 
-  formIndex: number
-  control: Control<any>
-  vehicleList: any
-}
+function SemiTrailerForm(props: FormProps) {
+  const { formIndex, control, vehicleList, setVehicleId } = props
+  const [enableAddAxle, setEnableAddAxle] = useState<boolean>(true)
+  const [enableRemoveAxle, setEnableRemoveAxle] = useState<boolean>(false)
+  const [axles, setAxles] = useState<number>(4)
 
-function SemiTrailerForm(props: SemiTrailerFormProps) {
-  const { formIndex, control, vehicleList } = props
+  const addedAxle = useCallback(() => {
+    if (axles >= 4 && axles < 7) {
+      setAxles((prev) => prev + 1)
+      setEnableRemoveAxle(true)
+      if (axles + 1 >= 7) {
+        setEnableAddAxle(false)
+      }
+    }
+  }, [axles])
+
+  const removedAxle = useCallback(() => {
+    if (axles > 4 && axles <= 7) {
+      setAxles((prev) => prev - 1)
+      setEnableAddAxle(true)
+      if (axles - 1 <= 4) {
+        setEnableRemoveAxle(false)
+      }
+    }
+  }, [axles])
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-      <div>
+    <div className="grid lg:grid-cols-3 gap-4">
+      <div className="lg:col-span-2">
         <h5>รถกึ่งพ่วง</h5>
         <Controller
           name={
@@ -27,7 +45,7 @@ function SemiTrailerForm(props: SemiTrailerFormProps) {
                 <Select
                   {...field}
                   placeholder="กรุณาเลือก"
-                  options={vehicleList.overview.data.data}
+                  options={vehicleList.data.data}
                   fieldNames={{
                     label: 'plate_no',
                     value: 'id',
@@ -38,6 +56,7 @@ function SemiTrailerForm(props: SemiTrailerFormProps) {
                     fontFamily: 'Noto Sans Thai',
                   }}
                   onChange={(value) => {
+                    setVehicleId(value)
                     field.onChange(value)
                   }}
                 />
@@ -46,105 +65,37 @@ function SemiTrailerForm(props: SemiTrailerFormProps) {
           }}
         />
       </div>
-      <div className="col-span-3">
+      <div className="lg:col-span-3">
         <h5>น้ำหนักลงเพลา รถกึ่งพ่วง (กิโลกรัม)</h5>
-        <div className="grid lg:grid-cols-2 xl:grid-cols-8 gap-4">
-          <div className="xl:col-span-2">
-            <Controller
-              name={
-                `form_template.'${formIndex}.'semi_trailer_chassis_weight_1` as `form_template.0.semi_trailer_chassis_weight_1`
-              }
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="เพลาที่ 1"
-                      className="w-full"
-                      size="large"
-                      style={{
-                        fontFamily: 'Noto Sans Thai',
-                      }}
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <Controller
-              name={
-                `form_template.'${formIndex}.'semi_trailer_chassis_weight_2` as `form_template.0.semi_trailer_chassis_weight_2`
-              }
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="เพลาที่ 2"
-                      className="w-full"
-                      size="large"
-                      style={{
-                        fontFamily: 'Noto Sans Thai',
-                      }}
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <Controller
-              name={
-                `form_template.'${formIndex}.'semi_trailer_chassis_weight_3` as `form_template.0.semi_trailer_chassis_weight_3`
-              }
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="เพลาที่ 3"
-                      className="w-full"
-                      size="large"
-                      style={{
-                        fontFamily: 'Noto Sans Thai',
-                      }}
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <Controller
-              name={
-                `form_template.'${formIndex}.'semi_trailer_chassis_weight_4` as `form_template.0.semi_trailer_chassis_weight_4`
-              }
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="เพลาที่ 4"
-                      className="w-full"
-                      size="large"
-                      style={{
-                        fontFamily: 'Noto Sans Thai',
-                      }}
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
+        <div className="grid grid-cols-2 xl:grid-cols-8 gap-4">
+          {Array.from({ length: axles }).map((_, index) => (
+            <div key={index} className="xl:col-span-2">
+              <Controller
+                name={
+                  `form_template.'${formIndex}.'semi_trailer_chassis_weight_${index + 1}` as `form_template.0.semi_trailer_chassis_weight_1`
+                }
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <Input
+                        {...field}
+                        name={`form_template.'${formIndex}.${field.name}`}
+                        placeholder={`เพลาที่ ${index + 1}`}
+                        className="w-full"
+                        size="large"
+                        style={{
+                          fontFamily: 'Noto Sans Thai',
+                        }}
+                      />
+                    </fieldset>
+                  )
+                }}
+              />
+            </div>
+          ))}
+          <Button type="primary" onClick={addedAxle} disabled={!enableAddAxle}>เพิ่มเพลา</Button>
+          <Button type="primary" danger onClick={removedAxle} disabled={!enableRemoveAxle}>ลบเพลา</Button>
         </div>
       </div>
     </div>

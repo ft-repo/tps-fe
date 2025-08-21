@@ -11,7 +11,6 @@ import { useRouteContext } from '../../context';
 import { FieldType } from '@/@types/entrepreneur/route-estimation';
 import { initFormValue } from '../../mock';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/store';
 
 const { TabNav, TabList, TabContent } = Tabs
 
@@ -20,7 +19,6 @@ interface Props { }
 const RouteEstimation: React.FC<Props> = (props) => {
   const { } = props;
   const navigate = useNavigate()
-  const session = useAppSelector(state => state.auth.session)
   const [tabKey, setTabKey] = useState<string>('tab0')
   const { setStep, setDataParser } = useRouteContext()
   const { control, handleSubmit } = useForm<FieldType>({

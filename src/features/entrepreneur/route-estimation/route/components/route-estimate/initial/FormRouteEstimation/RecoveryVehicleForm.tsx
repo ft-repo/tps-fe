@@ -1,15 +1,10 @@
 import { memo } from 'react'
-import { Control, Controller } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import { Input, Select } from 'antd'
+import { FormProps } from './type'
 
-export interface RecoveryVehicleFormProps {
-  formIndex: number
-  control: Control<any>
-  vehicleList: any
-}
-
-function RecoveryVehicleForm(props: RecoveryVehicleFormProps) {
-  const { formIndex, control, vehicleList } = props
+function RecoveryVehicleForm(props: FormProps) {
+  const { formIndex, control, vehicleList, setVehicleId } = props
 
   return (
     <div className="grid lg:grid-cols-3 gap-4">
@@ -27,7 +22,7 @@ function RecoveryVehicleForm(props: RecoveryVehicleFormProps) {
                 <Select
                   {...field}
                   placeholder="กรุณาเลือก"
-                  options={vehicleList.overview.data.data}
+                  options={vehicleList.data.data}
                   fieldNames={{
                     label: 'plate_no',
                     value: 'id',
@@ -38,6 +33,7 @@ function RecoveryVehicleForm(props: RecoveryVehicleFormProps) {
                     fontFamily: 'Noto Sans Thai',
                   }}
                   onChange={(value) => {
+                    setVehicleId(value)
                     field.onChange(value)
                   }}
                 />

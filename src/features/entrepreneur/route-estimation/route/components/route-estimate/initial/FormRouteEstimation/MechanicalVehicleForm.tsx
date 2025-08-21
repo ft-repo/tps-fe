@@ -1,19 +1,14 @@
 import { memo } from 'react'
-import { Control, Controller } from 'react-hook-form'
+import { Controller } from 'react-hook-form'
 import { Select } from 'antd'
+import { FormProps } from './type'
 
-export interface MechanicalVehicleFormProps {
-  formIndex: number
-  control: Control<any>
-  vehicleList: any
-}
-
-function MechanicalVehicleForm(props: MechanicalVehicleFormProps) {
-  const { formIndex, control, vehicleList } = props
+function MechanicalVehicleForm(props: FormProps) {
+  const { formIndex, control, vehicleList, setVehicleId } = props
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-      <div>
+    <div className="grid lg:grid-cols-3 gap-4">
+      <div className="lg:col-span-2">
         <h5>สินค้า/เครื่องจักร</h5>
         <Controller
           name={
@@ -27,7 +22,7 @@ function MechanicalVehicleForm(props: MechanicalVehicleFormProps) {
                 <Select
                   {...field}
                   placeholder="กรุณาเลือก"
-                  options={vehicleList.overview.data.data}
+                  options={vehicleList.data.data}
                   fieldNames={{
                     label: 'plate_no',
                     value: 'id',
@@ -38,6 +33,7 @@ function MechanicalVehicleForm(props: MechanicalVehicleFormProps) {
                     fontFamily: 'Noto Sans Thai',
                   }}
                   onChange={(value) => {
+                    setVehicleId(value)
                     field.onChange(value)
                   }}
                 />
