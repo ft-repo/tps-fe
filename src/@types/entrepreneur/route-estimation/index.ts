@@ -33,7 +33,7 @@ export interface Vehicle {
   turn_radius: number
   towing_vehicle_id: number
   semi_trailer_vehicle_id: number
-  etc_vehicle_id: any
+  etc_vehicle_id: number
   towing_axis_weight: number[]
   semi_trailer_axis_weight: number[]
 }
@@ -110,8 +110,12 @@ export interface ContextProps {
 
 export interface VehicleData {
   title: string;
-  description: string;
+  weight: number;
+  plate_no: string;
   image: string;
 }
 
-export type SummaryData = Omit<VehicleData, 'image'>
+export interface SummaryData {
+  title: string;
+  description: string;
+}
