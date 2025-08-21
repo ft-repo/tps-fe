@@ -116,163 +116,162 @@ const initialState: PetitionAdminState = {
         total: 0,
       }
     },
-    // detail: {
-    //   id: 0,
-    //   status_id: 0,
-    //   cert_date: '',
-    //   created_by: '',
-    //   poa_name: '',
-    //   phone_number: '',
-    //   ref_form_no: 0,
-    //   remark: '',
-    //   created_at: '',
-    //   status: {
-    //     status_name: ''
-    //   },
-    //   address: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     contact_house_number: '',
-    //     contact_village: '',
-    //     contact_lane: '',
-    //     contact_road: '',
-    //     contact_sub_district_id: 0,
-    //     contact_district_id: 0,
-    //     contact_province_id: 0,
-    //     contact_zip_code: '',
-    //     poa_house_number: '',
-    //     poa_village: '',
-    //     poa_lane: '',
-    //     poa_road: '',
-    //     poa_sub_district_id: 0,
-    //     poa_district_id: 0,
-    //     poa_province_id: 0,
-    //     poa_zip_code: '',
-    //     poa_province: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: ''
-    //     },
-    //     poa_district: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: '',
-    //       province_id: 0
-    //     },
-    //     poa_sub_district: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: '',
-    //       province_id: 0,
-    //       district_id: 0,
-    //       zip_code: ''
-    //     },
-    //     contact_province: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: ''
-    //     },
-    //     contact_district: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: '',
-    //       province_id: 0
-    //     },
-    //     contact_sub_district: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: '',
-    //       province_id: 0,
-    //       district_id: 0,
-    //       zip_code: ''
-    //     },
-    //   },
-    //   vehicle: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     characteristic: '',
-    //     type: '',
-    //     plate_no: '',
-    //     plate_province: '',
-    //     color: '',
-    //     axis_number: 0,
-    //     weight: 0,
-    //     axis_weight: []
-    //   },
-    //   user_document: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     cid_url: '',
-    //     company_certificate_url: '',
-    //     vehicle_permit_url: '',
-    //     power_of_attorney_url: '',
-    //   },
-    //   vehicle_document: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     vehicle_registration_url: '',
-    //     vehicle_photos_url: '',
-    //     vehicle_dimensions_empty_url: '',
-    //     vehicle_dimensions_loaded_url: '',
-    //     prefab_parts_details_url: '',
-    //     vehicle_turning_radius_url: '',
-    //   },
-    //   audit_document: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     bridge_structure_calculation_url: '',
-    //     road_structure_calculation_url: '',
-    //     bridge_engineer_certificate_url: '',
-    //     road_engineer_certificate_url: '',
-    //     mechanical_engineer_certificate_url: '',
-    //     safety_management_plan_url: '',
-    //     route_map_url: '',
-    //     operation_plan_url: '',
-    //     contact_info_url: '',
-    //   },
-    //   petition_extended_flow: [],
-    //   user_created: {
-    //     id: '',
-    //     registration_no: '',
-    //     created_at: '',
-    //     profile_url: '',
-    //     business_details: {
-    //       business_name: '',
-    //       entity_type_id: 0
-    //     },
-    //     business_address: {
-    //       house_number: '',
-    //       village: '',
-    //       lane: '',
-    //       road: '',
-    //       sub_district_id: 0,
-    //       district_id: 0,
-    //       zip_codes: '',
-    //       province_id: 0,
-    //       phone_number: '',
-    //       province: {
-    //         id: 0,
-    //         name_en: '',
-    //         name_th: '',
-    //       },
-    //       district: {
-    //         id: 0,
-    //         name_en: '',
-    //         name_th: '',
-    //         province_id: 0
-    //       },
-    //       sub_district: {
-    //         id: 0,
-    //         name_en: '',
-    //         name_th: '',
-    //         province_id: 0,
-    //         district_id: 0,
-    //         zip_code: ''
-    //       },
-    //     }
-    //   },
-    // },
-    detail: []
+    detail: {
+      id: 0,
+      status_id: 0,
+      cert_date: '',
+      created_by: '',
+      poa_name: '',
+      phone_number: '',
+      ref_form_no: 0,
+      remark: '',
+      created_at: '',
+      status: {
+        status_name: ''
+      },
+      address: {
+        id: 0,
+        petition_exid: 0,
+        contact_house_number: '',
+        contact_village: '',
+        contact_lane: '',
+        contact_road: '',
+        contact_sub_district_id: 0,
+        contact_district_id: 0,
+        contact_province_id: 0,
+        contact_zip_code: '',
+        poa_house_number: '',
+        poa_village: '',
+        poa_lane: '',
+        poa_road: '',
+        poa_sub_district_id: 0,
+        poa_district_id: 0,
+        poa_province_id: 0,
+        poa_zip_code: '',
+        poa_province: {
+          id: 0,
+          name_en: '',
+          name_th: ''
+        },
+        poa_district: {
+          id: 0,
+          name_en: '',
+          name_th: '',
+          province_id: 0
+        },
+        poa_sub_district: {
+          id: 0,
+          name_en: '',
+          name_th: '',
+          province_id: 0,
+          district_id: 0,
+          zip_code: ''
+        },
+        contact_province: {
+          id: 0,
+          name_en: '',
+          name_th: ''
+        },
+        contact_district: {
+          id: 0,
+          name_en: '',
+          name_th: '',
+          province_id: 0
+        },
+        contact_sub_district: {
+          id: 0,
+          name_en: '',
+          name_th: '',
+          province_id: 0,
+          district_id: 0,
+          zip_code: ''
+        },
+      },
+      vehicle: {
+        id: 0,
+        petition_exid: 0,
+        characteristic: '',
+        type: '',
+        plate_no: '',
+        plate_province: '',
+        color: '',
+        axis_number: 0,
+        weight: 0,
+        axis_weight: []
+      },
+      user_document: {
+        id: 0,
+        petition_exid: 0,
+        cid_url: '',
+        company_certificate_url: '',
+        vehicle_permit_url: '',
+        power_of_attorney_url: '',
+      },
+      vehicle_document: {
+        id: 0,
+        petition_exid: 0,
+        vehicle_registration_url: '',
+        vehicle_photos_url: '',
+        vehicle_dimensions_empty_url: '',
+        vehicle_dimensions_loaded_url: '',
+        prefab_parts_details_url: '',
+        vehicle_turning_radius_url: '',
+      },
+      audit_document: {
+        id: 0,
+        petition_exid: 0,
+        bridge_structure_calculation_url: '',
+        road_structure_calculation_url: '',
+        bridge_engineer_certificate_url: '',
+        road_engineer_certificate_url: '',
+        mechanical_engineer_certificate_url: '',
+        safety_management_plan_url: '',
+        route_map_url: '',
+        operation_plan_url: '',
+        contact_info_url: '',
+      },
+      petition_extended_flow: [],
+      user_created: {
+        id: '',
+        registration_no: '',
+        created_at: '',
+        profile_url: '',
+        business_details: {
+          business_name: '',
+          entity_type_id: 0
+        },
+        business_address: {
+          house_number: '',
+          village: '',
+          lane: '',
+          road: '',
+          sub_district_id: 0,
+          district_id: 0,
+          zip_codes: '',
+          province_id: 0,
+          phone_number: '',
+          province: {
+            id: 0,
+            name_en: '',
+            name_th: '',
+          },
+          district: {
+            id: 0,
+            name_en: '',
+            name_th: '',
+            province_id: 0
+          },
+          sub_district: {
+            id: 0,
+            name_en: '',
+            name_th: '',
+            province_id: 0,
+            district_id: 0,
+            zip_code: ''
+          },
+        }
+      },
+    },
   },
   petition_history: {
     overview: {
@@ -385,163 +384,162 @@ const initialState: PetitionAdminState = {
         total: 0,
       }
     },
-    // detail: {
-    //   id: 0,
-    //   status_id: 0,
-    //   cert_date: '',
-    //   created_by: '',
-    //   poa_name: '',
-    //   phone_number: '',
-    //   ref_form_no: 0,
-    //   remark: '',
-    //   created_at: '',
-    //   status: {
-    //     status_name: ''
-    //   },
-    //   address: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     contact_house_number: '',
-    //     contact_village: '',
-    //     contact_lane: '',
-    //     contact_road: '',
-    //     contact_sub_district_id: 0,
-    //     contact_district_id: 0,
-    //     contact_province_id: 0,
-    //     contact_zip_code: '',
-    //     poa_house_number: '',
-    //     poa_village: '',
-    //     poa_lane: '',
-    //     poa_road: '',
-    //     poa_sub_district_id: 0,
-    //     poa_district_id: 0,
-    //     poa_province_id: 0,
-    //     poa_zip_code: '',
-    //     poa_province: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: ''
-    //     },
-    //     poa_district: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: '',
-    //       province_id: 0
-    //     },
-    //     poa_sub_district: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: '',
-    //       province_id: 0,
-    //       district_id: 0,
-    //       zip_code: ''
-    //     },
-    //     contact_province: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: ''
-    //     },
-    //     contact_district: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: '',
-    //       province_id: 0
-    //     },
-    //     contact_sub_district: {
-    //       id: 0,
-    //       name_en: '',
-    //       name_th: '',
-    //       province_id: 0,
-    //       district_id: 0,
-    //       zip_code: ''
-    //     },
-    //   },
-    //   vehicle: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     characteristic: '',
-    //     type: '',
-    //     plate_no: '',
-    //     plate_province: '',
-    //     color: '',
-    //     axis_number: 0,
-    //     weight: 0,
-    //     axis_weight: []
-    //   },
-    //   user_document: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     cid_url: '',
-    //     company_certificate_url: '',
-    //     vehicle_permit_url: '',
-    //     power_of_attorney_url: '',
-    //   },
-    //   vehicle_document: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     vehicle_registration_url: '',
-    //     vehicle_photos_url: '',
-    //     vehicle_dimensions_empty_url: '',
-    //     vehicle_dimensions_loaded_url: '',
-    //     prefab_parts_details_url: '',
-    //     vehicle_turning_radius_url: '',
-    //   },
-    //   audit_document: {
-    //     id: 0,
-    //     petition_exid: 0,
-    //     bridge_structure_calculation_url: '',
-    //     road_structure_calculation_url: '',
-    //     bridge_engineer_certificate_url: '',
-    //     road_engineer_certificate_url: '',
-    //     mechanical_engineer_certificate_url: '',
-    //     safety_management_plan_url: '',
-    //     route_map_url: '',
-    //     operation_plan_url: '',
-    //     contact_info_url: '',
-    //   },
-    //   petition_extended_flow: [],
-    //   user_created: {
-    //     id: '',
-    //     registration_no: '',
-    //     created_at: '',
-    //     profile_url: '',
-    //     business_details: {
-    //       business_name: '',
-    //       entity_type_id: 0
-    //     },
-    //     business_address: {
-    //       house_number: '',
-    //       village: '',
-    //       lane: '',
-    //       road: '',
-    //       sub_district_id: 0,
-    //       district_id: 0,
-    //       zip_codes: '',
-    //       province_id: 0,
-    //       phone_number: '',
-    //       province: {
-    //         id: 0,
-    //         name_en: '',
-    //         name_th: '',
-    //       },
-    //       district: {
-    //         id: 0,
-    //         name_en: '',
-    //         name_th: '',
-    //         province_id: 0
-    //       },
-    //       sub_district: {
-    //         id: 0,
-    //         name_en: '',
-    //         name_th: '',
-    //         province_id: 0,
-    //         district_id: 0,
-    //         zip_code: ''
-    //       },
-    //     }
-    //   },
-    // },
-    detail: []
+    detail: {
+      id: 0,
+      status_id: 0,
+      cert_date: '',
+      created_by: '',
+      poa_name: '',
+      phone_number: '',
+      ref_form_no: 0,
+      remark: '',
+      created_at: '',
+      status: {
+        status_name: ''
+      },
+      address: {
+        id: 0,
+        petition_exid: 0,
+        contact_house_number: '',
+        contact_village: '',
+        contact_lane: '',
+        contact_road: '',
+        contact_sub_district_id: 0,
+        contact_district_id: 0,
+        contact_province_id: 0,
+        contact_zip_code: '',
+        poa_house_number: '',
+        poa_village: '',
+        poa_lane: '',
+        poa_road: '',
+        poa_sub_district_id: 0,
+        poa_district_id: 0,
+        poa_province_id: 0,
+        poa_zip_code: '',
+        poa_province: {
+          id: 0,
+          name_en: '',
+          name_th: ''
+        },
+        poa_district: {
+          id: 0,
+          name_en: '',
+          name_th: '',
+          province_id: 0
+        },
+        poa_sub_district: {
+          id: 0,
+          name_en: '',
+          name_th: '',
+          province_id: 0,
+          district_id: 0,
+          zip_code: ''
+        },
+        contact_province: {
+          id: 0,
+          name_en: '',
+          name_th: ''
+        },
+        contact_district: {
+          id: 0,
+          name_en: '',
+          name_th: '',
+          province_id: 0
+        },
+        contact_sub_district: {
+          id: 0,
+          name_en: '',
+          name_th: '',
+          province_id: 0,
+          district_id: 0,
+          zip_code: ''
+        },
+      },
+      vehicle: {
+        id: 0,
+        petition_exid: 0,
+        characteristic: '',
+        type: '',
+        plate_no: '',
+        plate_province: '',
+        color: '',
+        axis_number: 0,
+        weight: 0,
+        axis_weight: []
+      },
+      user_document: {
+        id: 0,
+        petition_exid: 0,
+        cid_url: '',
+        company_certificate_url: '',
+        vehicle_permit_url: '',
+        power_of_attorney_url: '',
+      },
+      vehicle_document: {
+        id: 0,
+        petition_exid: 0,
+        vehicle_registration_url: '',
+        vehicle_photos_url: '',
+        vehicle_dimensions_empty_url: '',
+        vehicle_dimensions_loaded_url: '',
+        prefab_parts_details_url: '',
+        vehicle_turning_radius_url: '',
+      },
+      audit_document: {
+        id: 0,
+        petition_exid: 0,
+        bridge_structure_calculation_url: '',
+        road_structure_calculation_url: '',
+        bridge_engineer_certificate_url: '',
+        road_engineer_certificate_url: '',
+        mechanical_engineer_certificate_url: '',
+        safety_management_plan_url: '',
+        route_map_url: '',
+        operation_plan_url: '',
+        contact_info_url: '',
+      },
+      petition_extended_flow: [],
+      user_created: {
+        id: '',
+        registration_no: '',
+        created_at: '',
+        profile_url: '',
+        business_details: {
+          business_name: '',
+          entity_type_id: 0
+        },
+        business_address: {
+          house_number: '',
+          village: '',
+          lane: '',
+          road: '',
+          sub_district_id: 0,
+          district_id: 0,
+          zip_codes: '',
+          province_id: 0,
+          phone_number: '',
+          province: {
+            id: 0,
+            name_en: '',
+            name_th: '',
+          },
+          district: {
+            id: 0,
+            name_en: '',
+            name_th: '',
+            province_id: 0
+          },
+          sub_district: {
+            id: 0,
+            name_en: '',
+            name_th: '',
+            province_id: 0,
+            district_id: 0,
+            zip_code: ''
+          },
+        }
+      },
+    },
   },
   loading: false
 }
@@ -772,7 +770,7 @@ const petitionSlice = createSlice({
       })
     // GET PETITION EXTENDED DETAI:
     builder.addCase(getPetitionExtendedDetail.fulfilled, (state, action) => {
-      state.petition_extended.detail = action.payload,
+      state.petition_extended.detail = action.payload[0],
         state.loading = false
     })
       .addCase(getPetitionExtendedDetail.pending, (state) => {

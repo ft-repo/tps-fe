@@ -389,7 +389,7 @@ export interface VehiclePicture {
 
 export interface AdminPetitionExtended {
   overview: AdminPetitionExtendedOverview;
-  detail: AdminPetitionExtendedDetail[];
+  detail: AdminPetitionExtendedDetail;
 }
 
 export interface AdminPetitionExtendedOverview {

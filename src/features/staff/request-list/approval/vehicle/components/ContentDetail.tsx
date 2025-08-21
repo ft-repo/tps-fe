@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { VehicleList } from '@/@types/reducer/petition';
 import { Descriptions, DescriptionsProps } from 'antd'
-import React from 'react'
+import React, { useCallback } from 'react'
 
 interface Props {
   index: number;
@@ -11,6 +11,10 @@ interface Props {
 
 const ContentDetail: React.FC<Props> = (props) => {
   const { item } = props
+
+  const renderAxisWeight = useCallback((arr: number[]) => {
+    return arr.join(' : ')
+  }, [])
 
   const vehicle_detail: DescriptionsProps['items'] = [
     {
@@ -59,7 +63,7 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '3',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>{`${item.towing_vehicle.axis_weight[0] || '-'} : ${item.towing_vehicle.axis_weight[1] || '-'} : ${item.towing_vehicle.axis_weight[2] || '-'}`}</p>,
+      children: <p>{renderAxisWeight(item.towing_vehicle.axis_weight)}</p>,
     },
   ];
 
@@ -77,7 +81,7 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '3',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>{`${item.semi_trailer_vehicle.axis_weight[0] || '-'} : ${item.semi_trailer_vehicle.axis_weight[1] || '-'} : ${item.semi_trailer_vehicle.axis_weight[2] || '-'}`}</p>,
+      children: <p>{renderAxisWeight(item.semi_trailer_vehicle.axis_weight)}</p>,
     },
   ];
 
