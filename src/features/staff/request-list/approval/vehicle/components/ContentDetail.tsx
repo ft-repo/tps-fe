@@ -1,25 +1,27 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
+import { VehicleList } from '@/@types/reducer/petition';
 import { Descriptions, DescriptionsProps } from 'antd'
 import React from 'react'
 
 interface Props {
-
+  index: number;
+  item: VehicleList;
 }
 
 const ContentDetail: React.FC<Props> = (props) => {
-  const { } = props
+  const { item } = props
 
-  const items: DescriptionsProps['items'] = [
+  const vehicle_detail: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'ประเภทจับคู่',
-      children: <p>รถลากจูง + รถกึ่งพ่วง + สินค้า / เครื่องจักร</p>,
+      children: <p>{item.match_type || '-'}</p>,
     },
     {
       key: '2',
       label: 'รัศมีเลี้ยว',
-      children: <p>12</p>,
+      children: <p>{item.turn_radius || '-'}</p>,
     },
     {
       key: '3',
@@ -43,39 +45,39 @@ const ContentDetail: React.FC<Props> = (props) => {
     },
   ];
 
-  const items2: DescriptionsProps['items'] = [
+  const towering_vehicle: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>22 - 1144 สระบุรี</p>,
+      children: <p>{item.towing_vehicle.plate_no} {item.towing_vehicle.plate_province}</p>,
     },
     {
       key: '2',
       label: 'น้ำหนัก (กิโลกรัม)',
-      children: <p>15,000</p>,
+      children: <p>{item.towing_vehicle.weight || '-'}</p>,
     },
     {
       key: '3',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>5000 : 5000 : 5000</p>,
+      children: <p>{`${item.towing_vehicle.axis_weight[0] || '-'} : ${item.towing_vehicle.axis_weight[1] || '-'} : ${item.towing_vehicle.axis_weight[2] || '-'}`}</p>,
     },
   ];
 
-  const items3: DescriptionsProps['items'] = [
+  const semi_trailer_vehicle: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>22 - 1144 สระบุรี</p>,
+      children: <p>{item.semi_trailer_vehicle.plate_no} {item.semi_trailer_vehicle.plate_province}</p>,
     },
     {
       key: '2',
       label: 'น้ำหนัก (กิโลกรัม)',
-      children: <p>15,000</p>,
+      children: <p>{item.semi_trailer_vehicle.weight || '-'}</p>,
     },
     {
       key: '3',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>5000 : 5000 : 5000 : 5000</p>,
+      children: <p>{`${item.semi_trailer_vehicle.axis_weight[0] || '-'} : ${item.semi_trailer_vehicle.axis_weight[1] || '-'} : ${item.semi_trailer_vehicle.axis_weight[2] || '-'}`}</p>,
     },
   ];
 
@@ -97,21 +99,21 @@ const ContentDetail: React.FC<Props> = (props) => {
       <section>
         <Descriptions
           title="ข้อมูลยานพาหนะ (รถคู่ที่ 1)"
-          items={items}
+          items={vehicle_detail}
           column={1}
         />
       </section>
       <section className='mt-3'>
         <Descriptions
           title="ข้อมูลรถลากจูง"
-          items={items2}
+          items={towering_vehicle}
           column={1}
         />
       </section>
       <section className='mt-3'>
         <Descriptions
           title="ข้อมูลรถกึ่งพ่วง 4 เพลา 8"
-          items={items3}
+          items={semi_trailer_vehicle}
           column={1}
         />
       </section>

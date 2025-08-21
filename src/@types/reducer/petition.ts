@@ -220,9 +220,155 @@ export interface DocumentDetail {
   mach_book_url: string;
 }
 
-export interface EstimateDetail {}
+export interface EstimateDetail {
+  route: EstimateRouteDetail;
+  summary: EstimateSummaryDetail;
+  bridge: EstimateBridgeDetail;
+  turn_radius: EstimateTurnRadiusDetail;
+}
 
-export interface VehicleDetail {}
+export interface EstimateRouteDetail {
+  petition_id: number;
+  vehicle_route: number[][];
+  estimate: EstimateRouteSubDetail[];
+  estimate_rural_roads: EstimateRuralRoad[];
+}
+
+export interface EstimateRouteSubDetail {
+  estimate_id: string;
+  sort: string;
+}
+
+export interface EstimateRuralRoad {
+  road_line: number[][][];
+}
+
+export interface EstimateSummaryDetail {
+  search: EstimateSearch;
+  data: EstimateSummaryData;
+}
+
+export interface EstimateSearch {
+  estimate_id: string;
+  page: number;
+  limit: number;
+}
+
+export interface EstimateSummaryData {
+  data: SummaryTableData[];
+  total: number;
+  page: number;
+  limit: number;
+  total_pages: number;
+
+}
+
+export interface SummaryTableData {
+  type: string;
+  total: number;
+  pass: number;
+  not_pass: number;
+}
+export interface EstimateBridgeDetail {
+  search: EstimateSearch;
+  data: EstimateBridgeDetailData;
+}
+
+export interface EstimateBridgeDetailSearch {
+  estimate_id: string;
+  page: number;
+  limit: number;
+}
+
+export interface EstimateBridgeDetailData {
+  data: BridgeTableData[];
+  total: number;
+  page: number;
+  limit: number;
+  total_pages: number;
+}
+
+export interface BridgeTableData {
+
+}
+
+export interface EstimateTurnRadiusDetail {
+  search: EstimateSearch;
+  data: EstimateTurnRadiusDetailData;
+}
+
+export interface EstimateTurnRadiusDetailSearch {
+  estimate_id: string;
+  page: number;
+  limit: number;
+}
+
+export interface EstimateTurnRadiusDetailData {
+  data: TurnRadiusTableData[];
+  total: number;
+  page: number;
+  limit: number;
+  total_pages: number;
+}
+
+export interface TurnRadiusTableData {
+  curvature_radius: number;
+  curvature_angle: number;
+  curve_type: string;
+  is_pass: boolean;
+}
+
+export interface VehicleDetail {
+  petition_id: number;
+  vehicle_list: VehicleList[];
+}
+
+export interface VehicleList {
+  sort: string;
+  match_type: string;
+  turn_radius: number;
+  towing_vehicle: TowingVehicle;
+  semi_trailer_vehicle: SemiTrailerVehicle;
+  etc_vehicle: any;
+  truck_dimension_url: string;
+  semi_trailer_dimension_url: string;
+  combined_vehicle_url: string;
+  turning_radius_url: string;
+  cargo_dimension_url: string;
+  highway_dept_permit_url: string;
+  highway_dept_permit_number_url: string;
+  rural_highway_dept_permit_url: string;
+  rural_highway_dept_permit_number_url: string;
+}
+
+export interface TowingVehicle {
+  plate_no: string;
+  plate_province: string;
+  weight: number;
+  axis_weight: number[];
+  width: number;
+  length: number;
+  height: number;
+  vehicle_picture: VehiclePicture;
+}
+
+export interface SemiTrailerVehicle {
+  plate_no: string;
+  plate_province: string;
+  weight: number;
+  axis_weight: number[];
+  width: number;
+  length: number;
+  height: number;
+  vehicle_picture: VehiclePicture;
+}
+
+export interface VehiclePicture {
+  front_rear_url: string;
+  side_rear_url: string;
+  back_rear_url: string;
+}
+
 
 // ADMIN PETITION EXTENDED
 

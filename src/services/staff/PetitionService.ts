@@ -1,4 +1,4 @@
-import { GetPetitionDetailParams, GetPetitionParams, PetitionExtendedPostBody, PetitionPostBody } from "@/@types/services/petition"
+import { GetEstimateDetailParams, GetPetitionDetailParams, GetPetitionParams, PetitionExtendedPostBody, PetitionPostBody } from "@/@types/services/petition"
 import ApiService from "../ApiService"
 import { AdminPetitionData, AdminPetitionExtendedData } from "@/@types/reducer/petition"
 
@@ -43,3 +43,44 @@ export const getPetitionDocumentAPI = async (params: GetPetitionDetailParams) =>
     params: { ...params }
   })
 }
+
+export const getPetitionEstimateRouteAPI = async (params: GetPetitionDetailParams) => {
+  return ApiService.fetchData<any, GetPetitionDetailParams>({
+    url: '/admin/petition/estimate',
+    method: 'get',
+    params: { ...params }
+  })
+}
+
+export const getPetitionEstimateSummaryAPI = async (params: GetEstimateDetailParams) => {
+  return ApiService.fetchData<any, GetEstimateDetailParams>({
+    url: '/admin/petition/estimate/summary',
+    method: 'get',
+    params: { ...params }
+  })
+}
+
+export const getPetitionEstimateBridgeAPI = async (params: GetEstimateDetailParams) => {
+  return ApiService.fetchData<any, GetEstimateDetailParams>({
+    url: '/admin/petition/estimate/bridges',
+    method: 'get',
+    params: { ...params }
+  })
+}
+
+export const getPetitionEstimateTurnRadiusAPI = async (params: GetEstimateDetailParams) => {
+  return ApiService.fetchData<any, GetEstimateDetailParams>({
+    url: '/admin/petition/estimate/turn_radius',
+    method: 'get',
+    params: { ...params }
+  })
+}
+
+export const getPetitionVehicleAPI = async (params: GetPetitionDetailParams) => {
+  return ApiService.fetchData<any, GetPetitionDetailParams>({
+    url: '/admin/petition/vehicle',
+    method: 'get',
+    params: { ...params }
+  })
+}
+

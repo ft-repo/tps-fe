@@ -1,22 +1,31 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
 import { Table, TableProps } from 'antd'
+import { SummaryTableData, TurnRadiusTableData } from '@/@types/reducer/petition';
+
+// Define the union type for all possible data types
+type TableDataType = SummaryTableData | BridgeTableData | TurnRadiusTableData;
+
+// Define the data structure that comes from your store
+interface TableDataResponse<T = TableDataType> {
+  data: T[];
+  page: number;
+  limit: number;
+  total: number;
+}
 
 interface Props {
+  keyId: 'summary' | 'bridge' | 'turn_radius';
+  data: TableDataResponse; // Replace 'any' with proper type
   handleTableChange: (page: number, pageSize: number) => void;
+  loading: boolean;
 }
-
-interface TableData {
-  type: string;
-  total: string;
-  pass: string;
-  not_pass: string;
-}
+interface BridgeTableData { }
 
 const TableRoute: React.FC<Props> = (props) => {
-  const { handleTableChange } = props
+  const { keyId, data, loading, handleTableChange } = props
 
-  const columns: TableProps<TableData>['columns'] = [
+  const summary_columns: TableProps<SummaryTableData>['columns'] = [
     {
       title: 'ประเภท',
       dataIndex: 'type',
@@ -47,19 +56,63 @@ const TableRoute: React.FC<Props> = (props) => {
     },
   ];
 
-  const data: any[] = []
+  const bridge_columns: TableProps<BridgeTableData>['columns'] = []
+
+  const turn_radius_columns: TableProps<TurnRadiusTableData>['columns'] = [
+    {
+      title: 'มุมโค้ง',
+      dataIndex: 'curvature_angle',
+      key: 'curvature_angle',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'รัศมีความโค้ง',
+      dataIndex: 'curvature_radius',
+      key: 'curvature_radius',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'ประเภทรัศมีมุมเลี้ยว',
+      dataIndex: 'curve_type',
+      key: 'curve_type',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'สถานะ',
+      dataIndex: 'is_pass',
+      key: 'is_pass',
+      width: 150,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return 'ผ่านได้'
+        }
+
+        return 'ผ่านไม่ได้'
+      }
+    },
+  ]
+
+  const column_list: Record<typeof keyId, TableProps<any>['columns']> = {
+    summary: summary_columns,
+    bridge: bridge_columns,
+    turn_radius: turn_radius_columns,
+  }
 
   return (
     <Table
-      columns={columns}
-      dataSource={data || []}
-      loading={false}
+      columns={column_list[keyId]}
+      dataSource={data.data || []}
+      loading={loading}
       pagination={{
         defaultCurrent: 1,
         defaultPageSize: 10,
-        current: 1,
-        pageSize: 10,
-        total: Number(10) || 0,
+        current: data.page,
+        pageSize: data.limit,
+        total: Number(data.total) || 0,
         onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
         showSizeChanger: true,
         position: ['bottomRight'],

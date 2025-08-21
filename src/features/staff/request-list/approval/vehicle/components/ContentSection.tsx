@@ -3,26 +3,34 @@
 import React from 'react'
 import { ContentDetail, ContentImage, ContentForm } from '../components'
 import { Col, Row } from 'antd'
+import { VehicleList } from '@/@types/reducer/petition';
 
 interface Props {
-
+  index: number;
+  item: VehicleList;
 }
 
 const ContentSection: React.FC<Props> = (props) => {
-  const { } = props
+  const { index, item } = props
 
   return (
     <Row gutter={[16, 16]}>
       <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
         <section>
-          <ContentDetail />
+          <ContentDetail
+            index={index}
+            item={item}
+          />
         </section>
         <section className='mt-5'>
           <ContentForm />
         </section>
       </Col>
       <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14}>
-        <ContentImage />
+        <ContentImage
+          index={index}
+          item={item}
+        />
       </Col>
     </Row>
   )

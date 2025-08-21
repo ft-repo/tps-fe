@@ -5,47 +5,47 @@ import { Col, Radio, Row } from 'antd'
 import { Controller, useForm } from 'react-hook-form';
 
 interface Props {
-
+  setShowTable: (value: 'summary' | 'bridge' | 'turn_radius') => void;
 }
 
 export interface FieldType {
-  status_id: string;
+  status_id: 'summary' | 'bridge' | 'turn_radius';
 }
 
 const STATUS_OPTION = [
   {
     label: 'ตารางสรุป',
-    value: '1',
+    value: 'summary',
   },
   {
     label: 'สะพาน',
-    value: '2',
+    value: 'bridge',
   },
-  {
-    label: 'โครงสร้าง',
-    value: '3',
-  },
+  // {
+  //   label: 'โครงสร้าง',
+  //   value: 'structure',
+  // },
   {
     label: 'รัศมีเลี้ยว',
-    value: '4',
+    value: 'turn_radius',
   },
 ]
 
 const FormSearchRoute: React.FC<Props> = (props) => {
-  const { } = props
+  const { setShowTable } = props
   const submitRef = useRef<HTMLButtonElement>(null)
 
   const form = useForm<FieldType>({
     defaultValues: {
-      status_id: ''
+      status_id: 'summary'
     }
   })
 
   const { handleSubmit, control } = form
 
   const onSubmit = useCallback((value: FieldType) => {
-    console.log(value)
-  }, [])
+    setShowTable(value.status_id)
+  }, [setShowTable])
 
   return (
     <Row gutter={[16, 16]} align={'middle'}>

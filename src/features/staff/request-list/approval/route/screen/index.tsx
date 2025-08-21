@@ -1,11 +1,12 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Spin } from 'antd';
 import { TitleSection, ContentSection } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
-import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/store';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { getPetitionEstimateRoute } from '@/store/slices/staff';
 
 interface Props {
 
@@ -13,11 +14,19 @@ interface Props {
 
 const RouteScreen: React.FC<Props> = (props) => {
   const { } = props
+  const [params] = useSearchParams()
+  const petitionId = params.get('petition_id')
   const navigate = useNavigate()
-  const loading = useAppSelector(state => state.layout.loading)
+  const dispatch = useAppDispatch()
+  const defaultLoading = useAppSelector(state => state.layout.loading)
+  const { loading } = useAppSelector(state => state.staff.petition)
+
+  useEffect(() => {
+    dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
+  }, [dispatch, petitionId])
 
   return (
-    <Spin spinning={loading}>
+    <Spin spinning={loading || defaultLoading}>
       <section>
         <Button
           type='text'

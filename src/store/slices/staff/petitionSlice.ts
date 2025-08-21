@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants'
 import { PetitionAdminState } from '@/@types/reducer/petition'
-import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionDocumentAPI } from '@/services/staff/PetitionService'
-import { GetPetitionDetailParams, GetPetitionParams } from '@/@types/services/petition'
+import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionDocumentAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateRouteAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionVehicleAPI } from '@/services/staff/PetitionService'
+import { GetEstimateDetailParams, GetPetitionDetailParams, GetPetitionParams } from '@/@types/services/petition'
 
 const initialState: PetitionAdminState = {
   petition: {
@@ -40,8 +40,60 @@ const initialState: PetitionAdminState = {
         poa_url: '',
         mach_book_url: '',
       },
-      estimate: {},
-      vehicle: {}
+      estimate: {
+        route: {
+          petition_id: 0,
+          vehicle_route: [],
+          estimate: [],
+          estimate_rural_roads: [],
+        },
+        summary: {
+          search: {
+            estimate_id: '',
+            page: 1,
+            limit: 10
+          },
+          data: {
+            data: [],
+            page: 1,
+            limit: 10,
+            total_pages: 0,
+            total: 0,
+          }
+        },
+        bridge: {
+          search: {
+            estimate_id: '',
+            page: 1,
+            limit: 10
+          },
+          data: {
+            data: [],
+            page: 1,
+            limit: 10,
+            total_pages: 0,
+            total: 0,
+          }
+        },
+        turn_radius: {
+          search: {
+            estimate_id: '',
+            page: 1,
+            limit: 10
+          },
+          data: {
+            data: [],
+            page: 1,
+            limit: 10,
+            total_pages: 0,
+            total: 0,
+          }
+        }
+      },
+      vehicle: {
+        petition_id: 0,
+        vehicle_list: [],
+      }
     }
   },
   petition_extended: {
@@ -98,8 +150,60 @@ const initialState: PetitionAdminState = {
         poa_url: '',
         mach_book_url: '',
       },
-      estimate: {},
-      vehicle: {}
+      estimate: {
+        route: {
+          petition_id: 0,
+          vehicle_route: [],
+          estimate: [],
+          estimate_rural_roads: [],
+        },
+        summary: {
+          search: {
+            estimate_id: '',
+            page: 1,
+            limit: 10
+          },
+          data: {
+            data: [],
+            page: 1,
+            limit: 10,
+            total_pages: 0,
+            total: 0,
+          }
+        },
+        bridge: {
+          search: {
+            estimate_id: '',
+            page: 1,
+            limit: 10
+          },
+          data: {
+            data: [],
+            page: 1,
+            limit: 10,
+            total_pages: 0,
+            total: 0,
+          }
+        },
+        turn_radius: {
+          search: {
+            estimate_id: '',
+            page: 1,
+            limit: 10
+          },
+          data: {
+            data: [],
+            page: 1,
+            limit: 10,
+            total_pages: 0,
+            total: 0,
+          }
+        }
+      },
+      vehicle: {
+        petition_id: 0,
+        vehicle_list: [],
+      }
     }
   },
   petition_history_extended: {
@@ -156,6 +260,36 @@ export const getPetitionDocument = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPe
   return response.data
 })
 
+export const getPetitionEstimateRoute = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionEstimateRoute', async (params: GetPetitionDetailParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionEstimateRouteAPI(params)
+  return response.data
+})
+
+export const getPetitionEstimateSummary = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionEstimateSummary', async (params: GetEstimateDetailParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionEstimateSummaryAPI(params)
+  return response.data
+})
+
+export const getPetitionEstimateBridge = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionEstimateBridge', async (params: GetEstimateDetailParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionEstimateBridgeAPI(params)
+  return response.data
+})
+
+export const getPetitionEstimateTurnRadius = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionEstimateTurnRadius', async (params: GetEstimateDetailParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionEstimateTurnRadiusAPI(params)
+  return response.data
+})
+
+export const getPetitionVehicle = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionVehicle', async (params: GetPetitionDetailParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionVehicleAPI(params)
+  return response.data
+})
+
 const petitionSlice = createSlice({
   name: `${SLICE_BASE_NAME}/petition`,
   initialState,
@@ -177,11 +311,29 @@ const petitionSlice = createSlice({
         state.petition_history_extended.overview.data = action.payload.data
     },
     setAdminPetitionDocument: (state, action) => {
-      state.petition.detail = action.payload.data
-    }
+      state.petition.detail.document = action.payload.data
+    },
+    setAdminPetitionVehicle: (state, action) => {
+      state.petition.detail.vehicle = action.payload.data
+    },
+    setAdminPetitionRouteEstimation: (state, action) => {
+      state.petition.detail.estimate.route = action.payload.data
+    },
+    setAdminPetitionSummaryEstimation: (state, action) => {
+      state.petition.detail.estimate.summary.search = action.payload.params,
+        state.petition.detail.estimate.summary.data = action.payload.data
+    },
+    setAdminPetitionBridgeEstimation: (state, action) => {
+      state.petition.detail.estimate.bridge.search = action.payload.params,
+        state.petition.detail.estimate.bridge.data = action.payload.data
+    },
+    setAdminPetitionTurnRadiusEstimation: (state, action) => {
+      state.petition.detail.estimate.turn_radius.search = action.payload.params,
+        state.petition.detail.estimate.turn_radius.data = action.payload.data
+    },
   },
   extraReducers: (builder) => {
-    // CLIENT
+    // GET PETITION DATA
     builder.addCase(getAdminPetitionData.fulfilled, (state, action) => {
       state.petition.overview.data = action.payload,
         state.loading = false
@@ -192,7 +344,7 @@ const petitionSlice = createSlice({
       .addCase(getAdminPetitionData.rejected, (state) => {
         state.loading = false
       })
-    // CLIENT DETAIL
+    // GET PETITION DETAIL
     builder.addCase(getAdminPetitionExtendedData.fulfilled, (state, action) => {
       state.petition_extended.overview.data = action.payload,
         state.loading = false
@@ -203,6 +355,7 @@ const petitionSlice = createSlice({
       .addCase(getAdminPetitionExtendedData.rejected, (state) => {
         state.loading = false
       })
+    // GET PETITION HISTORY
     builder.addCase(getAdminPetitionHistoryData.fulfilled, (state, action) => {
       state.petition_history.overview.data = action.payload,
         state.loading = false
@@ -213,6 +366,7 @@ const petitionSlice = createSlice({
       .addCase(getAdminPetitionHistoryData.rejected, (state) => {
         state.loading = false
       })
+    // GET PETITION EXTENDED HISTORY
     builder.addCase(getAdminPetitionHistoryExtendedData.fulfilled, (state, action) => {
       state.petition_history_extended.overview.data = action.payload,
         state.loading = false
@@ -223,6 +377,7 @@ const petitionSlice = createSlice({
       .addCase(getAdminPetitionHistoryExtendedData.rejected, (state) => {
         state.loading = false
       })
+    // GET PETITION DOCUMENT
     builder.addCase(getPetitionDocument.fulfilled, (state, action) => {
       state.petition.detail.document = action.payload,
         state.loading = false
@@ -233,9 +388,75 @@ const petitionSlice = createSlice({
       .addCase(getPetitionDocument.rejected, (state) => {
         state.loading = false
       })
+    // GET PETITION ESTIMATE ROUTE
+    builder.addCase(getPetitionEstimateRoute.fulfilled, (state, action) => {
+      state.petition.detail.estimate.route = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionEstimateRoute.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionEstimateRoute.rejected, (state) => {
+        state.loading = false
+      })
+    // GET PETITION ESTIMATE SUMMARY
+    builder.addCase(getPetitionEstimateSummary.fulfilled, (state, action) => {
+      state.petition.detail.estimate.summary.data.data = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionEstimateSummary.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionEstimateSummary.rejected, (state) => {
+        state.loading = false
+      })
+    // GET PETITION ESTIMATE BRIDGE
+    builder.addCase(getPetitionEstimateBridge.fulfilled, (state, action) => {
+      state.petition.detail.estimate.bridge.data = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionEstimateBridge.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionEstimateBridge.rejected, (state) => {
+        state.loading = false
+      })
+    // GET PETITION ESTIMATE TURN RADIUS
+    builder.addCase(getPetitionEstimateTurnRadius.fulfilled, (state, action) => {
+      state.petition.detail.estimate.turn_radius.data = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionEstimateTurnRadius.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionEstimateTurnRadius.rejected, (state) => {
+        state.loading = false
+      })
+    // GET PETITION VEHICLE
+    builder.addCase(getPetitionVehicle.fulfilled, (state, action) => {
+      state.petition.detail.vehicle = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionVehicle.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionVehicle.rejected, (state) => {
+        state.loading = false
+      })
   }
 })
 
-export const { setAdminPetitionData, setAdminPetitionExtendedData, setAdminPetitionHistoryData, setAdminPetitionHistoryExtendedData } = petitionSlice.actions
+export const {
+  setAdminPetitionData,
+  setAdminPetitionExtendedData,
+  setAdminPetitionHistoryData,
+  setAdminPetitionHistoryExtendedData,
+  setAdminPetitionDocument,
+  setAdminPetitionRouteEstimation,
+  setAdminPetitionSummaryEstimation,
+  setAdminPetitionBridgeEstimation,
+  setAdminPetitionTurnRadiusEstimation,
+  setAdminPetitionVehicle,
+} = petitionSlice.actions
 
 export default petitionSlice.reducer
