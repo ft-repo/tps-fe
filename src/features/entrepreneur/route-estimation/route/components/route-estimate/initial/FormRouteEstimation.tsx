@@ -1,44 +1,34 @@
-import { Root } from '@/@types/entrepreneur/route-estimation'
+import { Root, VehicleId } from '@/@types/entrepreneur/route-estimation'
 import { useAppDispatch, useAppSelector } from '@/store'
-import {
-  clearVehicleList,
-  getVehicleData,
-  getVehicleDetail,
-} from '@/store/slices/entrepreneur/vehicleListSlice'
+import { getVehicleData } from '@/store/slices/entrepreneur/vehicleListSlice'
 import { Input, Select } from 'antd'
-import { FC, useEffect, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import { Control, Controller, FieldArray } from 'react-hook-form'
 import FormVehicle from './FormVehicle'
+import { VehicleIdContext } from '../../step/RouteEstimation'
 
 interface Props {
   formItem: FieldArray
   formIndex: number
   control: Control<Root>
+  setVehicleId: (vehicleId: VehicleId) => void
 }
 
 const FormRouteEstimation: FC<Props> = (props: Props) => {
-  const { formItem, formIndex, control } = props
+  const { formIndex, control, setVehicleId } = props
   const dispatch = useAppDispatch()
   const { vehicle_type } = useAppSelector((state) => state.master)
   const { overview } = useAppSelector((state) => state.entrepreneur.vehicleList)
   const [vehicleType, setVehicleType] = useState<number[]>([])
-  const [vehicleId, setVehicleId] = useState<string | null>(null)
 
   useEffect(() => {
-    dispatch(clearVehicleList())
-    if (vehicleType !== 0) {
-      dispatch(
-        getVehicleData({
-          vehicle_type_id: vehicleType,
-          page: 1,
-          limit: 1000,
-        }),
-      )
-    }
-    if (vehicleId) {
-      dispatch(getVehicleDetail(vehicleId))
-    }
-  }, [dispatch, vehicleType, vehicleId])
+    dispatch(
+      getVehicleData({
+        page: 1,
+        limit: 1000,
+      }),
+    )
+  }, [dispatch])
 
   return (
     <div key={formIndex}>
@@ -63,7 +53,11 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
                 }}
                 onChange={(value) => {
                   setVehicleType(value)
-                  setVehicleId(null)
+                  setVehicleId({
+                    towing_vehicle_id: undefined,
+                    semi_trailer_vehicle_id: undefined,
+                    etc_vehicle_id: undefined,
+                  })
                 }}
               />
             </fieldset>

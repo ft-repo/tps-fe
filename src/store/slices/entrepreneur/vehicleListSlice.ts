@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { VehicleListState } from '@/@types/reducer/vehicle'
+import { Detail, VehicleListState } from '@/@types/reducer/vehicle'
 import {
   getVehicleAPI,
   getVehicleByIDAPI,
 } from '@/services/entrepreneur/VehicleListService'
-import { GetVehicleListParams } from '@/@types/services/vehicle'
+import { GetVehicleListParams, VehicleDetailForRouteEstimation } from '@/@types/services/vehicle'
+import { VehicleId } from '@/@types/entrepreneur/route-estimation'
 
 const initialState: VehicleListState = {
   overview: {
@@ -49,6 +50,11 @@ const initialState: VehicleListState = {
       back_rear_url: '',
     },
   },
+  detailForRouteEstimation: {
+    towing_vehicle_detail: {} as Detail,
+    semi_trailer_vehicle_detail: {} as Detail,
+    etc_vehicle_detail: {} as Detail,
+  },
   loading: false,
 }
 
@@ -68,8 +74,27 @@ export const getVehicleDetail = createAsyncThunk(
   async (id: string | number) => {
     // assume someService required reesponse & require type as generic
     const response = await getVehicleByIDAPI(id)
-    console.log('getVehicleDetail ====> response', response)
     return response.data
+  },
+)
+
+export const getVehicleDetailForRouteEstimation = createAsyncThunk(
+  SLICE_NAME + '/apiGetVehicleDetailForRouteEstimation',
+  async (id: VehicleId) => {
+    const response: VehicleDetailForRouteEstimation = {} as VehicleDetailForRouteEstimation;
+    if (id.towing_vehicle_id) {
+      const towing_vehicle_detail = await getVehicleByIDAPI(id.towing_vehicle_id)
+      response.towing_vehicle_detail = towing_vehicle_detail.data
+    }
+    if (id.semi_trailer_vehicle_id) {
+      const semi_trailer_vehicle_detail = await getVehicleByIDAPI(id.semi_trailer_vehicle_id)
+      response.semi_trailer_vehicle_detail = semi_trailer_vehicle_detail.data
+    }
+    if (id.etc_vehicle_id) {
+      const etc_vehicle_detail = await getVehicleByIDAPI(id.etc_vehicle_id)
+      response.etc_vehicle_detail = etc_vehicle_detail.data
+    }
+    return response
   },
 )
 
@@ -83,6 +108,9 @@ const vehicleListSlice = createSlice({
     },
     setVehicleListByID: (state, action) => {
       state.detail = action.payload
+    },
+    setVehicleDetailForRouteEstimation: (state, action) => {
+      state.detailForRouteEstimation = action.payload
     },
     clearVehicleList: (state) => {
       state.overview.search = initialState.overview.search
@@ -107,6 +135,15 @@ const vehicleListSlice = createSlice({
         state.loading = true
       })
       .addCase(getVehicleDetail.rejected, (state) => {
+        state.loading = false
+      })
+      .addCase(getVehicleDetailForRouteEstimation.fulfilled, (state, action) => {
+        state.detailForRouteEstimation = action.payload
+      })
+      .addCase(getVehicleDetailForRouteEstimation.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getVehicleDetailForRouteEstimation.rejected, (state) => {
         state.loading = false
       })
   },

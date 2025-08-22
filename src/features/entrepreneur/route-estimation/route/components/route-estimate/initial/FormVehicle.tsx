@@ -1,4 +1,4 @@
-import { Root } from '@/@types/entrepreneur/route-estimation'
+import { Root, VehicleId } from '@/@types/entrepreneur/route-estimation'
 import { Button, Input, Select } from 'antd'
 import { memo, useCallback, useState } from 'react'
 import { Control, Controller } from 'react-hook-form'
@@ -8,7 +8,7 @@ interface FormVehicleProps {
   formIndex: number
   control: Control<Root>
   vehicleList: any
-  setVehicleId: (id: string | null) => void
+  setVehicleId: (id: VehicleId) => void
 }
 
 function FormVehicle(props: FormVehicleProps) {
@@ -16,6 +16,8 @@ function FormVehicle(props: FormVehicleProps) {
   const [enableAddAxle, setEnableAddAxle] = useState<boolean>(true)
   const [enableRemoveAxle, setEnableRemoveAxle] = useState<boolean>(false)
   const [axles, setAxles] = useState<number>(4)
+  
+  const vehicleId = {}
 
   const addedAxle = useCallback(() => {
     if (axles >= 4 && axles < 7) {
@@ -64,7 +66,10 @@ function FormVehicle(props: FormVehicleProps) {
                     }}
                     onChange={(value) => {
                       field.onChange(value)
-                      setVehicleId(value as unknown as string)
+                      setVehicleId({
+                        ...vehicleId,
+                        towing_vehicle_id: value as unknown as number,
+                      })
                     }}
                   />
                 </fieldset>
@@ -97,7 +102,10 @@ function FormVehicle(props: FormVehicleProps) {
                       fontFamily: 'Noto Sans Thai',
                     }}
                     onChange={(value) => {
-                      setVehicleId(value as unknown as string)
+                      setVehicleId({
+                        ...vehicleId,
+                        semi_trailer_vehicle_id: value as unknown as number,
+                      })
                       field.onChange(value)
                     }}
                   />
@@ -131,7 +139,10 @@ function FormVehicle(props: FormVehicleProps) {
                       fontFamily: 'Noto Sans Thai',
                     }}
                     onChange={(value) => {
-                      setVehicleId(value as unknown as string)
+                      setVehicleId({
+                        ...vehicleId,
+                        etc_vehicle_id: value as unknown as number,
+                      })
                       field.onChange(value)
                     }}
                   />

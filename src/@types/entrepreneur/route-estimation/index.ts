@@ -52,6 +52,8 @@ export interface VehicleRoute {
   type: string
   coordinates: number[][]
 }
+
+export type VehicleId = Omit<Vehicle, 'turn_radius' | 'towing_axis_weight' | 'semi_trailer_axis_weight'>
 // End Estimation Route Body
 
 export interface FieldTypeForOther {

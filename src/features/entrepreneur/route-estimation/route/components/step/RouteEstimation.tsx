@@ -1,17 +1,14 @@
-import {
-  Root,
-  SummaryData,
-  VehicleData,
-} from '@/@types/entrepreneur/route-estimation'
+import { Root, VehicleId } from '@/@types/entrepreneur/route-estimation'
 import { Tabs, Button, Divider } from 'antd'
 import { useFieldArray, useForm } from 'react-hook-form'
-import { useCallback, useState, memo } from 'react'
+import { useCallback, useState, memo, useEffect, createContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FormRouteEstimation from '../route-estimate/initial/FormRouteEstimation'
 import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
-import CardVehicleDetails from '../route-estimate/initial/CardVehicleDetails'
-import VehicleSummary from '../route-estimate/initial/VehicleSummary'
 import FormMapEstimation from '../route-estimate/initial/FormMapEstimation'
+import DetailSection from '../route-estimate/initial/DetailSection'
+import { getVehicleDetailForRouteEstimation } from '@/store/slices/entrepreneur/vehicleListSlice'
+import { useAppDispatch } from '@/store'
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
@@ -47,48 +44,9 @@ const defaultValues: Root = {
   },
 }
 
-const vehicleData: VehicleData[] = [
-  {
-    title: 'รถลากจูง',
-    weight: 0,
-    plate_no: '',
-    image: '',
-  },
-  {
-    title: 'รถกึ่งพ่วง',
-    weight: 0,
-    plate_no: '',
-    image: '',
-  },
-  {
-    title: 'เครื่องจักร',
-    weight: 0,
-    plate_no: '',
-    image: '',
-  },
-]
-
-const summaryData: SummaryData[] = [
-  {
-    title: 'น้ำหนักรถเปล่ารวม',
-    description: String(0) + ' กก.',
-  },
-  {
-    title: 'น้ำหนักรถเปล่ารวมน้ำหนักเพลา',
-    description: String(0) + ' กก.',
-  },
-  {
-    title: 'มิติรถเปล่า',
-    description: `กว้าง 0 X ยาว 0 X สูง 0`,
-  },
-  {
-    title: 'มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.)',
-    description: `กว้าง 0 X ยาว 0 X สูง 0`,
-  },
-]
-
 function RouteEstimation() {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const { control, handleSubmit } = useForm<Root>({
     defaultValues,
   })
@@ -98,6 +56,13 @@ function RouteEstimation() {
     name: 'vehicle',
   })
 
+  const [firstPoint, setFirstPoint] = useState<number[] | null>(null)
+  const [secondPoint, setSecondPoint] = useState<number[] | null>(null)
+  const [vehicleId, setVehicleId] = useState<VehicleId>({
+    towing_vehicle_id: undefined,
+    semi_trailer_vehicle_id: undefined,
+    etc_vehicle_id: undefined,
+  })
   const initialTabItems: TabItem[] = [
     {
       label: 'รถคู่ที่ 1',
@@ -106,17 +71,20 @@ function RouteEstimation() {
           formItem={fields[0]}
           formIndex={0}
           control={control}
+          setVehicleId={setVehicleId}
         />
       ),
       key: '1',
       closable: false,
     },
   ]
-
   const [activeKey, setActiveKey] = useState(initialTabItems[0].key)
   const [tabItems, setTabItems] = useState<TabItem[]>(initialTabItems)
-  const [firstPoint, setFirstPoint] = useState<number[] | null>(null)
-  const [secondPoint, setSecondPoint] = useState<number[] | null>(null)
+
+  useEffect(() => {
+    console.log('vehicleId ======> ', vehicleId)
+    dispatch(getVehicleDetailForRouteEstimation(vehicleId))
+  }, [vehicleId, dispatch])
 
   const onAddedTab = useCallback(() => {
     append(defaultValues.vehicle[0])
@@ -128,13 +96,14 @@ function RouteEstimation() {
           formItem={fields[tabItems.length]}
           formIndex={tabItems.length}
           control={control}
+          setVehicleId={setVehicleId}
         />
       ),
       key: `${tabItems.length + 1}`,
     }
 
     setTabItems([...tabItems, newTabItem])
-  }, [tabItems, setTabItems, append, fields, control])
+  }, [tabItems, setTabItems, append, fields, control, vehicleId, setVehicleId])
 
   const onRemovedTab = useCallback(
     (targetKey: TargetKey) => {
@@ -218,18 +187,17 @@ function RouteEstimation() {
           />
         </div>
       </section>
-      <h4 className="text-lg font-bold m-0 p-0">
-        รายละเอียด {tabItems[Number(activeKey) - 1].label}
-      </h4>
-      <Divider className="mb-3" />
-      <section className="mt-5 grid lg:grid-cols-2 gap-4 lg:h-[25vh]">
-        <section className="lg:order-last">
-          <VehicleSummary data={summaryData} />
-        </section>
-        <section>
-          <CardVehicleDetails data={vehicleData} />
-        </section>
-      </section>
+      {(vehicleId.towing_vehicle_id ||
+        vehicleId.semi_trailer_vehicle_id ||
+        vehicleId.etc_vehicle_id) && (
+        <>
+          <h4 className="text-lg font-bold m-0 p-0">
+            รายละเอียด {tabItems[Number(activeKey) - 1].label}
+          </h4>
+          <Divider className="mb-3" />
+          <DetailSection />
+        </>
+      )}
 
       <section className="w-full">
         <div className="flex justify-end items-center gap-5">

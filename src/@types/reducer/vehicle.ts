@@ -2,6 +2,7 @@
 export interface VehicleListState {
   overview: Overview;
   detail: Detail;
+  detailForRouteEstimation: DetailForRouteEstimation;
   loading: boolean;
 }
 
@@ -56,4 +57,10 @@ export interface VehiclePictures {
   front_rear_url: string
   side_rear_url: string
   back_rear_url: string
+}
+
+export interface DetailForRouteEstimation {
+  towing_vehicle_detail: Detail;
+  semi_trailer_vehicle_detail: Detail;
+  etc_vehicle_detail: Detail;
 }
