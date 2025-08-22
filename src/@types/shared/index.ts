@@ -1,4 +1,3 @@
-import { color } from "framer-motion";
 import { APIPostBody } from "../services/vehicle";
 
 export interface DialogProps {
@@ -118,4 +117,10 @@ export interface UploadRequest {
 
 export interface UploadResponse {
   url: string;
+}
+
+// PARAMS
+export interface GetPaginateParams {
+  page: number;
+  limit: number;
 }
