@@ -1,16 +1,16 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import { Table, TableProps } from 'antd'
-import { TurnRadiusTableData } from '@/@types/reducer/petition';
+import { Flex, Table, TableProps, Tag } from 'antd'
+import { EstimateTurnRadiusDetailData, TurnRadiusTableData } from '@/@types/reducer/petition';
 
 interface Props {
-  // data: any[];
-  // handleTableChange: (page: number, pageSize: number) => void;
+  data: EstimateTurnRadiusDetailData;
+  handleTableChange: (page: number, pageSize: number) => void;
   loading: boolean;
 }
 
 const TableTurnRadius: React.FC<Props> = (props) => {
-  const { loading } = props
+  const { data, handleTableChange, loading } = props
 
   const columns: TableProps<TurnRadiusTableData>['columns'] = [
     {
@@ -52,19 +52,27 @@ const TableTurnRadius: React.FC<Props> = (props) => {
 
   return (
     <div className='mt-5'>
-      <h5>รัศมีวงเลี้ยว</h5>
+      <Flex
+        wrap
+        align='center'
+        gap={3}
+      >
+        <h5>รัศมีวงเลี้ยว</h5>
+        <Tag color="#52c41a">ผ่านได้ ({data.data.filter(item => item.is_pass === true).length || 0})</Tag>
+        <Tag color="#f5222d">ไม่ผ่านไม่ได้ ({data.data.filter(item => item.is_pass === false).length || 0})</Tag>
+      </Flex>
       <Table
         columns={columns}
-        dataSource={[]}
+        dataSource={data.data || []}
         loading={loading}
         pagination={{
           defaultCurrent: 1,
           defaultPageSize: 10,
-          current: 1,
-          pageSize: 10,
-          total: 10,
-          // onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
-          showSizeChanger: true,
+          current: data.page,
+          pageSize: data.limit,
+          total: Number(data.total) || 0,
+          onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
+          showSizeChanger: false,
           position: ['bottomRight'],
           showTotal: (total, range) => {
             const totalPage = (range[1] + 1) - range[0]

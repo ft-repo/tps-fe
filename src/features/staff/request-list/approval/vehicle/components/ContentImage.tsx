@@ -51,7 +51,7 @@ const ContentImage: React.FC<Props> = (props) => {
       <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
         <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
           <Image
-            src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTW7RZtTSqqVEjgKI9QIM1MZjZo7LJIDBnd1w&s'
+            src={item.etc_vehicle?.vehicle_picture?.front_rear_url}
             alt={`image + ${index}`}
             width={'100%'}
             height={'100%'}

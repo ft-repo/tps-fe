@@ -2,6 +2,7 @@
 /* eslint-disable no-empty-pattern */
 import React from 'react'
 import { } from '../components'
+import { ResultPermitDetail } from '../../document/components'
 
 interface Props {
 
@@ -14,6 +15,7 @@ const EvaluationPermission: React.FC<Props> = (props) => {
     <div className='border-2 rounded-md p-4 mb-3'>
       <h3>เอกสารลงนามและใบอนุญาต</h3>
       <section className='mt-5'>
+        <ResultPermitDetail />
       </section>
     </div>
   )

@@ -1,7 +1,11 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
-import { Descriptions, DescriptionsProps } from 'antd'
+import React, { useCallback } from 'react'
+import { Descriptions, DescriptionsProps, message } from 'antd'
+import { useAppSelector } from '@/store'
+import dayjs from 'dayjs'
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
+import { AiOutlineFilePdf } from 'react-icons/ai'
 
 interface Props {
 
@@ -9,82 +13,111 @@ interface Props {
 
 const PetitionDetail: React.FC<Props> = (props) => {
   const { } = props
+  const { petition } = useAppSelector(state => state.staff.petition)
+  const document = petition.detail.document
+
+  const showFile = useCallback(async (fileUrl: string) => {
+    try {
+      const response = await getUploadAPI(fileUrl)
+      if (response.status === 200) {
+        console.log(response)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    }
+  }, [])
 
   const items: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'ชื่อบริษัท / ห้าง / ร้าน',
-      children: <p>{'-'}</p>,
+      children: <p>{document.business_name || '-'}</p>,
     },
     {
       key: '2',
       label: 'ประเภทนิติบุคคล',
-      children: <p>{'-'}</p>,
+      children: <p>{document.entity_type || '-'}</p>,
     },
     {
       key: '3',
       label: 'ที่อยู่บริษัท',
-      children: <p>{'-'}</p>,
+      children: <p>{document.address || '-'}</p>,
     },
     {
       key: '4',
       label: 'เลขทะเบียนนิติบุคคล',
-      children: <p>{'-'}</p>,
+      children: <p>{document.registration_no || '-'}</p>,
     },
     {
       key: '5',
       label: 'เบอร์โทรสำนักงาน',
-      children: <p>{'-'}</p>,
+      children: <p>{document.business_phone_no || '-'}</p>,
     },
     {
       key: '6',
       label: 'ผู้ติดต่อ / ผู้มอบอำนาจ',
-      children: <p>{'-'}</p>,
+      children: <p>{document.contact_name || '-'}</p>,
     },
     {
       key: '7',
       label: 'เบอร์โทรศัพท์',
-      children: <p>{'-'}</p>,
+      children: <p>{document.contact_phone_no || '-'}</p>,
     },
     {
       key: '8',
       label: 'ชื่อโครงการ',
-      children: <p>{'-'}</p>,
+      children: <p>{document.project_name || '-'}</p>,
     },
     {
       key: '9',
       label: 'ประเภทการขออนุญาต',
-      children: <p>{'-'}</p>,
+      children: <p>{document.petition_type || '-'}</p>,
     },
     {
       key: '10',
       label: 'วันที่เริ่มต้น',
-      children: <p>{'-'}</p>,
+      children: <p>{dayjs(document.start_date).format('DD MMMM YYYY') || '-'}</p>,
     },
     {
       key: '11',
       label: 'วันที่สิ้นสุด',
-      children: <p>{'-'}</p>,
+      children: <p>{dayjs(document.end_date).format('DD MMMM YYYY') || '-'}</p>,
     },
     {
       key: '12',
       label: 'ขนส่งจาก',
-      children: <p>{'-'}</p>,
+      children: <p>{document.start_point || '-'}</p>,
     },
     {
       key: '13',
       label: 'ไปยัง',
-      children: <p>{'-'}</p>,
+      children: <p>{document.end_point || '-'}</p>,
     },
     {
       key: '14',
       label: 'หนังสือมอบอำนาจ',
-      children: <p>{'-'}</p>,
+      children: (
+        <AiOutlineFilePdf
+          className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
+          onClick={() => showFile(document.poa_url)}
+        />
+      )
+      ,
     },
     {
       key: '15',
       label: 'หนังสือวิศวะเครื่องกล',
-      children: <p>{'-'}</p>,
+      children: (
+        <AiOutlineFilePdf
+          className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
+          onClick={() => showFile(document.mach_book_url)}
+        />
+      )
+      ,
     },
   ];
 

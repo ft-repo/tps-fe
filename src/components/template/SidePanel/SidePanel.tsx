@@ -1,7 +1,8 @@
 import classNames from 'classnames'
 import Drawer from '@/components/ui/Drawer'
 import { HiOutlineCog } from 'react-icons/hi'
-import SidePanelContent, { SidePanelContentProps } from './SidePanelContent'
+// import SidePanelContent, { SidePanelContentProps } from './SidePanelContent'
+import NotificationContent, { SidePanelContentProps } from './NotificationContent'
 import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import { setPanelExpand, useAppSelector, useAppDispatch } from '@/store'
 import type { CommonProps } from '@/@types/common'
@@ -46,7 +47,8 @@ const _SidePanel = (props: SidePanelProps) => {
                 onClose={closePanel}
                 onRequestClose={closePanel}
             >
-                <SidePanelContent callBackClose={closePanel} />
+                {/* <SidePanelContent callBackClose={closePanel} /> */}
+                <NotificationContent callBackClose={closePanel} />
             </Drawer>
         </>
     )

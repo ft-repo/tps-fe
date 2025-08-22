@@ -16,6 +16,12 @@ const ContentDetail: React.FC<Props> = (props) => {
     return arr.join(' : ')
   }, [])
 
+  const renderLicensePlate = useCallback((plateNo: string, plateProvince: string) => {
+    const licenseArr = [plateNo, plateProvince]
+    if (!licenseArr.length) return '-'
+    return licenseArr.join(' ').trim()
+  }, [])
+
   const vehicle_detail: DescriptionsProps['items'] = [
     {
       key: '1',
@@ -53,7 +59,7 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>{item.towing_vehicle.plate_no} {item.towing_vehicle.plate_province}</p>,
+      children: <p>{renderLicensePlate(item.towing_vehicle.plate_no, item.towing_vehicle.plate_province)}</p>,
     },
     {
       key: '2',
@@ -71,7 +77,7 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>{item.semi_trailer_vehicle.plate_no} {item.semi_trailer_vehicle.plate_province}</p>,
+      children: <p>{renderLicensePlate(item.semi_trailer_vehicle.plate_no, item.semi_trailer_vehicle.plate_province)}</p>,
     },
     {
       key: '2',
@@ -89,7 +95,7 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>{item.etc_vehicle?.plate_no || '-'} {item.etc_vehicle?.plate_province || '-'}</p>,
+      children: <p>{renderLicensePlate(item.etc_vehicle?.plate_no, item.etc_vehicle?.plate_province)}</p>,
     },
     {
       key: '2',
@@ -102,7 +108,7 @@ const ContentDetail: React.FC<Props> = (props) => {
     <>
       <section>
         <Descriptions
-          title="ข้อมูลยานพาหนะ (รถคู่ที่ 1)"
+          title={`ข้อมูลยานพาหนะ (รถ${item.sort || 'คู่ที่ 1'})`}
           items={vehicle_detail}
           column={1}
         />
