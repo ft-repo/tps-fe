@@ -43,7 +43,7 @@ function FormVehicle(props: FormVehicleProps) {
         <div>
           <h5>รถลากจูง</h5>
           <Controller
-            name={`vehicle.'${formIndex}.'towing_vehicle_id`}
+            name={`vehicle.${formIndex}.towing_vehicle_id`}
             control={control}
             render={({ field }) => {
               return (
@@ -64,7 +64,7 @@ function FormVehicle(props: FormVehicleProps) {
                     }}
                     onChange={(value) => {
                       field.onChange(value)
-                      setVehicleId(value as string)
+                      setVehicleId(value as unknown as string)
                     }}
                   />
                 </fieldset>
@@ -77,7 +77,7 @@ function FormVehicle(props: FormVehicleProps) {
         <div>
           <h5>รถกึ่งพ่วง</h5>
           <Controller
-            name={`vehicle.'${formIndex}.'semi_trailer_license_plate`}
+            name={`vehicle.${formIndex}.semi_trailer_vehicle_id`}
             control={control}
             render={({ field }) => {
               return (
@@ -97,7 +97,7 @@ function FormVehicle(props: FormVehicleProps) {
                       fontFamily: 'Noto Sans Thai',
                     }}
                     onChange={(value) => {
-                      setVehicleId(value as string)
+                      setVehicleId(value as unknown as string)
                       field.onChange(value)
                     }}
                   />
@@ -111,7 +111,7 @@ function FormVehicle(props: FormVehicleProps) {
         <div>
           <h5>สินค้า/เครื่องจักร</h5>
           <Controller
-            name={`vehicle.'${formIndex}.'mechanical_vehicle_license_plate`}
+            name={`vehicle.${formIndex}.etc_vehicle_id`}
             control={control}
             render={({ field }) => {
               return (
@@ -131,7 +131,7 @@ function FormVehicle(props: FormVehicleProps) {
                       fontFamily: 'Noto Sans Thai',
                     }}
                     onChange={(value) => {
-                      setVehicleId(value as string)
+                      setVehicleId(value as unknown as string)
                       field.onChange(value)
                     }}
                   />
@@ -148,7 +148,7 @@ function FormVehicle(props: FormVehicleProps) {
           <div className="grid grid-cols-2 xl:grid-cols-6 gap-4">
             <div className="xl:col-span-2">
               <Controller
-                name={`vehicle.'${formIndex}.'towing_axis_weight.0`}
+                name={`vehicle.${formIndex}.towing_axis_weight.0`}
                 control={control}
                 render={({ field }) => {
                   return (
@@ -169,7 +169,7 @@ function FormVehicle(props: FormVehicleProps) {
             </div>
             <div className="xl:col-span-2">
               <Controller
-                name={`vehicle.'${formIndex}.'towing_axis_weight.1`}
+                name={`vehicle.${formIndex}.towing_axis_weight.1`}
                 control={control}
                 render={({ field }) => {
                   return (
@@ -190,7 +190,7 @@ function FormVehicle(props: FormVehicleProps) {
             </div>
             <div className="xl:col-span-2">
               <Controller
-                name={`vehicle.'${formIndex}.'towing_axis_weight.2`}
+                name={`vehicle.${formIndex}.towing_axis_weight.2`}
                 control={control}
                 render={({ field }) => {
                   return (
@@ -220,7 +220,7 @@ function FormVehicle(props: FormVehicleProps) {
               <div key={index} className="xl:col-span-2">
                 <Controller
                   name={
-                    `vehicle.'${formIndex}.'semi_trailer_axis_weight.${index}`
+                    `vehicle.${formIndex}.semi_trailer_axis_weight.${index}`
                   }
                   control={control}
                   render={({ field }) => {
@@ -228,7 +228,6 @@ function FormVehicle(props: FormVehicleProps) {
                       <fieldset>
                         <Input
                           {...field}
-                          name={`form_template.'${formIndex}.${field.name}`}
                           placeholder={`เพลาที่ ${index + 1}`}
                           className="w-full"
                           size="large"
@@ -244,16 +243,16 @@ function FormVehicle(props: FormVehicleProps) {
             ))}
             <Button
               type="primary"
-              onClick={addedAxle}
               disabled={!enableAddAxle}
+              onClick={addedAxle}
             >
               เพิ่มเพลา
             </Button>
             <Button
               type="primary"
-              danger
-              onClick={removedAxle}
+              danger={true}
               disabled={!enableRemoveAxle}
+              onClick={removedAxle}
             >
               ลบเพลา
             </Button>

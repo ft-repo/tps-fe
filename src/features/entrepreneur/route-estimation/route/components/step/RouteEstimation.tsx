@@ -1,4 +1,8 @@
-import { Root, SummaryData, VehicleData } from '@/@types/entrepreneur/route-estimation'
+import {
+  Root,
+  SummaryData,
+  VehicleData,
+} from '@/@types/entrepreneur/route-estimation'
 import { Tabs, Button, Divider } from 'antd'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useCallback, useState, memo } from 'react'
@@ -7,6 +11,7 @@ import FormRouteEstimation from '../route-estimate/initial/FormRouteEstimation'
 import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
 import CardVehicleDetails from '../route-estimate/initial/CardVehicleDetails'
 import VehicleSummary from '../route-estimate/initial/VehicleSummary'
+import FormMapEstimation from '../route-estimate/initial/FormMapEstimation'
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
@@ -30,11 +35,11 @@ const defaultValues: Root = {
   ],
   start_point: {
     type: '',
-    coordinates: [],
+    coordinates: ['', ''],
   },
   end_point: {
     type: '',
-    coordinates: [],
+    coordinates: ['', ''],
   },
   vehicle_route: {
     type: '',
@@ -110,6 +115,8 @@ function RouteEstimation() {
 
   const [activeKey, setActiveKey] = useState(initialTabItems[0].key)
   const [tabItems, setTabItems] = useState<TabItem[]>(initialTabItems)
+  const [firstPoint, setFirstPoint] = useState<number[] | null>(null)
+  const [secondPoint, setSecondPoint] = useState<number[] | null>(null)
 
   const onAddedTab = useCallback(() => {
     append(defaultValues.vehicle[0])
@@ -170,30 +177,38 @@ function RouteEstimation() {
 
   const onSubmit = useCallback((values: Root) => {
     console.log('values ======> ', values)
+    alert(JSON.stringify(values))
   }, [])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <section className="w-full grid lg:grid-cols-3 gap-4 mb-5">
-        <div className="w-full lg:h-[50vh] col-span-2">
-          <Tabs
-            type="editable-card"
-            items={tabItems}
-            activeKey={activeKey}
-            tabBarExtraContent={
-              <Button
-                type="primary"
-                variant="solid"
-                color="gold"
-                className="text-black"
-                size="middle"
-                onClick={() => navigate('/route-estimation/other')}
-              >
-                ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)
-              </Button>
-            }
-            onEdit={onTabsEdit}
-            onChange={onTabsChange}
+        <div className="w-full col-span-2">
+          <div className="lg:min-h-[50vh] mb-5">
+            <Tabs
+              type="editable-card"
+              items={tabItems}
+              activeKey={activeKey}
+              tabBarExtraContent={
+                <Button
+                  type="primary"
+                  variant="solid"
+                  color="gold"
+                  className="text-black"
+                  size="middle"
+                  onClick={() => navigate('/route-estimation/other')}
+                >
+                  ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)
+                </Button>
+              }
+              onEdit={onTabsEdit}
+              onChange={onTabsChange}
+            />
+          </div>
+          <FormMapEstimation
+            control={control}
+            setFirstPoint={setFirstPoint}
+            setSecondPoint={setSecondPoint}
           />
         </div>
         <div className="col-span-1 order-first lg:order-last z-0 h-[50vh]">
