@@ -6,7 +6,7 @@ import {
   TableOther as TablePetitionExtended
 } from '../components'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
-import { getPetitionData, getPetitionExtendedData, setPetitionData, setPetitionExtendedData } from '@/store/slices/entrepreneur'
+import { getPetitionExtendedData, setPetitionExtendedData } from '@/store/slices/entrepreneur'
 import { FieldType } from '@/@types/entrepreneur/permit-list'
 
 interface Props {
