@@ -6,7 +6,7 @@ import { ContentSection } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { getPetitionDocument, getPetitionEstimateRoute, getPetitionVehicle } from '@/store/slices/staff';
+import { getPetitionDocument, getPetitionEstimateRoute, getPetitionStatus, getPetitionVehicle } from '@/store/slices/staff';
 
 interface Props {
 
@@ -25,6 +25,7 @@ const OtherScreen: React.FC<Props> = (props) => {
     dispatch(getPetitionDocument({ petition_id: String(petitionId) }))
     dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
     dispatch(getPetitionVehicle({ petition_id: String(petitionId) }))
+    dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
   }, [dispatch, petitionId])
 
   return (

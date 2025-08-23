@@ -2,8 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback } from 'react'
-import { Button } from '@/components/ui'
-import { Input } from 'antd'
+import { Col, Input, Row, Button } from 'antd'
 import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
@@ -31,32 +30,38 @@ const SeachCreateStaff: React.FC<Props> = (props) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className='flex items-center gap-3 xl:w-1/3'>
-        <Controller
-          name='keyword'
-          control={control}
-          render={({ field }) => {
-            return (
-              <Input
-                {...field}
-                name={field.name}
-                placeholder="ค้นหาชื่อผู้ใช้งาน"
-                className='w-full'
-                size='large'
-                style={{
-                  fontFamily: 'Noto Sans Thai'
-                }}
-              />
-            )
-          }}
-        />
-        <Button
-          type='submit'
-          variant='solid'
-        >
-          ค้นหา
-        </Button>
-      </div>
+      <Row gutter={[16, 16]} align={'middle'}>
+        <Col xs={24} sm={20} md={20} lg={20} xl={12} xxl={8}>
+          <Controller
+            name='keyword'
+            control={control}
+            render={({ field }) => {
+              return (
+                <Input
+                  {...field}
+                  name={field.name}
+                  placeholder="ค้นหาชื่อผู้ใช้งาน"
+                  className='w-full'
+                  size='large'
+                  style={{
+                    fontFamily: 'Noto Sans Thai'
+                  }}
+                />
+              )
+            }}
+          />
+        </Col>
+        <Col xs={24} sm={4} md={4} lg={4} xl={3} xxl={2}>
+          <Button
+            block
+            htmlType='submit'
+            type='primary'
+            size='large'
+          >
+            ค้นหา
+          </Button>
+        </Col>
+      </Row>
     </form>
   )
 }

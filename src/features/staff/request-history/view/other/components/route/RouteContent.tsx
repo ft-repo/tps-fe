@@ -113,7 +113,7 @@ const RouteContent: React.FC<Props> = (props) => {
 
   return (
     <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={8}>
         <section>
           <RouteDetail />
         </section>
@@ -129,7 +129,7 @@ const RouteContent: React.FC<Props> = (props) => {
           <EvaluateRouteDetail />
         </section>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={16}>
         <TableSummary
           data={petition.detail.estimate.summary.data}
           loading={loading}

@@ -6,7 +6,7 @@ import { ContentSection } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { getPetitionExtendedDetail } from '@/store/slices/staff';
+import { getPetitionExtendedDetail, getPetitionStatus } from '@/store/slices/staff';
 
 interface Props {
 
@@ -23,6 +23,7 @@ const DocumentScreen: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(getPetitionExtendedDetail(String(petitionId)))
+    dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
   }, [dispatch, petitionId])
 
   return (

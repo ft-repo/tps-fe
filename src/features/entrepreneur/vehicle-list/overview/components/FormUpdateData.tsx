@@ -4,8 +4,7 @@ import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { useAppSelector } from '@/store';
 import React, { useCallback } from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
-import { Select, Input, Upload, message } from 'antd';
-import { Button } from '@/components/ui';
+import { Select, Input, Upload, message, Button } from 'antd';
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService';
 
@@ -383,10 +382,9 @@ const FormUpdateData: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      variant="solid"
                       icon={<HiOutlineCloudUpload />}
-                      size='sm'
-                      type='button'
+                      htmlType='button'
+                      type='primary'
                     >
                       เพิ่มไฟล์ .pdf
                     </Button>

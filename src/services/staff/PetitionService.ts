@@ -99,3 +99,11 @@ export const getPetitionNotificationAPI = async (params: GetPaginateParams) => {
     params: { ...params }
   })
 }
+
+export const getPetitionStatusAPI = async (params: GetPetitionDetailParams) => {
+  return ApiService.fetchData<any, GetPetitionDetailParams>({
+    url: `/admin/petition/status`,
+    method: 'get',
+    params: { ...params }
+  })
+}

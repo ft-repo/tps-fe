@@ -149,7 +149,22 @@ export interface PetitionAdminState {
   petition_history: AdminPetition;
   petition_history_extended: AdminPetitionExtended;
   notification: AdminPetitionNotification;
+  petition_status: AdminPetitionStatus[];
   loading: boolean;
+}
+
+export interface AdminPetitionStatus {
+  id: number;
+  petition_id: number;
+  status_id: number;
+  remark: string;
+  document_url?: string;
+  is_approved: boolean;
+  is_skipped: boolean;
+  created_by: string;
+  created_at: string;
+  status: Status;
+  admin_creaded: AdminCreaded;
 }
 
 export interface AdminPetitionNotification {

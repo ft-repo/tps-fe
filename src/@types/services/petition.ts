@@ -1,3 +1,5 @@
+import { GetPaginateParams } from "../shared";
+
 export interface GetPetitionParams {
   search?: string;
   page: number;
@@ -71,8 +73,10 @@ export interface GetEstimateParams {
   estimate_id: string;
 }
 
-export interface GetEstimateDetailParams {
+export interface GetEstimateDetailParams extends GetPaginateParams {
   estimate_id: string;
-  page: number;
-  limit: number;
+}
+
+export interface GetRuralRoadParams extends GetPaginateParams {
+  petition_id: string;
 }

@@ -12,6 +12,7 @@ const VehicleListDetail: React.FC<Props> = (props) => {
   const { item } = props
 
   const renderAxisWeight = useCallback((arr: number[]) => {
+    if (!arr.length) return '-'
     return arr.join(' : ')
   }, [])
 
@@ -25,17 +26,17 @@ const VehicleListDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>{renderLicensePlate(item.towing_vehicle.plate_no, item.towing_vehicle.plate_province)}</p>,
+      children: <p>{renderLicensePlate(item?.towing_vehicle?.plate_no, item?.towing_vehicle?.plate_province)}</p>,
     },
     {
       key: '2',
       label: 'น้ำหนัก (กิโลกรัม)',
-      children: <p>{item.towing_vehicle.weight || '-'}</p>,
+      children: <p>{item?.towing_vehicle?.weight || '-'}</p>,
     },
     {
       key: '3',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>{renderAxisWeight(item.towing_vehicle.axis_weight)}</p>,
+      children: <p>{renderAxisWeight(item?.towing_vehicle?.axis_weight)}</p>,
     },
   ];
 
@@ -43,17 +44,17 @@ const VehicleListDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>{renderLicensePlate(item.semi_trailer_vehicle.plate_no, item.semi_trailer_vehicle.plate_province)}</p>,
+      children: <p>{renderLicensePlate(item?.semi_trailer_vehicle?.plate_no, item?.semi_trailer_vehicle?.plate_province)}</p>,
     },
     {
       key: '2',
       label: 'น้ำหนัก (กิโลกรัม)',
-      children: <p>{item.semi_trailer_vehicle.weight || '-'}</p>,
+      children: <p>{item?.semi_trailer_vehicle?.weight || '-'}</p>,
     },
     {
       key: '3',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>{renderAxisWeight(item.semi_trailer_vehicle.axis_weight)}</p>,
+      children: <p>{renderAxisWeight(item?.semi_trailer_vehicle?.axis_weight)}</p>,
     },
   ];
 
@@ -61,12 +62,12 @@ const VehicleListDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>{renderLicensePlate(item.etc_vehicle?.plate_no, item.etc_vehicle?.plate_province)}</p>,
+      children: <p>{renderLicensePlate(item?.etc_vehicle?.plate_no, item?.etc_vehicle?.plate_province)}</p>,
     },
     {
       key: '2',
       label: 'น้ำหนัก (กิโลกรัม)',
-      children: <p>{item.etc_vehicle?.weight || '-'}</p>,
+      children: <p>{item?.etc_vehicle?.weight || '-'}</p>,
     },
   ];
 
@@ -74,10 +75,10 @@ const VehicleListDetail: React.FC<Props> = (props) => {
     <>
       <section>
         <Row gutter={[16, 16]}>
-          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+          <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={8}>
             <figure className='h-60 relative overflow-hidden rounded-lg'>
               <Image
-                src={item.towing_vehicle.vehicle_picture.front_rear_url}
+                src={item?.towing_vehicle?.vehicle_picture?.front_rear_url}
                 alt={'towering-vehicle'}
                 width={'100%'}
                 height={'100%'}
@@ -91,21 +92,23 @@ const VehicleListDetail: React.FC<Props> = (props) => {
               </section>
             </figure>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
+          <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={16}>
             <Descriptions
               title="ข้อมูลรถลากจูง"
               items={towering_vehicle}
               column={1}
+              layout='vertical'
+              size='small'
             />
           </Col>
         </Row>
       </section>
       <section className='mt-3'>
         <Row gutter={[16, 16]}>
-          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+          <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={8}>
             <figure className='h-60 relative overflow-hidden rounded-lg'>
               <Image
-                src={item.semi_trailer_vehicle.vehicle_picture.front_rear_url}
+                src={item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url}
                 alt={'semi-vehicle-img'}
                 width={'100%'}
                 height={'100%'}
@@ -119,21 +122,23 @@ const VehicleListDetail: React.FC<Props> = (props) => {
               </section>
             </figure>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
+          <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={16}>
             <Descriptions
               title="ข้อมูลรถกึ่งพ่วง 4 เพลา 8"
               items={semi_trailer_vehicle}
               column={1}
+              layout='vertical'
+              size='small'
             />
           </Col>
         </Row>
       </section>
       <section className='mt-3'>
         <Row gutter={[16, 16]}>
-          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+          <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={8}>
             <figure className='h-60 relative overflow-hidden rounded-lg'>
               <Image
-                src={item.etc_vehicle?.vehicle_picture?.front_rear_url}
+                src={item?.etc_vehicle?.vehicle_picture?.front_rear_url}
                 alt={'mech-img'}
                 width={'100%'}
                 height={'100%'}
@@ -147,11 +152,13 @@ const VehicleListDetail: React.FC<Props> = (props) => {
               </section>
             </figure>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
+          <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={16}>
             <Descriptions
               title="ข้อมูลเครื่องจักร"
               items={etc_vehicle}
               column={1}
+              layout='vertical'
+              size='small'
             />
           </Col>
         </Row>

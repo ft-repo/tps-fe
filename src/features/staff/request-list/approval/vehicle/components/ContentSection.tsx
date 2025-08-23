@@ -15,7 +15,7 @@ const ContentSection: React.FC<Props> = (props) => {
 
   return (
     <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={10} xxl={10}>
         <section>
           <ContentDetail
             index={index}
@@ -26,7 +26,7 @@ const ContentSection: React.FC<Props> = (props) => {
           <ContentForm />
         </section>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={14}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={14} xxl={14}>
         <ContentImage
           index={index}
           item={item}

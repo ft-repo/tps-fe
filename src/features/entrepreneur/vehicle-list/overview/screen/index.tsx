@@ -2,7 +2,6 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useEffect, useState } from 'react'
-import { Button } from '@/components/ui';
 import { TableVehicleList, FormSearchVehicleList, ModalUpdateVehicle } from '../components';
 import { FaPlus as PlusIcon } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +11,7 @@ import { getVehicleData, setVehicleList } from '@/store/slices/entrepreneur';
 import { VehicleListByIDResponse } from '@/@types/services/vehicle';
 import { TableData } from '@/@types/entrepreneur/vehicle-list';
 import { FieldType } from '../components/FormSearchVehicleList';
-import { message, Modal } from 'antd';
+import { Button, message, Modal } from 'antd';
 
 interface Props {
 
@@ -228,13 +227,23 @@ const OverviewScreen: React.FC<Props> = (props) => {
       <section className='flex justify-between items-center flex-wrap'>
         <h3>รายการรถ</h3>
         <Button
+          htmlType='button'
+          type='primary'
+          size='large'
+          className='w-full lg:w-auto'
+          icon={<PlusIcon />}
+          onClick={() => navigate('/vehicle-list/create')}
+        >
+          เพิ่มรายการรถ
+        </Button>
+        {/* <Button
           variant='solid'
           size='sm'
           icon={<PlusIcon />}
           onClick={() => navigate('/vehicle-list/create')}
         >
           เพิ่มรายการรถ
-        </Button>
+        </Button> */}
       </section>
       <section className='mt-5'>
         <FormSearchVehicleList

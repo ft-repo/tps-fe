@@ -71,22 +71,22 @@ const TablePetitionDocument: React.FC<Props> = (props) => {
     {
       no: '1',
       petition_list: 'สำเนาบัตรประชาชน',
-      file_id: detail.user_document.cid_url
+      file_id: detail?.user_document?.cid_url
     },
     {
       no: '2',
       petition_list: 'สำเนาหนังสือรับรองนิติบุคคล',
-      file_id: detail.user_document.company_certificate_url
+      file_id: detail?.user_document?.company_certificate_url
     },
     {
       no: '3',
       petition_list: 'แบบคำขออนุยาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท',
-      file_id: detail.user_document.vehicle_permit_url
+      file_id: detail?.user_document?.vehicle_permit_url
     },
     {
       no: '4',
       petition_list: 'หนังสือมอบอำนาจพร้อมตราประทับของผู้มีอำนาจลงนามแทนบริษัทหรือห้างหุ้นส่วน',
-      file_id: detail.user_document.power_of_attorney_url
+      file_id: detail?.user_document?.power_of_attorney_url
     },
   ]
 

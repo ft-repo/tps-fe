@@ -14,8 +14,8 @@ const ContentImage: React.FC<Props> = (props) => {
 
   return (
     <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.towing_vehicle.vehicle_picture.front_rear_url}
             alt={`image + ${index}`}
@@ -31,8 +31,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.semi_trailer_vehicle.vehicle_picture.front_rear_url}
             alt={`image + ${index}`}
@@ -48,8 +48,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.etc_vehicle?.vehicle_picture?.front_rear_url}
             alt={`image + ${index}`}
@@ -65,8 +65,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.truck_dimension_url}
             alt={`image + ${index}`}
@@ -82,8 +82,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.semi_trailer_dimension_url}
             alt={`image + ${index}`}
@@ -99,8 +99,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.cargo_dimension_url}
             alt={`image + ${index}`}
@@ -116,8 +116,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.combined_vehicle_url}
             alt={`image + ${index}`}
@@ -133,8 +133,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.turning_radius_url}
             alt={`image + ${index}`}
@@ -150,8 +150,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.highway_dept_permit_url}
             alt={`image + ${index}`}
@@ -167,8 +167,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.rural_highway_dept_permit_number_url}
             alt={`image + ${index}`}
@@ -184,8 +184,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.rural_highway_dept_permit_url}
             alt={`image + ${index}`}
@@ -201,8 +201,8 @@ const ContentImage: React.FC<Props> = (props) => {
           </section>
         </figure>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-        <figure className='h-60 relative overflow-hidden rounded-lg bg-[#101524]'>
+      <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+        <figure className='h-60 relative overflow-hidden rounded-lg'>
           <Image
             src={item.rural_highway_dept_permit_number_url}
             alt={`image + ${index}`}

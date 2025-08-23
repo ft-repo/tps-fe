@@ -14,7 +14,7 @@ interface Props {
 const PetitionDetail: React.FC<Props> = (props) => {
   const { } = props
   const { petition } = useAppSelector(state => state.staff.petition)
-  const document = petition.detail.document
+  const document = petition?.detail?.document
 
   const showFile = useCallback(async (fileUrl: string) => {
     try {
@@ -35,67 +35,67 @@ const PetitionDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'ชื่อบริษัท / ห้าง / ร้าน',
-      children: <p>{document.business_name || '-'}</p>,
+      children: <p>{document?.business_name || '-'}</p>,
     },
     {
       key: '2',
       label: 'ประเภทนิติบุคคล',
-      children: <p>{document.entity_type || '-'}</p>,
+      children: <p>{document?.entity_type || '-'}</p>,
     },
     {
       key: '3',
       label: 'ที่อยู่บริษัท',
-      children: <p>{document.address || '-'}</p>,
+      children: <p>{document?.address || '-'}</p>,
     },
     {
       key: '4',
       label: 'เลขทะเบียนนิติบุคคล',
-      children: <p>{document.registration_no || '-'}</p>,
+      children: <p>{document?.registration_no || '-'}</p>,
     },
     {
       key: '5',
       label: 'เบอร์โทรสำนักงาน',
-      children: <p>{document.business_phone_no || '-'}</p>,
+      children: <p>{document?.business_phone_no || '-'}</p>,
     },
     {
       key: '6',
       label: 'ผู้ติดต่อ / ผู้มอบอำนาจ',
-      children: <p>{document.contact_name || '-'}</p>,
+      children: <p>{document?.contact_name || '-'}</p>,
     },
     {
       key: '7',
       label: 'เบอร์โทรศัพท์',
-      children: <p>{document.contact_phone_no || '-'}</p>,
+      children: <p>{document?.contact_phone_no || '-'}</p>,
     },
     {
       key: '8',
       label: 'ชื่อโครงการ',
-      children: <p>{document.project_name || '-'}</p>,
+      children: <p>{document?.project_name || '-'}</p>,
     },
     {
       key: '9',
       label: 'ประเภทการขออนุญาต',
-      children: <p>{document.petition_type || '-'}</p>,
+      children: <p>{document?.petition_type || '-'}</p>,
     },
     {
       key: '10',
       label: 'วันที่เริ่มต้น',
-      children: <p>{dayjs(document.start_date).format('DD MMMM YYYY') || '-'}</p>,
+      children: <p>{document?.start_date ? dayjs(document?.start_date).format('DD MMMM YYYY') : '-'}</p>,
     },
     {
       key: '11',
       label: 'วันที่สิ้นสุด',
-      children: <p>{dayjs(document.end_date).format('DD MMMM YYYY') || '-'}</p>,
+      children: <p>{document?.end_date ? dayjs(document?.end_date).format('DD MMMM YYYY') : '-'}</p>,
     },
     {
       key: '12',
       label: 'ขนส่งจาก',
-      children: <p>{document.start_point || '-'}</p>,
+      children: <p>{document?.start_point || '-'}</p>,
     },
     {
       key: '13',
       label: 'ไปยัง',
-      children: <p>{document.end_point || '-'}</p>,
+      children: <p>{document?.end_point || '-'}</p>,
     },
     {
       key: '14',
@@ -103,10 +103,9 @@ const PetitionDetail: React.FC<Props> = (props) => {
       children: (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(document.poa_url)}
+          onClick={() => showFile(document?.poa_url)}
         />
       )
-      ,
     },
     {
       key: '15',
@@ -114,10 +113,9 @@ const PetitionDetail: React.FC<Props> = (props) => {
       children: (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(document.mach_book_url)}
+          onClick={() => showFile(document?.mach_book_url)}
         />
       )
-      ,
     },
   ];
 
@@ -125,7 +123,9 @@ const PetitionDetail: React.FC<Props> = (props) => {
     <Descriptions
       title="ข้อมูลผู้ประสงค์ขออนุญาต"
       items={items}
-      column={3}
+      column={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 2, xxl: 3 }}
+      layout='vertical'
+      size='small'
     />
   )
 }

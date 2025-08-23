@@ -15,7 +15,7 @@ const VehicleContent: React.FC<Props> = (props) => {
 
   return (
     <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={8} xxl={8}>
         <section>
           <VehicleDetail
             item={item}
@@ -25,7 +25,7 @@ const VehicleContent: React.FC<Props> = (props) => {
           <EvaluateVehicleDetail />
         </section>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={16} xxl={16}>
         <VehicleListDetail
           item={item}
         />
