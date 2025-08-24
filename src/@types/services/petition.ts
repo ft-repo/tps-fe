@@ -45,3 +45,34 @@ export interface PetitionStatus {
 }
 
 // ADMIN
+export interface PetitionPostBody {
+  petition_id: number;
+  status_id: number;
+  is_approved: boolean;
+  remark: string;
+  document_url: string;
+  is_skipped: boolean;
+}
+
+export interface PetitionExtendedPostBody {
+  petition_exid: number;
+  status_id: number;
+  is_approved: boolean;
+  remark: string;
+  reply_message: string;
+  document_url: string;
+}
+
+export interface GetPetitionDetailParams {
+  petition_id: string;
+}
+
+export interface GetEstimateParams {
+  estimate_id: string;
+}
+
+export interface GetEstimateDetailParams {
+  estimate_id: string;
+  page: number;
+  limit: number;
+}

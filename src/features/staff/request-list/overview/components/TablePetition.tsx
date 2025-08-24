@@ -116,7 +116,7 @@ const makeStepRenderer =
                       'null';
 
                 navigate(
-                  `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&is_approved=${approved}`
+                  `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`
                 );
               }
               : undefined
@@ -131,7 +131,7 @@ const makeStepRenderer =
                 flow?.is_approved === false ? 'false' :
                   'null';
             navigate(
-              `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&is_approved=${approved}`
+              `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`
             );
           }}
         >

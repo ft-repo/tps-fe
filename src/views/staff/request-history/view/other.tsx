@@ -20,7 +20,8 @@ const OtherIndex: React.FC<Props> = (props) => {
       }}
     >
       <OtherScreen />
-    </ConfigProvider>)
+    </ConfigProvider>
+  )
 }
 
 export default React.memo<Props>(OtherIndex)

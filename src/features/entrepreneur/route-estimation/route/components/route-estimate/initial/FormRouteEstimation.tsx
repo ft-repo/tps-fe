@@ -1,80 +1,70 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable react-refresh/only-export-components */
-/* eslint-disable import/no-unresolved */
-import React, { useEffect, useRef } from 'react'
-import { Input, Select } from '@/components/ui'
-import { Control, Controller } from 'react-hook-form'
-import { FieldType, FieldArray } from '@/@types/entrepreneur/route-estimation'
-import CardVehicleDetails from './CardVehicleDetails';
-import VehicleSummary from './VehicleSummary';
-import { SUMMARY_DATA, VEHICLE_DATA } from '../../../mock';
+import { Root, VehicleId } from '@/@types/entrepreneur/route-estimation'
+import { useAppDispatch, useAppSelector } from '@/store'
+import { getVehicleData } from '@/store/slices/entrepreneur/vehicleListSlice'
+import { Input, Select } from 'antd'
+import { FC, useContext, useEffect, useState } from 'react'
+import { Control, Controller, FieldArray } from 'react-hook-form'
+import FormVehicle from './FormVehicle'
+import { VehicleIdContext } from '../../step/RouteEstimation'
 
 interface Props {
-  formItem: FieldArray;
-  formIndex: number;
-  control: Control<FieldType>
-  setFirstPoint?: (point: [number, number]) => void
-  setSecondPoint?: (point: [number, number]) => void
+  formItem: FieldArray
+  formIndex: number
+  control: Control<Root>
+  setVehicleId: (vehicleId: VehicleId) => void
 }
 
-const FormRouteEstimation: React.FC<Props> = (props) => {
-  const { formItem, formIndex, control, setFirstPoint, setSecondPoint } = props
-  const firstPointTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-  const secondPointTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+const FormRouteEstimation: FC<Props> = (props: Props) => {
+  const { formIndex, control, setVehicleId } = props
+  const dispatch = useAppDispatch()
+  const { vehicle_type } = useAppSelector((state) => state.master)
+  const { overview } = useAppSelector((state) => state.entrepreneur.vehicleList)
+  const [vehicleType, setVehicleType] = useState<number[]>([])
 
-  console.log(formItem)
-
-  // Cleanup timeouts on unmount
   useEffect(() => {
-    return () => {
-      if (firstPointTimeoutRef.current) {
-        clearTimeout(firstPointTimeoutRef.current)
-      }
-      if (secondPointTimeoutRef.current) {
-        clearTimeout(secondPointTimeoutRef.current)
-      }
-    }
-  }, [])
+    dispatch(
+      getVehicleData({
+        page: 1,
+        limit: 1000,
+      }),
+    )
+  }, [dispatch])
 
   return (
-    <>
+    <div key={formIndex}>
       <section>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2">
-            <Controller
-              name={`form_template.'${formIndex}.'vehicle_type` as `form_template.0.vehicle_type`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>เลือกประเภทจับคู่</label>
-                    <Select
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="เลือกประเภทจับคู่"
-                      options={[
-                        {
-                          label: 'รถลากจูง + รถกึ่งพ่วง + สินค้า / เครื่องจักร',
-                          value: '1',
-                        },
-                        {
-                          label: 'รถลากจูง + รถกึ่งพ่วง',
-                          value: '2',
-                        },
-                        {
-                          label: 'สินค้า / เครื่องจักร',
-                          value: '3',
-                        },
-                      ] as any}
-                    />
-                  </fieldset>
-                )
-              }}
-            />
+        <div className="grid grid-cols-3 gap-4">
+          <div className="col-span-2">
+            <fieldset>
+              <label>เลือกประเภทจับคู่</label>
+              <Select
+                id="vehicle_type"
+                mode="multiple"
+                placeholder="กรุณาเลือก"
+                options={vehicle_type}
+                fieldNames={{
+                  label: 'name',
+                  value: 'id',
+                }}
+                className="w-full"
+                size="large"
+                style={{
+                  fontFamily: 'Noto Sans Thai',
+                }}
+                onChange={(value) => {
+                  setVehicleType(value)
+                  setVehicleId({
+                    towing_vehicle_id: undefined,
+                    semi_trailer_vehicle_id: undefined,
+                    etc_vehicle_id: undefined,
+                  })
+                }}
+              />
+            </fieldset>
           </div>
           <div>
             <Controller
-              name={`form_template.'${formIndex}.'turn_radius` as `form_template.0.turn_radius`}
+              name={`vehicle.${formIndex}.turn_radius`}
               control={control}
               render={({ field }) => {
                 return (
@@ -82,284 +72,11 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
                     <label>รัศมีวงเลี้ยว</label>
                     <Input
                       {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="รัศมีวงเลี้ยว"
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-        </div>
-      </section>
-      <section className='mt-5'>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-          <div>
-            <h5>รถลากจูง</h5>
-            <Controller
-              name={`form_template.'${formIndex}.'recovery_vehicle_license_plate` as `form_template.0.recovery_vehicle_license_plate`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>เลขทะเบียน / เลขตัวรถ</label>
-                    <Select
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="กรุณาเลือก"
-                      options={[
-                        {
-                          label: '83 - 9120',
-                          value: '83 - 9120',
-                        }
-                      ] as any}
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div>
-            <h5>รถกึ่งพ่วง</h5>
-            <Controller
-              name={`form_template.'${formIndex}.'semi_trailer_license_plate` as `form_template.0.semi_trailer_license_plate`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>เลขทะเบียน / เลขตัวรถ</label>
-                    <Select
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="กรุณาเลือก"
-                      options={[
-                        {
-                          label: '83 - 9120',
-                          value: '83 - 9120',
-                        }
-                      ] as any}
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div>
-            <h5>สินค้า/เครื่องจักร</h5>
-            <Controller
-              name={`form_template.'${formIndex}.'mechanical_vehicle_license_plate` as `form_template.0.mechanical_vehicle_license_plate`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>เลขทะเบียน / เลขตัวรถ</label>
-                    <Select
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="กรุณาเลือก"
-                      options={[
-                        {
-                          label: '83 - 9120',
-                          value: '83 - 9120',
-                        }
-                      ] as any}
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-        </div>
-      </section>
-      <section className='mt-5'>
-        <h5>น้ำหนักลงเพลา รถลากจูง (กิโลกรัม)</h5>
-        <div className="grid lg:grid-cols-2 xl:grid-cols-8 gap-4">
-          <div className="xl:col-span-2">
-            <Controller
-              name={`form_template.'${formIndex}.'recover_vehicle_chassis_weight_1` as `form_template.0.recover_vehicle_chassis_weight_1`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
                       placeholder="กรุณาระบุ"
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <Controller
-              name={`form_template.'${formIndex}.'recover_vehicle_chassis_weight_2` as `form_template.0.recover_vehicle_chassis_weight_2`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="กรุณาระบุ"
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <Controller
-              name={`form_template.'${formIndex}.'recover_vehicle_chassis_weight_3` as `form_template.0.recover_vehicle_chassis_weight_3`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="กรุณาระบุ"
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-        </div>
-      </section>
-      <section className='mt-5'>
-        <h5>น้ำหนักลงเพลา รถกึ่งพ่วง (กิโลกรัม)</h5>
-        <div className="grid lg:grid-cols-2 xl:grid-cols-8 gap-4">
-          <div className="xl:col-span-2">
-            <Controller
-              name={`form_template.'${formIndex}.'semi_trailer_chassis_weight_1` as `form_template.0.semi_trailer_chassis_weight_1`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="กรุณาระบุ"
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <Controller
-              name={`form_template.'${formIndex}.'semi_trailer_chassis_weight_2` as `form_template.0.semi_trailer_chassis_weight_2`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="กรุณาระบุ"
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <Controller
-              name={`form_template.'${formIndex}.'semi_trailer_chassis_weight_3` as `form_template.0.semi_trailer_chassis_weight_3`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="กรุณาระบุ"
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div className="xl:col-span-2">
-            <Controller
-              name={`form_template.'${formIndex}.'semi_trailer_chassis_weight_4` as `form_template.0.semi_trailer_chassis_weight_4`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="กรุณาระบุ"
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-        </div>
-      </section>
-      <section className='mt-5'>
-        <h5>เส้นทาง</h5>
-        <div className="grid grid-cols-2 xl:grid-cols-8 gap-4">
-          <div className="xl:col-span-4">
-            <Controller
-              name={`form_template.'${formIndex}.'start_route` as `form_template.0.start_route`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>ต้นทาง</label>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="ต้นทาง"
-                      onChange={(e) => {
-                        field.onChange(e)
-                        const [lat, lng] = e.target.value.split(',').map(Number) ?? []
-                        
-                        // Clear existing timeout
-                        if (firstPointTimeoutRef.current) {
-                          clearTimeout(firstPointTimeoutRef.current)
-                        }
-                        
-                        // Set new timeout for 500ms delay
-                        firstPointTimeoutRef.current = setTimeout(() => {
-                          setFirstPoint?.([lat, lng])
-                        }, 500)
-                      }}
-                    />
-                  </fieldset>
-                )
-              }}
-            />
-          </div>
-          <div className="xl:col-span-4">
-            <Controller
-              name={`form_template.'${formIndex}.'end_route` as `form_template.0.end_route`}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>ปลายทาง</label>
-                    <Input
-                      {...field}
-                      name={`form_template.'${formIndex}.${field.name}`}
-                      placeholder="ปลายทาง"
-                      onChange={(e) => {
-                        field.onChange(e)
-                        const [lat, lng] = e.target.value.split(',').map(Number) ?? []
-                        
-                        // Clear existing timeout
-                        if (secondPointTimeoutRef.current) {
-                          clearTimeout(secondPointTimeoutRef.current)
-                        }
-                        
-                        // Set new timeout for 500ms delay
-                        secondPointTimeoutRef.current = setTimeout(() => {
-                          setSecondPoint?.([lat, lng])
-                        }, 500)
+                      className="w-full"
+                      size="large"
+                      style={{
+                        fontFamily: 'Noto Sans Thai',
                       }}
                     />
                   </fieldset>
@@ -369,21 +86,17 @@ const FormRouteEstimation: React.FC<Props> = (props) => {
           </div>
         </div>
       </section>
-      <section className='mt-5'>
-        <h5>รายละเอียด</h5>
-        <section className='mb-3'>
-          <VehicleSummary
-            data={SUMMARY_DATA}
-          />
-        </section>
-        <section>
-          <CardVehicleDetails
-            data={VEHICLE_DATA}
-          />
-        </section>
+      <section className="mt-5">
+        <FormVehicle
+          vehicleType={vehicleType}
+          formIndex={formIndex}
+          control={control}
+          vehicleList={overview}
+          setVehicleId={setVehicleId}
+        />
       </section>
-    </>
+    </div>
   )
 }
 
-export default React.memo<Props>(FormRouteEstimation)
+export default FormRouteEstimation

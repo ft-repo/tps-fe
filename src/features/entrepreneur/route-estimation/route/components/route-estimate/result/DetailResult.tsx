@@ -1,9 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldArray } from '@/@types/entrepreneur/route-estimation'
 import React from 'react'
-import CardVehicleDetails from '../initial/CardVehicleDetails';
+import CardVehicleDetails from '../initial/DetailSection/CardVehicleDetails';
 import { SUMMARY_DATA, VEHICLE_DATA } from '../../../mock';
-import VehicleSummary from '../initial/VehicleSummary';
+import VehicleSummary from '../initial/DetailSection/VehicleSummary';
 import MapRouteEstimation from '../initial/MapRouteEstimation';
 
 interface Props {

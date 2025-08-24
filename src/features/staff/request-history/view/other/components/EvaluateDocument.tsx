@@ -1,0 +1,26 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable no-empty-pattern */
+import React from 'react'
+import { PetitionDetail, EvaluateDocumentDetail } from '../components'
+
+interface Props {
+
+}
+
+const EvaluationDocument: React.FC<Props> = (props) => {
+  const { } = props
+
+  return (
+    <div className='border-2 rounded-md p-4 mb-3'>
+      <h3>ตรวจสอบเอกสาร</h3>
+      <section className='mt-5'>
+        <PetitionDetail />
+      </section>
+      <section className='mt-5'>
+        <EvaluateDocumentDetail />
+      </section>
+    </div>
+  )
+}
+
+export default React.memo<Props>(EvaluationDocument)

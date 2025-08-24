@@ -5,7 +5,6 @@ import { EstimateResult, RouteEstimation, RequestPermit } from '../components'
 import { useRouteContext } from '../context'
 
 interface Props {
-
 }
 
 const RouteEstimationScreen: React.FC<Props> = (props) => {
