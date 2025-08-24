@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
-import { ContextProps, FieldType } from '@/@types/entrepreneur/route-estimation'
+import { ContextProps, RouteEstimationResponse } from '@/@types/entrepreneur/route-estimation'
 import React, { createContext, useContext, useState } from 'react'
 
 export const PageContext = createContext<ContextProps | null>(null)
@@ -9,7 +9,7 @@ export const PageContext = createContext<ContextProps | null>(null)
 export const RouteProvider = (props: any) => {
   const { children } = props
   const [step, setStep] = useState<number>(1)
-  const [dataParser, setDataParser] = useState<FieldType>({ form_template: [] })
+  const [dataParser, setDataParser] = useState<RouteEstimationResponse>({ estimate: [], set_id: '' })
 
   return (
     <PageContext.Provider

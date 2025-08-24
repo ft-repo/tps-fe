@@ -1,24 +1,25 @@
-import { Root, VehicleId } from '@/@types/entrepreneur/route-estimation'
+import { RouteEstimationRequest } from '@/@types/entrepreneur/route-estimation'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { getVehicleData } from '@/store/slices/entrepreneur/vehicleListSlice'
-import { Input, Select } from 'antd'
-import { FC, useContext, useEffect, useState } from 'react'
+import { Input, Select, Spin } from 'antd'
+import { FC, useEffect, useState } from 'react'
 import { Control, Controller, FieldArray } from 'react-hook-form'
 import FormVehicle from './FormVehicle'
-import { VehicleIdContext } from '../../step/RouteEstimation'
+import DetailSection from './DetailSection'
 
 interface Props {
   formItem: FieldArray
   formIndex: number
-  control: Control<Root>
-  setVehicleId: (vehicleId: VehicleId) => void
+  control: Control<RouteEstimationRequest>
 }
 
 const FormRouteEstimation: FC<Props> = (props: Props) => {
-  const { formIndex, control, setVehicleId } = props
+  const { formIndex, control } = props
   const dispatch = useAppDispatch()
   const { vehicle_type } = useAppSelector((state) => state.master)
-  const { overview } = useAppSelector((state) => state.entrepreneur.vehicleList)
+  const { overview, loading } = useAppSelector(
+    (state) => state.entrepreneur.vehicleList,
+  )
   const [vehicleType, setVehicleType] = useState<number[]>([])
 
   useEffect(() => {
@@ -53,11 +54,6 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
                 }}
                 onChange={(value) => {
                   setVehicleType(value)
-                  setVehicleId({
-                    towing_vehicle_id: undefined,
-                    semi_trailer_vehicle_id: undefined,
-                    etc_vehicle_id: undefined,
-                  })
                 }}
               />
             </fieldset>
@@ -72,11 +68,16 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
                     <label>รัศมีวงเลี้ยว</label>
                     <Input
                       {...field}
+                      value={field.value as number}
                       placeholder="กรุณาระบุ"
                       className="w-full"
                       size="large"
                       style={{
                         fontFamily: 'Noto Sans Thai',
+                      }}
+                      onChange={(e) => {
+                        const newVal = Number(e.target.value)
+                        field.onChange(newVal)
                       }}
                     />
                   </fieldset>
@@ -92,9 +93,9 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
           formIndex={formIndex}
           control={control}
           vehicleList={overview}
-          setVehicleId={setVehicleId}
         />
       </section>
+      {loading ? <Spin /> : <DetailSection />}
     </div>
   )
 }

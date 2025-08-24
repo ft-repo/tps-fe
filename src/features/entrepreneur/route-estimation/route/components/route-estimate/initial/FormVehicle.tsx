@@ -1,23 +1,28 @@
-import { Root, VehicleId } from '@/@types/entrepreneur/route-estimation'
+import { RouteEstimationRequest } from '@/@types/entrepreneur/route-estimation'
+import { VehicleDetailForRouteEstimation } from '@/@types/services/vehicle'
+import { getVehicleByIDAPI } from '@/services/entrepreneur/VehicleListService'
+import { setLoading, useAppDispatch } from '@/store'
+import { setVehicleDetailForRouteEstimation } from '@/store/slices/entrepreneur/vehicleListSlice'
 import { Button, Input, Select } from 'antd'
-import { memo, useCallback, useState } from 'react'
-import { Control, Controller } from 'react-hook-form'
+import { memo, useCallback, useEffect, useState } from 'react'
+import { Control, Controller, useWatch } from 'react-hook-form'
 
 interface FormVehicleProps {
   vehicleType: number[]
   formIndex: number
-  control: Control<Root>
+  control: Control<RouteEstimationRequest>
   vehicleList: any
-  setVehicleId: (id: VehicleId) => void
 }
 
 function FormVehicle(props: FormVehicleProps) {
-  const { vehicleType, formIndex, control, vehicleList, setVehicleId } = props
+  const { vehicleType, formIndex, control, vehicleList } = props
+  const dispatch = useAppDispatch()
   const [enableAddAxle, setEnableAddAxle] = useState<boolean>(true)
   const [enableRemoveAxle, setEnableRemoveAxle] = useState<boolean>(false)
   const [axles, setAxles] = useState<number>(4)
-  
-  const vehicleId = {}
+  const towingId = useWatch({ control, name: `vehicle.${formIndex}.towing_vehicle_id` })
+  const semiTrailerId = useWatch({ control, name: `vehicle.${formIndex}.semi_trailer_vehicle_id` })
+  const etcId = useWatch({ control, name: `vehicle.${formIndex}.etc_vehicle_id` })
 
   const addedAxle = useCallback(() => {
     if (axles >= 4 && axles < 7) {
@@ -38,6 +43,31 @@ function FormVehicle(props: FormVehicleProps) {
       }
     }
   }, [axles])
+
+  const getVehicleDetail = useCallback(async () => {
+    const detailForRouteEstimation: VehicleDetailForRouteEstimation = {} as VehicleDetailForRouteEstimation
+    dispatch(setLoading(true))
+
+    if (towingId) {
+      const towing = await getVehicleByIDAPI(towingId)
+      detailForRouteEstimation.towing_vehicle_detail = towing.data
+    }
+    if (semiTrailerId) {
+      const semiTrailer = await getVehicleByIDAPI(semiTrailerId)
+      detailForRouteEstimation.semi_trailer_vehicle_detail = semiTrailer.data
+    }
+    if (etcId) {
+      const etc = await getVehicleByIDAPI(etcId)
+      detailForRouteEstimation.etc_vehicle_detail = etc.data
+    }
+
+    dispatch(setVehicleDetailForRouteEstimation(detailForRouteEstimation))
+    dispatch(setLoading(false))
+  }, [dispatch, towingId, semiTrailerId, etcId])
+
+  useEffect(() => {
+    getVehicleDetail()
+  }, [getVehicleDetail, control])
 
   return (
     <section className="grid lg:grid-cols-3 gap-4">
@@ -66,10 +96,6 @@ function FormVehicle(props: FormVehicleProps) {
                     }}
                     onChange={(value) => {
                       field.onChange(value)
-                      setVehicleId({
-                        ...vehicleId,
-                        towing_vehicle_id: value as unknown as number,
-                      })
                     }}
                   />
                 </fieldset>
@@ -102,10 +128,6 @@ function FormVehicle(props: FormVehicleProps) {
                       fontFamily: 'Noto Sans Thai',
                     }}
                     onChange={(value) => {
-                      setVehicleId({
-                        ...vehicleId,
-                        semi_trailer_vehicle_id: value as unknown as number,
-                      })
                       field.onChange(value)
                     }}
                   />
@@ -139,10 +161,6 @@ function FormVehicle(props: FormVehicleProps) {
                       fontFamily: 'Noto Sans Thai',
                     }}
                     onChange={(value) => {
-                      setVehicleId({
-                        ...vehicleId,
-                        etc_vehicle_id: value as unknown as number,
-                      })
                       field.onChange(value)
                     }}
                   />
@@ -172,6 +190,10 @@ function FormVehicle(props: FormVehicleProps) {
                         style={{
                           fontFamily: 'Noto Sans Thai',
                         }}
+                        onChange={(e) => {
+                          const newVal = Number(e.target.value)
+                          field.onChange(newVal)
+                        }}
                       />
                     </fieldset>
                   )
@@ -193,6 +215,10 @@ function FormVehicle(props: FormVehicleProps) {
                         style={{
                           fontFamily: 'Noto Sans Thai',
                         }}
+                        onChange={(e) => {
+                          const newVal = Number(e.target.value)
+                          field.onChange(newVal)
+                        }}
                       />
                     </fieldset>
                   )
@@ -213,6 +239,10 @@ function FormVehicle(props: FormVehicleProps) {
                         size="large"
                         style={{
                           fontFamily: 'Noto Sans Thai',
+                        }}
+                        onChange={(e) => {
+                          const newVal = Number(e.target.value)
+                          field.onChange(newVal)
                         }}
                       />
                     </fieldset>
@@ -244,6 +274,10 @@ function FormVehicle(props: FormVehicleProps) {
                           size="large"
                           style={{
                             fontFamily: 'Noto Sans Thai',
+                          }}
+                          onChange={(e) => {
+                            const newVal = Number(e.target.value)
+                            field.onChange(newVal)
                           }}
                         />
                       </fieldset>

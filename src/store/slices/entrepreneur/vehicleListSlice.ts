@@ -5,8 +5,9 @@ import {
   getVehicleAPI,
   getVehicleByIDAPI,
 } from '@/services/entrepreneur/VehicleListService'
-import { GetVehicleListParams, VehicleDetailForRouteEstimation } from '@/@types/services/vehicle'
-import { VehicleId } from '@/@types/entrepreneur/route-estimation'
+import {
+  GetVehicleListParams,
+} from '@/@types/services/vehicle'
 
 const initialState: VehicleListState = {
   overview: {
@@ -78,26 +79,6 @@ export const getVehicleDetail = createAsyncThunk(
   },
 )
 
-export const getVehicleDetailForRouteEstimation = createAsyncThunk(
-  SLICE_NAME + '/apiGetVehicleDetailForRouteEstimation',
-  async (id: VehicleId) => {
-    const response: VehicleDetailForRouteEstimation = {} as VehicleDetailForRouteEstimation;
-    if (id.towing_vehicle_id) {
-      const towing_vehicle_detail = await getVehicleByIDAPI(id.towing_vehicle_id)
-      response.towing_vehicle_detail = towing_vehicle_detail.data
-    }
-    if (id.semi_trailer_vehicle_id) {
-      const semi_trailer_vehicle_detail = await getVehicleByIDAPI(id.semi_trailer_vehicle_id)
-      response.semi_trailer_vehicle_detail = semi_trailer_vehicle_detail.data
-    }
-    if (id.etc_vehicle_id) {
-      const etc_vehicle_detail = await getVehicleByIDAPI(id.etc_vehicle_id)
-      response.etc_vehicle_detail = etc_vehicle_detail.data
-    }
-    return response
-  },
-)
-
 const vehicleListSlice = createSlice({
   name: SLICE_NAME,
   initialState,
@@ -115,6 +96,9 @@ const vehicleListSlice = createSlice({
     clearVehicleList: (state) => {
       state.overview.search = initialState.overview.search
       state.overview.data = initialState.overview.data
+    },
+    clearVehicleDetailForRouteEstimation: (state) => {
+      state.detailForRouteEstimation = initialState.detailForRouteEstimation
     },
   },
   extraReducers: (builder) => {
@@ -137,22 +121,10 @@ const vehicleListSlice = createSlice({
       .addCase(getVehicleDetail.rejected, (state) => {
         state.loading = false
       })
-      .addCase(getVehicleDetailForRouteEstimation.fulfilled, (state, action) => {
-        state.detailForRouteEstimation = action.payload
-      })
-      .addCase(getVehicleDetailForRouteEstimation.pending, (state) => {
-        state.loading = true
-      })
-      .addCase(getVehicleDetailForRouteEstimation.rejected, (state) => {
-        state.loading = false
-      })
   },
 })
 
-export const {
-  setVehicleList,
-  setVehicleListByID,
-  clearVehicleList,
-} = vehicleListSlice.actions
+export const { setVehicleList, setVehicleListByID, clearVehicleList, setVehicleDetailForRouteEstimation, clearVehicleDetailForRouteEstimation } =
+  vehicleListSlice.actions
 
 export default vehicleListSlice.reducer

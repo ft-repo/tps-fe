@@ -22,7 +22,7 @@ export interface FieldArray {
 // End Old fucked up things
 
 // Estimation Route Body
-export interface Root {
+export type RouteEstimationRequest = {
   vehicle: Vehicle[]
   start_point: StartPoint
   end_point: EndPoint
@@ -40,12 +40,12 @@ export interface Vehicle {
 
 export interface StartPoint {
   type: string
-  coordinates: [string, string]
+  coordinates: [number, number]
 }
 
 export interface EndPoint {
   type: string
-  coordinates: [string, string]
+  coordinates: [number, number]
 }
 
 export interface VehicleRoute {
@@ -106,8 +106,8 @@ export interface FieldTypeForOther {
 export interface ContextProps {
   step: number;
   setStep: (step: number | any) => void;
-  dataParser: FieldType;
-  setDataParser: (dataParser: FieldType | FieldTypeForOther) => void;
+  dataParser: RouteEstimationResponse;
+  setDataParser: (dataParser: RouteEstimationResponse) => void;
 }
 
 export interface VehicleData {
@@ -120,4 +120,20 @@ export interface VehicleData {
 export interface SummaryData {
   title: string;
   description: string;
+}
+
+export type RouteEstimationResponse = {
+  estimate: EstimateResponse[]
+  set_id: string
+}
+
+export interface EstimateResponse {
+  estimate_id: string
+  vehicle: VehicleResponse[]
+}
+
+export interface VehicleResponse {
+  vehicle_type: string
+  plate_no: string
+  plate_province: string
 }
