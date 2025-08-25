@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { usePublicRouteContext } from '../../context'
 import { Button, Tabs } from '@/components/ui'
-import { DetailResult, TableResult } from '..'
+import { DetailResult, TableResult } from '../../../route/components'
 
 const { TabNav, TabList, TabContent } = Tabs
 

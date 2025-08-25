@@ -2,7 +2,6 @@ import { RouteEstimationRequest } from '@/@types/entrepreneur/route-estimation'
 import { Tabs, Button } from 'antd'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useCallback, useState, memo } from 'react'
-import { useNavigate } from 'react-router-dom'
 import FormRouteEstimation from '../route-estimate/initial/FormRouteEstimation'
 import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
 import FormMapEstimation from '../route-estimate/initial/FormMapEstimation'
@@ -48,7 +47,6 @@ const defaultValues: RouteEstimationRequest = {
 }
 
 function RouteEstimation() {
-  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { setStep, setDataParser } = useRouteContext()
   const { control, handleSubmit } = useForm<RouteEstimationRequest>({

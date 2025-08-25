@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui'
-import { RouteProvider } from '@/features/entrepreneur/route-estimation/route/context'
-import RouteEstimationScreen from '@/features/entrepreneur/route-estimation/route/screen'
+import { PublicRouteProvider } from '@/features/entrepreneur/route-estimation/public/context'
+import RouteEstimationScreen from '@/features/entrepreneur/route-estimation/public/screen'
 import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getVehicleType, useAppDispatch } from '@/store'
@@ -30,9 +30,9 @@ function RouteEstimationPublic() {
       </div>
 
       <div className="mx-5">
-        <RouteProvider>
+        <PublicRouteProvider>
           <RouteEstimationScreen />
-        </RouteProvider>
+        </PublicRouteProvider>
       </div>
     </div>
   )

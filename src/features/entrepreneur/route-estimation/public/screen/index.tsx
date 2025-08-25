@@ -23,4 +23,4 @@ const RouteEstimationScreen: FC = () => {
   )
 }
 
-export default memo<Props>(RouteEstimationScreen)
+export default memo(RouteEstimationScreen)
