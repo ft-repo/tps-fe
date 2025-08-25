@@ -31,11 +31,11 @@ export type RouteEstimationRequest = {
 
 export interface Vehicle {
   turn_radius: number
-  towing_vehicle_id?: number
-  semi_trailer_vehicle_id?: number
-  etc_vehicle_id?: number
-  towing_axis_weight?: number[]
-  semi_trailer_axis_weight?: number[]
+  towing_vehicle_id: number | null
+  semi_trailer_vehicle_id: number | null
+  etc_vehicle_id: number | null
+  towing_axis_weight: number[]
+  semi_trailer_axis_weight: number[]
 }
 
 export interface StartPoint {
@@ -106,8 +106,8 @@ export interface FieldTypeForOther {
 export interface ContextProps {
   step: number;
   setStep: (step: number | any) => void;
-  dataParser: RouteEstimationResponse;
-  setDataParser: (dataParser: RouteEstimationResponse) => void;
+  dataParser: RouteEstimationRequest;
+  setDataParser: (dataParser: RouteEstimationRequest) => void;
 }
 
 export interface VehicleData {
@@ -136,4 +136,68 @@ export interface VehicleResponse {
   vehicle_type: string
   plate_no: string
   plate_province: string
+}
+
+export type RouteEstimationDetailResponse = {
+  towing_vehicle: TowingVehicle
+  semi_trailer_vehicle: SemiTrailerVehicle
+  towing_axis_weight: number[]
+  semi_trailer_axis_weight: number[]
+  start_point: number[]
+  end_point: number[]
+  vehicle_route: number[][]
+  estimate_rural_roads: EstimateRuralRoad[]
+}
+
+export interface TowingVehicle {
+  vehicle_type: string
+  vehicle_weight: number
+  vehicle_plate: string
+  vehicle_province: string
+  vehicle_picture: string
+}
+
+export interface SemiTrailerVehicle {
+  vehicle_type: string
+  vehicle_weight: number
+  vehicle_plate: string
+  vehicle_province: string
+  vehicle_picture: string
+}
+
+export interface EstimateRuralRoad {
+  road_line: number[][][]
+}
+
+
+export type RouteEstimationSummaryResponse = RouteEstimationSummary[]
+
+export interface RouteEstimationSummary {
+  type: string
+  total: number
+  pass: number
+  not_pass: number
+}
+
+export type RouteCurveResponse = {
+  data: RouteCurve[]
+  total: number
+  page: number
+  limit: number
+  total_pages: number
+}
+
+export interface RouteCurve {
+  curvature_radius: number
+  curvature_angle: number
+  curve_type: string
+  is_pass: boolean
+}
+
+export type RouteBridgeResponse = {
+  data: any[]
+  total: number
+  page: number
+  limit: number
+  total_pages: number
 }

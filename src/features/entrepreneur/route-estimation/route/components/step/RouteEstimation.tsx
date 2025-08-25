@@ -170,7 +170,7 @@ function RouteEstimation() {
             type={'success'}
             onClose={() => {
               setStep(2)
-              setDataParser(response.data)
+              setDataParser(data)
             }}
           >
             <p className='break-all'>Successfully submit data</p>
@@ -187,7 +187,14 @@ function RouteEstimation() {
         )
       }
     } catch (error) {
-      console.log(error)
+      toast.push(
+        <Notification
+          title={'Error'}
+          type={'danger'}
+        >
+          <p className='break-all'>Failed to submit data</p>
+        </Notification>
+      )
     } finally {
       dispatch(setLoading(false))
     }

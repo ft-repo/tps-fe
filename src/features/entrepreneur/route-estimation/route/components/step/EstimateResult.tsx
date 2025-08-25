@@ -19,9 +19,9 @@ const EstimateResult: React.FC<Props> = (props) => {
   const [tabKey, setTabKey] = useState<string>('tab0')
 
   const renderTabList = useMemo(() => {
-    if (!dataParser.form_template.length) return
+    if (!dataParser.vehicle.length) return
 
-    const tabArr = dataParser.form_template.map((item, index) => {
+    const tabArr = dataParser.vehicle.map((item, index) => {
       return (
         <TabNav key={index} value={`tab` + index}>
           รถคู่ที่ {index + 1}
@@ -32,14 +32,16 @@ const EstimateResult: React.FC<Props> = (props) => {
   }, [dataParser])
 
   const renderTabContent = useMemo(() => {
-    if (!dataParser.form_template.length) return
+    if (!dataParser.vehicle.length) return
 
-    const contentArr = dataParser.form_template.map((item, index) => {
+    const contentArr = dataParser.vehicle.map((item, index) => {
       return (
         <TabContent key={index} value={`tab` + index}>
           <section>
             <DetailResult
               data={item}
+              start_point={dataParser.start_point}
+              end_point={dataParser.end_point}
             />
           </section>
           <hr className='my-5' />
