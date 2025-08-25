@@ -62,20 +62,20 @@ export interface FieldTypeForOther {
   company_village_number: string;
   company_alley: string;
   company_road: string;
-  company_province: string;
-  company_district: string;
-  company_sub_district: string;
+  company_province: string | number;
+  company_district: string | number;
+  company_sub_district: string | number;
   company_postcode: string;
   // 1.1 REGISTERED DETAIL
-  business_type: string;
+  business_type: string | number;
   registered_date: string;
   registered_company_address: string;
   registered_company_village_no: string;
   registered_company_alley: string;
   registered_company_road: string;
-  registered_company_province: string;
-  registered_company_district: string;
-  registered_company_sub_district: string;
+  registered_company_province: string | number;
+  registered_company_district: string | number;
+  registered_company_sub_district: string | number;
   registered_company_postcode: string;
   // 1.2 TRANSFERER DETAIL
   transferer_name: string;
@@ -84,9 +84,9 @@ export interface FieldTypeForOther {
   transferer_company_village_no: string;
   transferer_company_alley: string;
   transferer_company_road: string;
-  transferer_company_province: string;
-  transferer_company_district: string;
-  transferer_company_sub_district: string;
+  transferer_company_province: string | number;
+  transferer_company_district: string | number;
+  transferer_company_sub_district: string | number;
   transferer_company_postcode: string;
   // 2. VEHICLE DETAIL
   vehicle_appearance: string;
@@ -96,6 +96,13 @@ export interface FieldTypeForOther {
   vehicle_color: string;
   vehicle_axles: string;
   vehicle_weight: string;
+  vehicle_axles_weight1: number;
+  vehicle_axles_weight2: number;
+  vehicle_axles_weight3: number;
+  vehicle_axles_weight4: number;
+  vehicle_axles_weight5: number;
+  vehicle_axles_weight6: number;
+  vehicle_axles_weight7: number;
   // 3. REMARK
   petition_number: string;
   remark: string;

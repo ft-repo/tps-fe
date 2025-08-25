@@ -1,4 +1,4 @@
-import { GetPetitionParams, GetPetitionResponse, GetRuralRoadParams } from "@/@types/services/petition"
+import { GetPetitionParams, GetPetitionResponse, GetRuralRoadParams, PetitionExtendedPostRequest, PetitionExtendedPostResponse } from "@/@types/services/petition"
 import ApiService from "../ApiService"
 import { UploadRequest, UploadResponse } from "@/@types/shared"
 import { RoadInfo } from "@/features/entrepreneur/permit-list/overview/components/ModalRuralRoadDetails"
@@ -38,5 +38,13 @@ export const getRuralRoadDetailAPI = async (params: GetRuralRoadParams) => {
     method: 'get',
     // params = query/parameter
     params: { ...params }
+  })
+}
+
+export const postPetitionExtendedAPI = async (data: PetitionExtendedPostRequest) => {
+  return ApiService.fetchData<PetitionExtendedPostResponse, PetitionExtendedPostRequest>({
+    url: '/client/petition_extended/temporary',
+    method: 'post',
+    data: { ...data },
   })
 }

@@ -44,14 +44,9 @@ function useAuth() {
 								id: resp.data.details.id,
 								userName: resp.data.details.registration_no,
 								name: resp.data.details.business_details.business_name,
-								details: {
-									entity_type: {
-										id: resp.data.details.business_details.entity_type.id,
-										name: resp.data.details.business_details.entity_type.name,
-									},
-								},
+								details: { ...resp.data.details },
 								authority: ['USER'],
-							},	
+							},
 						),
 					)
 				}
@@ -89,12 +84,7 @@ function useAuth() {
 								id: resp.data.details.id,
 								userName: resp.data.details.registration_no,
 								name: resp.data.details.business_details.business_name,
-								details: {
-									entity_type: {
-										id: resp.data.details.business_details.entity_type.id,
-										name: resp.data.details.business_details.entity_type.name,
-									},
-								},
+								details: { ...resp.data.details },
 								authority: ['USER'],
 							},
 						),
@@ -166,7 +156,7 @@ function useAuth() {
 									},
 								},
 								authority: ['ADMIN'],
-							},	
+							},
 						),
 					)
 				}
