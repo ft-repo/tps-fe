@@ -5,11 +5,12 @@ import React, { useEffect } from 'react'
 import RouteEstimationScreen from '@/features/entrepreneur/route-estimation/route/screen'
 import { RouteProvider } from '@/features/entrepreneur/route-estimation/route/context'
 import { getVehicleType, useAppDispatch } from '@/store'
+import { ConfigProvider } from 'antd'
 
-interface Props {}
+interface Props { }
 
 const RouteIndex: React.FC<Props> = (props) => {
-  const {} = props
+  const { } = props
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -17,9 +18,17 @@ const RouteIndex: React.FC<Props> = (props) => {
   }, [dispatch])
 
   return (
-    <RouteProvider>
-      <RouteEstimationScreen />
-    </RouteProvider>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Noto Sans Thai"
+        }
+      }}
+    >
+      <RouteProvider>
+        <RouteEstimationScreen />
+      </RouteProvider>
+    </ConfigProvider>
   )
 }
 

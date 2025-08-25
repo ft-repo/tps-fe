@@ -71,32 +71,32 @@ const TablePermitDocument: React.FC<Props> = (props) => {
     {
       no: '1',
       petition_list: 'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างสะพานรายสะพานที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก',
-      file_id: detail.audit_document.bridge_structure_calculation_url
+      file_id: detail?.audit_document?.bridge_structure_calculation_url
     },
     {
       no: '2',
       petition_list: 'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างทางตลอดเส้นทางที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก',
-      file_id: detail.audit_document.road_structure_calculation_url
+      file_id: detail?.audit_document?.road_structure_calculation_url
     },
     {
       no: '3',
       petition_list: 'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างสะพานพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
-      file_id: detail.audit_document.bridge_engineer_certificate_url
+      file_id: detail?.audit_document?.bridge_engineer_certificate_url
     },
     {
       no: '4',
       petition_list: 'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างทางพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
-      file_id: detail.audit_document.road_engineer_certificate_url
+      file_id: detail?.audit_document?.road_engineer_certificate_url
     },
     {
       no: '5',
       petition_list: 'หนังสือรับรองของวิศวกรเครื่องกลผู้คำนวณรัศมีวงเลี้ยว (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
-      file_id: detail.audit_document.mechanical_engineer_certificate_url
+      file_id: detail?.audit_document?.mechanical_engineer_certificate_url
     },
     {
       no: '6',
       petition_list: 'แผนและระยะเวลาการดำเนินงาน',
-      file_id: detail.audit_document.operation_plan_url
+      file_id: detail?.audit_document?.operation_plan_url
     },
   ]
 

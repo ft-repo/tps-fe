@@ -13,7 +13,7 @@ const ContentSection: React.FC<Props> = (props) => {
 
   return (
     <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
         <section>
           <ContentDetail />
         </section>
@@ -21,7 +21,7 @@ const ContentSection: React.FC<Props> = (props) => {
           <ContentForm />
         </section>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
         <ContentPreviewPDF />
       </Col>
     </Row>

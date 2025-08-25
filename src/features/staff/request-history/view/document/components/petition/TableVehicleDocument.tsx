@@ -72,27 +72,27 @@ const TableVehicleDocument: React.FC<Props> = (props) => {
     {
       no: '1',
       petition_list: 'สำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง',
-      file_id: detail.vehicle_document.prefab_parts_details_url
+      file_id: detail?.vehicle_document?.prefab_parts_details_url
     },
     {
       no: '2',
       petition_list: 'รูปถ่ายสียานพาหนะ',
-      file_id: detail.vehicle_document.vehicle_photos_url
+      file_id: detail?.vehicle_document?.vehicle_photos_url
     },
     {
       no: '3',
       petition_list: 'รูปแบบยานพาหนะโดยแสดงถึงขนาดระยะและน้ำหนักลงเพลาของยานพาหนะเปล่า',
-      file_id: detail.vehicle_document.vehicle_dimensions_empty_url
+      file_id: detail?.vehicle_document?.vehicle_dimensions_empty_url
     },
     {
       no: '4',
       petition_list: 'รูปแบบยานพาหนะโดยแสดงถึงมิติของรถรวมสิ่งของที่บรรทุก น้ำหนักลงเพลา',
-      file_id: detail.vehicle_document.vehicle_dimensions_loaded_url
+      file_id: detail?.vehicle_document?.vehicle_dimensions_loaded_url
     },
     {
       no: '5',
       petition_list: 'รูปแบบยานพาหนะโดยแสดงถึงรัศมีวงเลี้ยว',
-      file_id: detail.vehicle_document.vehicle_turning_radius_url
+      file_id: detail?.vehicle_document?.vehicle_turning_radius_url
     },
   ]
 

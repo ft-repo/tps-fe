@@ -1,8 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
-import { ContentDetail, ContentImage, ContentForm } from '../components'
 import { Col, Row } from 'antd'
+import React from 'react'
+import { VehicleDetail, EvaluateVehicleDetail, VehicleListDetail } from '../../components'
 import { VehicleList } from '@/@types/reducer/petition';
 
 interface Props {
@@ -10,25 +10,23 @@ interface Props {
   item: VehicleList;
 }
 
-const ContentSection: React.FC<Props> = (props) => {
-  const { index, item } = props
+const VehicleContent: React.FC<Props> = (props) => {
+  const { item } = props
 
   return (
     <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24} lg={24} xl={10} xxl={10}>
+      <Col xs={24} sm={24} md={24} lg={24} xl={8} xxl={8}>
         <section>
-          <ContentDetail
-            index={index}
+          <VehicleDetail
             item={item}
           />
         </section>
         <section className='mt-5'>
-          <ContentForm />
+          <EvaluateVehicleDetail />
         </section>
       </Col>
-      <Col xs={24} sm={24} md={24} lg={24} xl={14} xxl={14}>
-        <ContentImage
-          index={index}
+      <Col xs={24} sm={24} md={24} lg={24} xl={16} xxl={16}>
+        <VehicleListDetail
           item={item}
         />
       </Col>
@@ -36,4 +34,4 @@ const ContentSection: React.FC<Props> = (props) => {
   )
 }
 
-export default React.memo<Props>(ContentSection)
+export default React.memo<Props>(VehicleContent)

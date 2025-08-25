@@ -2,13 +2,12 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
-import { Button } from '@/components/ui'
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService'
 import React, { useCallback } from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
-import { Input, message, Select, Upload } from 'antd'
+import { Button, Input, message, Select, Upload } from 'antd'
 
 interface Props {
   control: Control<FieldType>;
@@ -386,10 +385,9 @@ const FormInfo: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      variant="solid"
                       icon={<HiOutlineCloudUpload />}
-                      size='sm'
-                      type='button'
+                      htmlType='button'
+                      type='primary'
                     >
                       เพิ่มไฟล์ .pdf
                     </Button>

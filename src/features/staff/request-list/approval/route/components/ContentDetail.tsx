@@ -17,12 +17,12 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'ขนส่งจาก',
-      children: <p>{route.start_point || '-'}</p>,
+      children: <p>{route?.start_point || '-'}</p>,
     },
     {
       key: '2',
       label: 'ไปยัง',
-      children: <p>{route.end_point || '-'}</p>,
+      children: <p>{route?.end_point || '-'}</p>,
     },
   ];
 
@@ -31,6 +31,8 @@ const ContentDetail: React.FC<Props> = (props) => {
       title="ข้อมูลเส้นทาง (รถคู่ที่ 1)"
       items={items}
       column={1}
+      layout='vertical'
+      size='small'
     />
   )
 }

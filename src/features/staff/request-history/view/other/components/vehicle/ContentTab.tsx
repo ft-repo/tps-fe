@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useState } from 'react'
 import { Tabs, type TabsProps } from 'antd'
-import { ContentSection } from '../components'
+import { VehicleContent } from '../../components'
 import { useAppSelector } from '@/store'
 
 interface Props {
@@ -19,7 +19,7 @@ const ContentTab: React.FC<Props> = (props) => {
     return {
       key: String(index + 1),
       label: `รถคู่ที่ ${index + 1}`,
-      children: <ContentSection index={index + 1} item={item} />
+      children: <VehicleContent index={index} item={item} />
     }
   })
 

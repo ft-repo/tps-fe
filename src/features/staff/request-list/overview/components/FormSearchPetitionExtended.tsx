@@ -1,7 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { Button } from '@/components/ui';
-import { Col, Input, Radio, Row } from 'antd';
+import { Button, Col, Input, Radio, Row } from 'antd';
 import React, { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
@@ -42,8 +41,8 @@ const FormSearchPetitionExtended: React.FC<Props> = (props) => {
   const { handleSubmit, control } = form
 
   const onSubmit = useCallback((value: FieldType) => {
-    console.log(value)
-  }, [])
+    handleSearch(value)
+  }, [handleSearch])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -91,8 +90,9 @@ const FormSearchPetitionExtended: React.FC<Props> = (props) => {
         <Col xs={24} sm={24} md={24} lg={2} xl={2} xxl={2}>
           <Button
             block
-            type='submit'
-            variant='solid'
+            htmlType='submit'
+            type='primary'
+            size='large'
           >
             ค้นหา
           </Button>
