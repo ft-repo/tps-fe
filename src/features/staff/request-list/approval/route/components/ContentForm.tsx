@@ -1,18 +1,22 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { Button } from '@/components/ui';
-import { postUploadProfileImageAPI } from '@/services/entrepreneur/UserService';
-import { Flex, Input, message, Radio, Upload } from 'antd';
+import { PetitionPostBody } from '@/@types/services/petition';
+import { postUploadFileAPI } from '@/services/entrepreneur/PetitionService';
+import { postPetitionApproveAPI } from '@/services/staff/PetitionService';
+import { setLoading, useAppDispatch, useAppSelector } from '@/store';
+import { getAdminPetitionData } from '@/store/slices/staff';
+import { Button, Flex, Input, message, Modal, Radio, Upload } from 'antd';
 import React, { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface Props {
 
 }
 
 interface FieldType {
-  is_approved: boolean;
+  is_approved: string | null;
   reply_message: string;
   file_id: FileType;
 }
@@ -25,39 +29,53 @@ interface FileType {
 const OPTIONS = [
   {
     label: 'ผ่านการตรวจสอบ',
-    value: true,
+    value: '1',
   },
   {
     label: 'ไม่ผ่านการตรวจสอบ',
-    value: false,
+    value: '2',
   },
 ]
 
 const ContentForm: React.FC<Props> = (props) => {
   const { } = props
+  // PARAMS
+  const [params] = useSearchParams()
+  const petitionId = params.get('petition_id')
+  const statusId = params.get('status_id')
+  const isApproved = params.get('is_approved')
+  // REDUX MANAGE
+  const { petition } = useAppSelector(state => state.staff.petition)
+  const dispatch = useAppDispatch()
+  // NAVIGATE
+  const navigate = useNavigate()
+  // IS DISABLED
+  const disabled = isApproved !== 'null' ? true : false
 
   const form = useForm<FieldType>({
     defaultValues: {
-      is_approved: false,
+      is_approved: null,
       reply_message: '',
       file_id: {
         file: [],
         url: ''
       }
-    }
+    },
+    disabled: disabled
   })
 
   const {
     handleSubmit,
     control,
     setValue,
+    reset,
     formState: { errors }
   } = form
 
   const uploadFile = useCallback(async (file: any) => {
     try {
       // POST
-      const response = await postUploadProfileImageAPI({ upload: file[0].originFileObj })
+      const response = await postUploadFileAPI({ upload: file[0].originFileObj })
       if (response.status === 200) {
         setValue('file_id.url', response.data?.url)
       } else {
@@ -72,10 +90,61 @@ const ContentForm: React.FC<Props> = (props) => {
     }
   }, [setValue])
 
+  const onSubmit = useCallback(async (value: FieldType) => {
+    const body: PetitionPostBody = {
+      petition_id: Number(petitionId),
+      status_id: Number(statusId),
+      is_approved: value.is_approved === '1' ? true : false,
+      document_url: value.file_id.url,
+      remark: value.reply_message,
+      is_skipped: false
+    }
 
-  const onSubmit = useCallback((value: FieldType) => {
-    console.log(value)
-  }, [])
+    dispatch(setLoading(true))
+    try {
+      const response = await postPetitionApproveAPI(body)
+      if (response.status === 200) {
+        Modal.success({
+          title: 'สำเร็จ',
+          content: 'บันทึกข้อมูลสำเร็จ',
+          okText: 'ตกลง',
+          onOk: () => {
+            dispatch(getAdminPetitionData(petition.overview.search))
+            navigate(-1)
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [petitionId, statusId, dispatch, navigate, petition.overview.search])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -180,10 +249,10 @@ const ContentForm: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      variant="solid"
+                      disabled={disabled}
                       icon={<HiOutlineCloudUpload />}
-                      size='sm'
-                      type='button'
+                      htmlType='button'
+                      type='primary'
                     >
                       เพิ่มไฟล์ .pdf
                     </Button>
@@ -205,17 +274,20 @@ const ContentForm: React.FC<Props> = (props) => {
           gap={5}
         >
           <Button
-            type='button'
-            variant='default'
-            size='sm'
+            disabled={disabled}
+            htmlType='button'
+            type='default'
+            size='large'
             className='w-full lg:w-auto'
+            onClick={() => reset()}
           >
             ล้างข้อมูล
           </Button>
           <Button
-            type='submit'
-            variant='solid'
-            size='sm'
+            disabled={disabled}
+            htmlType='submit'
+            type='primary'
+            size='large'
             className='w-full lg:w-auto'
           >
             บันทึกข้อมูล

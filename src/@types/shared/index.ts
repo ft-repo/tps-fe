@@ -1,9 +1,61 @@
-import { color } from "framer-motion";
 import { APIPostBody } from "../services/vehicle";
 
 export interface DialogProps {
   open: boolean;
   data: APIPostBody | null;
+}
+
+export interface ClientPetitionColor{
+  APPROVE: {
+    color: string;
+    text: string;
+  }
+  NOT_APPROVE:{
+    color: string;
+    text: string;
+  }
+  REJECTED: {
+    color: string;
+    text: string;
+  }
+  IN_PROGRESS: {
+    color: string;
+    text: string;
+  }
+}
+
+export interface ClientPetitionExtendColor{
+  APPROVE: {
+    color: string;
+    text: string;
+  }
+  NOT_APPROVE:{
+    color: string;
+    text: string;
+  }
+  REJECTED: {
+    color: string;
+    text: string;
+  }
+  IN_PROGRESS: {
+    color: string;
+    text: string;
+  }
+}
+
+export interface HistoryPetitionColor{
+  APPROVE: {
+    color: string;
+    text: string;
+  }
+  NOT_APPROVE:{
+    color: string;
+    text: string;
+  }
+  REJECTED: {
+    color: string;
+    text: string;
+  }
 }
 
 export interface StatusColor {
@@ -56,4 +108,19 @@ export interface DepartmentState {
 export interface RoleState {
   id: string;
   name: string;
+}
+
+// UPLOAD
+export interface UploadRequest {
+  upload: ArrayBuffer
+}
+
+export interface UploadResponse {
+  url: string;
+}
+
+// PARAMS
+export interface GetPaginateParams {
+  page: number;
+  limit: number;
 }

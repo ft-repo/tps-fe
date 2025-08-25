@@ -5,12 +5,11 @@ import React, { useCallback, useRef } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '@/features/entrepreneur/entrepreneur-info/components';
 import { useForm } from 'react-hook-form';
 import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
-import { Button } from '@/components/ui';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getUserData } from '@/store/slices/entrepreneur';
 import dayjs from 'dayjs';
 import { putUserAPI } from '@/services/entrepreneur/UserService';
-import { Modal } from 'antd';
+import { Button, Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
@@ -162,13 +161,23 @@ const ViewScreen: React.FC<Props> = (props) => {
         <h3>ข้อมูลผู้ประกอบการ</h3>
         <div className='flex items-center gap-3'>
           <Button
+            htmlType='button'
+            type='default'
+            size='large'
+            className='w-full lg:w-auto'
+            loading={loading}
+            onClick={() => navigate(-1)}
+          >
+            ย้อนกลับ
+          </Button>
+          {/* <Button
             variant='default'
             size='sm'
             loading={loading}
             onClick={() => navigate(-1)}
           >
             ย้อนกลับ
-          </Button>
+          </Button> */}
           {/* <Button
             variant='default'
             size='sm'

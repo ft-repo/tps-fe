@@ -4,13 +4,6 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 
-// Extend Leaflet namespace to include Routing
-declare global {
-  namespace L {
-    const Routing: any;
-  }
-}
-
 interface Props {
   firstPoint?: [number, number] | null;
   secondPoint?: [number, number] | null;

@@ -2,10 +2,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useEffect, useState } from 'react'
 import { SeachStaff, StaffTable, ModalUpdateStaff } from '../components'
-import { Button } from '@/components/ui'
 import { FaPlus as PlusIcon } from 'react-icons/fa6'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
-import { Modal } from 'antd'
+import { Button, Modal } from 'antd'
 import { getAdminData, setAdminData } from '@/store/slices/staff'
 import { deleteStaffAPI } from '@/services/staff/UserService'
 import { StaffList } from '@/@types/services/user'
@@ -18,6 +17,7 @@ interface ModalProps {
   open: boolean;
   data: StaffList;
 }
+
 export const INIT_MODAL: ModalProps = {
   id: '',
   open: false,
@@ -185,7 +185,10 @@ const OverviewScreen: React.FC<Props> = (props) => {
       <section className="flex justify-between items-center flex-wrap gap-5">
         <h3>ข้อมูลเจ้าหน้าที่</h3>
         <Button
-          variant="solid"
+          htmlType='button'
+          type='primary'
+          size='large'
+          className='w-full lg:w-auto'
           icon={<PlusIcon />}
           onClick={() => navigate('/user-info/staff/create')}
         >

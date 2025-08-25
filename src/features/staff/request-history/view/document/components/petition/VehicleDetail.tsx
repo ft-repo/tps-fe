@@ -1,7 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
+import { useAppSelector } from '@/store'
 import { Descriptions, DescriptionsProps } from 'antd'
-import React from 'react'
+import React, { useCallback } from 'react'
 
 interface Props {
 
@@ -9,47 +10,54 @@ interface Props {
 
 const VehicleDetail: React.FC<Props> = (props) => {
   const { } = props
+  const { petition_extended } = useAppSelector(state => state.staff.petition)
+  const detail = petition_extended.detail
+
+  const renderAxisWeight = useCallback((arr: number[]) => {
+    if (!arr.length) return '-'
+    return arr.join(' : ')
+  }, [])
 
   const items: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'ลักษณะ / มาตราฐาน',
-      children: <p>ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด</p>,
+      children: <p>{detail?.vehicle?.characteristic || '-'}</p>,
     },
     {
       key: '2',
       label: 'ประเภท',
-      children: <p>รถลากจูง + รถกึ่งพ่วง</p>,
+      children: <p>{detail?.vehicle?.type || '-'}</p>,
     },
     {
       key: '3',
       label: 'เลขทะเบียน',
-      children: <p>22 - 1144</p>,
+      children: <p>{detail?.vehicle?.plate_no || '-'}</p>,
     },
     {
       key: '4',
       label: 'จังหวัด',
-      children: <p>สระบุรี</p>,
+      children: <p>{detail?.vehicle?.plate_province || '-'}</p>,
     },
     {
       key: '5',
       label: 'สี',
-      children: <p>น้ำเงิน</p>,
+      children: <p>{detail?.vehicle?.color || '-'}</p>,
     },
     {
       key: '6',
       label: 'จำนวนเพลา',
-      children: <p>4</p>,
+      children: <p>{detail?.vehicle?.axis_number || '-'}</p>,
     },
     {
       key: '7',
       label: 'น้ำหนักรวม (กิโลกรัม)',
-      children: <p>36,200</p>,
+      children: <p>{detail?.vehicle?.weight || '-'}</p>,
     },
     {
       key: '8',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>9000 : 9000 : 9000 : 9200</p>,
+      children: <p>{renderAxisWeight(detail?.vehicle?.axis_weight || [])}</p>,
     },
   ]
 
@@ -58,6 +66,8 @@ const VehicleDetail: React.FC<Props> = (props) => {
       title="ข้อมูลยานพาหนะ"
       items={items}
       column={1}
+      layout='vertical'
+      size='small'
     />
   )
 }

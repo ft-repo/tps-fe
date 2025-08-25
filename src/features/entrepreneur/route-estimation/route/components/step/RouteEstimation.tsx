@@ -1,128 +1,230 @@
-/* eslint-disable no-empty-pattern */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useState } from 'react'
-import Tabs from '@/components/ui/Tabs'
-import { TemplateForm } from '..'
-import { useForm, useFieldArray } from "react-hook-form";
-// import { HiX } from 'react-icons/hi';
-import { Button, Notification, toast } from '@/components/ui';
-import { useRouteContext } from '../../context';
-import { FieldType } from '@/@types/entrepreneur/route-estimation';
-import { initFormValue } from '../../mock';
-import { useNavigate } from 'react-router-dom';
+import { Root, SummaryData, VehicleData } from '@/@types/entrepreneur/route-estimation'
+import { Tabs, Button, Divider } from 'antd'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { useCallback, useState, memo } from 'react'
+import { useNavigate } from 'react-router-dom'
+import FormRouteEstimation from '../route-estimate/initial/FormRouteEstimation'
+import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
+import CardVehicleDetails from '../route-estimate/initial/CardVehicleDetails'
+import VehicleSummary from '../route-estimate/initial/VehicleSummary'
 
-const { TabNav, TabList, TabContent } = Tabs
+type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
-interface Props { }
+interface TabItem {
+  label: string
+  children: React.ReactNode
+  key: string
+  closable?: boolean
+}
 
-const RouteEstimation: React.FC<Props> = (props) => {
-  const { } = props;
+const defaultValues: Root = {
+  vehicle: [
+    {
+      turn_radius: 0,
+      towing_vehicle_id: 0,
+      semi_trailer_vehicle_id: 0,
+      etc_vehicle_id: 0,
+      towing_axis_weight: [],
+      semi_trailer_axis_weight: [],
+    },
+  ],
+  start_point: {
+    type: '',
+    coordinates: [],
+  },
+  end_point: {
+    type: '',
+    coordinates: [],
+  },
+  vehicle_route: {
+    type: '',
+    coordinates: [],
+  },
+}
+
+const vehicleData: VehicleData[] = [
+  {
+    title: 'รถลากจูง',
+    weight: 0,
+    plate_no: '',
+    image: '',
+  },
+  {
+    title: 'รถกึ่งพ่วง',
+    weight: 0,
+    plate_no: '',
+    image: '',
+  },
+  {
+    title: 'เครื่องจักร',
+    weight: 0,
+    plate_no: '',
+    image: '',
+  },
+]
+
+const summaryData: SummaryData[] = [
+  {
+    title: 'น้ำหนักรถเปล่ารวม',
+    description: String(0) + ' กก.',
+  },
+  {
+    title: 'น้ำหนักรถเปล่ารวมน้ำหนักเพลา',
+    description: String(0) + ' กก.',
+  },
+  {
+    title: 'มิติรถเปล่า',
+    description: `กว้าง 0 X ยาว 0 X สูง 0`,
+  },
+  {
+    title: 'มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.)',
+    description: `กว้าง 0 X ยาว 0 X สูง 0`,
+  },
+]
+
+function RouteEstimation() {
   const navigate = useNavigate()
-  const [tabKey, setTabKey] = useState<string>('tab0')
-  const { setStep, setDataParser } = useRouteContext()
-  const { control, handleSubmit } = useForm<FieldType>({
-    defaultValues: {
-      form_template: [initFormValue]
-    }
-  });
+  const { control, handleSubmit } = useForm<Root>({
+    defaultValues,
+  })
 
-  const { fields, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
-    name: "form_template"
-  });
+    name: 'vehicle',
+  })
 
-  const onSubmit = useCallback((data: FieldType) => {
-    toast.push(
-      <Notification
-        title={'Success'}
-        type={'success'}
-        onClose={() => {
-          setStep(2)
-          setDataParser(data)
-        }}
-      >
-        <p className='break-all'>Successfully submit data</p>
-      </Notification>
-    )
-  }, [setDataParser, setStep])
+  const initialTabItems: TabItem[] = [
+    {
+      label: 'รถคู่ที่ 1',
+      children: (
+        <FormRouteEstimation
+          formItem={fields[0]}
+          formIndex={0}
+          control={control}
+        />
+      ),
+      key: '1',
+      closable: false,
+    },
+  ]
+
+  const [activeKey, setActiveKey] = useState(initialTabItems[0].key)
+  const [tabItems, setTabItems] = useState<TabItem[]>(initialTabItems)
+
+  const onAddedTab = useCallback(() => {
+    append(defaultValues.vehicle[0])
+
+    const newTabItem: TabItem = {
+      label: `รถคู่ที่ ${tabItems.length + 1}`,
+      children: (
+        <FormRouteEstimation
+          formItem={fields[tabItems.length]}
+          formIndex={tabItems.length}
+          control={control}
+        />
+      ),
+      key: `${tabItems.length + 1}`,
+    }
+
+    setTabItems([...tabItems, newTabItem])
+  }, [tabItems, setTabItems, append, fields, control])
+
+  const onRemovedTab = useCallback(
+    (targetKey: TargetKey) => {
+      const newTabItems = tabItems.filter((item, index) => {
+        if (item.key === targetKey) {
+          remove(index)
+          return false
+        }
+        return true
+      })
+
+      const reorderTabItems = newTabItems.map((item, index) => ({
+        ...item,
+        label: `รถคู่ที่ ${index + 1}`,
+        key: `${index + 1}`,
+      }))
+
+      setTabItems(reorderTabItems)
+    },
+    [tabItems, setTabItems, remove],
+  )
+
+  const onTabsEdit = useCallback(
+    (targetKey: TargetKey, action: 'add' | 'remove') => {
+      if (action === 'add') {
+        onAddedTab()
+      } else {
+        onRemovedTab(targetKey)
+      }
+    },
+    [onAddedTab, onRemovedTab],
+  )
+
+  const onTabsChange = useCallback(
+    (newActiveKey: string) => {
+      setActiveKey(newActiveKey)
+    },
+    [setActiveKey],
+  )
+
+  const onSubmit = useCallback((values: Root) => {
+    console.log('values ======> ', values)
+  }, [])
 
   return (
-    <>
-      <Tabs
-        defaultValue={tabKey}
-        variant='pill'
-        onChange={(tabKey) => setTabKey(tabKey)}
-      >
-        <div className='flex items-center justify-between flex-wrap gap-3'>
-          <div className='flex items-center gap-1'>
-            <TabList>
-              {fields.map((item, index) => {
-                return (
-                  <TabNav
-                    key={index}
-                    value={`tab` + index}
-                  >
-                    รถคู่ที่ {index + 1}
-                  </TabNav>
-                )
-              })}
-            </TabList>
-            {/* {fields.length < 4 ?
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <section className="w-full grid lg:grid-cols-3 gap-4 mb-5">
+        <div className="w-full lg:h-[50vh] col-span-2">
+          <Tabs
+            type="editable-card"
+            items={tabItems}
+            activeKey={activeKey}
+            tabBarExtraContent={
               <Button
-                type='button'
-                size='sm'
-                variant='solid'
-                onClick={() => append(initFormValue)}
+                type="primary"
+                variant="solid"
+                color="gold"
+                className="text-black"
+                size="middle"
+                onClick={() => navigate('/route-estimation/other')}
               >
-                เพิ่มรถคู่
+                ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)
               </Button>
-              : null} */}
-          </div>
-          <Button
-            variant='solid'
-            className='bg-yellow-500 hover:bg-yellow-300 active:bg-yellow-600 transition duration-300'
-            size='sm'
-            onClick={() => navigate('/route-estimation/other')}
-          >
-            ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)
+            }
+            onEdit={onTabsEdit}
+            onChange={onTabsChange}
+          />
+        </div>
+        <div className="col-span-1 order-first lg:order-last z-0 h-[50vh]">
+          <MapRouteEstimation
+          // firstPoint={firstPoint}
+          // secondPoint={secondPoint}
+          />
+        </div>
+      </section>
+      <h4 className="text-lg font-bold m-0 p-0">
+        รายละเอียด {tabItems[Number(activeKey) - 1].label}
+      </h4>
+      <Divider className="mb-3" />
+      <section className="mt-5 grid lg:grid-cols-2 gap-4 lg:h-[25vh]">
+        <section className="lg:order-last">
+          <VehicleSummary data={summaryData} />
+        </section>
+        <section>
+          <CardVehicleDetails data={vehicleData} />
+        </section>
+      </section>
+
+      <section className="w-full">
+        <div className="flex justify-end items-center gap-5">
+          <Button type="primary" variant="solid" size="large" htmlType="submit">
+            ประเมินเส้นทาง
           </Button>
         </div>
-        <div className="p-4">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {fields.map((item, index) => {
-              return (
-                <>
-                  <TabContent
-                    key={item.id}
-                    value={`tab` + index}
-                  >
-                    <TemplateForm
-                      formItem={item}
-                      formIndex={index}
-                      control={control}
-                    />
-                    <section className='mt-5'>
-                      <div className='flex items-center gap-5 '>
-                        <Button
-                          type='button'
-                          disabled={index === 0 ? true : false}
-                          onClick={() => remove(index)}
-                        >
-                          ลบข้อมูล
-                        </Button>
-                        <Button type='submit' variant='solid'>ประเมินเส้นทาง</Button>
-                      </div>
-                    </section>
-                  </TabContent>
-                </>
-              )
-            })}
-          </form>
-        </div>
-      </Tabs >
-    </>
+      </section>
+    </form>
   )
 }
 
-export default React.memo<Props>(RouteEstimation)
+export default memo(RouteEstimation)

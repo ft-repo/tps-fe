@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// Old fucked up things
 export interface FieldType {
   form_template: FieldArray[];
 }
@@ -19,6 +19,40 @@ export interface FieldArray {
   start_route: string;
   end_route: string;
 }
+// End Old fucked up things
+
+// Estimation Route Body
+export interface Root {
+  vehicle: Vehicle[]
+  start_point: StartPoint
+  end_point: EndPoint
+  vehicle_route: VehicleRoute
+}
+
+export interface Vehicle {
+  turn_radius: number
+  towing_vehicle_id: number
+  semi_trailer_vehicle_id: number
+  etc_vehicle_id: number
+  towing_axis_weight: number[]
+  semi_trailer_axis_weight: number[]
+}
+
+export interface StartPoint {
+  type: string
+  coordinates: number[]
+}
+
+export interface EndPoint {
+  type: string
+  coordinates: number[]
+}
+
+export interface VehicleRoute {
+  type: string
+  coordinates: number[][]
+}
+// End Estimation Route Body
 
 export interface FieldTypeForOther {
   // 1. PETITOR INFO
@@ -28,20 +62,20 @@ export interface FieldTypeForOther {
   company_village_number: string;
   company_alley: string;
   company_road: string;
-  company_province: string;
-  company_district: string;
-  company_sub_district: string;
+  company_province: string | number;
+  company_district: string | number;
+  company_sub_district: string | number;
   company_postcode: string;
   // 1.1 REGISTERED DETAIL
-  business_type: string;
+  business_type: string | number;
   registered_date: string;
   registered_company_address: string;
   registered_company_village_no: string;
   registered_company_alley: string;
   registered_company_road: string;
-  registered_company_province: string;
-  registered_company_district: string;
-  registered_company_sub_district: string;
+  registered_company_province: string | number;
+  registered_company_district: string | number;
+  registered_company_sub_district: string | number;
   registered_company_postcode: string;
   // 1.2 TRANSFERER DETAIL
   transferer_name: string;
@@ -50,9 +84,9 @@ export interface FieldTypeForOther {
   transferer_company_village_no: string;
   transferer_company_alley: string;
   transferer_company_road: string;
-  transferer_company_province: string;
-  transferer_company_district: string;
-  transferer_company_sub_district: string;
+  transferer_company_province: string | number;
+  transferer_company_district: string | number;
+  transferer_company_sub_district: string | number;
   transferer_company_postcode: string;
   // 2. VEHICLE DETAIL
   vehicle_appearance: string;
@@ -62,6 +96,13 @@ export interface FieldTypeForOther {
   vehicle_color: string;
   vehicle_axles: string;
   vehicle_weight: string;
+  vehicle_axles_weight1: number;
+  vehicle_axles_weight2: number;
+  vehicle_axles_weight3: number;
+  vehicle_axles_weight4: number;
+  vehicle_axles_weight5: number;
+  vehicle_axles_weight6: number;
+  vehicle_axles_weight7: number;
   // 3. REMARK
   petition_number: string;
   remark: string;
@@ -76,8 +117,12 @@ export interface ContextProps {
 
 export interface VehicleData {
   title: string;
-  description: string;
+  weight: number;
+  plate_no: string;
   image: string;
 }
 
-export type SummaryData = Omit<VehicleData, 'image'>
+export interface SummaryData {
+  title: string;
+  description: string;
+}

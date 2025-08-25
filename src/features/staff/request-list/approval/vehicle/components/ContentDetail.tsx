@@ -1,94 +1,107 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
+import { VehicleList } from '@/@types/reducer/petition';
 import { Descriptions, DescriptionsProps } from 'antd'
-import React from 'react'
+import React, { useCallback } from 'react'
 
 interface Props {
-
+  index: number;
+  item: VehicleList;
 }
 
 const ContentDetail: React.FC<Props> = (props) => {
-  const { } = props
+  const { item } = props
 
-  const items: DescriptionsProps['items'] = [
+  const renderAxisWeight = useCallback((arr: number[]) => {
+    if (!arr.length) return '-'
+    return arr.join(' : ')
+  }, [])
+
+  const renderLicensePlate = useCallback((plateNo: string, plateProvince: string) => {
+    const licenseArr = [plateNo, plateProvince]
+    if (!licenseArr.length) return '-'
+    return licenseArr.join(' ').trim()
+  }, [])
+
+  const vehicle_detail: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'ประเภทจับคู่',
-      children: <p>รถลากจูง + รถกึ่งพ่วง + สินค้า / เครื่องจักร</p>,
+      children: <p>{item?.match_type || '-'}</p>,
     },
     {
       key: '2',
       label: 'รัศมีเลี้ยว',
-      children: <p>12</p>,
+      children: <p>{item?.turn_radius || '-'}</p>,
     },
     {
       key: '3',
       label: 'น้ำหนักรถเปล่า (กิโลกรัม)',
-      children: <p>57,000</p>,
+      children: <p>{Number(item?.towing_vehicle?.weight || 0) + Number(item?.semi_trailer_vehicle?.weight || 0)}</p>,
     },
     {
       key: '4',
       label: 'น้ำหนักรถเปล่ารวมน้ำหนักเพลา (กิโลกรัม)',
-      children: <p>57,000</p>,
+      children: <p>{Number(item?.towing_vehicle?.weight || 0) + Number(item?.semi_trailer_vehicle?.weight || 0) + Number(item?.towing_vehicle?.axis_weight[0]) + Number(item?.towing_vehicle?.axis_weight[1]) + Number(item?.towing_vehicle?.axis_weight[2]) + Number(item?.semi_trailer_vehicle?.axis_weight[0]) + Number(item?.semi_trailer_vehicle?.axis_weight[1]) + Number(item?.semi_trailer_vehicle?.axis_weight[2])}</p>,
     },
     {
       key: '5',
       label: 'มิติรถเปล่า (เมตร)',
-      children: <p>กว้าง 3.50 X ยาว 9.00 X สูง 4.30</p>,
+      children: <p>{`กว้าง ${Math.max(Number(item?.towing_vehicle?.width || 0), Number(item?.semi_trailer_vehicle?.width || 0))} X ยาว ${Math.max(Number(item?.towing_vehicle?.length || 0), Number(item?.semi_trailer_vehicle?.length || 0))} X สูง ${Math.max(Number(item?.towing_vehicle?.height || 0), Number(item?.semi_trailer_vehicle?.height || 0))}`}</p>,
     },
     {
       key: '6',
       label: 'มิติรถเปล่ารวมสินค้า เครื่องจักร (เมตร)',
-      children: <p>กว้าง 3.50 X ยาว 9.00 X สูง 4.30</p>,
+      children: <p>{`กว้าง ${Math.max(Number(item?.towing_vehicle?.width || 0), Number(item?.semi_trailer_vehicle?.width || 0), Number(item?.etc_vehicle?.width || 0))} X ยาว ${Math.max(Number(item?.towing_vehicle?.length || 0), Number(item?.semi_trailer_vehicle?.length || 0), Number(item?.etc_vehicle?.length || 0))} X สูง ${Math.max(Number(item?.towing_vehicle?.height || 0), Number(item?.semi_trailer_vehicle?.height || 0), Number(item?.etc_vehicle?.height || 0))}`}</p>,
     },
   ];
 
-  const items2: DescriptionsProps['items'] = [
+  const towering_vehicle: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>22 - 1144 สระบุรี</p>,
+      children: <p>{renderLicensePlate(item?.towing_vehicle?.plate_no, item?.towing_vehicle?.plate_province)}</p>,
     },
     {
       key: '2',
       label: 'น้ำหนัก (กิโลกรัม)',
-      children: <p>15,000</p>,
+      children: <p>{item?.towing_vehicle?.weight || '-'}</p>,
     },
     {
       key: '3',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>5000 : 5000 : 5000</p>,
+      children: <p>{renderAxisWeight(item?.towing_vehicle?.axis_weight)}</p>,
     },
   ];
 
-  const items3: DescriptionsProps['items'] = [
+  const semi_trailer_vehicle: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>22 - 1144 สระบุรี</p>,
+      children: <p>{renderLicensePlate(item?.semi_trailer_vehicle?.plate_no, item?.semi_trailer_vehicle?.plate_province)}</p>,
     },
     {
       key: '2',
       label: 'น้ำหนัก (กิโลกรัม)',
-      children: <p>15,000</p>,
+      children: <p>{item?.semi_trailer_vehicle?.weight || '-'}</p>,
     },
     {
       key: '3',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>5000 : 5000 : 5000 : 5000</p>,
+      children: <p>{renderAxisWeight(item?.semi_trailer_vehicle?.axis_weight)}</p>,
     },
   ];
 
-  const items4: DescriptionsProps['items'] = [
+  const etc_vehicle: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>22 - 1144 สระบุรี</p>,
+      children: <p>{renderLicensePlate(item?.etc_vehicle?.plate_no, item?.etc_vehicle?.plate_province)}</p>,
     },
     {
       key: '2',
       label: 'น้ำหนัก (กิโลกรัม)',
-      children: <p>15,000</p>,
+      children: <p>{item?.etc_vehicle?.weight || '-'}</p>,
     },
   ];
 
@@ -96,30 +109,38 @@ const ContentDetail: React.FC<Props> = (props) => {
     <>
       <section>
         <Descriptions
-          title="ข้อมูลยานพาหนะ (รถคู่ที่ 1)"
-          items={items}
+          title={`ข้อมูลยานพาหนะ (รถ${item?.sort || 'คู่ที่ 1'})`}
+          items={vehicle_detail}
           column={1}
+          layout='vertical'
+          size='small'
         />
       </section>
       <section className='mt-3'>
         <Descriptions
           title="ข้อมูลรถลากจูง"
-          items={items2}
+          items={towering_vehicle}
           column={1}
+          layout='vertical'
+          size='small'
         />
       </section>
       <section className='mt-3'>
         <Descriptions
           title="ข้อมูลรถกึ่งพ่วง 4 เพลา 8"
-          items={items3}
+          items={semi_trailer_vehicle}
           column={1}
+          layout='vertical'
+          size='small'
         />
       </section>
       <section className='mt-3'>
         <Descriptions
           title="ข้อมูลเครื่องจักร"
-          items={items4}
+          items={etc_vehicle}
           column={1}
+          layout='vertical'
+          size='small'
         />
       </section>
     </>

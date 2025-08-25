@@ -1,26 +1,77 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { FormSearchPetitionExtended, TablePetitionExtended } from '../components'
+import { setLoading, useAppDispatch, useAppSelector } from '@/store'
+import { getAdminPetitionHistoryExtendedData, setAdminPetitionHistoryExtendedData } from '@/store/slices/staff'
 
 interface Props { }
 
 const ContentPetitionExtended: React.FC<Props> = (props) => {
   const { } = props
+  const dispatch = useAppDispatch()
+  const { petition_history_extended, loading } = useAppSelector(state => state.staff.petition)
 
-  const handleTableChange = useCallback((page: number, pageSize: number) => {
-    console.log(page)
-    console.log(pageSize)
-  }, [])
+  useEffect(() => {
+    dispatch(getAdminPetitionHistoryExtendedData(petition_history_extended.overview.search))
+  }, [dispatch, petition_history_extended.overview.search])
+
+  const handleTableChange = useCallback((page: number, limit: number) => {
+    dispatch(setLoading(true))
+    try {
+      dispatch(setAdminPetitionHistoryExtendedData({
+        params: {
+          ...petition_history_extended.overview.search,
+          page,
+          limit
+        },
+        data: { ...petition_history_extended.overview.data }
+      }))
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, petition_history_extended.overview])
+
+  const handleSearch = useCallback((value: string) => {
+    dispatch(setLoading(true))
+    try {
+      dispatch(setAdminPetitionHistoryExtendedData({
+        params: {
+          ...petition_history_extended.overview.search,
+          search: value
+        },
+        data: { ...petition_history_extended.overview.data }
+      }))
+
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, petition_history_extended.overview])
 
   return (
     <div>
       <h3>ประวัติการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)</h3>
       <section className="mt-5">
-        <FormSearchPetitionExtended />
+        <FormSearchPetitionExtended
+          handleSearch={handleSearch}
+        />
       </section>
       <section className="mt-5">
         <TablePetitionExtended
+          data={petition_history_extended.overview.data}
+          loading={loading}
           handleTableChange={handleTableChange}
         />
       </section>

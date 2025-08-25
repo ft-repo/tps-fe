@@ -4,19 +4,21 @@ import React from 'react'
 import { ContentDetail, ContentRouteList, ContentForm } from '../components'
 import { Col, Row } from 'antd'
 import MapRouteEstimation from '@/features/entrepreneur/route-estimation/route/components/route-estimate/initial/MapRouteEstimation'
+import { EstimateRouteSubDetail } from '@/@types/reducer/petition';
 
 interface Props {
-
+  index: number;
+  item: EstimateRouteSubDetail;
 }
 
 const ContentRoute: React.FC<Props> = (props) => {
-  const { } = props
+  const { index, item } = props
 
   return (
     <>
       <section>
         <Row gutter={[16, 16]}>
-          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
             <section>
               <ContentDetail />
             </section>
@@ -24,7 +26,7 @@ const ContentRoute: React.FC<Props> = (props) => {
               <ContentForm />
             </section>
           </Col>
-          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[58vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
               <MapRouteEstimation
                 firstPoint={null}
@@ -38,7 +40,10 @@ const ContentRoute: React.FC<Props> = (props) => {
       <section>
         <h3>รายการประเมินเส้นทาง</h3>
         <section className='mt-3'>
-          <ContentRouteList />
+          <ContentRouteList
+            index={index}
+            item={item}
+          />
         </section>
       </section>
     </>
