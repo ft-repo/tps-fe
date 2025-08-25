@@ -55,7 +55,7 @@ const SignUp = () => {
     }
   })
 
-  const { handleSubmit, control, setValue, formState: { errors } } = form
+  const { handleSubmit, control, setValue, setError , formState: { errors } } = form
 
   useEffect(() => {
     dispatch(getProvince())
@@ -157,6 +157,7 @@ const SignUp = () => {
         <SignUpForm
           control={control}
           setValue={setValue}
+          setError={setError}
           errors={errors}
           setProvinceId={setProvinceId}
           setDistrictId={setDistrictId}
