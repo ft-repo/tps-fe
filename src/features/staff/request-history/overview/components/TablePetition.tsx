@@ -124,7 +124,8 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       loading={loading}
       onRow={(record) => ({
         onClick: () => {
-          const href = `/request-history/view/document?petition_id=${(record as any).petition_id ?? ''}`
+                    const href = `/request-history/view/other?petition_id=${(record as any).petition_id ?? ''}`
+
           navigate(href)
         },
       })}
