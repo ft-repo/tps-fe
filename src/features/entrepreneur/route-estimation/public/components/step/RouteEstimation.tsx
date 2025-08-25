@@ -2,16 +2,10 @@ import { RouteEstimationRequest } from '@/@types/entrepreneur/route-estimation'
 import { Tabs, Button } from 'antd'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useCallback, useState, memo } from 'react'
-import { useNavigate } from 'react-router-dom'
-import FormRouteEstimation from '../route-estimate/initial/FormRouteEstimation'
-import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
-import FormMapEstimation from '../route-estimate/initial/FormMapEstimation'
-import { postRouteEstimationStep1API } from '@/services/entrepreneur/RouteEstimationService'
-import { setLoading } from '@/store'
-import { useAppDispatch } from '@/store/hook'
-import { Notification, toast } from '@/components/ui'
-import { useRouteContext } from '../../context'
-import { MOCK_VEHICLE_ROUTE } from '../../mock'
+import FormRouteEstimation from '../../../route/components/route-estimate/initial/FormRouteEstimation'
+import MapRouteEstimation from '../../../route/components/route-estimate/initial/MapRouteEstimation'
+import FormMapEstimation from '../../../route/components/route-estimate/initial/FormMapEstimation'
+import { usePublicRouteContext } from '../../context'
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
@@ -48,9 +42,7 @@ const defaultValues: RouteEstimationRequest = {
 }
 
 function RouteEstimation() {
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
-  const { setStep, setDataParser } = useRouteContext()
+  const { setStep, setDataParser } = usePublicRouteContext()
   const { control, handleSubmit } = useForm<RouteEstimationRequest>({
     defaultValues,
   })
@@ -138,9 +130,6 @@ function RouteEstimation() {
   )
 
   const onSubmit = useCallback(async (values: RouteEstimationRequest) => {
-    console.log('values ======> ', values)
-    // INIT LOADING
-    dispatch(setLoading(true))
     // CREATING REQUEST
     const requestBody: RouteEstimationRequest = {
       ...values,
@@ -158,47 +147,16 @@ function RouteEstimation() {
         type: 'Point',
         coordinates: [values.end_point.coordinates[1] as number, values.end_point.coordinates[0] as number],
       },
-      vehicle_route: MOCK_VEHICLE_ROUTE,
+      vehicle_route: {
+        type: 'LineString',
+        coordinates: [],
+      },
     }
     console.log('requestBody ======> ', requestBody)
-    try {
-      const response = await postRouteEstimationStep1API(requestBody)
-      if (response.status === 200) {
-        toast.push(
-          <Notification
-            title={'Success'}
-            type={'success'}
-            onClose={() => {
-              setStep(2)
-              setDataParser(data)
-            }}
-          >
-            <p className='break-all'>Successfully submit data</p>
-          </Notification>
-        )
-      } else {
-        toast.push(
-          <Notification
-            title={'Error'}
-            type={'danger'}
-          >
-            <p className='break-all'>Failed to submit data</p>
-          </Notification>
-        )
-      }
-    } catch (error) {
-      toast.push(
-        <Notification
-          title={'Error'}
-          type={'danger'}
-        >
-          <p className='break-all'>Failed to submit data</p>
-        </Notification>
-      )
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [dispatch, setStep, setDataParser])
+
+    // setStep(2)
+    // setDataParser(data)
+  }, [setStep, setDataParser])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

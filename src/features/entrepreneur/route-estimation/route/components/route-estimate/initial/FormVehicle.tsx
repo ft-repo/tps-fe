@@ -1,14 +1,14 @@
 import { RouteEstimationRequest } from '@/@types/entrepreneur/route-estimation'
 import { VehicleDetailForRouteEstimation } from '@/@types/services/vehicle'
 import { getVehicleByIDAPI } from '@/services/entrepreneur/VehicleListService'
-import { setLoading, useAppDispatch } from '@/store'
+import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { setVehicleDetailForRouteEstimation } from '@/store/slices/entrepreneur/vehicleListSlice'
 import { Button, Input, Select } from 'antd'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { Control, Controller, useWatch } from 'react-hook-form'
 
 interface FormVehicleProps {
-  vehicleType: number[]
+  vehicleType: number | null
   formIndex: number
   control: Control<RouteEstimationRequest>
   vehicleList: any
@@ -17,6 +17,7 @@ interface FormVehicleProps {
 function FormVehicle(props: FormVehicleProps) {
   const { vehicleType, formIndex, control, vehicleList } = props
   const dispatch = useAppDispatch()
+  const { signedIn } = useAppSelector((state) => state.auth.session)
   const [enableAddAxle, setEnableAddAxle] = useState<boolean>(true)
   const [enableRemoveAxle, setEnableRemoveAxle] = useState<boolean>(false)
   const [axles, setAxles] = useState<number>(4)
@@ -71,7 +72,7 @@ function FormVehicle(props: FormVehicleProps) {
 
   return (
     <section className="grid lg:grid-cols-3 gap-4">
-      {vehicleType.includes(1) && (
+      {signedIn && (vehicleType === 1 || vehicleType === 2 || vehicleType === 3) && (
         <div>
           <h5>รถลากจูง</h5>
           <Controller
@@ -104,7 +105,7 @@ function FormVehicle(props: FormVehicleProps) {
           />
         </div>
       )}
-      {vehicleType.includes(2) && (
+      {signedIn && (vehicleType === 1 || vehicleType === 2) && (
         <div>
           <h5>รถกึ่งพ่วง</h5>
           <Controller
@@ -137,7 +138,7 @@ function FormVehicle(props: FormVehicleProps) {
           />
         </div>
       )}
-      {vehicleType.includes(3) && (
+      {signedIn && vehicleType === 1 && (
         <div>
           <h5>สินค้า/เครื่องจักร</h5>
           <Controller
@@ -171,7 +172,7 @@ function FormVehicle(props: FormVehicleProps) {
         </div>
       )}
 
-      {vehicleType.includes(1) && (
+      {(vehicleType === 1 || vehicleType === 2 || vehicleType === 3) && (
         <div className="lg:col-span-3">
           <h5>น้ำหนักลงเพลา รถลากจูง (กิโลกรัม)</h5>
           <div className="grid grid-cols-2 xl:grid-cols-6 gap-4">
@@ -253,7 +254,7 @@ function FormVehicle(props: FormVehicleProps) {
           </div>
         </div>
       )}
-      {vehicleType.includes(2) && (
+      {(vehicleType === 2 || vehicleType === 1) && (
         <div className="lg:col-span-3">
           <h5>น้ำหนักลงเพลา รถกึ่งพ่วง (กิโลกรัม)</h5>
           <div className="grid grid-cols-2 xl:grid-cols-8 gap-4">

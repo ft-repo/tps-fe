@@ -13,23 +13,51 @@ interface Props {
   control: Control<RouteEstimationRequest>
 }
 
+const vehicle_type = [
+  {
+    id: 1,
+    name: 'รถลากจูง + รถกึ่งพ่วง + สินค้า / เครื่องจักร',
+  },
+  {
+    id: 2,
+    name: 'รถลากจูง + รถกึ่งพ่วง',
+  },
+  {
+    id: 3,
+    name: 'รถลากจูง',
+  },
+]
+
+const vehicle_type_public = [
+  {
+    id: 2,
+    name: 'รถลากจูง + รถกึ่งพ่วง',
+  },
+  {
+    id: 3,
+    name: 'รถลากจูง',
+  },
+]
+
 const FormRouteEstimation: FC<Props> = (props: Props) => {
   const { formIndex, control } = props
   const dispatch = useAppDispatch()
-  const { vehicle_type } = useAppSelector((state) => state.master)
   const { overview, loading } = useAppSelector(
     (state) => state.entrepreneur.vehicleList,
   )
-  const [vehicleType, setVehicleType] = useState<number[]>([])
+  const { signedIn } = useAppSelector((state) => state.auth.session)
+  const [vehicleType, setVehicleType] = useState<number | null>(null)
 
   useEffect(() => {
-    dispatch(
-      getVehicleData({
-        page: 1,
-        limit: 1000,
-      }),
-    )
-  }, [dispatch])
+    if (signedIn) {
+      dispatch(
+        getVehicleData({
+          page: 1,
+          limit: 1000,
+        }),
+      )
+    }
+  }, [dispatch, signedIn])
 
   return (
     <div key={formIndex}>
@@ -40,9 +68,8 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
               <label>เลือกประเภทจับคู่</label>
               <Select
                 id="vehicle_type"
-                mode="multiple"
                 placeholder="กรุณาเลือก"
-                options={vehicle_type}
+                options={signedIn ? vehicle_type : vehicle_type_public}
                 fieldNames={{
                   label: 'name',
                   value: 'id',
