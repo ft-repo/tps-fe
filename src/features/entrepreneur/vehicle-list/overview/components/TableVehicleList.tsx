@@ -95,6 +95,7 @@ const TableVehicleList: React.FC<Props> = (props) => {
     <Table
       columns={columns}
       dataSource={data.data || []}
+      rowKey="id"
       loading={loading}
       pagination={{
         defaultCurrent: 1,
