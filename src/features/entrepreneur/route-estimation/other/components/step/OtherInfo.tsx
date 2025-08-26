@@ -6,9 +6,11 @@ import { useNavigate } from 'react-router-dom'
 import { useOtherContext } from '../../context'
 import { useForm } from 'react-hook-form'
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation'
-import { useAppDispatch, useAppSelector } from '@/store'
-import { Button, Col, Row } from 'antd'
+import { useAppSelector, useAppDispatch, setLoading } from '@/store'
+import { Button, Col, Modal, Row } from 'antd'
 import { PetitionExtendedPostRequest } from '@/@types/services/petition'
+import dayjs from 'dayjs'
+import { postPetitionExtendedAPI } from '@/services/entrepreneur/PetitionService'
 
 interface Props {
 
@@ -20,64 +22,66 @@ const OtherInfo: React.FC<Props> = (props) => {
   const { loading } = useAppSelector(state => state.layout)
   const { user } = useAppSelector(state => state.auth)
   const navigate = useNavigate()
-  const { setStep, setDataParser } = useOtherContext()
+  const { dataParser, setStep, setDataParser } = useOtherContext()
   const submitRef = useRef<HTMLButtonElement>(null)
-
-  console.log(user)
 
   const form = useForm<FieldTypeForOther>({
     defaultValues: {
       // 1. PETITOR INFO
       company_name: user.details.business_details.business_name || '',
-      company_contactor: '',
-      company_address: '',
-      company_village_number: '',
-      company_alley: '',
-      company_road: '',
-      company_province: '',
-      company_district: '',
-      company_sub_district: '',
-      company_postcode: '',
+      company_contactor: user.details.contact_info.contact_name || '',
+      company_address: dataParser.data.petition_extended_address.contact_address.house_number || '',
+      company_village_number: dataParser.data.petition_extended_address.contact_address.village || '',
+      company_alley: dataParser.data.petition_extended_address.contact_address.lane || '',
+      company_road: dataParser.data.petition_extended_address.contact_address.road || '',
+      company_province: dataParser.data.petition_extended_address.contact_address.province_id || null,
+      company_district: dataParser.data.petition_extended_address.contact_address.district_id || null,
+      company_sub_district: dataParser.data.petition_extended_address.contact_address.sub_district_id || null,
+      company_postcode: dataParser.data.petition_extended_address.contact_address.zip_code || '',
       // 1.1 REGISTERED DETAIL
       business_type: user.details.business_details.entity_type.id,
-      registered_date: '',
+      registered_date: dataParser.data.petition_extended_detail.cert_date ? dayjs(dataParser.data.petition_extended_detail.cert_date) : user.details.created_at ? dayjs(user.details.created_at) : null,
       registered_company_address: user.details.business_address.house_number,
       registered_company_village_no: user.details.business_address.village,
       registered_company_alley: user.details.business_address.lane,
       registered_company_road: user.details.business_address.road,
-      registered_company_province: user.details.business_address.province.id,
-      registered_company_district: user.details.business_address.district.id,
-      registered_company_sub_district: user.details.business_address.sub_district.id,
+      registered_company_province: user.details.business_address.province.id || null,
+      registered_company_district: user.details.business_address.district.id || null,
+      registered_company_sub_district: user.details.business_address.sub_district.id || null,
       registered_company_postcode: user.details.business_address.zip_codes,
       // 1.2 TRANSFERER DETAIL
-      transferer_name: '',
-      transferer_phone_number: '',
-      transferer_company_address: '',
-      transferer_company_village_no: '',
-      transferer_company_alley: '',
-      transferer_company_road: '',
-      transferer_company_province: '',
-      transferer_company_district: '',
-      transferer_company_sub_district: '',
-      transferer_company_postcode: '',
+      transferer_name: dataParser.data.petition_extended_detail.poa_name || '',
+      transferer_phone_number: dataParser.data.petition_extended_detail.phone_number || '',
+      transferer_company_address: dataParser.data.petition_extended_address.poa_address.house_number || '',
+      transferer_company_village_no: dataParser.data.petition_extended_address.poa_address.village || '',
+      transferer_company_alley: dataParser.data.petition_extended_address.poa_address.lane || '',
+      transferer_company_road: dataParser.data.petition_extended_address.poa_address.road || '',
+      transferer_company_province: dataParser.data.petition_extended_address.poa_address.province_id || null,
+      transferer_company_district: dataParser.data.petition_extended_address.poa_address.district_id || null,
+      transferer_company_sub_district: dataParser.data.petition_extended_address.poa_address.sub_district_id || null,
+      transferer_company_postcode: dataParser.data.petition_extended_address.poa_address.zip_code || '',
       // 2. VEHICLE DETAIL
-      vehicle_appearance: '',
-      vehicle_type: '',
-      vehicle_license_plate: '',
-      vehicle_province: '',
-      vehicle_color: '',
-      vehicle_axles: '',
-      vehicle_weight: '',
-      vehicle_axles_weight1: 0,
-      vehicle_axles_weight2: 0,
-      vehicle_axles_weight3: 0,
-      vehicle_axles_weight4: 0,
-      vehicle_axles_weight5: 0,
-      vehicle_axles_weight6: 0,
-      vehicle_axles_weight7: 0,
+      match_type: dataParser.match_type || null,
+      towering_vehicle: dataParser.data.petition_extended_vehicle.towing_vehicle_id || null,
+      semi_trailer_vehicle: dataParser.data.petition_extended_vehicle.semi_trailer_vehicle_id || null,
+      etc_vehicle: dataParser.data.petition_extended_vehicle.etc_vehicle_id || null,
+      towering_weight1: dataParser.data.petition_extended_vehicle.axis_weight_towing[0] || 0,
+      towering_weight2: dataParser.data.petition_extended_vehicle.axis_weight_towing[1] || 0,
+      towering_weight3: dataParser.data.petition_extended_vehicle.axis_weight_towing[2] || 0,
+      towering_weight4: dataParser.data.petition_extended_vehicle.axis_weight_towing[3] || 0,
+      towering_weight5: dataParser.data.petition_extended_vehicle.axis_weight_towing[4] || 0,
+      towering_weight6: dataParser.data.petition_extended_vehicle.axis_weight_towing[5] || 0,
+      towering_weight7: dataParser.data.petition_extended_vehicle.axis_weight_towing[6] || 0,
+      semi_weight1: dataParser.data.petition_extended_vehicle.axis_weight_semi_trailer[0] || 0,
+      semi_weight2: dataParser.data.petition_extended_vehicle.axis_weight_semi_trailer[1] || 0,
+      semi_weight3: dataParser.data.petition_extended_vehicle.axis_weight_semi_trailer[2] || 0,
+      semi_weight4: dataParser.data.petition_extended_vehicle.axis_weight_semi_trailer[3] || 0,
+      semi_weight5: dataParser.data.petition_extended_vehicle.axis_weight_semi_trailer[4] || 0,
+      semi_weight6: dataParser.data.petition_extended_vehicle.axis_weight_semi_trailer[5] || 0,
+      semi_weight7: dataParser.data.petition_extended_vehicle.axis_weight_semi_trailer[6] || 0,
       // 3. REMARK
-      petition_number: '',
-      remark: ''
+      petition_number: String(dataParser.data.petition_extended_detail.ref_form_no) || '',
+      remark: dataParser.data.petition_extended_detail.remark || ''
     }
   })
 
@@ -85,14 +89,15 @@ const OtherInfo: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     setValue,
+    watch,
     formState: { errors }
   } = form
 
   const onSubmit = useCallback(async (value: FieldTypeForOther) => {
     const body: PetitionExtendedPostRequest = {
       petition_extended_detail: {
-        cert_date: value.registered_date,
-        poa_name: value.company_name,
+        cert_date: dayjs(value.registered_date).format('YYYY-MM-DD'),
+        poa_name: value.transferer_name,
         phone_number: value.transferer_phone_number,
         ref_form_no: Number(value.petition_number),
         remark: value.remark
@@ -120,27 +125,79 @@ const OtherInfo: React.FC<Props> = (props) => {
         }
       },
       petition_extended_vehicle: {
-        characteristic: value.vehicle_appearance,
-        type: value.vehicle_type,
-        plate_no: value.vehicle_license_plate,
-        plate_province: value.vehicle_province,
-        color: value.vehicle_color,
-        axis_number: Number(value.vehicle_axles),
-        weight_total: Number(value.vehicle_weight),
-        axis_weight: [
-          value.vehicle_axles_weight1,
-          value.vehicle_axles_weight2,
-          value.vehicle_axles_weight3,
-          value.vehicle_axles_weight4,
-          value.vehicle_axles_weight5,
-          value.vehicle_axles_weight6,
-          value.vehicle_axles_weight7
-        ]
+        towing_vehicle_id: Number(value.towering_vehicle),
+        semi_trailer_vehicle_id: Number(value.semi_trailer_vehicle),
+        etc_vehicle_id: Number(value.etc_vehicle),
+        axis_weight_towing: [
+          Number(value.towering_weight1),
+          Number(value.towering_weight2),
+          Number(value.towering_weight3),
+          Number(value.towering_weight4),
+          Number(value.towering_weight5),
+          Number(value.towering_weight6),
+          Number(value.towering_weight7),
+        ],
+        axis_weight_semi_trailer: [
+          Number(value.semi_weight1),
+          Number(value.semi_weight2),
+          Number(value.semi_weight3),
+          Number(value.semi_weight4),
+          Number(value.semi_weight5),
+          Number(value.semi_weight6),
+          Number(value.semi_weight7),
+        ],
       },
     }
 
-    console.log(body)
-  }, [])
+    dispatch(setLoading(true))
+    try {
+      const response = await postPetitionExtendedAPI(body)
+      if (response.status === 200) {
+        Modal.success({
+          title: 'สำเร็จ',
+          content: 'บันทึกข้อมูลสำเร็จ',
+          okText: 'ตกลง',
+          onOk: () => {
+            setStep(2)
+            setDataParser({
+              data: body,
+              temporary_id: response.data.temporary_id,
+              match_type: Number(value.match_type)
+            })
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, setDataParser, setStep])
 
   return (
     <main>
@@ -151,9 +208,9 @@ const OtherInfo: React.FC<Props> = (props) => {
             disabled={loading}
             htmlType='button'
             type='default'
-            size='large'
+            // size='large'
             className='w-full lg:w-auto'
-            onClick={() => navigate('/route-estimation/route')}
+            onClick={() => navigate(-1)}
           >
             ย้อนกลับ
           </Button>
@@ -161,7 +218,7 @@ const OtherInfo: React.FC<Props> = (props) => {
             loading={loading}
             htmlType='submit'
             type='primary'
-            size='large'
+            // size='large'
             className='w-full lg:w-auto'
             onClick={() => submitRef.current?.click()}
           >
@@ -182,6 +239,7 @@ const OtherInfo: React.FC<Props> = (props) => {
             <FormVehicleContent
               control={control}
               setValue={setValue}
+              watch={watch}
               errors={errors}
             />
           </Col>

@@ -32,7 +32,8 @@ export interface GetVehicleDetail {
   width: number | string | null | any;
   length: number | string | null | any;
   height: number | string | null | any;
-  registration_document_url: string
+  registration_document_url: string;
+  axis_number: number;
 }
 
 export interface GetVehicleOwnerDocuments {
@@ -67,6 +68,7 @@ export interface VehicleDetail {
   length: number | string;
   height: number | string;
   registration_document_url: string;
+  axis_number: number;
 }
 
 export interface VehicleOwnerDocument {

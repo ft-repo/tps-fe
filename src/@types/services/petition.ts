@@ -92,7 +92,7 @@ export interface PetitionExtendedDetail {
   cert_date: string;
   poa_name: string;
   phone_number: string;
-  ref_form_no: number;
+  ref_form_no: number | string;
   remark: string;
 }
 
@@ -124,18 +124,49 @@ export interface PoaAddress {
 }
 
 export interface PetitionExtendedVehicle {
-  characteristic: string;
-  type: string;
-  plate_no: string;
-  plate_province: string;
-  color: string;
-  axis_number: number;
-  weight_total: number;
-  axis_weight: number[];
+  towing_vehicle_id: number;
+  semi_trailer_vehicle_id: number;
+  etc_vehicle_id: number;
+  axis_weight_towing: number[];
+  axis_weight_semi_trailer: number[];
 }
 
 export interface PetitionExtendedPostResponse {
   message: string
   success: boolean
   temporary_id: string
+}
+
+export interface PetitionExtendedDocumentPostRequest {
+  petition_extended_user_document: PetitionExtendedUserDocument;
+  petition_extended_vehicle_document: PetitionExtendedVehicleDocument;
+  petition_extended_audit_document: PetitionExtendedAuditDocument;
+}
+
+export interface PetitionExtendedUserDocument {
+  cid_url: string;
+  company_certificate_url: string;
+  vehicle_permit_url: string;
+  power_of_attorney_url: string;
+}
+
+export interface PetitionExtendedVehicleDocument {
+  vehicle_registration_url: string;
+  vehicle_photos_url: string;
+  vehicle_dimensions_empty_url: string;
+  vehicle_dimensions_loaded_url: string;
+  prefab_parts_details_url: string;
+  vehicle_turning_radius_url: string;
+}
+
+export interface PetitionExtendedAuditDocument {
+  bridge_structure_calculation_url: string;
+  road_structure_calculation_url: string;
+  bridge_engineer_certificate_url: string;
+  road_engineer_certificate_url: string;
+  mechanical_engineer_certificate_url: string;
+  safety_management_plan_url: string;
+  route_map_url: string;
+  operation_plan_url: string;
+  contact_info_url: string;
 }

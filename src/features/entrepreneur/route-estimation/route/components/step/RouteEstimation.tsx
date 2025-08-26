@@ -1,7 +1,9 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import { Root, SummaryData, VehicleData } from '@/@types/entrepreneur/route-estimation'
 import { Tabs, Button, Divider } from 'antd'
 import { useFieldArray, useForm } from 'react-hook-form'
-import { useCallback, useState, memo } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FormRouteEstimation from '../route-estimate/initial/FormRouteEstimation'
 import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
@@ -16,6 +18,8 @@ interface TabItem {
   key: string
   closable?: boolean
 }
+
+interface Props { }
 
 const defaultValues: Root = {
   vehicle: [
@@ -82,7 +86,8 @@ const summaryData: SummaryData[] = [
   },
 ]
 
-function RouteEstimation() {
+const RouteEstimation: React.FC<Props> = (props) => {
+  const { } = props;
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm<Root>({
     defaultValues,
@@ -173,58 +178,73 @@ function RouteEstimation() {
   }, [])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <section className="w-full grid lg:grid-cols-3 gap-4 mb-5">
-        <div className="w-full lg:h-[50vh] col-span-2">
-          <Tabs
-            type="editable-card"
-            items={tabItems}
-            activeKey={activeKey}
-            tabBarExtraContent={
-              <Button
-                type="primary"
-                variant="solid"
-                color="gold"
-                className="text-black"
-                size="middle"
-                onClick={() => navigate('/route-estimation/other')}
-              >
-                ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)
-              </Button>
-            }
-            onEdit={onTabsEdit}
-            onChange={onTabsChange}
-          />
-        </div>
-        <div className="col-span-1 order-first lg:order-last z-0 h-[50vh]">
-          <MapRouteEstimation
-          // firstPoint={firstPoint}
-          // secondPoint={secondPoint}
-          />
-        </div>
-      </section>
-      <h4 className="text-lg font-bold m-0 p-0">
-        รายละเอียด {tabItems[Number(activeKey) - 1].label}
-      </h4>
-      <Divider className="mb-3" />
-      <section className="mt-5 grid lg:grid-cols-2 gap-4 lg:h-[25vh]">
-        <section className="lg:order-last">
-          <VehicleSummary data={summaryData} />
-        </section>
-        <section>
-          <CardVehicleDetails data={vehicleData} />
-        </section>
-      </section>
-
-      <section className="w-full">
-        <div className="flex justify-end items-center gap-5">
-          <Button type="primary" variant="solid" size="large" htmlType="submit">
-            ประเมินเส้นทาง
+    <main>
+      <section className='flex justify-between items-center flex-wrap gap-5 mb-5'>
+        <h3>ขออนุญาตหมวด 2 (4 - 7 เพลา)</h3>
+        <div className='flex items-center gap-3'>
+          <Button
+            disabled={false}
+            htmlType='button'
+            type='default'
+            // size='large'
+            className='w-full lg:w-auto'
+            onClick={() => navigate(-1)}
+          >
+            ย้อนกลับ
+          </Button>
+          <Button
+            loading={false}
+            htmlType='submit'
+            type='primary'
+            // size='large'
+            className='w-full lg:w-auto'
+          // onClick={() => submitRef.current?.click()}
+          >
+            ถัดไป
           </Button>
         </div>
       </section>
-    </form>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section className="w-full grid lg:grid-cols-3 gap-4 mb-5">
+          <div className="w-full lg:h-[50vh] col-span-2">
+            <Tabs
+              type="editable-card"
+              items={tabItems}
+              activeKey={activeKey}
+              onEdit={onTabsEdit}
+              onChange={onTabsChange}
+            />
+          </div>
+          <div className="col-span-1 order-first lg:order-last z-0 h-[50vh]">
+            <MapRouteEstimation
+            // firstPoint={firstPoint}
+            // secondPoint={secondPoint}
+            />
+          </div>
+        </section>
+        <h4 className="text-lg font-bold m-0 p-0">
+          รายละเอียด {tabItems[Number(activeKey) - 1].label}
+        </h4>
+        <Divider className="mb-3" />
+        <section className="mt-5 grid lg:grid-cols-2 gap-4 lg:h-[25vh]">
+          <section className="lg:order-last">
+            <VehicleSummary data={summaryData} />
+          </section>
+          <section>
+            <CardVehicleDetails data={vehicleData} />
+          </section>
+        </section>
+
+        <section className="w-full">
+          <div className="flex justify-end items-center gap-5">
+            <Button type="primary" variant="solid" size="large" htmlType="submit">
+              ประเมินเส้นทาง
+            </Button>
+          </div>
+        </section>
+      </form>
+    </main>
   )
 }
 
-export default memo(RouteEstimation)
+export default React.memo<Props>(RouteEstimation)

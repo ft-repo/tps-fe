@@ -5,12 +5,12 @@ export interface DialogProps {
   data: APIPostBody | null;
 }
 
-export interface ClientPetitionColor{
+export interface ClientPetitionColor {
   APPROVE: {
     color: string;
     text: string;
   }
-  NOT_APPROVE:{
+  NOT_APPROVE: {
     color: string;
     text: string;
   }
@@ -24,12 +24,12 @@ export interface ClientPetitionColor{
   }
 }
 
-export interface ClientPetitionExtendColor{
+export interface ClientPetitionExtendColor {
   APPROVE: {
     color: string;
     text: string;
   }
-  NOT_APPROVE:{
+  NOT_APPROVE: {
     color: string;
     text: string;
   }
@@ -43,12 +43,12 @@ export interface ClientPetitionExtendColor{
   }
 }
 
-export interface HistoryPetitionColor{
+export interface HistoryPetitionColor {
   APPROVE: {
     color: string;
     text: string;
   }
-  NOT_APPROVE:{
+  NOT_APPROVE: {
     color: string;
     text: string;
   }
@@ -123,4 +123,10 @@ export interface UploadResponse {
 export interface GetPaginateParams {
   page: number;
   limit: number;
+}
+
+// FILE TYPE
+export interface FileType {
+  file: any[];
+  url: string;
 }

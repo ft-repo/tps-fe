@@ -1,10 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
+import { getNewDistrictAPI, getNewProvinceAPI, getNewSubDistrictAPI, ProvinceAPIResponse, SubDistrictAPIResponse } from '@/services/master/MasterService';
 import { useAppSelector } from '@/store';
-import { Col, DatePicker, Input, Row, Select } from 'antd';
-import React from 'react'
-import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
+import { Col, DatePicker, Input, message, Row, Select } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react'
+import { Control, Controller, FieldErrors, UseFormSetValue, useWatch } from 'react-hook-form'
 
 interface Props {
   control: Control<FieldTypeForOther>;
@@ -13,8 +15,120 @@ interface Props {
 }
 
 const FormPetition: React.FC<Props> = (props) => {
-  const { control, errors } = props
+  const { control, setValue, errors } = props
   const { province, district, sub_district, entity_type } = useAppSelector((state) => state.master)
+  const {
+    company_province,
+    company_district,
+    company_sub_district,
+    transferer_company_province,
+    transferer_company_district,
+    transferer_company_sub_district,
+  } = useWatch({ control })
+  // CONTACT
+  const [contactProvince, setContactProvince] = useState<ProvinceAPIResponse[]>([])
+  const [contactDistrict, setContactDistrict] = useState<ProvinceAPIResponse[]>([])
+  const [contactSubDistrict, setContactSubDistrict] = useState<SubDistrictAPIResponse[]>([])
+  // POA
+  const [poaProvince, setPoaProvince] = useState<ProvinceAPIResponse[]>([])
+  const [poaDistrict, setPoaDistrict] = useState<ProvinceAPIResponse[]>([])
+  const [poaSubDistrict, setPoaSubDistrict] = useState<SubDistrictAPIResponse[]>([])
+
+  const fetchProvinceAPI = useCallback(async (selectType?: 'contact' | 'poa', provinceId?: string | number | null, districtId?: string | number | null, subDistrictId?: string | number | null) => {
+    try {
+      const response = await getNewProvinceAPI({
+        province_id: provinceId ? provinceId : null,
+        district_id: districtId ? districtId : null,
+        sub_district_id: subDistrictId ? subDistrictId : null
+      })
+      if (response.status === 200) {
+        if (selectType === 'contact') {
+          setContactProvince(response.data)
+        } else if (selectType === 'poa') {
+          setPoaProvince(response.data)
+        } else {
+          setContactProvince(response.data)
+          setPoaProvince(response.data)
+        }
+      } else {
+        console.log(response)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    }
+  }, [])
+
+  const fetchDistrictAPI = useCallback(async (selectType?: 'contact' | 'poa', provinceId?: string | number | null, districtId?: string | number | null, subDistrictId?: string | number | null) => {
+    try {
+      const response = await getNewDistrictAPI({
+        province_id: provinceId ? provinceId : null,
+        district_id: districtId ? districtId : null,
+        sub_district_id: subDistrictId ? subDistrictId : null
+      })
+      if (response.status === 200) {
+        if (selectType === 'contact') {
+          setContactDistrict(response.data)
+        } else if (selectType === 'poa') {
+          setPoaDistrict(response.data)
+        } else {
+          setContactDistrict(response.data)
+          setPoaDistrict(response.data)
+        }
+      } else {
+        console.log(response)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    }
+  }, [])
+
+  const fetchSubDistrictAPI = useCallback(async (selectType?: 'contact' | 'poa', provinceId?: string | number | null, districtId?: string | number | null, subDistrictId?: string | number | null) => {
+    try {
+      const response = await getNewSubDistrictAPI({
+        province_id: provinceId ? provinceId : null,
+        district_id: districtId ? districtId : null,
+        sub_district_id: subDistrictId ? subDistrictId : null
+      })
+      if (response.status === 200) {
+        if (selectType === 'contact') {
+          setContactSubDistrict(response.data)
+        } else if (selectType === 'poa') {
+          setPoaSubDistrict(response.data)
+        } else {
+          setContactSubDistrict(response.data)
+          setPoaSubDistrict(response.data)
+        }
+      } else {
+        console.log(response)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchProvinceAPI()
+  }, [])
+
+  useEffect(() => {
+    fetchDistrictAPI()
+  }, [])
+
+  useEffect(() => {
+    fetchSubDistrictAPI()
+  }, [])
 
   return (
     <div>
@@ -213,7 +327,7 @@ const FormPetition: React.FC<Props> = (props) => {
                       allowClear
                       showSearch
                       placeholder='กรุณาเลือก'
-                      options={province}
+                      options={contactProvince}
                       fieldNames={{
                         label: 'name_th',
                         value: 'id'
@@ -225,6 +339,20 @@ const FormPetition: React.FC<Props> = (props) => {
                       size='large'
                       style={{
                         fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(value) => {
+                        field.onChange(value)
+                        // fetchProvinceAPI('contact', value, company_district, company_sub_district)
+                        fetchDistrictAPI('contact', value, company_district, company_sub_district)
+                        fetchSubDistrictAPI('contact', value, company_district, company_sub_district)
+                        // SET VALUE
+                        setValue('company_district', null)
+                        setValue('company_sub_district', null)
+                        setValue('company_postcode', '')
+                        // NO VALUE
+                        if (!value) {
+                          fetchProvinceAPI('contact')
+                        }
                       }}
                     />
                     {!!errors.company_province &&
@@ -250,8 +378,9 @@ const FormPetition: React.FC<Props> = (props) => {
                       {...field}
                       allowClear
                       showSearch
+                      disabled={!company_province}
                       placeholder='กรุณาเลือก'
-                      options={district}
+                      options={contactDistrict}
                       fieldNames={{
                         label: 'name_th',
                         value: 'id'
@@ -263,6 +392,15 @@ const FormPetition: React.FC<Props> = (props) => {
                       size='large'
                       style={{
                         fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(value) => {
+                        field.onChange(value)
+                        fetchProvinceAPI('contact', company_province, value, company_sub_district)
+                        // fetchDistrictAPI('contact', value, company_district, company_sub_district)
+                        fetchSubDistrictAPI('contact', company_province, value, company_sub_district)
+                        // SET VALUE
+                        setValue('company_sub_district', null)
+                        setValue('company_postcode', '')
                       }}
                     />
                     {!!errors.company_district &&
@@ -288,8 +426,9 @@ const FormPetition: React.FC<Props> = (props) => {
                       {...field}
                       allowClear
                       showSearch
+                      disabled={!company_district}
                       placeholder='กรุณาเลือก'
-                      options={sub_district}
+                      options={contactSubDistrict}
                       fieldNames={{
                         label: 'name_th',
                         value: 'id'
@@ -301,6 +440,14 @@ const FormPetition: React.FC<Props> = (props) => {
                       size='large'
                       style={{
                         fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(value) => {
+                        field.onChange(value)
+                        fetchProvinceAPI('contact', company_province, company_district, value)
+                        fetchDistrictAPI('contact', company_province, company_district, value)
+                        // fetchSubDistrictAPI('contact', value, company_district, company_sub_district)
+                        const zip_code = contactSubDistrict.find(item => item.id === value)?.zip_code
+                        setValue('company_postcode', String(zip_code))
                       }}
                     />
                     {!!errors.company_sub_district &&
@@ -325,6 +472,7 @@ const FormPetition: React.FC<Props> = (props) => {
                     <Input
                       {...field}
                       name={field.name}
+                      disabled={!company_sub_district}
                       placeholder='กรุณาระบุ'
                       className='w-full'
                       size='large'
@@ -877,7 +1025,7 @@ const FormPetition: React.FC<Props> = (props) => {
                       allowClear
                       showSearch
                       placeholder='กรุณาเลือก'
-                      options={province}
+                      options={poaProvince}
                       fieldNames={{
                         label: 'name_th',
                         value: 'id'
@@ -889,6 +1037,19 @@ const FormPetition: React.FC<Props> = (props) => {
                       size='large'
                       style={{
                         fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(value) => {
+                        field.onChange(value)
+                        // fetchProvinceAPI('poa', value, transferer_company_district, transferer_company_sub_district)
+                        fetchDistrictAPI('poa', value, transferer_company_district, transferer_company_sub_district)
+                        fetchSubDistrictAPI('poa', value, transferer_company_district, transferer_company_sub_district)
+                        // SET VALUE
+                        setValue('transferer_company_district', null)
+                        setValue('transferer_company_sub_district', null)
+                        setValue('transferer_company_postcode', '')
+                        if (!value) {
+                          fetchProvinceAPI('poa')
+                        }
                       }}
                     />
                     {!!errors.transferer_company_province &&
@@ -914,8 +1075,9 @@ const FormPetition: React.FC<Props> = (props) => {
                       {...field}
                       allowClear
                       showSearch
+                      disabled={!transferer_company_province}
                       placeholder='กรุณาเลือก'
-                      options={district}
+                      options={poaDistrict}
                       fieldNames={{
                         label: 'name_th',
                         value: 'id'
@@ -927,6 +1089,15 @@ const FormPetition: React.FC<Props> = (props) => {
                       size='large'
                       style={{
                         fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(value) => {
+                        field.onChange(value)
+                        fetchProvinceAPI('poa', transferer_company_province, value, transferer_company_sub_district)
+                        // fetchDistrictAPI('poa', transferer_company_province, value, transferer_company_sub_district)
+                        fetchSubDistrictAPI('poa', transferer_company_province, value, transferer_company_sub_district)
+                        // SET VALUE
+                        setValue('transferer_company_sub_district', null)
+                        setValue('transferer_company_postcode', '')
                       }}
                     />
                     {!!errors.transferer_company_district &&
@@ -952,8 +1123,9 @@ const FormPetition: React.FC<Props> = (props) => {
                       {...field}
                       allowClear
                       showSearch
+                      disabled={!transferer_company_district}
                       placeholder='กรุณาเลือก'
-                      options={sub_district}
+                      options={poaSubDistrict}
                       fieldNames={{
                         label: 'name_th',
                         value: 'id'
@@ -965,6 +1137,15 @@ const FormPetition: React.FC<Props> = (props) => {
                       size='large'
                       style={{
                         fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(value) => {
+                        field.onChange(value)
+                        fetchProvinceAPI('poa', transferer_company_province, transferer_company_district, value)
+                        fetchDistrictAPI('poa', transferer_company_province, transferer_company_district, value)
+                        // fetchSubDistrictAPI('poa', transferer_company_province, transferer_company_district, value)
+                        // SET VALUE
+                        const zip_code = poaSubDistrict.find(item => item.id === value)?.zip_code
+                        setValue('transferer_company_postcode', String(zip_code))
                       }}
                     />
                     {!!errors.transferer_company_sub_district &&
@@ -989,6 +1170,7 @@ const FormPetition: React.FC<Props> = (props) => {
                     <Input
                       {...field}
                       name={field.name}
+                      disabled={!transferer_company_sub_district}
                       placeholder='กรุณาระบุ'
                       className='w-full'
                       size='large'

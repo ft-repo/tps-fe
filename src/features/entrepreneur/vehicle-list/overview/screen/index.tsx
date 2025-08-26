@@ -45,6 +45,7 @@ export const INIT_VEHICLE_MODAL: OpenDialogProps = {
       length: '',
       weight: '',
       width: '',
+      axis_number: 0,
       registration_document_url: ''
     },
     vehicle_owner_documents: {
@@ -229,7 +230,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
         <Button
           htmlType='button'
           type='primary'
-          size='large'
+          // size='large'
           className='w-full lg:w-auto'
           icon={<PlusIcon />}
           onClick={() => navigate('/vehicle-list/create')}

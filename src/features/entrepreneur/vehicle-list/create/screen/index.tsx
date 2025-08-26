@@ -36,6 +36,7 @@ const CreateScreen: React.FC<Props> = (props) => {
       wide_unit: 0,
       long_unit: 0,
       tall_unit: 0,
+      vehicle_axles: null,
       file_registered_document_id: {
         file: [],
         url: ''
@@ -92,6 +93,7 @@ const CreateScreen: React.FC<Props> = (props) => {
         width: Number(value.wide_unit) || 0,
         length: Number(value.long_unit) || 0,
         height: Number(value.tall_unit) || 0,
+        axis_number: Number(value.vehicle_axles) || 0,
         registration_document_url: value.file_registered_document_id.url
       },
       vehicle_owner_document: {
@@ -165,7 +167,7 @@ const CreateScreen: React.FC<Props> = (props) => {
             disabled={loading}
             htmlType='button'
             type='default'
-            size='large'
+            // size='large'
             className='w-full lg:w-auto'
             onClick={() => navigate(-1)}
           >
@@ -175,7 +177,7 @@ const CreateScreen: React.FC<Props> = (props) => {
             loading={loading}
             htmlType='submit'
             type='primary'
-            size='large'
+            // size='large'
             className='w-full lg:w-auto'
             onClick={() => submitRef.current?.click()}
           >

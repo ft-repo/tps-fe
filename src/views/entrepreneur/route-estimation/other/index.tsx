@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import OtherScreen from '@/features/entrepreneur/route-estimation/other/screen'
 import { OtherProvider } from '@/features/entrepreneur/route-estimation/other/context'
 import { ConfigProvider } from 'antd'
-import { getDistrict, getEntityType, getProvince, getSubDistrict, getVehicleType, useAppDispatch } from '@/store'
+import { getDistrict, getEntityType, getProvince, getSubDistrict, getVehicleSelection, getVehicleType, useAppDispatch } from '@/store'
 
 interface Props {
 
@@ -20,6 +20,14 @@ const OtherIndex: React.FC<Props> = (props) => {
     dispatch(getSubDistrict(''))
     dispatch(getEntityType())
     dispatch(getVehicleType())
+    dispatch(getVehicleSelection(
+      {
+        page: 1,
+        limit: 100,
+        search: '',
+        vehicle_type_id: ''
+      }
+    ))
   }, [dispatch])
 
   return (

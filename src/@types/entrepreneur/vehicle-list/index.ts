@@ -9,6 +9,7 @@ export interface FieldType {
   wide_unit: number
   long_unit: number;
   tall_unit: number;
+  vehicle_axles: number | null;
   // DOCUMENT ID
   file_registered_document_id: FileType;
   file_property_document_id: FileType;
