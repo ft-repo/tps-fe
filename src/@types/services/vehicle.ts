@@ -109,3 +109,9 @@ export interface PutVehicleDetail {
 export interface PutVehiclePicture {
   front_rear_url: string;
 }
+
+export interface VehicleDetailForRouteEstimation {
+  towing_vehicle_detail: VehicleListByIDResponse;
+  semi_trailer_vehicle_detail: VehicleListByIDResponse;
+  etc_vehicle_detail: VehicleListByIDResponse;
+}

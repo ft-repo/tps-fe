@@ -115,7 +115,7 @@ const MapRouteEstimation: React.FC<Props> = (props: Props) => {
   }, [map]);
 
   return (
-    <div ref={mapRef} className='h-full w-full rounded-md' />
+    <div ref={mapRef} className='z-0 h-full w-full rounded-md' />
   )
 }
 

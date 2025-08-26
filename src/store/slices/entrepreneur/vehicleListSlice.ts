@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { VehicleListState } from '@/@types/reducer/vehicle'
+import { Detail, VehicleListState } from '@/@types/reducer/vehicle'
 import {
   getVehicleAPI,
   getVehicleByIDAPI,
 } from '@/services/entrepreneur/VehicleListService'
-import { GetVehicleListParams } from '@/@types/services/vehicle'
+import {
+  GetVehicleListParams,
+} from '@/@types/services/vehicle'
 
 const initialState: VehicleListState = {
   overview: {
@@ -49,6 +51,11 @@ const initialState: VehicleListState = {
       back_rear_url: '',
     },
   },
+  detailForRouteEstimation: {
+    towing_vehicle_detail: {} as Detail,
+    semi_trailer_vehicle_detail: {} as Detail,
+    etc_vehicle_detail: {} as Detail,
+  },
   loading: false,
 }
 
@@ -68,7 +75,6 @@ export const getVehicleDetail = createAsyncThunk(
   async (id: string | number) => {
     // assume someService required reesponse & require type as generic
     const response = await getVehicleByIDAPI(id)
-    console.log('getVehicleDetail ====> response', response)
     return response.data
   },
 )
@@ -84,9 +90,15 @@ const vehicleListSlice = createSlice({
     setVehicleListByID: (state, action) => {
       state.detail = action.payload
     },
+    setVehicleDetailForRouteEstimation: (state, action) => {
+      state.detailForRouteEstimation = action.payload
+    },
     clearVehicleList: (state) => {
       state.overview.search = initialState.overview.search
       state.overview.data = initialState.overview.data
+    },
+    clearVehicleDetailForRouteEstimation: (state) => {
+      state.detailForRouteEstimation = initialState.detailForRouteEstimation
     },
   },
   extraReducers: (builder) => {
@@ -112,10 +124,7 @@ const vehicleListSlice = createSlice({
   },
 })
 
-export const {
-  setVehicleList,
-  setVehicleListByID,
-  clearVehicleList,
-} = vehicleListSlice.actions
+export const { setVehicleList, setVehicleListByID, clearVehicleList, setVehicleDetailForRouteEstimation, clearVehicleDetailForRouteEstimation } =
+  vehicleListSlice.actions
 
 export default vehicleListSlice.reducer

@@ -7,8 +7,13 @@ import React, { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import FormRouteEstimation from '../route-estimate/initial/FormRouteEstimation'
 import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
-import CardVehicleDetails from '../route-estimate/initial/CardVehicleDetails'
-import VehicleSummary from '../route-estimate/initial/VehicleSummary'
+import FormMapEstimation from '../route-estimate/initial/FormMapEstimation'
+import { postRouteEstimationStep1API } from '@/services/entrepreneur/RouteEstimationService'
+import { setLoading } from '@/store'
+import { useAppDispatch } from '@/store/hook'
+import { Notification, toast } from '@/components/ui'
+import { useRouteContext } from '../../context'
+import { MOCK_VEHICLE_ROUTE } from '../../mock'
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
@@ -33,58 +38,18 @@ const defaultValues: Root = {
     },
   ],
   start_point: {
-    type: '',
-    coordinates: [],
+    type: 'Point',
+    coordinates: [0, 0],
   },
   end_point: {
-    type: '',
-    coordinates: [],
+    type: 'Point',
+    coordinates: [0, 0],
   },
   vehicle_route: {
-    type: '',
+    type: 'LineString',
     coordinates: [],
   },
 }
-
-const vehicleData: VehicleData[] = [
-  {
-    title: 'รถลากจูง',
-    weight: 0,
-    plate_no: '',
-    image: '',
-  },
-  {
-    title: 'รถกึ่งพ่วง',
-    weight: 0,
-    plate_no: '',
-    image: '',
-  },
-  {
-    title: 'เครื่องจักร',
-    weight: 0,
-    plate_no: '',
-    image: '',
-  },
-]
-
-const summaryData: SummaryData[] = [
-  {
-    title: 'น้ำหนักรถเปล่ารวม',
-    description: String(0) + ' กก.',
-  },
-  {
-    title: 'น้ำหนักรถเปล่ารวมน้ำหนักเพลา',
-    description: String(0) + ' กก.',
-  },
-  {
-    title: 'มิติรถเปล่า',
-    description: `กว้าง 0 X ยาว 0 X สูง 0`,
-  },
-  {
-    title: 'มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.)',
-    description: `กว้าง 0 X ยาว 0 X สูง 0`,
-  },
-]
 
 const RouteEstimation: React.FC<Props> = (props) => {
   const { } = props;
@@ -97,6 +62,9 @@ const RouteEstimation: React.FC<Props> = (props) => {
     control,
     name: 'vehicle',
   })
+
+  const [firstPoint, setFirstPoint] = useState<[number, number] | null>(null)
+  const [secondPoint, setSecondPoint] = useState<[number, number] | null>(null)
 
   const initialTabItems: TabItem[] = [
     {
@@ -112,7 +80,6 @@ const RouteEstimation: React.FC<Props> = (props) => {
       closable: false,
     },
   ]
-
   const [activeKey, setActiveKey] = useState(initialTabItems[0].key)
   const [tabItems, setTabItems] = useState<TabItem[]>(initialTabItems)
 
@@ -173,9 +140,68 @@ const RouteEstimation: React.FC<Props> = (props) => {
     [setActiveKey],
   )
 
-  const onSubmit = useCallback((values: Root) => {
+  const onSubmit = useCallback(async (values: RouteEstimationRequest) => {
     console.log('values ======> ', values)
-  }, [])
+    // INIT LOADING
+    dispatch(setLoading(true))
+    // CREATING REQUEST
+    const requestBody: RouteEstimationRequest = {
+      ...values,
+      vehicle: values.vehicle.map((vehicle) => ({
+        ...vehicle,
+        towing_vehicle_id: vehicle.towing_vehicle_id === 0 ? null : vehicle.towing_vehicle_id,
+        semi_trailer_vehicle_id: vehicle.semi_trailer_vehicle_id === 0 ? null : vehicle.semi_trailer_vehicle_id,
+        etc_vehicle_id: vehicle.etc_vehicle_id === 0 ? null : vehicle.etc_vehicle_id,
+      })),
+      start_point: {
+        type: 'Point',
+        coordinates: [values.start_point.coordinates[1] as number, values.start_point.coordinates[0] as number],
+      },
+      end_point: {
+        type: 'Point',
+        coordinates: [values.end_point.coordinates[1] as number, values.end_point.coordinates[0] as number],
+      },
+      vehicle_route: MOCK_VEHICLE_ROUTE,
+    }
+    console.log('requestBody ======> ', requestBody)
+    try {
+      const response = await postRouteEstimationStep1API(requestBody)
+      if (response.status === 200) {
+        toast.push(
+          <Notification
+            title={'Success'}
+            type={'success'}
+            onClose={() => {
+              setStep(2)
+              setDataParser(data)
+            }}
+          >
+            <p className='break-all'>Successfully submit data</p>
+          </Notification>
+        )
+      } else {
+        toast.push(
+          <Notification
+            title={'Error'}
+            type={'danger'}
+          >
+            <p className='break-all'>Failed to submit data</p>
+          </Notification>
+        )
+      }
+    } catch (error) {
+      toast.push(
+        <Notification
+          title={'Error'}
+          type={'danger'}
+        >
+          <p className='break-all'>Failed to submit data</p>
+        </Notification>
+      )
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, setStep, setDataParser])
 
   return (
     <main>

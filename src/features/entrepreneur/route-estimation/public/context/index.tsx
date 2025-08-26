@@ -6,7 +6,7 @@ import React, { createContext, useContext, useState } from 'react'
 
 export const PageContext = createContext<ContextProps | null>(null)
 
-export const RouteProvider = (props: any) => {
+export const PublicRouteProvider = (props: any) => {
   const { children } = props
   const [step, setStep] = useState<number>(1)
   const [dataParser, setDataParser] = useState<RouteEstimationRequest>({
@@ -39,10 +39,10 @@ export const RouteProvider = (props: any) => {
   )
 }
 
-export const useRouteContext = () => {
+export const usePublicRouteContext = () => {
   const context = useContext(PageContext);
   if (!context) {
-    throw new Error("useRouteContext must be used within an RouteProvider");
+    throw new Error("usePublicRouteContext must be used within an PublicRouteProvider");
   }
   return context;
 };
