@@ -80,3 +80,93 @@ export interface GetEstimateDetailParams extends GetPaginateParams {
 export interface GetRuralRoadParams extends GetPaginateParams {
   petition_id: string;
 }
+
+// POST BODY
+export interface PetitionExtendedPostRequest {
+  petition_extended_detail: PetitionExtendedDetail;
+  petition_extended_address: PetitionExtendedAddress;
+  petition_extended_vehicle: PetitionExtendedVehicle;
+}
+
+export interface PetitionExtendedDetail {
+  cert_date: string;
+  poa_name: string;
+  phone_number: string;
+  ref_form_no: number | string;
+  remark: string;
+}
+
+export interface PetitionExtendedAddress {
+  contact_address: ContactAddress;
+  poa_address: PoaAddress;
+}
+
+export interface ContactAddress {
+  house_number: string;
+  village: string;
+  lane: string;
+  road: string;
+  sub_district_id: number;
+  district_id: number;
+  province_id: number;
+  zip_code: string;
+}
+
+export interface PoaAddress {
+  house_number: string;
+  village: string;
+  lane: string;
+  road: string;
+  sub_district_id: number;
+  district_id: number;
+  province_id: number;
+  zip_code: string;
+}
+
+export interface PetitionExtendedVehicle {
+  towing_vehicle_id: number;
+  semi_trailer_vehicle_id: number;
+  etc_vehicle_id: number;
+  axis_weight_towing: number[];
+  axis_weight_semi_trailer: number[];
+}
+
+export interface PetitionExtendedPostResponse {
+  message: string
+  success: boolean
+  temporary_id: string
+}
+
+export interface PetitionExtendedDocumentPostRequest {
+  petition_extended_user_document: PetitionExtendedUserDocument;
+  petition_extended_vehicle_document: PetitionExtendedVehicleDocument;
+  petition_extended_audit_document: PetitionExtendedAuditDocument;
+}
+
+export interface PetitionExtendedUserDocument {
+  cid_url: string;
+  company_certificate_url: string;
+  vehicle_permit_url: string;
+  power_of_attorney_url: string;
+}
+
+export interface PetitionExtendedVehicleDocument {
+  vehicle_registration_url: string;
+  vehicle_photos_url: string;
+  vehicle_dimensions_empty_url: string;
+  vehicle_dimensions_loaded_url: string;
+  prefab_parts_details_url: string;
+  vehicle_turning_radius_url: string;
+}
+
+export interface PetitionExtendedAuditDocument {
+  bridge_structure_calculation_url: string;
+  road_structure_calculation_url: string;
+  bridge_engineer_certificate_url: string;
+  road_engineer_certificate_url: string;
+  mechanical_engineer_certificate_url: string;
+  safety_management_plan_url: string;
+  route_map_url: string;
+  operation_plan_url: string;
+  contact_info_url: string;
+}

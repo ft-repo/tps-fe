@@ -1,7 +1,10 @@
-import { RouteEstimationRequest } from '@/@types/entrepreneur/route-estimation'
-import { Tabs, Button } from 'antd'
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
+import { Root, SummaryData, VehicleData } from '@/@types/entrepreneur/route-estimation'
+import { Tabs, Button, Divider } from 'antd'
 import { useFieldArray, useForm } from 'react-hook-form'
-import { useCallback, useState, memo } from 'react'
+import React, { useCallback, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import FormRouteEstimation from '../route-estimate/initial/FormRouteEstimation'
 import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
 import FormMapEstimation from '../route-estimate/initial/FormMapEstimation'
@@ -21,7 +24,9 @@ interface TabItem {
   closable?: boolean
 }
 
-const defaultValues: RouteEstimationRequest = {
+interface Props { }
+
+const defaultValues: Root = {
   vehicle: [
     {
       turn_radius: 0,
@@ -46,10 +51,10 @@ const defaultValues: RouteEstimationRequest = {
   },
 }
 
-function RouteEstimation() {
-  const dispatch = useAppDispatch()
-  const { setStep, setDataParser } = useRouteContext()
-  const { control, handleSubmit } = useForm<RouteEstimationRequest>({
+const RouteEstimation: React.FC<Props> = (props) => {
+  const { } = props;
+  const navigate = useNavigate()
+  const { control, handleSubmit } = useForm<Root>({
     defaultValues,
   })
 
@@ -199,10 +204,35 @@ function RouteEstimation() {
   }, [dispatch, setStep, setDataParser])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <section className="w-full grid lg:grid-cols-3 gap-4 mb-5">
-        <div className="w-full col-span-2">
-          <div className="lg:min-h-[50vh] mb-5">
+    <main>
+      <section className='flex justify-between items-center flex-wrap gap-5 mb-5'>
+        <h3>ขออนุญาตหมวด 2 (4 - 7 เพลา)</h3>
+        <div className='flex items-center gap-3'>
+          <Button
+            disabled={false}
+            htmlType='button'
+            type='default'
+            // size='large'
+            className='w-full lg:w-auto'
+            onClick={() => navigate(-1)}
+          >
+            ย้อนกลับ
+          </Button>
+          <Button
+            loading={false}
+            htmlType='submit'
+            type='primary'
+            // size='large'
+            className='w-full lg:w-auto'
+          // onClick={() => submitRef.current?.click()}
+          >
+            ถัดไป
+          </Button>
+        </div>
+      </section>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <section className="w-full grid lg:grid-cols-3 gap-4 mb-5">
+          <div className="w-full lg:h-[50vh] col-span-2">
             <Tabs
               type="editable-card"
               items={tabItems}
@@ -211,31 +241,36 @@ function RouteEstimation() {
               onChange={onTabsChange}
             />
           </div>
-        </div>
-        <div className="w-full col-span-2 lg:col-span-1 gap-4 order-first lg:order-last">
-          <div className="z-0 h-[50vh]">
+          <div className="col-span-1 order-first lg:order-last z-0 h-[50vh]">
             <MapRouteEstimation
-              firstPoint={firstPoint}
-              secondPoint={secondPoint}
+            // firstPoint={firstPoint}
+            // secondPoint={secondPoint}
             />
           </div>
-          <FormMapEstimation
-            control={control}
-            setFirstPoint={setFirstPoint}
-            setSecondPoint={setSecondPoint}
-          />
-        </div>
-      </section>
+        </section>
+        <h4 className="text-lg font-bold m-0 p-0">
+          รายละเอียด {tabItems[Number(activeKey) - 1].label}
+        </h4>
+        <Divider className="mb-3" />
+        <section className="mt-5 grid lg:grid-cols-2 gap-4 lg:h-[25vh]">
+          <section className="lg:order-last">
+            <VehicleSummary data={summaryData} />
+          </section>
+          <section>
+            <CardVehicleDetails data={vehicleData} />
+          </section>
+        </section>
 
-      <section className="w-full">
-        <div className="flex justify-end items-center gap-5">
-          <Button type="primary" variant="solid" size="large" htmlType="submit">
-            ประเมินเส้นทาง
-          </Button>
-        </div>
-      </section>
-    </form>
+        <section className="w-full">
+          <div className="flex justify-end items-center gap-5">
+            <Button type="primary" variant="solid" size="large" htmlType="submit">
+              ประเมินเส้นทาง
+            </Button>
+          </div>
+        </section>
+      </form>
+    </main>
   )
 }
 
-export default memo(RouteEstimation)
+export default React.memo<Props>(RouteEstimation)

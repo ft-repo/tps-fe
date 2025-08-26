@@ -7,7 +7,7 @@ import React, { useCallback } from 'react'
 import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
-import { Button, Input, message, Select, Upload } from 'antd'
+import { Button, Col, Input, message, Row, Select, Upload } from 'antd'
 
 interface Props {
   control: Control<FieldType>;
@@ -44,177 +44,190 @@ const FormInfo: React.FC<Props> = (props) => {
         <p>กรุณากรอกข้อมูลจริงเท่านั้น</p>
       </section>
       <section className='mt-5'>
-        <div className='block lg:grid grid-cols-2 gap-3'>
-          <Controller
-            name='vehicle_type'
-            control={control}
-            rules={{
-              required: 'กรุณาระบุประเภทรถ'
-            }}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label>ประเภทรถ</label>
-                  <Select
-                    {...field}
-                    placeholder='กรุณาเลือก'
-                    options={vehicle_type}
-                    fieldNames={{
-                      label: 'name',
-                      value: 'id'
-                    }}
-                    className='w-full'
-                    size='large'
-                    style={{
-                      fontFamily: 'Noto Sans Thai'
-                    }}
-                  />
-                  {!!errors.vehicle_type &&
-                    <p className='text-red-500'>{errors.vehicle_type.message}</p>
-                  }
-                </fieldset>
-              )
-            }}
-          />
-          <Controller
-            name='license_plate'
-            control={control}
-            rules={{
-              required: 'กรุณาระบุเลขทะเบียน / เลขตัวรถ'
-            }}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label>เลขทะเบียน / เลขตัวรถ</label>
-                  <Input
-                    {...field}
-                    name={field.name}
-                    placeholder='กรุณาระบุ'
-                    className='w-full'
-                    size='large'
-                    style={{
-                      fontFamily: 'Noto Sans Thai'
-                    }}
-                  />
-                  {!!errors.license_plate &&
-                    <p className='text-red-500'>{errors.license_plate.message}</p>
-                  }
-                </fieldset>
-              )
-            }}
-          />
-          <Controller
-            name='vehicle_model'
-            control={control}
-            rules={{
-              required: 'กรุณาระบุยี่ห้อ',
-            }}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label>ยี่ห้อ</label>
-                  <Input
-                    {...field}
-                    name={field.name}
-                    placeholder='กรุณาระบุ'
-                    className='w-full'
-                    size='large'
-                    style={{
-                      fontFamily: 'Noto Sans Thai'
-                    }}
-                  />
-                  {!!errors.vehicle_model &&
-                    <p className='text-red-500'>{errors.vehicle_model.message}</p>
-                  }
-                </fieldset>
-              )
-            }}
-          />
-          <Controller
-            name='province'
-            control={control}
-            rules={{
-              required: 'กรุณาระบุจังหวัด'
-            }}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label>จังหวัด</label>
-                  <Input
-                    {...field}
-                    name={field.name}
-                    placeholder='กรุณาระบุ'
-                    className='w-full'
-                    size='large'
-                    style={{
-                      fontFamily: 'Noto Sans Thai'
-                    }}
-                  />
-                  {!!errors.province &&
-                    <p className='text-red-500'>{errors.province.message}</p>
-                  }
-                </fieldset>
-              )
-            }}
-          />
-          <Controller
-            name='vehicle_weight'
-            control={control}
-            rules={{
-              required: 'กรุณาระบุน้ำหนักรถเปล่า (กก.)'
-            }}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label>น้ำหนักรถเปล่า (กก.)</label>
-                  <Input
-                    {...field}
-                    name={field.name}
-                    placeholder='กรุณาระบุ'
-                    className='w-full'
-                    size='large'
-                    style={{
-                      fontFamily: 'Noto Sans Thai'
-                    }}
-                    onChange={(e) => {
-                      field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                    }}
-                  />
-                  {!!errors.vehicle_weight &&
-                    <p className='text-red-500'>{errors.vehicle_weight.message}</p>
-                  }
-                </fieldset>
-              )
-            }}
-          />
-          <Controller
-            name='vehicle_color'
-            control={control}
-            rules={{
-              required: 'กรุณาระบุสีรถ'
-            }}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label>สีรถ</label>
-                  <Input
-                    {...field}
-                    name={field.name}
-                    placeholder='กรุณาระบุ'
-                    className='w-full'
-                    size='large'
-                    style={{
-                      fontFamily: 'Noto Sans Thai'
-                    }}
-                  />
-                  {!!errors.vehicle_color &&
-                    <p className='text-red-500'>{errors.vehicle_color.message}</p>
-                  }
-                </fieldset>
-              )
-            }}
-          />
-          <div className='col-span-2'>
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <Controller
+              name='vehicle_type'
+              control={control}
+              rules={{
+                required: 'กรุณาระบุประเภทรถ'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>ประเภทรถ</label>
+                    <Select
+                      {...field}
+                      placeholder='กรุณาเลือก'
+                      options={vehicle_type}
+                      fieldNames={{
+                        label: 'name',
+                        value: 'id'
+                      }}
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                    />
+                    {!!errors.vehicle_type &&
+                      <p className='text-red-500'>{errors.vehicle_type.message}</p>
+                    }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <Controller
+              name='license_plate'
+              control={control}
+              rules={{
+                required: 'กรุณาระบุเลขทะเบียน / เลขตัวรถ'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>เลขทะเบียน / เลขตัวรถ</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                    />
+                    {!!errors.license_plate &&
+                      <p className='text-red-500'>{errors.license_plate.message}</p>
+                    }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <Controller
+              name='vehicle_model'
+              control={control}
+              rules={{
+                required: 'กรุณาระบุยี่ห้อ',
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>ยี่ห้อ</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                    />
+                    {!!errors.vehicle_model &&
+                      <p className='text-red-500'>{errors.vehicle_model.message}</p>
+                    }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <Controller
+              name='province'
+              control={control}
+              rules={{
+                required: 'กรุณาระบุจังหวัด'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>จังหวัด</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                    />
+                    {!!errors.province &&
+                      <p className='text-red-500'>{errors.province.message}</p>
+                    }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <Controller
+              name='vehicle_weight'
+              control={control}
+              rules={{
+                required: 'กรุณาระบุน้ำหนักรถเปล่า (กก.)'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>น้ำหนักรถเปล่า (กก.)</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                      suffix='กก.'
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                      }}
+                    />
+                    {!!errors.vehicle_weight &&
+                      <p className='text-red-500'>{errors.vehicle_weight.message}</p>
+                    }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <Controller
+              name='vehicle_color'
+              control={control}
+              rules={{
+                required: 'กรุณาระบุสีรถ'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>สีรถ</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                    />
+                    {!!errors.vehicle_color &&
+                      <p className='text-red-500'>{errors.vehicle_color.message}</p>
+                    }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
               name='vehicle_distance'
               control={control}
@@ -234,6 +247,7 @@ const FormInfo: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
+                      suffix='ม.'
                       onChange={(e) => {
                         field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
                       }}
@@ -245,161 +259,224 @@ const FormInfo: React.FC<Props> = (props) => {
                 )
               }}
             />
-          </div>
-        </div>
-        <div className='block sm:grid md:grid-cols-2 lg:grid-cols-3 gap-3 mt-3'>
-          <Controller
-            name='wide_unit'
-            control={control}
-            rules={{
-              required: 'กรุณาระบุกว้าง (ม.)'
-            }}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label>กว้าง (ม.)</label>
-                  <Input
-                    {...field}
-                    name={field.name}
-                    placeholder='กรุณาระบุ'
-                    className='w-full'
-                    size='large'
-                    style={{
-                      fontFamily: 'Noto Sans Thai'
-                    }}
-                    onChange={(e) => {
-                      field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                    }}
-                  />
-                  {!!errors.wide_unit &&
-                    <p className='text-red-500'>{errors.wide_unit.message}</p>
-                  }
-                </fieldset>
-              )
-            }}
-          />
-          <Controller
-            name='long_unit'
-            control={control}
-            rules={{
-              required: 'กรุณาระบุกว้าง (ม.)'
-            }}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label>กว้าง (ม.)</label>
-                  <Input
-                    {...field}
-                    name={field.name}
-                    placeholder='กรุณาระบุ'
-                    className='w-full'
-                    size='large'
-                    style={{
-                      fontFamily: 'Noto Sans Thai'
-                    }}
-                    onChange={(e) => {
-                      field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                    }}
-                  />
-                  {!!errors.long_unit &&
-                    <p className='text-red-500'>{errors.long_unit.message}</p>
-                  }
-                </fieldset>
-              )
-            }}
-          />
-          <Controller
-            name='tall_unit'
-            control={control}
-            rules={{
-              required: 'กรุณาระบุสูง (ม.)'
-            }}
-            render={({ field }) => {
-              return (
-                <fieldset>
-                  <label>สูง (ม.)</label>
-                  <Input
-                    {...field}
-                    name={field.name}
-                    placeholder='กรุณาระบุ'
-                    className='w-full'
-                    size='large'
-                    style={{
-                      fontFamily: 'Noto Sans Thai'
-                    }}
-                    onChange={(e) => {
-                      field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                    }}
-                  />
-                  {!!errors.tall_unit &&
-                    <p className='text-red-500'>{errors.tall_unit.message}</p>
-                  }
-                </fieldset>
-              )
-            }}
-          />
-        </div>
-      </section>
-      <section className='mt-5'>
-        <Controller
-          name='file_registered_document_id.file'
-          control={control}
-          rules={{
-            required: 'กรุณาอัปโหลดเอกสารเล่มทะเบียน'
-          }}
-          render={({ field }) => {
-            return (
-              <fieldset>
-                <label className='block'>เอกสารเล่มทะเบียน</label>
-                <Upload
-                  {...field}
-                  fileList={field.value || []}
-                  maxCount={1}
-                  listType='picture'
-                  accept='application/pdf'
-                  beforeUpload={(file) => {
-                    // DEFAULT VALUES
-                    const allowList = ['application/pdf']
-                    const maxFileSize = 10000000
-                    // CHECK
-                    const isListAvailable = allowList.some(item => item === file.type)
-                    const isLt10 = file.size < maxFileSize
-                    if (!isListAvailable) {
-                      message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                      return Upload.LIST_IGNORE
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <Controller
+              name='vehicle_axles'
+              control={control}
+              rules={{
+                required: 'กรุณาเลือกจำนวนเพลา'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>จำนวนเพลา</label>
+                    <Select
+                      {...field}
+                      allowClear
+                      showSearch
+                      placeholder='กรุณาเลือก'
+                      options={[
+                        {
+                          label: '2 เพลา',
+                          value: 2
+                        },
+                        {
+                          label: '3 เพลา',
+                          value: 3
+                        },
+                        {
+                          label: '4 เพลา',
+                          value: 4
+                        },
+                        {
+                          label: '5 เพลา',
+                          value: 5
+                        },
+                        {
+                          label: '6 เพลา',
+                          value: 6
+                        },
+                        {
+                          label: '7 เพลา',
+                          value: 7
+                        },
+                      ]}
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                    />
+                    {!!errors.vehicle_axles &&
+                      <p className='text-red-500'>{errors.vehicle_axles.message}</p>
                     }
-                    if (!isLt10) {
-                      message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                      return Upload.LIST_IGNORE
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Controller
+              name='wide_unit'
+              control={control}
+              rules={{
+                required: 'กรุณาระบุกว้าง (ม.)'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>กว้าง (ม.)</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                      suffix='ม.'
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                      }}
+                    />
+                    {!!errors.wide_unit &&
+                      <p className='text-red-500'>{errors.wide_unit.message}</p>
                     }
-                    return false
-                  }}
-                  onChange={(e) => {
-                    field.onChange(e.fileList);
-                    if (e.fileList.length) {
-                      uploadFile(e.fileList)
-                    } else {
-                      setValue('file_registered_document_id.url', '')
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Controller
+              name='long_unit'
+              control={control}
+              rules={{
+                required: 'กรุณาระบุกว้าง (ม.)'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>กว้าง (ม.)</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                      suffix='ม.'
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                      }}
+                    />
+                    {!!errors.long_unit &&
+                      <p className='text-red-500'>{errors.long_unit.message}</p>
                     }
-                  }}
-                >
-                  {field.value.length ? null :
-                    <Button
-                      icon={<HiOutlineCloudUpload />}
-                      htmlType='button'
-                      type='primary'
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Controller
+              name='tall_unit'
+              control={control}
+              rules={{
+                required: 'กรุณาระบุสูง (ม.)'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>สูง (ม.)</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                      suffix='ม.'
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                      }}
+                    />
+                    {!!errors.tall_unit &&
+                      <p className='text-red-500'>{errors.tall_unit.message}</p>
+                    }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+            <Controller
+              name='file_registered_document_id.file'
+              control={control}
+              rules={{
+                required: 'กรุณาอัปโหลดเอกสารเล่มทะเบียน'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label className='block'>เอกสารเล่มทะเบียน</label>
+                    <Upload
+                      {...field}
+                      fileList={field.value || []}
+                      maxCount={1}
+                      listType='picture'
+                      accept='application/pdf'
+                      beforeUpload={(file) => {
+                        // DEFAULT VALUES
+                        const allowList = ['application/pdf']
+                        const maxFileSize = 10000000
+                        // CHECK
+                        const isListAvailable = allowList.some(item => item === file.type)
+                        const isLt10 = file.size < maxFileSize
+                        if (!isListAvailable) {
+                          message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                          return Upload.LIST_IGNORE
+                        }
+                        if (!isLt10) {
+                          message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                          return Upload.LIST_IGNORE
+                        }
+                        return false
+                      }}
+                      onChange={(e) => {
+                        field.onChange(e.fileList);
+                        if (e.fileList.length) {
+                          uploadFile(e.fileList)
+                        } else {
+                          setValue('file_registered_document_id.url', '')
+                        }
+                      }}
                     >
-                      เพิ่มไฟล์ .pdf
-                    </Button>
-                  }
-                </Upload>
-                {!!errors.file_registered_document_id?.file &&
-                  <p className='text-red-500'>{errors.file_registered_document_id.file.message}</p>
-                }
-              </fieldset>
-            )
-          }}
-        />
+                      {field.value.length ? null :
+                        <Button
+                          icon={<HiOutlineCloudUpload />}
+                          htmlType='button'
+                          type='primary'
+                        >
+                          เพิ่มไฟล์ .pdf
+                        </Button>
+                      }
+                    </Upload>
+                    {!!errors.file_registered_document_id?.file &&
+                      <p className='text-red-500'>{errors.file_registered_document_id.file.message}</p>
+                    }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+        </Row>
       </section>
     </div>
   )

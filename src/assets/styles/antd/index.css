@@ -8,3 +8,7 @@
 .ant-upload-wrapper .ant-upload-list.ant-upload-list-picture-card .ant-upload-list-item .ant-upload-list-item-thumbnail .anticon {
   font-size: 120px !important;
 }
+
+.ant-upload-wrapper .ant-upload-select {
+  display: block;
+}

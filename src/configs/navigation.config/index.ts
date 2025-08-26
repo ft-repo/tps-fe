@@ -7,16 +7,16 @@ import {
 import type { NavigationTree } from '@/@types/navigation'
 
 const navigationConfig: NavigationTree[] = [
-    {
-        key: 'route_estimation',
-        path: '/route-estimation/route',
-        title: 'Route Estimation',
-        translateKey: 'nav.route_estimation',
-        icon: 'route_estimation',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: ['USER'],
-        subMenu: [],
-    },
+    // {
+    //     key: 'route_estimation',
+    //     path: '/route-estimation/route',
+    //     title: 'Route Estimation',
+    //     translateKey: 'nav.route_estimation',
+    //     icon: 'route_estimation',
+    //     type: NAV_ITEM_TYPE_ITEM,
+    //     authority: ['USER'],
+    //     subMenu: [],
+    // },
     {
         key: 'permit_list',
         path: '/permit-list',

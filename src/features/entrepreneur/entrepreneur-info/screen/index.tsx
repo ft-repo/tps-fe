@@ -161,7 +161,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
             disabled={loading}
             htmlType='button'
             type='default'
-            size='large'
+            // size='large'
             className='w-full lg:w-auto'
             onClick={() => dispatch(getUserData())}
           >
@@ -171,7 +171,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
             loading={loading}
             htmlType='submit'
             type='primary'
-            size='large'
+            // size='large'
             className='w-full lg:w-auto'
             onClick={() => submitRef.current?.click()}
           >

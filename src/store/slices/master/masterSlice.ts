@@ -1,7 +1,7 @@
 import { DepartmentState, EntityState, RoleState, SubDistrictState, ThailandState } from '@/@types/shared';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants';
-import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI, getEntityTypeAPI, getDepartmentAPI, getRoleAPI } from '@/services/master/MasterService';
+import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI, getEntityTypeAPI, getDepartmentAPI, getRoleAPI, VehicleSelectionRequest, getVehicleSelectionAPI, VehicleSelectionResponse } from '@/services/master/MasterService';
 
 export type MasterState = {
   entity: EntityState[];
@@ -13,6 +13,7 @@ export type MasterState = {
   entity_type: EntityState[];
   department: DepartmentState[];
   role: RoleState[];
+  vehicle_selection: VehicleSelectionResponse;
   loading: boolean;
 }
 
@@ -26,6 +27,16 @@ const initialState: MasterState = {
   entity_type: [],
   role: [],
   department: [],
+  vehicle_selection: {
+    data: [],
+    pagination: {
+      hasMore: false,
+      page: 1,
+      limit: 100,
+      total: 0,
+      totalPages: 0
+    }
+  },
   loading: false
 }
 
@@ -79,6 +90,11 @@ export const getRole = createAsyncThunk(SLICE_BASE_NAME + '/apiGetRole', async (
   return response.data
 })
 
+export const getVehicleSelection = createAsyncThunk(SLICE_BASE_NAME + '/apiGetVehicleSelection', async (params: VehicleSelectionRequest) => {
+  const response = await getVehicleSelectionAPI(params)
+  return response.data
+})
+
 const masterSlice = createSlice({
   name: SLICE_BASE_NAME,
   initialState,
@@ -110,6 +126,9 @@ const masterSlice = createSlice({
     getRole: (state, action) => {
       state.role = action.payload
     },
+    getVehicleSelection: (state, action) => {
+      state.vehicle_selection = action.payload
+    }
   },
   extraReducers: (builder) => {
     // GET ENTITY
@@ -209,6 +228,17 @@ const masterSlice = createSlice({
         state.loading = true
       })
       .addCase(getRole.rejected, (state) => {
+        state.loading = false
+      })
+    // GET ROLE
+    builder.addCase(getVehicleSelection.fulfilled, (state, action) => {
+      state.vehicle_selection = action.payload
+      state.loading = false
+    })
+      .addCase(getVehicleSelection.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getVehicleSelection.rejected, (state) => {
         state.loading = false
       })
   },

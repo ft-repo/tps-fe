@@ -44,6 +44,7 @@ const Content = (props: ContentProps) => {
       wide_unit: data.vehicle_detail.width || 0,
       long_unit: data.vehicle_detail.length || 0,
       tall_unit: data.vehicle_detail.height || 0,
+      vehicle_axles: data.vehicle_detail.axis_number || null,
       file_registered_document_id: {
         file: fileList.length ? [fileList[0] || { uid: '', name: '', url: '' }] : [],
         url: data.vehicle_detail.registration_document_url || ''
@@ -99,6 +100,7 @@ const Content = (props: ContentProps) => {
         width: Number(value.wide_unit) || 0,
         length: Number(value.long_unit) || 0,
         height: Number(value.tall_unit) || 0,
+        axis_number: Number(value.vehicle_axles) || 0,
         registration_document_url: value.file_registered_document_id.url
       },
       vehicle_owner_document: {

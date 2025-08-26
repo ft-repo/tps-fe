@@ -1,3 +1,6 @@
+import { FileType } from "@/@types/shared";
+import { Dayjs } from "dayjs";
+
 // Old fucked up things
 export interface FieldType {
   form_template: FieldArray[];
@@ -64,20 +67,20 @@ export interface FieldTypeForOther {
   company_village_number: string;
   company_alley: string;
   company_road: string;
-  company_province: string;
-  company_district: string;
-  company_sub_district: string;
+  company_province: string | number | null;
+  company_district: string | number | null;
+  company_sub_district: string | number | null;
   company_postcode: string;
   // 1.1 REGISTERED DETAIL
-  business_type: string;
-  registered_date: string;
+  business_type: string | number;
+  registered_date: string | null | Dayjs;
   registered_company_address: string;
   registered_company_village_no: string;
   registered_company_alley: string;
   registered_company_road: string;
-  registered_company_province: string;
-  registered_company_district: string;
-  registered_company_sub_district: string;
+  registered_company_province: string | number | null;
+  registered_company_district: string | number | null;
+  registered_company_sub_district: string | number | null;
   registered_company_postcode: string;
   // 1.2 TRANSFERER DETAIL
   transferer_name: string;
@@ -86,18 +89,29 @@ export interface FieldTypeForOther {
   transferer_company_village_no: string;
   transferer_company_alley: string;
   transferer_company_road: string;
-  transferer_company_province: string;
-  transferer_company_district: string;
-  transferer_company_sub_district: string;
+  transferer_company_province: string | number | null;
+  transferer_company_district: string | number | null;
+  transferer_company_sub_district: string | number | null;
   transferer_company_postcode: string;
   // 2. VEHICLE DETAIL
-  vehicle_appearance: string;
-  vehicle_type: string;
-  vehicle_license_plate: string;
-  vehicle_province: string;
-  vehicle_color: string;
-  vehicle_axles: string;
-  vehicle_weight: string;
+  match_type: number | null,
+  towering_vehicle: number | null,
+  semi_trailer_vehicle: number | null,
+  etc_vehicle: number | null,
+  towering_weight1: number;
+  towering_weight2: number;
+  towering_weight3: number;
+  towering_weight4: number;
+  towering_weight5: number;
+  towering_weight6: number;
+  towering_weight7: number;
+  semi_weight1: number;
+  semi_weight2: number;
+  semi_weight3: number;
+  semi_weight4: number;
+  semi_weight5: number;
+  semi_weight6: number;
+  semi_weight7: number;
   // 3. REMARK
   petition_number: string;
   remark: string;
@@ -120,6 +134,41 @@ export interface VehicleData {
 export interface SummaryData {
   title: string;
   description: string;
+}
+
+// OTHE RDOC FORM
+export interface DocumentFieldType {
+  petition_extended_user_document: PetitionExtendedUserDocument;
+  petition_extended_vehicle_document: PetitionExtendedVehicleDocument;
+  petition_extended_audit_document: PetitionExtendedAuditDocument;
+}
+
+export interface PetitionExtendedUserDocument {
+  cid_url: FileType;
+  company_certificate_url: FileType;
+  vehicle_permit_url: FileType;
+  power_of_attorney_url: FileType;
+}
+
+export interface PetitionExtendedVehicleDocument {
+  vehicle_registration_url: FileType;
+  vehicle_photos_url: FileType;
+  vehicle_dimensions_empty_url: FileType;
+  vehicle_dimensions_loaded_url: FileType;
+  prefab_parts_details_url: FileType;
+  vehicle_turning_radius_url: FileType;
+}
+
+export interface PetitionExtendedAuditDocument {
+  bridge_structure_calculation_url: FileType;
+  road_structure_calculation_url: FileType;
+  bridge_engineer_certificate_url: FileType;
+  road_engineer_certificate_url: FileType;
+  mechanical_engineer_certificate_url: FileType;
+  safety_management_plan_url: FileType;
+  route_map_url: FileType;
+  operation_plan_url: FileType;
+  contact_info_url: FileType;
 }
 
 export type RouteEstimationResponse = {
