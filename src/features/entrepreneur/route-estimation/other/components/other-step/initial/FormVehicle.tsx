@@ -233,6 +233,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             : null}
         </Row>
       </section>
+      {JSON.stringify(toweringVehicleWheel)}
       {toweringVehicleWheel !== 0 ?
         <section className='mt-3'>
           <h5>น้ำหนักลงเพลา รถลากจูง (กิโลกรัม)</h5>
@@ -301,69 +302,73 @@ const FormVehicle: React.FC<Props> = (props) => {
                     }}
                   />
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-                  <Controller
-                    name='towering_weight3'
-                    control={control}
-                    rules={{
-                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
-                    }}
-                    render={({ field }) => {
-                      return (
-                        <fieldset>
-                          <Input
-                            {...field}
-                            name={field.name}
-                            placeholder='กรุณาระบุ'
-                            className='w-full'
-                            size='large'
-                            style={{
-                              fontFamily: 'Noto Sans Thai'
-                            }}
-                            onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                            }}
-                          />
-                          {!!errors.towering_weight3 &&
-                            <p className='text-red-500'>{errors.towering_weight3.message}</p>
-                          }
-                        </fieldset>
-                      )
-                    }}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-                  <Controller
-                    name='towering_weight4'
-                    control={control}
-                    rules={{
-                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
-                    }}
-                    render={({ field }) => {
-                      return (
-                        <fieldset>
-                          <Input
-                            {...field}
-                            name={field.name}
-                            placeholder='กรุณาระบุ'
-                            className='w-full'
-                            size='large'
-                            style={{
-                              fontFamily: 'Noto Sans Thai'
-                            }}
-                            onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                            }}
-                          />
-                          {!!errors.towering_weight4 &&
-                            <p className='text-red-500'>{errors.towering_weight4.message}</p>
-                          }
-                        </fieldset>
-                      )
-                    }}
-                  />
-                </Col>
               </>
+              : null}
+            {toweringVehicleWheel >= 3 ?
+              <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
+                <Controller
+                  name='towering_weight3'
+                  control={control}
+                  rules={{
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                  }}
+                  render={({ field }) => {
+                    return (
+                      <fieldset>
+                        <Input
+                          {...field}
+                          name={field.name}
+                          placeholder='กรุณาระบุ'
+                          className='w-full'
+                          size='large'
+                          style={{
+                            fontFamily: 'Noto Sans Thai'
+                          }}
+                          onChange={(e) => {
+                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                          }}
+                        />
+                        {!!errors.towering_weight3 &&
+                          <p className='text-red-500'>{errors.towering_weight3.message}</p>
+                        }
+                      </fieldset>
+                    )
+                  }}
+                />
+              </Col>
+              : null}
+            {toweringVehicleWheel >= 4 ?
+              <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
+                <Controller
+                  name='towering_weight4'
+                  control={control}
+                  rules={{
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                  }}
+                  render={({ field }) => {
+                    return (
+                      <fieldset>
+                        <Input
+                          {...field}
+                          name={field.name}
+                          placeholder='กรุณาระบุ'
+                          className='w-full'
+                          size='large'
+                          style={{
+                            fontFamily: 'Noto Sans Thai'
+                          }}
+                          onChange={(e) => {
+                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                          }}
+                        />
+                        {!!errors.towering_weight4 &&
+                          <p className='text-red-500'>{errors.towering_weight4.message}</p>
+                        }
+                      </fieldset>
+                    )
+                  }}
+                />
+              </Col>
               : null}
             {toweringVehicleWheel >= 5 ?
               <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
@@ -467,11 +472,12 @@ const FormVehicle: React.FC<Props> = (props) => {
           </Row>
         </section>
         : null}
+      {JSON.stringify(semiVehicleWheel)}
       {semiVehicleWheel !== 0 ?
         <section className='mt-3'>
           <h5>น้ำหนักลงเพลา รถกึ่งพ่วง (กิโลกรัม)</h5>
           <Row gutter={[16, 16]}>
-            {semiVehicleWheel >= 4 ?
+            {semiVehicleWheel >= 2 ?
               <>
                 <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
                   <Controller
@@ -506,7 +512,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
                   <Controller
-                    name='semi_weight6'
+                    name='semi_weight2'
                     control={control}
                     rules={{
                       required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
@@ -535,69 +541,73 @@ const FormVehicle: React.FC<Props> = (props) => {
                     }}
                   />
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-                  <Controller
-                    name='towering_weight7'
-                    control={control}
-                    rules={{
-                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
-                    }}
-                    render={({ field }) => {
-                      return (
-                        <fieldset>
-                          <Input
-                            {...field}
-                            name={field.name}
-                            placeholder='กรุณาระบุ'
-                            className='w-full'
-                            size='large'
-                            style={{
-                              fontFamily: 'Noto Sans Thai'
-                            }}
-                            onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                            }}
-                          />
-                          {!!errors.towering_weight7 &&
-                            <p className='text-red-500'>{errors.towering_weight7.message}</p>
-                          }
-                        </fieldset>
-                      )
-                    }}
-                  />
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-                  <Controller
-                    name='semi_weight4'
-                    control={control}
-                    rules={{
-                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
-                    }}
-                    render={({ field }) => {
-                      return (
-                        <fieldset>
-                          <Input
-                            {...field}
-                            name={field.name}
-                            placeholder='กรุณาระบุ'
-                            className='w-full'
-                            size='large'
-                            style={{
-                              fontFamily: 'Noto Sans Thai'
-                            }}
-                            onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                            }}
-                          />
-                          {!!errors.semi_weight4 &&
-                            <p className='text-red-500'>{errors.semi_weight4.message}</p>
-                          }
-                        </fieldset>
-                      )
-                    }}
-                  />
-                </Col>
               </>
+              : null}
+            {semiVehicleWheel >= 3 ?
+              <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
+                <Controller
+                  name='semi_weight3'
+                  control={control}
+                  rules={{
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                  }}
+                  render={({ field }) => {
+                    return (
+                      <fieldset>
+                        <Input
+                          {...field}
+                          name={field.name}
+                          placeholder='กรุณาระบุ'
+                          className='w-full'
+                          size='large'
+                          style={{
+                            fontFamily: 'Noto Sans Thai'
+                          }}
+                          onChange={(e) => {
+                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                          }}
+                        />
+                        {!!errors.towering_weight7 &&
+                          <p className='text-red-500'>{errors.towering_weight7.message}</p>
+                        }
+                      </fieldset>
+                    )
+                  }}
+                />
+              </Col>
+              : null}
+            {semiVehicleWheel >= 4 ?
+              <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
+                <Controller
+                  name='semi_weight4'
+                  control={control}
+                  rules={{
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                  }}
+                  render={({ field }) => {
+                    return (
+                      <fieldset>
+                        <Input
+                          {...field}
+                          name={field.name}
+                          placeholder='กรุณาระบุ'
+                          className='w-full'
+                          size='large'
+                          style={{
+                            fontFamily: 'Noto Sans Thai'
+                          }}
+                          onChange={(e) => {
+                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                          }}
+                        />
+                        {!!errors.semi_weight4 &&
+                          <p className='text-red-500'>{errors.semi_weight4.message}</p>
+                        }
+                      </fieldset>
+                    )
+                  }}
+                />
+              </Col>
               : null}
             {semiVehicleWheel >= 5 ?
               <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
