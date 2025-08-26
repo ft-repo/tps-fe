@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useState } from 'react'
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
-import { Control, Controller, FieldErrors, UseFormSetValue, useFormState, UseFormWatch, useWatch } from 'react-hook-form';
+import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
 import { Col, Input, Row, Select } from 'antd';
 import { useAppSelector } from '@/store';
 import { VehicleDetail } from '@/services/master/MasterService';
@@ -10,8 +10,6 @@ import { VehicleDetail } from '@/services/master/MasterService';
 interface Props {
   control: Control<FieldTypeForOther>;
   setValue: UseFormSetValue<FieldTypeForOther>;
-  watch: UseFormWatch<FieldTypeForOther>;
-  errors: FieldErrors<FieldTypeForOther>;
 }
 
 const FormVehicle: React.FC<Props> = (props) => {
@@ -20,10 +18,7 @@ const FormVehicle: React.FC<Props> = (props) => {
   const [toweringVehicleWheel, setToweringVehicleWheel] = useState<number>(0)
   const [semiVehicleWheel, setSemiVehicleWheel] = useState<number>(0)
 
-  const matchType = useWatch({
-    control,
-    name: 'match_type'
-  })
+  const { match_type } = useWatch({ control })
 
   const { errors } = useFormState({ control })
 
@@ -86,7 +81,7 @@ const FormVehicle: React.FC<Props> = (props) => {
               }}
             />
           </Col>
-          {(matchType === 1 || matchType === 2) ?
+          {(match_type === 1 || match_type === 2) ?
             <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
               <Controller
                 name='towering_vehicle'
@@ -138,7 +133,7 @@ const FormVehicle: React.FC<Props> = (props) => {
               />
             </Col>
             : null}
-          {(matchType === 1 || matchType === 2) ?
+          {(match_type === 1 || match_type === 2) ?
             <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
               <Controller
                 name='semi_trailer_vehicle'
@@ -189,7 +184,7 @@ const FormVehicle: React.FC<Props> = (props) => {
               />
             </Col>
             : null}
-          {(matchType === 1 || matchType === 3) ?
+          {(match_type === 1 || match_type === 3) ?
             <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
               <Controller
                 name='etc_vehicle'

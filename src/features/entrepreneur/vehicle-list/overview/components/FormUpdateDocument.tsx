@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import React, { useCallback } from 'react'
-import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
+import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 import { postUploadFileAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { message, Upload } from 'antd';
@@ -10,11 +10,11 @@ import { message, Upload } from 'antd';
 interface Props {
   control: Control<FieldType>;
   setValue: UseFormSetValue<FieldType>;
-  errors: FieldErrors<FieldType>;
 }
 
 const FormUpdateDocument: React.FC<Props> = (props) => {
-  const { control, setValue, errors } = props
+  const { control, setValue } = props
+  const { errors } = useFormState({ control })
 
   const uploadFile = useCallback(async (fieldName: string, file: any, isImage: boolean = false) => {
     let uploadAPI

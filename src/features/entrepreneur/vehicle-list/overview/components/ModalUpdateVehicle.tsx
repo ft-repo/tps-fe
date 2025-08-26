@@ -84,7 +84,6 @@ const Content = (props: ContentProps) => {
     handleSubmit,
     control,
     setValue,
-    formState: { errors }
   } = form;
 
   const onSubmit = useCallback(async (value: FieldType) => {
@@ -173,14 +172,12 @@ const Content = (props: ContentProps) => {
           <FormUpdateData
             control={control}
             setValue={setValue}
-            errors={errors}
           />
         </Col>
         <Col xs={24} sm={24} lg={12} xl={12} xxl={12}>
           <FormUpdateDocument
             control={control}
             setValue={setValue}
-            errors={errors}
           />
         </Col>
       </Row>

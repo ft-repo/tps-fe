@@ -3,7 +3,7 @@
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { useAppSelector } from '@/store';
 import React, { useCallback } from 'react'
-import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
+import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form'
 import { Select, Input, Upload, message, Button, Row, Col } from 'antd';
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService';
@@ -11,12 +11,12 @@ import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService';
 interface Props {
   control: Control<FieldType>;
   setValue: UseFormSetValue<FieldType>;
-  errors: FieldErrors<FieldType>;
 }
 
 const FormUpdateData: React.FC<Props> = (props) => {
-  const { control, setValue, errors } = props
+  const { control, setValue } = props
   const { vehicle_type } = useAppSelector(state => state.master)
+  const { errors } = useFormState({ control })
 
   const uploadFile = useCallback(async (file: any) => {
     try {

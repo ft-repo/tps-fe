@@ -89,8 +89,6 @@ const OtherInfo: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     setValue,
-    watch,
-    formState: { errors }
   } = form
 
   const onSubmit = useCallback(async (value: FieldTypeForOther) => {
@@ -232,15 +230,12 @@ const OtherInfo: React.FC<Props> = (props) => {
             <FormPetition
               control={control}
               setValue={setValue}
-              errors={errors}
             />
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
             <FormVehicleContent
               control={control}
               setValue={setValue}
-              watch={watch}
-              errors={errors}
             />
           </Col>
         </Row>
