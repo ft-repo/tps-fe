@@ -1,21 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-empty-pattern */
-/* eslint-disable react-refresh/only-export-components */
 import React, { useMemo, useState } from 'react'
-import { useRouteContext } from '../../context'
+import { usePublicRouteContext } from '../../context'
 import { Button, Tabs } from '@/components/ui'
-import { DetailResult, TableResult } from '..'
+import { DetailResult, TableResult } from '../../../route/components'
 
 const { TabNav, TabList, TabContent } = Tabs
 
-interface Props {
-
-}
-
-const EstimateResult: React.FC<Props> = (props) => {
-  const { } = props
-  const { dataParser, setStep } = useRouteContext()
+const EstimateResult: React.FC = () => {
+  const { dataParser, setStep } = usePublicRouteContext()
   const [tabKey, setTabKey] = useState<string>('tab0')
 
   const renderTabList = useMemo(() => {
@@ -99,4 +90,4 @@ const EstimateResult: React.FC<Props> = (props) => {
   )
 }
 
-export default React.memo<Props>(EstimateResult)
+export default React.memo(EstimateResult)

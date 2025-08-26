@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable import/no-unresolved */
 import React, { useMemo } from 'react'
-import { FieldArray } from '@/@types/entrepreneur/route-estimation'
+import { EstimateResponse } from '@/@types/entrepreneur/route-estimation'
 // import Table from '@/components/ui/Table'
 import { Table } from '@/components/custom/table';
 import { Segment } from '@/components/ui';
@@ -10,7 +10,7 @@ import { ColumnDef } from '@tanstack/react-table';
 // const { Tr, Th, Td, THead, TBody } = Table
 
 interface Props {
-  data: FieldArray;
+  data: EstimateResponse;
 }
 
 interface TableData {
