@@ -156,7 +156,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             />
           </Col>
           {(match_type === 1 || match_type === 3) ?
-            <Col xs={24} sm={24} md={12} lg={8} xl={8} xxl={8}>
+            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
               <Controller
                 name={`route_form.${formIndex}.turn_radius`}
                 control={control}
