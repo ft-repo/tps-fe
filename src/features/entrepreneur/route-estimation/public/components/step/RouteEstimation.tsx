@@ -174,7 +174,7 @@ function RouteEstimation() {
         </div>
         <div className="w-full col-span-2 lg:col-span-1 gap-4 order-first lg:order-last">
           <div className="z-0 h-[50vh]">
-            <MapRoute />
+            <MapRoute coordinates={[[100.5018, 13.7563], [102.0977, 14.9799]]} radiuses={[20]} isRouteEstimate={true} isGeometry={true} />
           </div>
           <FormMapEstimation
             control={control}
