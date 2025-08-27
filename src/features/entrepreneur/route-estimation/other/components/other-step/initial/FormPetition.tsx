@@ -6,16 +6,15 @@ import { getNewDistrictAPI, getNewProvinceAPI, getNewSubDistrictAPI, ProvinceAPI
 import { useAppSelector } from '@/store';
 import { Col, DatePicker, Input, message, Row, Select } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
-import { Control, Controller, FieldErrors, UseFormSetValue, useWatch } from 'react-hook-form'
+import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form'
 
 interface Props {
   control: Control<FieldTypeForOther>;
   setValue: UseFormSetValue<FieldTypeForOther>;
-  errors: FieldErrors<FieldTypeForOther>;
 }
 
 const FormPetition: React.FC<Props> = (props) => {
-  const { control, setValue, errors } = props
+  const { control, setValue } = props
   const { province, district, sub_district, entity_type } = useAppSelector((state) => state.master)
   const {
     company_province,
@@ -25,6 +24,7 @@ const FormPetition: React.FC<Props> = (props) => {
     transferer_company_district,
     transferer_company_sub_district,
   } = useWatch({ control })
+  const { errors } = useFormState({ control })
   // CONTACT
   const [contactProvince, setContactProvince] = useState<ProvinceAPIResponse[]>([])
   const [contactDistrict, setContactDistrict] = useState<ProvinceAPIResponse[]>([])

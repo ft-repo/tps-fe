@@ -4,7 +4,7 @@
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService'
 import React, { useCallback } from 'react'
-import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
+import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
 import { Button, Col, Input, message, Row, Select, Upload } from 'antd'
@@ -12,12 +12,12 @@ import { Button, Col, Input, message, Row, Select, Upload } from 'antd'
 interface Props {
   control: Control<FieldType>;
   setValue: UseFormSetValue<FieldType>;
-  errors: FieldErrors<FieldType>;
 }
 
 const FormInfo: React.FC<Props> = (props) => {
-  const { control, setValue, errors } = props
+  const { control, setValue } = props
   const { vehicle_type } = useAppSelector(state => state.master)
+  const { errors } = useFormState({ control })
 
   const uploadFile = useCallback(async (file: any) => {
     try {

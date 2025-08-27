@@ -3,7 +3,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback } from 'react'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
-import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
+import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form'
 import { FieldType } from '@/@types/entrepreneur/executive-data';
 import { DatePicker, Select, Input, Upload, message, Button } from 'antd';
 import { useAppSelector } from '@/store';
@@ -11,14 +11,15 @@ import { postUploadProfileImageAPI } from '@/services/entrepreneur/UserService';
 
 interface Props {
   control: Control<FieldType>;
-  errors: FieldErrors<FieldType>;
   setValue: UseFormSetValue<FieldType>;
 }
 
 const FormExecutiveData: React.FC<Props> = (props) => {
-  const { control, errors, setValue } = props
+  const { control, setValue } = props
   const { entity_type, contact_type } = useAppSelector(state => state.master)
   const disabled = window.location.href.includes('/user-info/entrepreneur/view/') ? true : false
+
+  const { errors } = useFormState({ control })
 
   const uploadFile = useCallback(async (file: any) => {
     try {

@@ -92,7 +92,6 @@ const ViewScreen: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     setValue,
-    formState: { errors }
   } = form
 
   const onSubmit = useCallback(async (value: FieldType) => {
@@ -201,12 +200,10 @@ const ViewScreen: React.FC<Props> = (props) => {
           <div className='block xl:grid grid-cols-2 gap-5'>
             <FormExecutiveData
               control={control}
-              errors={errors}
               setValue={setValue}
             />
             <FormExecutiveDocument
               control={control}
-              errors={errors}
               setValue={setValue}
             />
           </div>

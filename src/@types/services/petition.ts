@@ -170,3 +170,52 @@ export interface PetitionExtendedAuditDocument {
   operation_plan_url: string;
   contact_info_url: string;
 }
+
+// PETITION
+export interface PetitionEstimateRequest {
+  vehicle: VehicleRequestArr[];
+  start_point: StartPoint;
+  end_point: EndPoint;
+  vehicle_route: VehicleRoute;
+}
+
+export interface VehicleRequestArr {
+  turn_radius: number;
+  towing_vehicle_id: number;
+  semi_trailer_vehicle_id: number;
+  etc_vehicle_id: any;
+  towing_axis_weight: number[];
+  semi_trailer_axis_weight: number[];
+}
+
+export interface StartPoint {
+  type: string;
+  coordinates: number[];
+}
+
+export interface EndPoint {
+  type: string;
+  coordinates: number[];
+}
+
+export interface VehicleRoute {
+  type: string;
+  coordinates: number[][];
+}
+
+
+export interface PetitionEstimateResponse {
+  estimate: EstimateResponse[];
+  set_id: string;
+}
+
+export interface EstimateResponse {
+  estimate_id: string
+  vehicle: Vehicle[]
+}
+
+export interface Vehicle {
+  vehicle_type: string
+  plate_no: string
+  plate_province: string
+}

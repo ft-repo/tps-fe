@@ -2,17 +2,17 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
-import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
+import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 import { Input } from 'antd';
 
 interface Props {
   control: Control<FieldTypeForOther>;
   setValue: UseFormSetValue<FieldTypeForOther>;
-  errors: FieldErrors<FieldTypeForOther>;
 }
 
 const FormRemark: React.FC<Props> = (props) => {
-  const { control, errors } = props
+  const { control } = props
+  const { errors } = useFormState({ control })
 
   return (
     <div className='border-2 rounded-md p-4 mb-3'>

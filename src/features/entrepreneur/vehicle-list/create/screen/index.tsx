@@ -76,7 +76,6 @@ const CreateScreen: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     setValue,
-    formState: { errors }
   } = form;
 
   const onSubmit = useCallback(async (value: FieldType) => {
@@ -207,12 +206,10 @@ const CreateScreen: React.FC<Props> = (props) => {
             <FormInfo
               control={control}
               setValue={setValue}
-              errors={errors}
             />
             <FormDocument
               control={control}
               setValue={setValue}
-              errors={errors}
             />
           </div>
           <button ref={submitRef} hidden type='submit' />

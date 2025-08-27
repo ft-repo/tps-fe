@@ -3,17 +3,15 @@
 import React from 'react'
 import { FormVehicle, FormRemark } from '../../components'
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
-import { Control, FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form';
+import { Control, UseFormSetValue } from 'react-hook-form';
 
 interface Props {
   control: Control<FieldTypeForOther>;
   setValue: UseFormSetValue<FieldTypeForOther>;
-  watch: UseFormWatch<FieldTypeForOther>;
-  errors: FieldErrors<FieldTypeForOther>;
 }
 
 const FormVehicleContent: React.FC<Props> = (props) => {
-  const { control, setValue, watch, errors } = props
+  const { control, setValue } = props
 
   return (
     <div>
@@ -21,15 +19,12 @@ const FormVehicleContent: React.FC<Props> = (props) => {
         <FormVehicle
           control={control}
           setValue={setValue}
-          watch={watch}
-          errors={errors}
         />
       </section>
       <section className='mt-3'>
         <FormRemark
           control={control}
           setValue={setValue}
-          errors={errors}
         />
       </section>
     </div>
