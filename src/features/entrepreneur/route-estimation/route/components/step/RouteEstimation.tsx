@@ -7,6 +7,8 @@ import React, { useCallback, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { ContentTab } from '../../components'
+import { PetitionEstimateRequest } from '@/@types/services/petition'
+import { postPetitionEstimateAPI } from '@/services/entrepreneur/PetitionService'
 
 interface Props {
 
@@ -54,9 +56,63 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const { handleSubmit, control, setValue } = form
 
   const onSubmit = useCallback(async (value: FieldTypeArr) => {
+    const body: PetitionEstimateRequest = {
+      vehicle: value.route_form.map((item) => {
+        return {
+          turn_radius: Number(item.turn_radius),
+          towing_vehicle_id: Number(item.towering_vehicle),
+          semi_trailer_vehicle_id: Number(item.semi_trailer_vehicle),
+          etc_vehicle_id: Number(item.etc_vehicle),
+          towing_axis_weight: [
+            Number(item.towering_weight1),
+            Number(item.towering_weight2),
+            Number(item.towering_weight3),
+            Number(item.towering_weight4),
+            Number(item.towering_weight5),
+            Number(item.towering_weight6),
+            Number(item.towering_weight7),
+          ],
+          semi_trailer_axis_weight: [
+            Number(item.semi_weight1),
+            Number(item.semi_weight2),
+            Number(item.semi_weight3),
+            Number(item.semi_weight4),
+            Number(item.semi_weight5),
+            Number(item.semi_weight6),
+            Number(item.semi_weight7),
+          ]
+        }
+      }),
+      start_point: {
+        type: "Point",
+        coordinates: value.route_form.flatMap((item) => {
+          return [
+            Number(item.start_latitude), Number(item.start_longitude)
+          ]
+        })
+      },
+      end_point: {
+        type: "Point",
+        coordinates: value.route_form.flatMap((item) => {
+          return [
+            Number(item.end_latitude), Number(item.end_longitude)
+          ]
+        })
+      },
+      vehicle_route: {
+        type: "LineString",
+        coordinates: value.route_form.flatMap((item) => [
+          [Number(item.start_latitude), Number(item.start_longitude)],
+          [Number(item.end_latitude), Number(item.end_longitude)]
+        ])
+      }
+    }
     dispatch(setLoading(true))
     try {
-      console.log(value)
+      const response = await postPetitionEstimateAPI(body)
+      if (response.status === 200) {
+        console.log(response.data)
+      }
     } catch (error) {
       if (error instanceof Error) {
         Modal.error({

@@ -1,4 +1,4 @@
-import { GetPetitionParams, GetPetitionResponse, GetRuralRoadParams, PetitionExtendedDocumentPostRequest, PetitionExtendedPostRequest, PetitionExtendedPostResponse } from "@/@types/services/petition"
+import { GetPetitionParams, GetPetitionResponse, GetRuralRoadParams, PetitionEstimateRequest, PetitionEstimateResponse, PetitionExtendedDocumentPostRequest, PetitionExtendedPostRequest, PetitionExtendedPostResponse } from "@/@types/services/petition"
 import ApiService from "../ApiService"
 import { UploadRequest, UploadResponse } from "@/@types/shared"
 import { RoadInfo } from "@/features/entrepreneur/permit-list/overview/components/ModalRuralRoadDetails"
@@ -88,5 +88,13 @@ export const postUploadVehicleRegistrationDocumentAPI = async (data: UploadReque
     headers: {
       'Content-Type': 'multipart/form-data'
     }
+  })
+}
+
+export const postPetitionEstimateAPI = async (data: PetitionEstimateRequest) => {
+  return ApiService.fetchData<PetitionEstimateResponse, PetitionEstimateRequest>({
+    url: '/client/estimate',
+    method: 'post',
+    data: { ...data },
   })
 }
