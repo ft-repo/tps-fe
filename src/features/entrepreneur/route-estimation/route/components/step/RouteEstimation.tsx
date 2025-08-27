@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { ContentTab } from '../../components'
 import { PetitionEstimateRequest } from '@/@types/services/petition'
 import { postPetitionEstimateAPI } from '@/services/entrepreneur/PetitionService'
+import { useRouteContext } from '../../context'
 
 interface Props {
 
@@ -20,6 +21,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
   const navigate = useNavigate()
+  const { setStep, setDataParser } = useRouteContext()
 
   const form = useForm<FieldTypeArr>({
     defaultValues: {
@@ -87,7 +89,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
         type: "Point",
         coordinates: value.route_form.flatMap((item) => {
           return [
-            Number(item.start_latitude), Number(item.start_longitude)
+            Number(item.start_longitude), Number(item.start_latitude)
           ]
         })
       },
@@ -95,15 +97,15 @@ const RouteEstimation: React.FC<Props> = (props) => {
         type: "Point",
         coordinates: value.route_form.flatMap((item) => {
           return [
-            Number(item.end_latitude), Number(item.end_longitude)
+            Number(item.end_longitude), Number(item.end_latitude)
           ]
         })
       },
       vehicle_route: {
         type: "LineString",
         coordinates: value.route_form.flatMap((item) => [
-          [Number(item.start_latitude), Number(item.start_longitude)],
-          [Number(item.end_latitude), Number(item.end_longitude)]
+          [Number(item.start_longitude), Number(item.start_latitude)],
+          [Number(item.end_longitude), Number(item.end_latitude)]
         ])
       }
     }
@@ -111,7 +113,27 @@ const RouteEstimation: React.FC<Props> = (props) => {
     try {
       const response = await postPetitionEstimateAPI(body)
       if (response.status === 200) {
-        console.log(response.data)
+        Modal.success({
+          title: 'สำเร็จ',
+          content: 'บันทึกข้อมูลสำเร็จ',
+          okText: 'ตกลง',
+          onOk: () => {
+            setDataParser({
+              req_data: body,
+              res_data: response.data,
+              match_type: 1
+            })
+            setStep(2)
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
       }
     } catch (error) {
       if (error instanceof Error) {
