@@ -1015,7 +1015,7 @@ const FormVehicle: React.FC<Props> = (props) => {
       <section className='mt-5'>
         <Row gutter={[16, 16]}>
           {towingProperties.id ?
-            <Col xs={24} sm={24} md={24} lg={24} xl={8} xxl={8}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <Card
                 cover={(
                   <Image
@@ -1041,7 +1041,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             </Col>
             : null}
           {semiProperties.id ?
-            <Col xs={24} sm={24} md={24} lg={24} xl={8} xxl={8}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <Card
                 cover={(
                   <Image
@@ -1067,7 +1067,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             </Col>
             : null}
           {etcProperties.id ?
-            <Col xs={24} sm={24} md={24} lg={24} xl={8} xxl={8}>
+            <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <Card
                 cover={(
                   <Image
