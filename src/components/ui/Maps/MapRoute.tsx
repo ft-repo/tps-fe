@@ -2,27 +2,61 @@ import { GeoJSON, MapContainer, Marker, TileLayer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet'
 import { getRouteDirectionAPI, useAppDispatch, useAppSelector } from '@/store'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { GeoJsonObject } from 'geojson'
 
+/**
+ * @param coordinates Points for drawing distance, coordinates [longitude, latitude] must have at least 2 points
+ * @param radiuses Radius of points
+ * @param geometry Shape of the distance, must be GeoJSON with LineString shape
+ * @param max_speed Maximum speed
+ * @param isRouteEstimate If true, will call API to fetch route distance. If false, must provide geometry
+ */
 export type MapRouteProps = {
-  coordinates: number[][],
+  coordinates: [number, number][] | null,
   radiuses?: number[],
   geometry?: GeoJsonObject,
   max_speed?: number,
   isRouteEstimate?: boolean,
 }
 
-function MapRoute({ coordinates, radiuses, geometry, max_speed, isRouteEstimate }: MapRouteProps) {
+/**
+ * @param coordinates Points for drawing distance, coordinates [longitude, latitude] must have at least 2 points
+ * @param radiuses Radius of points
+ * @param geometry Shape of the distance, must be GeoJSON with LineString shape
+ * @param max_speed Maximum speed
+ * @param isRouteEstimate If true, will call API to fetch route distance. If false, must provide geometry
+ */
+function MapRoute({ coordinates, radiuses, geometry, isRouteEstimate = false }: MapRouteProps) {
   const dispatch = useAppDispatch()
   const { routeDirection } = useAppSelector((state) => state.routeDirection)
   const [geometryData, setGeometryData] = useState<GeoJsonObject | null>(null)
 
-  useEffect(() => {
-    if (isRouteEstimate) {
-      dispatch(getRouteDirectionAPI({ coordinates, radiuses }))
+  const validateData = useCallback(() => {
+    if (!coordinates) {
+      return false
     }
-  }, [coordinates, radiuses, geometry, max_speed, isRouteEstimate, dispatch])
+
+    if (coordinates.length < 2) {
+      return false
+    }
+
+    if (coordinates.some((coordinate) => coordinate.some((c) => c === null || c === undefined || c === 0))) {
+      return false
+    }
+
+    if (!isRouteEstimate && (!geometry || geometry.type !== 'LineString')) {
+      return false
+    }
+
+    return true
+  }, [coordinates, isRouteEstimate, geometry])
+
+  useEffect(() => {
+    if (isRouteEstimate && validateData()) {
+      dispatch(getRouteDirectionAPI({ coordinates: coordinates as [number, number][] }))
+    }
+  }, [coordinates, isRouteEstimate, dispatch, validateData])
 
   useEffect(() => {
     if (isRouteEstimate && routeDirection) {
@@ -41,7 +75,7 @@ function MapRoute({ coordinates, radiuses, geometry, max_speed, isRouteEstimate 
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {coordinates.map((coordinate, index) => (
+        {coordinates && coordinates.map((coordinate, index) => (
           <Marker key={index} position={[coordinate[1], coordinate[0]]} />
         ))}
         {geometryData && (

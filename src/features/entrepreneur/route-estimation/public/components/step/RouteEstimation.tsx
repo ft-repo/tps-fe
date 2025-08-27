@@ -1,7 +1,7 @@
 import { RouteEstimationRequest } from '@/@types/entrepreneur/route-estimation'
 import { Tabs, Button } from 'antd'
 import { useFieldArray, useForm } from 'react-hook-form'
-import { useCallback, useState, memo } from 'react'
+import { useCallback, useState, memo, useMemo } from 'react'
 import FormRouteEstimation from '../../../route/components/route-estimate/initial/FormRouteEstimation'
 import FormMapEstimation from '../../../route/components/route-estimate/initial/FormMapEstimation'
 import { usePublicRouteContext } from '../../context'
@@ -71,6 +71,14 @@ function RouteEstimation() {
   ]
   const [activeKey, setActiveKey] = useState(initialTabItems[0].key)
   const [tabItems, setTabItems] = useState<TabItem[]>(initialTabItems)
+
+  const coordinates = useMemo(() => {
+    if (firstPoint && secondPoint) {
+      return [firstPoint, secondPoint]
+    }
+
+    return null
+  }, [firstPoint, secondPoint])
 
   const onAddedTab = useCallback(() => {
     append(defaultValues.vehicle[0])
@@ -174,7 +182,7 @@ function RouteEstimation() {
         </div>
         <div className="w-full col-span-2 lg:col-span-1 gap-4 order-first lg:order-last">
           <div className="z-0 h-[50vh]">
-            <MapRoute coordinates={[[100.5018, 13.7563], [102.0977, 14.9799]]} radiuses={[20]} isRouteEstimate={true} isGeometry={true} />
+            <MapRoute coordinates={coordinates} isRouteEstimate={true} />
           </div>
           <FormMapEstimation
             control={control}

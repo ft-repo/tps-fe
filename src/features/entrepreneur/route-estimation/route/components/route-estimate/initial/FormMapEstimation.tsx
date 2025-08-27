@@ -56,8 +56,8 @@ function FormMapEstimation(props: FormMapEstimationProps) {
                       }
                       firstPointTimeoutRef.current = setTimeout(() => {
                         setFirstPoint([
-                          newVal,
                           typeof startLng === 'number' ? startLng : Number(startLng) || 0,
+                          newVal,
                         ])
                       }, 1000)
                     }}
@@ -81,8 +81,8 @@ function FormMapEstimation(props: FormMapEstimationProps) {
                       }
                       firstPointTimeoutRef.current = setTimeout(() => {
                         setFirstPoint([
-                          typeof startLat === 'number' ? startLat : Number(startLat) || 0,
                           newVal,
+                          typeof startLat === 'number' ? startLat : Number(startLat) || 0,
                         ])
                       }, 1000)
                     }}
@@ -112,8 +112,8 @@ function FormMapEstimation(props: FormMapEstimationProps) {
                       }
                       secondPointTimeoutRef.current = setTimeout(() => {
                         setSecondPoint([
-                          newVal,
                           typeof endLng === 'number' ? endLng : Number(endLng) || 0,
+                          newVal,
                         ])
                       }, 1000)
                     }}
@@ -137,8 +137,8 @@ function FormMapEstimation(props: FormMapEstimationProps) {
                       }
                       secondPointTimeoutRef.current = setTimeout(() => {
                         setSecondPoint([
-                          typeof endLat === 'number' ? endLat : Number(endLat) || 0,
                           newVal,
+                          typeof endLat === 'number' ? endLat : Number(endLat) || 0,
                         ])
                       }, 1000)
                     }}
