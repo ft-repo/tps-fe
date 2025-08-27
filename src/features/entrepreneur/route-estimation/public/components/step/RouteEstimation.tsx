@@ -3,9 +3,9 @@ import { Tabs, Button } from 'antd'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useCallback, useState, memo } from 'react'
 import FormRouteEstimation from '../../../route/components/route-estimate/initial/FormRouteEstimation'
-import MapRouteEstimation from '../../../route/components/route-estimate/initial/MapRouteEstimation'
 import FormMapEstimation from '../../../route/components/route-estimate/initial/FormMapEstimation'
 import { usePublicRouteContext } from '../../context'
+import { MapRoute } from '@/components/ui/Maps'
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string
 
@@ -174,10 +174,7 @@ function RouteEstimation() {
         </div>
         <div className="w-full col-span-2 lg:col-span-1 gap-4 order-first lg:order-last">
           <div className="z-0 h-[50vh]">
-            <MapRouteEstimation
-              firstPoint={firstPoint}
-              secondPoint={secondPoint}
-            />
+            <MapRoute />
           </div>
           <FormMapEstimation
             control={control}
