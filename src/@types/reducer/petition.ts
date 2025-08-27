@@ -148,7 +148,48 @@ export interface PetitionAdminState {
   petition_extended: AdminPetitionExtended;
   petition_history: AdminPetition;
   petition_history_extended: AdminPetitionExtended;
+  notification: AdminPetitionNotification;
+  petition_status: AdminPetitionStatus[];
   loading: boolean;
+}
+
+export interface AdminPetitionStatus {
+  id: number;
+  petition_id: number;
+  status_id: number;
+  remark: string;
+  document_url?: string;
+  is_approved: boolean;
+  is_skipped: boolean;
+  created_by: string;
+  created_at: string;
+  status: Status;
+  admin_creaded: AdminCreaded;
+}
+
+export interface AdminPetitionNotification {
+  search: NotificationSearch;
+  data: NotificationData[];
+  pagination: NotificationPagination;
+}
+
+export interface NotificationSearch {
+  page: number;
+  limit: number;
+}
+
+export interface NotificationData {
+  business_name: string;
+  created_at: string;
+  from: string;
+}
+
+export interface NotificationPagination {
+  hasMore: boolean;
+  limit: number;
+  page: number;
+  total: number;
+  totalPages: number;
 }
 
 export interface AdminPetition {

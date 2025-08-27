@@ -10,6 +10,7 @@ interface Props {
   data: PetitionData;
   loading: boolean;
   handleTableChange: (page: number, limit: number) => void;
+  openDataModal: (id: string | number, record: PetitionTableData) => void;
 }
 
 // ---------- Helpers ----------
@@ -77,7 +78,7 @@ const computeStatuses = (record: PetitionTableData): Record<StepId, StepStatus> 
   return out
 }
 
-const TableCategory: React.FC<Props> = ({ data, loading, handleTableChange }) => {
+const TableCategory: React.FC<Props> = ({ data, loading, handleTableChange, openDataModal }) => {
   const makeStatusCell =
     (step: StepId) =>
       (_val: unknown, record: PetitionTableData) => {
@@ -123,8 +124,25 @@ const TableCategory: React.FC<Props> = ({ data, loading, handleTableChange }) =>
 
   const columns: TableProps<PetitionTableData>['columns'] = [
     { title: 'เลขที่', dataIndex: 'petition_no', key: 'petition_no', width: 100, align: 'center' },
-    { title: 'รหัสสายทาง', dataIndex: 'road_code', key: 'road_code', width: 150, align: 'center' },
-    { title: 'ชื่อสายทาง', dataIndex: 'road_name', key: 'road_name', width: 200, align: 'center' },
+    {
+      title: 'รหัสสายทาง',
+      dataIndex: 'road_code',
+      key: 'road_code',
+      width: 150,
+      align: 'center'
+    },
+    {
+      title: 'ชื่อสายทาง',
+      dataIndex: 'road_name',
+      key: 'road_name',
+      width: 200,
+      align: 'center',
+      render: (item, record) => {
+        return (
+          <p onClick={() => openDataModal(record.petition_id, record)}>{item}</p>
+        )
+      }
+    },
     { title: 'วันที่เริ่มต้น', dataIndex: 'start_date', key: 'start_date', width: 150, align: 'center' },
     { title: 'วันที่สิ้นสุด', dataIndex: 'end_date', key: 'end_date', width: 150, align: 'center' },
     { title: 'วันที่ขออนุญาต', dataIndex: 'petition_date', key: 'petition_date', width: 150, align: 'center' },

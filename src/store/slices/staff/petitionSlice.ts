@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants'
 import { PetitionAdminState } from '@/@types/reducer/petition'
-import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionDocumentAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateRouteAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedDetailAPI, getPetitionVehicleAPI } from '@/services/staff/PetitionService'
+import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionDocumentAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateRouteAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedDetailAPI, getPetitionNotificationAPI, getPetitionStatusAPI, getPetitionVehicleAPI } from '@/services/staff/PetitionService'
 import { GetEstimateDetailParams, GetPetitionDetailParams, GetPetitionParams } from '@/@types/services/petition'
+import { GetPaginateParams } from '@/@types/shared'
 
 const initialState: PetitionAdminState = {
   petition: {
@@ -541,6 +542,21 @@ const initialState: PetitionAdminState = {
       },
     },
   },
+  petition_status: [],
+  notification: {
+    search: {
+      page: 1,
+      limit: 10
+    },
+    data: [],
+    pagination: {
+      hasMore: false,
+      page: 1,
+      limit: 10,
+      total: 0,
+      totalPages: 0,
+    }
+  },
   loading: false
 }
 
@@ -612,6 +628,18 @@ export const getPetitionExtendedDetail = createAsyncThunk(SLICE_BASE_NAME + '/ap
   return response.data
 })
 
+export const getPetitionNotification = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionNotification', async (params: GetPaginateParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionNotificationAPI(params)
+  return response.data
+})
+
+export const getPetitionStatus = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionStatus', async (params: GetPetitionDetailParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionStatusAPI(params)
+  return response.data
+})
+
 const petitionSlice = createSlice({
   name: `${SLICE_BASE_NAME}/petition`,
   initialState,
@@ -655,6 +683,13 @@ const petitionSlice = createSlice({
     },
     setAdminPetitionExtendedDetail: (state, action) => {
       state.petition_extended.detail = action.payload
+    },
+    setAdminPetitionNotification: (state, action) => {
+      state.notification.search = action.payload.params,
+        state.notification.data = action.payload.data
+    },
+    setAdminPetitionStatus: (state, action) => {
+      state.petition_status = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -768,7 +803,7 @@ const petitionSlice = createSlice({
       .addCase(getPetitionVehicle.rejected, (state) => {
         state.loading = false
       })
-    // GET PETITION EXTENDED DETAI:
+    // GET PETITION EXTENDED DETAIL
     builder.addCase(getPetitionExtendedDetail.fulfilled, (state, action) => {
       state.petition_extended.detail = action.payload[0],
         state.loading = false
@@ -777,6 +812,29 @@ const petitionSlice = createSlice({
         state.loading = true
       })
       .addCase(getPetitionExtendedDetail.rejected, (state) => {
+        state.loading = false
+      })
+    // GET PETITION NOTIFICATION
+    builder.addCase(getPetitionNotification.fulfilled, (state, action) => {
+      state.notification.data = action.payload.data,
+        state.notification.pagination = action.payload.pagination,
+        state.loading = false
+    })
+      .addCase(getPetitionNotification.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionNotification.rejected, (state) => {
+        state.loading = false
+      })
+    // GET PETITION STATUS
+    builder.addCase(getPetitionStatus.fulfilled, (state, action) => {
+      state.petition_status = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionStatus.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionStatus.rejected, (state) => {
         state.loading = false
       })
   }
@@ -793,7 +851,9 @@ export const {
   setAdminPetitionBridgeEstimation,
   setAdminPetitionTurnRadiusEstimation,
   setAdminPetitionVehicle,
-  setAdminPetitionExtendedDetail
+  setAdminPetitionExtendedDetail,
+  setAdminPetitionNotification,
+  setAdminPetitionStatus
 } = petitionSlice.actions
 
 export default petitionSlice.reducer

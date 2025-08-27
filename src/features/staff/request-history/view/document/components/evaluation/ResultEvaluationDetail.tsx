@@ -27,7 +27,7 @@ const ResultDocumentDetail: React.FC<Props> = (props) => {
       children: <p>นางสาว วรรณิษา ศิริวัฒน์ (เจ้าหน้าที่ส่วนกลาง ทช.)</p>,
     },
     {
-      key: '3',
+      key: '4',
       label: 'หมายเหตุ',
       children: <p>-</p>,
     },
@@ -38,6 +38,8 @@ const ResultDocumentDetail: React.FC<Props> = (props) => {
       title="ผลการตรวจสอบ"
       items={items}
       column={1}
+      layout='vertical'
+      size='small'
     />
   )
 }

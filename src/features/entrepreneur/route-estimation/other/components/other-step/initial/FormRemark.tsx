@@ -1,16 +1,18 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import { Input } from '@/components/ui'
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
-import { Control, Controller } from 'react-hook-form';
+import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
+import { Input } from 'antd';
 
 interface Props {
   control: Control<FieldTypeForOther>;
+  setValue: UseFormSetValue<FieldTypeForOther>;
 }
 
 const FormRemark: React.FC<Props> = (props) => {
   const { control } = props
+  const { errors } = useFormState({ control })
 
   return (
     <div className='border-2 rounded-md p-4 mb-3'>
@@ -20,6 +22,9 @@ const FormRemark: React.FC<Props> = (props) => {
           <Controller
             name='petition_number'
             control={control}
+            rules={{
+              required: 'กรุณาระบุขออนุญาตให้ยานพาหนะเดินบนทางหลวงชนบท'
+            }}
             render={({ field }) => {
               return (
                 <fieldset>
@@ -28,7 +33,15 @@ const FormRemark: React.FC<Props> = (props) => {
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
                   />
+                  {!!errors.petition_number &&
+                    <p className='text-red-500'>{errors.petition_number.message}</p>
+                  }
                 </fieldset>
               )
             }}
@@ -36,15 +49,27 @@ const FormRemark: React.FC<Props> = (props) => {
           <Controller
             name='remark'
             control={control}
+            rules={{
+              required: 'กรุณาระบุเหตุผลที่ขอ'
+            }}
             render={({ field }) => {
               return (
                 <fieldset className='mt-3'>
                   <label>เหตุผลที่ขอ</label>
-                  <Input
+                  <Input.TextArea
                     {...field}
                     name={field.name}
                     placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    rows={8}
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
                   />
+                  {!!errors.remark &&
+                    <p className='text-red-500'>{errors.remark.message}</p>
+                  }
                 </fieldset>
               )
             }}

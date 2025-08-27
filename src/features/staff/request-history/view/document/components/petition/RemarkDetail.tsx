@@ -17,12 +17,12 @@ const RemarkDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'ขออนุญาตให้ยานพาหนะเดินบนทางหลวงชนบท ข้อที่',
-      children: <p>{detail.ref_form_no || '-'}</p>,
+      children: <p>{detail?.ref_form_no || '-'}</p>,
     },
     {
       key: '2',
       label: 'เหตุผลที่ขอ',
-      children: <p>{detail.remark || '-'}</p>,
+      children: <p>{detail?.remark || '-'}</p>,
     },
   ]
 
@@ -31,6 +31,8 @@ const RemarkDetail: React.FC<Props> = (props) => {
       title="เหตุผล"
       items={items}
       column={1}
+      layout='vertical'
+      size='small'
     />
   )
 }

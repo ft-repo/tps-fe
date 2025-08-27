@@ -1,9 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useMemo } from 'react'
-import { Button } from '@/components/ui'
 import { useNavigate } from 'react-router-dom'
-import { Col, Input, Modal, Row, Select } from 'antd';
+import { Col, Input, Modal, Row, Select, Button } from 'antd';
 import { Controller, useForm } from 'react-hook-form';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { LDAPList } from '@/@types/reducer/user';
@@ -340,16 +339,20 @@ const CreateStaffData: React.FC<Props> = (props) => {
         <section className='mt-5'>
           <div className='flex items-center gap-3'>
             <Button
-              type='button'
-              variant='default'
+              htmlType='button'
+              type='default'
+              size='large'
+              className='w-full lg:w-auto'
               disabled={loading}
               onClick={() => navigate(-1)}
             >
               ย้อนกลับ
             </Button>
             <Button
-              type='submit'
-              variant='solid'
+              htmlType='submit'
+              type='primary'
+              size='large'
+              className='w-full lg:w-auto'
               loading={loading}
             >
               บันทึก

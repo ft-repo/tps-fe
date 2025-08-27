@@ -1,15 +1,87 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
-import { ContextProps, FieldType } from '@/@types/entrepreneur/route-estimation'
+import { PetitionExtendedPostRequest } from '@/@types/services/petition'
 import React, { createContext, useContext, useState } from 'react'
+
+export interface ContextProps {
+  step: number;
+  setStep: (step: number | any) => void;
+  dataParser: DataParser;
+  setDataParser: (dataParser: DataParser) => void;
+}
+export interface DataParser extends MatchType {
+  data: PetitionExtendedPostRequest;
+  temporary_id: string;
+}
+
+export interface MatchType {
+  match_type: number;
+}
 
 export const PageContext = createContext<ContextProps | null>(null)
 
 export const OtherProvider = (props: any) => {
   const { children } = props
   const [step, setStep] = useState<number>(1)
-  const [dataParser, setDataParser] = useState<FieldType>({ form_template: [] })
+  const [dataParser, setDataParser] = useState<DataParser>({
+    data: {
+      petition_extended_detail: {
+        cert_date: '',
+        poa_name: '',
+        phone_number: '',
+        ref_form_no: '',
+        remark: ''
+      },
+      petition_extended_address: {
+        contact_address: {
+          house_number: '',
+          village: '',
+          lane: '',
+          road: '',
+          sub_district_id: 0,
+          district_id: 0,
+          province_id: 0,
+          zip_code: ''
+        },
+        poa_address: {
+          house_number: '',
+          village: '',
+          lane: '',
+          road: '',
+          sub_district_id: 0,
+          district_id: 0,
+          province_id: 0,
+          zip_code: ''
+        }
+      },
+      petition_extended_vehicle: {
+        towing_vehicle_id: 0,
+        semi_trailer_vehicle_id: 0,
+        etc_vehicle_id: 0,
+        axis_weight_towing: [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+        ],
+        axis_weight_semi_trailer: [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+        ],
+      },
+    },
+    match_type: 0,
+    temporary_id: ''
+  })
 
   return (
     <PageContext.Provider

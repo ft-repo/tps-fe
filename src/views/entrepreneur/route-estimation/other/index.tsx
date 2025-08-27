@@ -1,8 +1,10 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
+import React, { useEffect } from 'react'
 import OtherScreen from '@/features/entrepreneur/route-estimation/other/screen'
 import { OtherProvider } from '@/features/entrepreneur/route-estimation/other/context'
+import { ConfigProvider } from 'antd'
+import { getDistrict, getEntityType, getProvince, getSubDistrict, getVehicleSelection, getVehicleType, useAppDispatch } from '@/store'
 
 interface Props {
 
@@ -10,11 +12,36 @@ interface Props {
 
 const OtherIndex: React.FC<Props> = (props) => {
   const { } = props
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(getProvince())
+    dispatch(getDistrict(''))
+    dispatch(getSubDistrict(''))
+    dispatch(getEntityType())
+    dispatch(getVehicleType())
+    dispatch(getVehicleSelection(
+      {
+        page: 1,
+        limit: 100,
+        search: '',
+        vehicle_type_id: ''
+      }
+    ))
+  }, [dispatch])
 
   return (
-    <OtherProvider>
-      <OtherScreen />
-    </OtherProvider>
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: "Noto Sans Thai"
+        }
+      }}
+    >
+      <OtherProvider>
+        <OtherScreen />
+      </OtherProvider>
+    </ConfigProvider>
   )
 }
 

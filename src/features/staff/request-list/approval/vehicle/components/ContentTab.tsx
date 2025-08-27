@@ -15,7 +15,7 @@ const ContentTab: React.FC<Props> = (props) => {
   const { petition } = useAppSelector(state => state.staff.petition)
   const vehicle = petition.detail.vehicle
 
-  const items: TabsProps['items'] = vehicle.vehicle_list.map((item, index) => {
+  const items: TabsProps['items'] = vehicle.vehicle_list?.map((item, index) => {
     return {
       key: String(index + 1),
       label: `รถคู่ที่ ${index + 1}`,

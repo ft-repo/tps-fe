@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DepartmentState, RoleState } from "@/@types/shared";
 import ApiService from "../ApiService"
+import { NotificationPagination } from "@/@types/reducer/petition";
+import { VehiclePictures } from "@/@types/reducer/vehicle";
 
 export type ProvinceAPI = ProvinceAPIResponse[];
 export type SubDistrictAPI = SubDistrictAPIResponse[];
@@ -22,6 +24,41 @@ export interface SubDistrictAPIResponse {
   name_th: string;
   name_en: string;
   zip_code: string;
+}
+
+export interface VehicleSelectionRequest {
+  page: number;
+  limit: number;
+  search: string;
+  vehicle_type_id: string | number;
+}
+
+export interface VehicleSelectionResponse {
+  data: VehicleList[];
+  pagination: NotificationPagination;
+}
+
+export interface VehicleList {
+  vehicle_detail: VehicleDetail
+  vehicle_pictures: VehiclePictures;
+}
+
+export interface VehicleDetail {
+  id: number
+  vehicle_type_name: string
+  plate_no: string
+  plate_province: string
+  weight: number
+  width: number
+  length: number
+  height: number
+  axis_number: number
+}
+
+export interface RegionParams {
+  province_id?: string | number | null;
+  district_id?: string | number | null;
+  sub_district_id?: string | number | null;
 }
 
 export const getEntityAPI = async () => {
@@ -85,5 +122,40 @@ export const getRoleAPI = async () => {
   return ApiService.fetchData<RoleState[]>({
     url: '/lists/role',
     method: 'get',
+  })
+}
+
+export const getVehicleSelectionAPI = async (params: VehicleSelectionRequest) => {
+  return ApiService.fetchData<VehicleSelectionResponse, VehicleSelectionRequest>({
+    url: `/client/vehicle/selection`,
+    method: 'get',
+    params: { ...params }
+  })
+}
+
+// NEW PROVINCE
+export const getNewProvinceAPI = async (params: RegionParams) => {
+  return ApiService.fetchData<ProvinceAPIResponse[], RegionParams>({
+    url: `/th/provinces`,
+    method: 'get',
+    params: { ...params }
+  })
+}
+
+// NEW DISTRICT
+export const getNewDistrictAPI = async (params: RegionParams) => {
+  return ApiService.fetchData<ProvinceAPIResponse[], RegionParams>({
+    url: `/th/districts`,
+    method: 'get',
+    params: { ...params }
+  })
+}
+
+// NEW SUB DISTRICT
+export const getNewSubDistrictAPI = async (params: RegionParams) => {
+  return ApiService.fetchData<SubDistrictAPIResponse[], RegionParams>({
+    url: `/th/subdistricts`,
+    method: 'get',
+    params: { ...params }
   })
 }

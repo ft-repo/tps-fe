@@ -1,12 +1,11 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { PetitionPostBody } from '@/@types/services/petition';
-import { Button } from '@/components/ui';
 import { postUploadFileAPI } from '@/services/entrepreneur/PetitionService';
 import { postPetitionApproveAPI } from '@/services/staff/PetitionService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getAdminPetitionData } from '@/store/slices/staff';
-import { Flex, Input, message, Modal, Radio, Upload } from 'antd';
+import { Button, Flex, Input, message, Modal, Radio, Upload } from 'antd';
 import React, { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
@@ -69,6 +68,7 @@ const ContentForm: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     setValue,
+    reset,
     formState: { errors }
   } = form
 
@@ -249,10 +249,10 @@ const ContentForm: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      variant="solid"
+                      disabled={disabled}
                       icon={<HiOutlineCloudUpload />}
-                      size='sm'
-                      type='button'
+                      htmlType='button'
+                      type='primary'
                     >
                       เพิ่มไฟล์ .pdf
                     </Button>
@@ -275,18 +275,19 @@ const ContentForm: React.FC<Props> = (props) => {
         >
           <Button
             disabled={disabled}
-            type='button'
-            variant='default'
-            size='sm'
+            htmlType='button'
+            type='default'
+            size='large'
             className='w-full lg:w-auto'
+            onClick={() => reset()}
           >
             ล้างข้อมูล
           </Button>
           <Button
             disabled={disabled}
-            type='submit'
-            variant='solid'
-            size='sm'
+            htmlType='submit'
+            type='primary'
+            size='large'
             className='w-full lg:w-auto'
           >
             บันทึกข้อมูล

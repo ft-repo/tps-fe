@@ -5,12 +5,11 @@ import React, { useCallback, useRef } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '../components';
 import { useForm } from 'react-hook-form';
 import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
-import { Button } from '@/components/ui';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getUserData } from '@/store/slices/entrepreneur';
 import dayjs from 'dayjs';
 import { putUserAPI } from '@/services/entrepreneur/UserService';
-import { Modal } from 'antd';
+import { Button, Modal } from 'antd';
 
 interface Props {
   fileList: any[];
@@ -90,7 +89,6 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     setValue,
-    formState: { errors }
   } = form
 
   const onSubmit = useCallback(async (value: FieldType) => {
@@ -159,6 +157,26 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         <h3>ข้อมูลผู้ประกอบการ</h3>
         <div className='flex items-center gap-3'>
           <Button
+            disabled={loading}
+            htmlType='button'
+            type='default'
+            // size='large'
+            className='w-full lg:w-auto'
+            onClick={() => dispatch(getUserData())}
+          >
+            ย้อนกลับข้อมูลก่อนหน้า
+          </Button>
+          <Button
+            loading={loading}
+            htmlType='submit'
+            type='primary'
+            // size='large'
+            className='w-full lg:w-auto'
+            onClick={() => submitRef.current?.click()}
+          >
+            บันทึกข้อมูลใหม่
+          </Button>
+          {/* <Button
             variant='default'
             size='sm'
             loading={loading}
@@ -173,7 +191,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
             onClick={() => submitRef.current?.click()}
           >
             บันทึกข้อมูลใหม่
-          </Button>
+          </Button> */}
         </div>
       </section>
       <section className='mt-5'>
@@ -181,12 +199,10 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
           <div className='block xl:grid grid-cols-2 gap-5'>
             <FormExecutiveData
               control={control}
-              errors={errors}
               setValue={setValue}
             />
             <FormExecutiveDocument
               control={control}
-              errors={errors}
               setValue={setValue}
             />
           </div>

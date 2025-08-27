@@ -1,34 +1,63 @@
-import { Root, VehicleId } from '@/@types/entrepreneur/route-estimation'
+import { RouteEstimationRequest } from '@/@types/entrepreneur/route-estimation'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { getVehicleData } from '@/store/slices/entrepreneur/vehicleListSlice'
-import { Input, Select } from 'antd'
-import { FC, useContext, useEffect, useState } from 'react'
+import { Input, Select, Spin } from 'antd'
+import { FC, useEffect, useState } from 'react'
 import { Control, Controller, FieldArray } from 'react-hook-form'
 import FormVehicle from './FormVehicle'
-import { VehicleIdContext } from '../../step/RouteEstimation'
+import DetailSection from './DetailSection'
 
 interface Props {
   formItem: FieldArray
   formIndex: number
-  control: Control<Root>
-  setVehicleId: (vehicleId: VehicleId) => void
+  control: Control<RouteEstimationRequest>
 }
 
+const vehicle_type = [
+  {
+    id: 1,
+    name: 'รถลากจูง + รถกึ่งพ่วง + สินค้า / เครื่องจักร',
+  },
+  {
+    id: 2,
+    name: 'รถลากจูง + รถกึ่งพ่วง',
+  },
+  {
+    id: 3,
+    name: 'รถลากจูง',
+  },
+]
+
+const vehicle_type_public = [
+  {
+    id: 2,
+    name: 'รถลากจูง + รถกึ่งพ่วง',
+  },
+  {
+    id: 3,
+    name: 'รถลากจูง',
+  },
+]
+
 const FormRouteEstimation: FC<Props> = (props: Props) => {
-  const { formIndex, control, setVehicleId } = props
+  const { formIndex, control } = props
   const dispatch = useAppDispatch()
-  const { vehicle_type } = useAppSelector((state) => state.master)
-  const { overview } = useAppSelector((state) => state.entrepreneur.vehicleList)
-  const [vehicleType, setVehicleType] = useState<number[]>([])
+  const { overview, loading } = useAppSelector(
+    (state) => state.entrepreneur.vehicleList,
+  )
+  const { signedIn } = useAppSelector((state) => state.auth.session)
+  const [vehicleType, setVehicleType] = useState<number | null>(null)
 
   useEffect(() => {
-    dispatch(
-      getVehicleData({
-        page: 1,
-        limit: 1000,
-      }),
-    )
-  }, [dispatch])
+    if (signedIn) {
+      dispatch(
+        getVehicleData({
+          page: 1,
+          limit: 1000,
+        }),
+      )
+    }
+  }, [dispatch, signedIn])
 
   return (
     <div key={formIndex}>
@@ -39,9 +68,8 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
               <label>เลือกประเภทจับคู่</label>
               <Select
                 id="vehicle_type"
-                mode="multiple"
                 placeholder="กรุณาเลือก"
-                options={vehicle_type}
+                options={signedIn ? vehicle_type : vehicle_type_public}
                 fieldNames={{
                   label: 'name',
                   value: 'id',
@@ -53,11 +81,6 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
                 }}
                 onChange={(value) => {
                   setVehicleType(value)
-                  setVehicleId({
-                    towing_vehicle_id: undefined,
-                    semi_trailer_vehicle_id: undefined,
-                    etc_vehicle_id: undefined,
-                  })
                 }}
               />
             </fieldset>
@@ -72,11 +95,16 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
                     <label>รัศมีวงเลี้ยว</label>
                     <Input
                       {...field}
+                      value={field.value as number}
                       placeholder="กรุณาระบุ"
                       className="w-full"
                       size="large"
                       style={{
                         fontFamily: 'Noto Sans Thai',
+                      }}
+                      onChange={(e) => {
+                        const newVal = Number(e.target.value)
+                        field.onChange(newVal)
                       }}
                     />
                   </fieldset>
@@ -92,9 +120,9 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
           formIndex={formIndex}
           control={control}
           vehicleList={overview}
-          setVehicleId={setVehicleId}
         />
       </section>
+      {loading ? <Spin /> : <DetailSection />}
     </div>
   )
 }

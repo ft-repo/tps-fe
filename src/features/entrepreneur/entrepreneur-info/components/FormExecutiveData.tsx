@@ -1,24 +1,25 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import { Button } from '@/components/ui'
 import React, { useCallback } from 'react'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
-import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
+import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form'
 import { FieldType } from '@/@types/entrepreneur/executive-data';
-import { DatePicker, Select, Input, Upload, message } from 'antd';
+import { DatePicker, Select, Input, Upload, message, Button } from 'antd';
 import { useAppSelector } from '@/store';
 import { postUploadProfileImageAPI } from '@/services/entrepreneur/UserService';
 
 interface Props {
   control: Control<FieldType>;
-  errors: FieldErrors<FieldType>;
   setValue: UseFormSetValue<FieldType>;
 }
 
 const FormExecutiveData: React.FC<Props> = (props) => {
-  const { control, errors, setValue } = props
+  const { control, setValue } = props
   const { entity_type, contact_type } = useAppSelector(state => state.master)
+  const disabled = window.location.href.includes('/user-info/entrepreneur/view/') ? true : false
+
+  const { errors } = useFormState({ control })
 
   const uploadFile = useCallback(async (file: any) => {
     try {
@@ -358,12 +359,12 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      variant="solid"
+                      disabled={disabled}
+                      htmlType='button'
+                      type='primary'
                       icon={<HiOutlineCloudUpload />}
-                      size='sm'
-                      type='button'
                     >
-                      เพิ่มไฟล์ .pdf
+                      เพิ่มไฟล์รูปภาพ
                     </Button>
                   }
                 </Upload>

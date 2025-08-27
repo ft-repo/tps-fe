@@ -1,20 +1,19 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { Button } from '@/components/ui';
-import { Col, Input, Row } from 'antd';
+import { Button, Col, Input, Row } from 'antd';
 import React, { useCallback } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
-
+  handleSearch: (value: string) => void;
 }
 
-interface FieldType {
+export interface FieldType {
   search: string;
 }
 
 const FormSearchPetition: React.FC<Props> = (props) => {
-  const { } = props
+  const { handleSearch } = props
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -25,13 +24,13 @@ const FormSearchPetition: React.FC<Props> = (props) => {
   const { handleSubmit, control } = form
 
   const onSubmit = useCallback((value: FieldType) => {
-    console.log(value)
-  }, [])
+    handleSearch(value.search)
+  }, [handleSearch])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Row gutter={[16, 16]} align={'middle'}>
-        <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+        <Col xs={24} sm={20} md={20} lg={20} xl={12} xxl={8}>
           <Controller
             name='search'
             control={control}
@@ -51,11 +50,12 @@ const FormSearchPetition: React.FC<Props> = (props) => {
             }}
           />
         </Col>
-        <Col xs={24} sm={24} md={24} lg={2} xl={2} xxl={2}>
+        <Col xs={24} sm={4} md={4} lg={4} xl={3} xxl={2}>
           <Button
             block
-            type='submit'
-            variant='solid'
+            htmlType='submit'
+            type='primary'
+            size='large'
           >
             ค้นหา
           </Button>

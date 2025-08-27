@@ -4,32 +4,62 @@ import { Select } from '@/components/ui/Select'
 import { Upload } from '@/components/ui/NewUpload'
 import { useAppSelector } from '@/store'
 import { useCallback } from 'react'
-import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form'
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFormSetError,
+  UseFormSetValue,
+  useWatch,
+} from 'react-hook-form'
 import { Notification, toast } from '@/components/ui'
 
 interface Props {
   control: Control<SignUpFieldType>
   setValue: UseFormSetValue<SignUpFieldType>
   errors: FieldErrors<SignUpFieldType>
+  setError: UseFormSetError<SignUpFieldType>
   setProvinceId: (provinceId: string) => void
   setDistrictId: (districtId: string) => void
 }
 
 function SignUpForm(props: Props) {
-  const { control, setValue, setProvinceId, setDistrictId, errors } = props
+  const { control, setValue, setProvinceId, setDistrictId, errors, setError } =
+    props
   const { province, district, sub_district, entity_type, contact_type } =
     useAppSelector((state) => state.master)
 
+  const password = useWatch({ control, name: 'password' })
+
   const handleUploadError = useCallback((error: string) => {
     toast.push(
-      <Notification
-        type="danger"
-        title="ผิดพลาด"
-      >
+      <Notification type="danger" title="ผิดพลาด">
         {error}
-      </Notification>, {
-      placement: 'top-center',
-    })
+      </Notification>,
+      {
+        placement: 'top-center',
+      },
+    )
+  }, [])
+
+  const idCardCheck = useCallback((idCardNumber: string) => {
+    let sum = 0
+    if (idCardNumber.length != 13) return false
+    // STEP 1 - get only first 12 digits
+    for (let i = 0; i < 12; i++) {
+      // STEP 2 - multiply each digit with each index (reverse)
+      // STEP 3 - sum multiply value together
+      sum += parseInt(idCardNumber.charAt(i)) * (13 - i)
+    }
+    // STEP 4 - mod sum with 11
+    const mod = sum % 11
+    // STEP 5 - subtract 11 with mod, then mod 10 to get unit
+    const check = (11 - mod) % 10
+    // STEP 6 - if check is match the digit 13th is correct
+    if (check == parseInt(idCardNumber.charAt(12))) {
+      return true
+    }
+    return false
   }, [])
 
   return (
@@ -58,9 +88,11 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
-                {!!errors.business_detail?.entity_type_id &&
-                  <p className='text-red-500'>{errors.business_detail.entity_type_id.message}</p>
-                }
+                {!!errors.business_detail?.entity_type_id && (
+                  <p className="text-red-500">
+                    {errors.business_detail.entity_type_id.message}
+                  </p>
+                )}
               </fieldset>
             )
           }}
@@ -68,7 +100,22 @@ function SignUpForm(props: Props) {
         <Controller
           name="business_detail.registration_no"
           control={control}
-          rules={{ required: 'กรุณาระบุ' }}
+          rules={{
+            required: 'กรุณาระบุ',
+            pattern: {
+              value: /^[0-9]\d*$/,
+              message: 'กรุณาระบุเลขทะเบียนนิติบุคคลให้ถูกต้อง',
+            },
+            validate: (value) =>
+              idCardCheck(value) || 'กรุณาระบุเลขทะเบียนนิติบุคคลให้ถูกต้อง',
+            onBlur: (e) => {
+              if (!idCardCheck(e.target.value)) {
+                setError('business_detail.registration_no', {
+                  message: 'กรุณาระบุเลขทะเบียนนิติบุคคลให้ถูกต้อง',
+                })
+              }
+            },
+          }}
           render={({ field }) => {
             return (
               <fieldset>
@@ -77,14 +124,17 @@ function SignUpForm(props: Props) {
                   {...field}
                   name={field.name}
                   placeholder="กรุณาระบุ"
+                  maxLength={13}
                   onChange={(e) => {
                     setValue('business_detail.registration_no', e.target.value)
                     field.onChange(e)
                   }}
                 />
-                {!!errors.business_detail?.registration_no &&
-                  <p className='text-red-500'>{errors.business_detail.registration_no.message}</p>
-                }
+                {!!errors.business_detail?.registration_no && (
+                  <p className="text-red-500">
+                    {errors.business_detail.registration_no.message}
+                  </p>
+                )}
               </fieldset>
             )
           }}
@@ -106,9 +156,11 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
-                {!!errors.business_detail?.business_name &&
-                  <p className='text-red-500'>{errors.business_detail.business_name.message}</p>
-                }
+                {!!errors.business_detail?.business_name && (
+                  <p className="text-red-500">
+                    {errors.business_detail.business_name.message}
+                  </p>
+                )}
               </fieldset>
             )
           }}
@@ -132,9 +184,11 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
-                {!!errors.business_address?.phone_number &&
-                  <p className='text-red-500'>{errors.business_address.phone_number.message}</p>
-                }
+                {!!errors.business_address?.phone_number && (
+                  <p className="text-red-500">
+                    {errors.business_address.phone_number.message}
+                  </p>
+                )}
               </fieldset>
             )
           }}
@@ -353,9 +407,11 @@ function SignUpForm(props: Props) {
                         field.onChange(e)
                       }}
                     />
-                    {!!errors.contact_info?.contact_name &&
-                      <p className='text-red-500'>{errors.contact_info.contact_name.message}</p>
-                    }
+                    {!!errors.contact_info?.contact_name && (
+                      <p className="text-red-500">
+                        {errors.contact_info.contact_name.message}
+                      </p>
+                    )}
                   </fieldset>
                 )
               }}
@@ -383,9 +439,11 @@ function SignUpForm(props: Props) {
                         field.onChange(e)
                       }}
                     />
-                    {!!errors.contact_info?.contact_name &&
-                      <p className='text-red-500'>{errors.contact_info.contact_name.message}</p>
-                    }
+                    {!!errors.contact_info?.contact_name && (
+                      <p className="text-red-500">
+                        {errors.contact_info.contact_name.message}
+                      </p>
+                    )}
                   </fieldset>
                 )
               }}
@@ -409,9 +467,11 @@ function SignUpForm(props: Props) {
                         field.onChange(e)
                       }}
                     />
-                    {!!errors.contact_info?.phone_number &&
-                      <p className='text-red-500'>{errors.contact_info.phone_number.message}</p>
-                    }
+                    {!!errors.contact_info?.phone_number && (
+                      <p className="text-red-500">
+                        {errors.contact_info.phone_number.message}
+                      </p>
+                    )}
                   </fieldset>
                 )
               }}
@@ -419,7 +479,22 @@ function SignUpForm(props: Props) {
             <Controller
               name="contact_info.cid"
               control={control}
-              rules={{ required: 'กรุณาระบุ' }}
+              rules={{
+                required: 'กรุณาระบุ',
+                pattern: {
+                  value: /^[0-9]\d*$/,
+                  message: 'กรุณาระบุเลขบัตรประชาชนให้ถูกต้อง',
+                },
+                validate: (value) =>
+                  idCardCheck(value) || 'กรุณาระบุเลขบัตรประชาชนให้ถูกต้อง',
+                onBlur: (e) => {
+                  if (!idCardCheck(e.target.value)) {
+                    setError('contact_info.cid', {
+                      message: 'กรุณาระบุเลขบัตรประชาชนให้ถูกต้อง',
+                    })
+                  }
+                },
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -435,9 +510,11 @@ function SignUpForm(props: Props) {
                         field.onChange(e)
                       }}
                     />
-                    {!!errors.contact_info?.cid &&
-                      <p className='text-red-500'>{errors.contact_info.cid.message}</p>
-                    }
+                    {!!errors.contact_info?.cid && (
+                      <p className="text-red-500">
+                        {errors.contact_info.cid.message}
+                      </p>
+                    )}
                   </fieldset>
                 )
               }}
@@ -456,6 +533,7 @@ function SignUpForm(props: Props) {
                 label="หนังสือรับรองนิติบุคคล"
                 accept=".pdf"
                 maxSize={10}
+                value={field.value}
                 error={fieldState.error?.message}
                 control={control}
                 fieldName="business_document.business_file_url"
@@ -489,11 +567,14 @@ function SignUpForm(props: Props) {
           <Controller
             name="business_document.certificate_file_url"
             control={control}
+            rules={{ required: 'รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจต้องมี' }}
             render={({ field, fieldState }) => (
               <Upload
                 name="business_document.certificate_file_url"
                 label="รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ"
                 accept=".pdf,.png,.jpeg,.jpg"
+                isImage={true}
+                value={field.value}
                 maxSize={10}
                 error={fieldState.error?.message}
                 control={control}
@@ -525,9 +606,9 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
-                {!!errors.password &&
-                  <p className='text-red-500'>{errors.password.message}</p>
-                }
+                {!!errors.password && (
+                  <p className="text-red-500">{errors.password.message}</p>
+                )}
               </fieldset>
             )
           }}
@@ -535,7 +616,17 @@ function SignUpForm(props: Props) {
         <Controller
           name="password_confirmation"
           control={control}
-          rules={{ required: 'กรุณาระบุ' }}
+          rules={{
+            required: 'กรุณาระบุ',
+            validate: (value) => value === password || 'รหัสผ่านไม่ตรงกัน',
+            onBlur: (e) => {
+              if (e.target.value !== password) {
+                setError('password_confirmation', {
+                  message: 'รหัสผ่านไม่ตรงกัน',
+                })
+              }
+            },
+          }}
           render={({ field }) => {
             return (
               <fieldset>
@@ -551,9 +642,11 @@ function SignUpForm(props: Props) {
                     field.onChange(e)
                   }}
                 />
-                {!!errors.password_confirmation &&
-                  <p className='text-red-500'>{errors.password_confirmation.message}</p>
-                }
+                {!!errors.password_confirmation && (
+                  <p className="text-red-500">
+                    {errors.password_confirmation.message}
+                  </p>
+                )}
               </fieldset>
             )
           }}

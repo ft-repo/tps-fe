@@ -1,18 +1,25 @@
-import { Root } from '@/@types/entrepreneur/route-estimation'
+import { RouteEstimationRequest } from '@/@types/entrepreneur/route-estimation'
 import { memo, useEffect, useRef } from 'react'
 import { Input, Space } from 'antd'
-import { Control, Controller } from 'react-hook-form'
+import { Control, Controller, useWatch } from 'react-hook-form'
 
 interface FormMapEstimationProps {
-  control: Control<Root>
-  setFirstPoint: (point: number[] | null) => void
-  setSecondPoint: (point: number[] | null) => void
+  className?: string
+  control: Control<RouteEstimationRequest>
+  setFirstPoint: (point: [number, number] | null) => void
+  setSecondPoint: (point: [number, number] | null) => void
 }
 
 function FormMapEstimation(props: FormMapEstimationProps) {
-  const { control, setFirstPoint, setSecondPoint } = props
+  const { control, setFirstPoint, setSecondPoint, className } = props
   const firstPointTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const secondPointTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Watch current coordinate values to compute the paired point reliably
+  const startLat = useWatch({ control, name: 'start_point.coordinates.0' })
+  const startLng = useWatch({ control, name: 'start_point.coordinates.1' })
+  const endLat = useWatch({ control, name: 'end_point.coordinates.0' })
+  const endLng = useWatch({ control, name: 'end_point.coordinates.1' })
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -27,7 +34,7 @@ function FormMapEstimation(props: FormMapEstimationProps) {
   }, [])
 
   return (
-    <div>
+    <div className={className}>
       <h5>เส้นทาง</h5>
       <section className="grid grid-cols-2 gap-4 mb-5">
         <fieldset>
@@ -42,14 +49,15 @@ function FormMapEstimation(props: FormMapEstimationProps) {
                     {...field}
                     placeholder="ละติจูด"
                     onChange={(e) => {
-                      field.onChange(e)
+                      const newVal = Number(e.target.value)
+                      field.onChange(newVal)
                       if (firstPointTimeoutRef.current) {
                         clearTimeout(firstPointTimeoutRef.current)
                       }
                       firstPointTimeoutRef.current = setTimeout(() => {
                         setFirstPoint([
-                          Number(e.target.value),
-                          field.value[1] as unknown as number,
+                          newVal,
+                          typeof startLng === 'number' ? startLng : Number(startLng) || 0,
                         ])
                       }, 1000)
                     }}
@@ -66,14 +74,15 @@ function FormMapEstimation(props: FormMapEstimationProps) {
                     {...field}
                     placeholder="ลองติจูด"
                     onChange={(e) => {
-                      field.onChange(e)
+                      const newVal = Number(e.target.value)
+                      field.onChange(newVal)
                       if (firstPointTimeoutRef.current) {
                         clearTimeout(firstPointTimeoutRef.current)
                       }
                       firstPointTimeoutRef.current = setTimeout(() => {
                         setFirstPoint([
-                          field.value[0] as unknown as number,
-                          Number(e.target.value),
+                          typeof startLat === 'number' ? startLat : Number(startLat) || 0,
+                          newVal,
                         ])
                       }, 1000)
                     }}
@@ -82,20 +91,6 @@ function FormMapEstimation(props: FormMapEstimationProps) {
               }}
             />
           </Space.Compact>
-          {/* <Input
-                  {...field}
-                  size="large"
-                  placeholder="กรุณากรอก"
-                  className="w-full"
-                  onChange={(e) => {
-                    if (firstPointTimeoutRef.current) {
-                      clearTimeout(firstPointTimeoutRef.current)
-                    }
-                    firstPointTimeoutRef.current = setTimeout(() => {
-                      setFirstPoint(e.target.value)
-                    }, 1000)
-                  }}
-                /> */}
         </fieldset>
 
         <fieldset>
@@ -110,14 +105,15 @@ function FormMapEstimation(props: FormMapEstimationProps) {
                     {...field}
                     placeholder="ละติจูด"
                     onChange={(e) => {
-                      field.onChange(e)
+                      const newVal = Number(e.target.value)
+                      field.onChange(newVal)
                       if (secondPointTimeoutRef.current) {
                         clearTimeout(secondPointTimeoutRef.current)
                       }
                       secondPointTimeoutRef.current = setTimeout(() => {
                         setSecondPoint([
-                          Number(e.target.value),
-                          field.value[1] as unknown as number,
+                          newVal,
+                          typeof endLng === 'number' ? endLng : Number(endLng) || 0,
                         ])
                       }, 1000)
                     }}
@@ -134,14 +130,15 @@ function FormMapEstimation(props: FormMapEstimationProps) {
                     {...field}
                     placeholder="ลองติจูด"
                     onChange={(e) => {
-                      field.onChange(e)
+                      const newVal = Number(e.target.value)
+                      field.onChange(newVal)
                       if (secondPointTimeoutRef.current) {
                         clearTimeout(secondPointTimeoutRef.current)
                       }
                       secondPointTimeoutRef.current = setTimeout(() => {
                         setSecondPoint([
-                          field.value[0] as unknown as number,
-                          Number(e.target.value),
+                          typeof endLat === 'number' ? endLat : Number(endLat) || 0,
+                          newVal,
                         ])
                       }, 1000)
                     }}

@@ -1,10 +1,12 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
-import { Button } from 'antd';
+import React, { useEffect } from 'react'
+import { Button, Spin } from 'antd';
 import { ContentSection } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { getPetitionDocument, getPetitionEstimateRoute, getPetitionStatus, getPetitionVehicle } from '@/store/slices/staff';
 
 interface Props {
 
@@ -12,10 +14,22 @@ interface Props {
 
 const OtherScreen: React.FC<Props> = (props) => {
   const { } = props
+  const [params] = useSearchParams()
+  const petitionId = params.get('petition_id')
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const defaultLoading = useAppSelector(state => state.layout.loading)
+  const { loading } = useAppSelector(state => state.staff.petition)
+
+  useEffect(() => {
+    dispatch(getPetitionDocument({ petition_id: String(petitionId) }))
+    dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
+    dispatch(getPetitionVehicle({ petition_id: String(petitionId) }))
+    dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
+  }, [dispatch, petitionId])
 
   return (
-    <>
+    <Spin spinning={loading || defaultLoading}>
       <section>
         <Button
           type='text'
@@ -28,7 +42,7 @@ const OtherScreen: React.FC<Props> = (props) => {
       <section className='mt-5'>
         <ContentSection />
       </section>
-    </>
+    </Spin>
   )
 }
 

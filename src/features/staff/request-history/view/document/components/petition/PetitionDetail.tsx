@@ -31,12 +31,12 @@ const PetitionDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'ชื่อบริษัท / ห้าง / ร้าน',
-      children: <p>{detail.user_created.business_details.business_name || '-'}</p>,
+      children: <p>{detail?.user_created?.business_details?.business_name || '-'}</p>,
     },
     {
       key: '2',
       label: 'ประเภทนิติบุคคล',
-      children: <p>{detail.user_created.business_details.entity_type_id || '-'}</p>,
+      children: <p>{detail?.user_created?.business_details?.entity_type_id || '-'}</p>,
     },
     {
       key: '3',
@@ -44,13 +44,13 @@ const PetitionDetail: React.FC<Props> = (props) => {
       children: (
         <p>
           {renderAddress(
-            detail.user_created.business_address.house_number,
-            detail.user_created.business_address.road,
-            detail.user_created.business_address.lane,
-            detail.user_created.business_address.province.name_th,
-            detail.user_created.business_address.district.name_th,
-            detail.user_created.business_address.sub_district.name_th,
-            detail.user_created.business_address.zip_codes,
+            detail?.user_created?.business_address?.house_number,
+            detail?.user_created?.business_address?.road,
+            detail?.user_created?.business_address?.lane,
+            detail?.user_created?.business_address?.province?.name_th,
+            detail?.user_created?.business_address?.district?.name_th,
+            detail?.user_created?.business_address?.sub_district?.name_th,
+            detail?.user_created?.business_address?.zip_codes,
           )}
         </p>
       ),
@@ -58,17 +58,17 @@ const PetitionDetail: React.FC<Props> = (props) => {
     {
       key: '4',
       label: 'วันที่จดทะเบียน',
-      children: <p>{dayjs(detail.user_created.created_at).format('DD MMMM YYYY') || '-'}</p>,
+      children: <p>{detail?.user_created?.created_at ? dayjs(detail?.user_created?.created_at).format('DD MMMM YYYY') : '-'}</p>,
     },
     {
       key: '5',
       label: 'เลขทะเบียนนิติบุคคล',
-      children: <p>{detail.user_created.registration_no || '-'}</p>,
+      children: <p>{detail?.user_created?.registration_no || '-'}</p>,
     },
     {
       key: '6',
       label: 'เบอร์โทรสำนักงาน',
-      children: <p>{detail.user_created.business_address.phone_number || '-'}</p>,
+      children: <p>{detail?.user_created?.business_address?.phone_number || '-'}</p>,
     },
     {
       key: '7',
@@ -81,13 +81,13 @@ const PetitionDetail: React.FC<Props> = (props) => {
       children: (
         <p>
           {renderAddress(
-            detail.address.contact_house_number,
-            detail.address.contact_road,
-            detail.address.contact_lane,
-            detail.address.contact_province.name_th,
-            detail.address.contact_district.name_th,
-            detail.address.contact_sub_district.name_th,
-            detail.address.contact_zip_code,
+            detail?.address?.contact_house_number,
+            detail?.address?.contact_road,
+            detail?.address?.contact_lane,
+            detail?.address?.contact_province?.name_th,
+            detail?.address?.contact_district?.name_th,
+            detail?.address?.contact_sub_district?.name_th,
+            detail?.address?.contact_zip_code,
           )}
         </p>
       ),
@@ -95,7 +95,7 @@ const PetitionDetail: React.FC<Props> = (props) => {
     {
       key: '9',
       label: 'ผู้ได้รับมอบอำนาจ',
-      children: <p>{detail.poa_name || '-'}</p>,
+      children: <p>{detail?.poa_name || '-'}</p>,
     },
     {
       key: '10',
@@ -103,13 +103,13 @@ const PetitionDetail: React.FC<Props> = (props) => {
       children: (
         <p>
           {renderAddress(
-            detail.address.poa_house_number,
-            detail.address.poa_road,
-            detail.address.poa_lane,
-            detail.address.poa_province.name_th,
-            detail.address.poa_district.name_th,
-            detail.address.poa_sub_district.name_th,
-            detail.address.poa_zip_code,
+            detail?.address?.poa_house_number,
+            detail?.address?.poa_road,
+            detail?.address?.poa_lane,
+            detail?.address?.poa_province?.name_th,
+            detail?.address?.poa_district?.name_th,
+            detail?.address?.poa_sub_district?.name_th,
+            detail?.address?.poa_zip_code,
           )}
         </p>
       ),
@@ -126,6 +126,8 @@ const PetitionDetail: React.FC<Props> = (props) => {
       title="ข้อมูลผู้ประสงค์ขออนุญาต"
       items={items}
       column={1}
+      layout='vertical'
+      size='small'
     />
   )
 }
