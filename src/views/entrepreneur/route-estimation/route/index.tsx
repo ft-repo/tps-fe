@@ -4,7 +4,7 @@
 import React, { useEffect } from 'react'
 import RouteEstimationScreen from '@/features/entrepreneur/route-estimation/route/screen'
 import { RouteProvider } from '@/features/entrepreneur/route-estimation/route/context'
-import { getVehicleSelection, getVehicleType, useAppDispatch } from '@/store'
+import { getProvince, getVehicleSelection, getVehicleType, useAppDispatch } from '@/store'
 import { ConfigProvider } from 'antd'
 
 interface Props { }
@@ -23,6 +23,7 @@ const RouteIndex: React.FC<Props> = (props) => {
         vehicle_type_id: ''
       }
     ))
+    dispatch(getProvince())
   }, [dispatch])
 
   return (

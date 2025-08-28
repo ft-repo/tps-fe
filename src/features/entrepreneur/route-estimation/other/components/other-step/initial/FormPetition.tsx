@@ -316,7 +316,7 @@ const FormPetition: React.FC<Props> = (props) => {
               name='company_province'
               control={control}
               rules={{
-                required: 'กรุณาระบุจังหวัด'
+                required: 'กรุณาเลือกจังหวัด'
               }}
               render={({ field }) => {
                 return (

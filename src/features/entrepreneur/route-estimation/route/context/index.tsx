@@ -1,6 +1,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
+import { FieldTypeArr } from '@/@types/entrepreneur/route-estimation';
 import { PetitionEstimateRequest, PetitionEstimateResponse } from '@/@types/services/petition';
 import { createContext, useContext, useState } from 'react'
 
@@ -11,13 +12,10 @@ export interface ContextProps {
   setDataParser: (dataParser: DataParser) => void;
 }
 
-export interface DataParser extends MatchType {
+export interface DataParser {
   req_data: PetitionEstimateRequest;
   res_data: PetitionEstimateResponse;
-}
-
-export interface MatchType {
-  match_type: number;
+  raw_body: FieldTypeArr;
 }
 
 export const PageContext = createContext<ContextProps | null>(null)
@@ -45,7 +43,9 @@ export const RouteProvider = (props: any) => {
       estimate: [],
       set_id: ''
     },
-    match_type: 0
+    raw_body: {
+      route_form: []
+    }
   })
 
   return (

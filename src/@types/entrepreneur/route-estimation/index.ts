@@ -182,6 +182,7 @@ export interface EstimateResponse {
 }
 
 export interface VehicleResponse {
+  id: number
   vehicle_type: string
   plate_no: string
   plate_province: string

@@ -23,13 +23,14 @@ const CreateScreen: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   const loading = useAppSelector(state => state.layout.loading)
   const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
+  const { province } = useAppSelector(state => state.master)
 
   const form = useForm<FieldType>({
     defaultValues: {
       vehicle_type: null,
       license_plate: '',
       vehicle_model: '',
-      province: '',
+      province: null,
       vehicle_weight: 0,
       vehicle_color: '',
       vehicle_distance: 0,
@@ -84,7 +85,7 @@ const CreateScreen: React.FC<Props> = (props) => {
       vehicle_detail: {
         vehicle_type_id: value.vehicle_type || '',
         plate_no: value.license_plate || '',
-        plate_province: value.province || '',
+        plate_province: province.find(item => item.id === value.province)?.name_th || '',
         brand: value.vehicle_model || '',
         weight: Number(value.vehicle_weight) || 0,
         color: value.vehicle_color || '',
@@ -155,7 +156,7 @@ const CreateScreen: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [navigate, dispatch, vehicle.overview.search])
+  }, [navigate, dispatch, vehicle.overview.search, province])
 
   return (
     <div>

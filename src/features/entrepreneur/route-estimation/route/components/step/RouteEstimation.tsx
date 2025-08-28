@@ -21,37 +21,38 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
   const navigate = useNavigate()
-  const { setStep, setDataParser } = useRouteContext()
+  const { dataParser, setStep, setDataParser } = useRouteContext()
 
   const form = useForm<FieldTypeArr>({
     defaultValues: {
-      route_form: [
-        {
-          match_type: null,
-          turn_radius: 0,
-          towering_vehicle: null,
-          semi_trailer_vehicle: null,
-          etc_vehicle: null,
-          towering_weight1: 0,
-          towering_weight2: 0,
-          towering_weight3: 0,
-          towering_weight4: 0,
-          towering_weight5: 0,
-          towering_weight6: 0,
-          towering_weight7: 0,
-          semi_weight1: 0,
-          semi_weight2: 0,
-          semi_weight3: 0,
-          semi_weight4: 0,
-          semi_weight5: 0,
-          semi_weight6: 0,
-          semi_weight7: 0,
-          start_latitude: 0,
-          start_longitude: 0,
-          end_latitude: 0,
-          end_longitude: 0,
-        }
-      ]
+      route_form: dataParser.raw_body.route_form.length ? dataParser.raw_body.route_form :
+        [
+          {
+            match_type: null,
+            turn_radius: 0,
+            towering_vehicle: null,
+            semi_trailer_vehicle: null,
+            etc_vehicle: null,
+            towering_weight1: 0,
+            towering_weight2: 0,
+            towering_weight3: 0,
+            towering_weight4: 0,
+            towering_weight5: 0,
+            towering_weight6: 0,
+            towering_weight7: 0,
+            semi_weight1: 0,
+            semi_weight2: 0,
+            semi_weight3: 0,
+            semi_weight4: 0,
+            semi_weight5: 0,
+            semi_weight6: 0,
+            semi_weight7: 0,
+            start_latitude: 0,
+            start_longitude: 0,
+            end_latitude: 0,
+            end_longitude: 0,
+          }
+        ]
     }
   })
 
@@ -121,7 +122,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
             setDataParser({
               req_data: body,
               res_data: response.data,
-              match_type: 1
+              raw_body: value
             })
             setStep(2)
           },
@@ -157,7 +158,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch])
+  }, [dispatch, setDataParser, setStep])
 
   return (
     <main>
