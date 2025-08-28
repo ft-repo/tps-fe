@@ -14,3 +14,5 @@ export { default as FormPermitDocument } from './route-estimate/petition/FormPer
 
 // NEW
 export { default as ContentTab } from './route-estimate/initial/ContentTab'
+export { default as FormSearchRoute } from './route-estimate/result/FormSearchRoute'
+export { default as TableRoute } from './route-estimate/result/TableRoute'

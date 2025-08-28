@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable import/no-unresolved */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useMemo, useState } from 'react'
+import { useAppSelector } from '@/store'
+import { Button } from 'antd'
+import React from 'react'
 import { useRouteContext } from '../../context'
-import { Button, Tabs } from '@/components/ui'
-import { DetailResult, TableResult } from '..'
-
-const { TabNav, TabList, TabContent } = Tabs
+import ContentTab from '../route-estimate/result/ContentTab'
 
 interface Props {
 
@@ -15,87 +12,40 @@ interface Props {
 
 const EstimateResult: React.FC<Props> = (props) => {
   const { } = props
-  const { dataParser, setStep } = useRouteContext()
-  const [tabKey, setTabKey] = useState<string>('tab0')
-
-  const renderTabList = useMemo(() => {
-    if (!dataParser.vehicle.length) return
-
-    const tabArr = dataParser.vehicle.map((item, index) => {
-      return (
-        <TabNav key={index} value={`tab` + index}>
-          รถคู่ที่ {index + 1}
-        </TabNav>
-      )
-    })
-    return tabArr
-  }, [dataParser])
-
-  const renderTabContent = useMemo(() => {
-    if (!dataParser.vehicle.length) return
-
-    const contentArr = dataParser.vehicle.map((item, index) => {
-      return (
-        <TabContent key={index} value={`tab` + index}>
-          <section>
-            <DetailResult
-              data={item}
-              start_point={dataParser.start_point}
-              end_point={dataParser.end_point}
-            />
-          </section>
-          <hr className='my-5' />
-          <section>
-            <TableResult
-              data={item}
-            />
-          </section>
-        </TabContent>
-      )
-    })
-
-    return contentArr
-  }, [dataParser])
+  const { loading } = useAppSelector(state => state.layout)
+  const { setStep } = useRouteContext()
 
   return (
-    <div>
-      <section className='flex items-center justify-between gap-3 flex-wrap'>
-        <h3>รายการประเมินเส้นทาง</h3>
-        <div className='flex items-center flex-wrap gap-3'>
+    <main>
+      <section className='flex justify-between items-center flex-wrap gap-5 mb-5'>
+        <h3>ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)</h3>
+        <div className='flex items-center gap-3'>
           <Button
-            variant='default'
-            size='sm'
+            disabled={loading}
+            htmlType='button'
+            type='default'
+            // size='large'
+            className='w-full lg:w-auto'
             onClick={() => setStep((prev: number) => prev - 1)}
           >
             ย้อนกลับ
           </Button>
           <Button
-            type='button'
-            variant='solid'
-            size='sm'
-            className='bg-yellow-500 hover:bg-yellow-300 transition duration-300'
-            onClick={() => setStep(3)}
+            loading={loading}
+            htmlType='submit'
+            type='primary'
+            // size='large'
+            className='w-full lg:w-auto'
+            onClick={() => setStep((prev: number) => prev + 1)}
           >
-            ขออนุญาต
+            ขอใบนุญาต
           </Button>
         </div>
-
       </section>
       <section className='mt-5'>
-        <Tabs
-          value={tabKey}
-          variant='pill'
-          onChange={(tabKey) => setTabKey(tabKey)}
-        >
-          <TabList>
-            {renderTabList}
-          </TabList>
-          <div className="p-4">
-            {renderTabContent}
-          </div>
-        </Tabs>
+        <ContentTab />
       </section>
-    </div>
+    </main>
   )
 }
 

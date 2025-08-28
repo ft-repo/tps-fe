@@ -2,7 +2,7 @@
 import { FieldTypeArr, FieldTypeForRoute } from '@/@types/entrepreneur/route-estimation';
 import { useAppSelector } from '@/store';
 import { Card, Col, Image, Input, Row, Select } from 'antd';
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
 import { VehicleDetail } from '@/services/master/MasterService';
 
@@ -71,27 +71,6 @@ const FormVehicle: React.FC<Props> = (props) => {
 
   const { errors } = useFormState({ control })
 
-  const columns = useMemo(() => {
-    if (match_type === 1 || match_type === 3) {
-      return {
-        xs: 24,
-        sm: 24,
-        md: 24,
-        lg: 16,
-        xl: 16,
-        xxl: 16
-      }
-    }
-    return {
-      xs: 24,
-      sm: 24,
-      md: 24,
-      lg: 24,
-      xl: 24,
-      xxl: 24
-    }
-  }, [match_type])
-
   const selectTowing = vehicle_selection.data.find(item => item.vehicle_detail.id === towering_vehicle) || null
   const selectSemi = vehicle_selection.data.find(item => item.vehicle_detail.id === semi_trailer_vehicle) || null
   const selectETC = vehicle_selection.data.find(item => item.vehicle_detail.id === etc_vehicle) || null
@@ -101,7 +80,7 @@ const FormVehicle: React.FC<Props> = (props) => {
       <section>
         <h5>ข้อมูลยานพาหนะ</h5>
         <Row gutter={[16, 16]}>
-          <Col {...columns}>
+          <Col xs={24} sm={24} md={24} lg={16} xl={16} xxl={16}>
             <Controller
               name={`route_form.${formIndex}.match_type`}
               control={control}
@@ -155,41 +134,39 @@ const FormVehicle: React.FC<Props> = (props) => {
               }}
             />
           </Col>
-          {(match_type === 1 || match_type === 3) ?
-            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
-              <Controller
-                name={`route_form.${formIndex}.turn_radius`}
-                control={control}
-                rules={{
-                  required: 'กรุณาระบุรัศมีวงเลี้ยว (เมตร)'
-                }}
-                render={({ field }) => {
-                  return (
-                    <fieldset>
-                      <label>รัศมีวงเลี้ยว (เมตร)</label>
-                      <Input
-                        {...field}
-                        name={field.name}
-                        placeholder='กรุณาระบุ'
-                        className='w-full'
-                        size='large'
-                        style={{
-                          fontFamily: 'Noto Sans Thai'
-                        }}
-                        suffix='เมตร'
-                        onChange={(e) => {
-                          field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                        }}
-                      />
-                      {!!errors.route_form?.[formIndex]?.turn_radius &&
-                        <p className='text-red-500'>{errors.route_form[formIndex].turn_radius.message}</p>
-                      }
-                    </fieldset>
-                  )
-                }}
-              />
-            </Col>
-            : null}
+          <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Controller
+              name={`route_form.${formIndex}.turn_radius`}
+              control={control}
+              rules={{
+                required: 'กรุณาระบุรัศมีวงเลี้ยว (เมตร)'
+              }}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <label>รัศมีวงเลี้ยว (เมตร)</label>
+                    <Input
+                      {...field}
+                      name={field.name}
+                      placeholder='กรุณาระบุ'
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
+                      }}
+                      suffix='เมตร'
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                      }}
+                    />
+                    {!!errors.route_form?.[formIndex]?.turn_radius &&
+                      <p className='text-red-500'>{errors.route_form[formIndex].turn_radius.message}</p>
+                    }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
           {(match_type === 1 || match_type === 2) ?
             <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
               <Controller
@@ -208,7 +185,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                         allowClear
                         showSearch
                         placeholder='กรุณาเลือก'
-                        options={vehicle_selection.data.map(item => {
+                        options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'รถลากจูง').map(item => {
                           return item.vehicle_detail
                         })}
                         fieldNames={{
@@ -263,7 +240,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                         allowClear
                         showSearch
                         placeholder='กรุณาเลือก'
-                        options={vehicle_selection.data.map(item => {
+                        options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'รถกึ่งพ่วง').map(item => {
                           return item.vehicle_detail
                         })} fieldNames={{
                           label: 'plate_no',
@@ -316,7 +293,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                         allowClear
                         showSearch
                         placeholder='กรุณาเลือก'
-                        options={vehicle_selection.data.map(item => {
+                        options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'เครื่องจักร / สินค้า').map(item => {
                           return item.vehicle_detail
                         })} fieldNames={{
                           label: 'plate_no',

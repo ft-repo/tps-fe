@@ -31,13 +31,14 @@ const Content = (props: ContentProps) => {
   const { id, data, submitRef, fileList, setOpen } = props
   const dispatch = useAppDispatch()
   const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
+  const { province } = useAppSelector(state => state.master)
 
   const form = useForm<FieldType>({
     defaultValues: {
       vehicle_type: data.vehicle_detail.vehicle_type_id || null,
       license_plate: data.vehicle_detail.plate_no || '',
       vehicle_model: data.vehicle_detail.brand || '',
-      province: data.vehicle_detail.plate_province || '',
+      province: province.find(item => item.name_th === data.vehicle_detail.plate_province)?.id || null,
       vehicle_weight: data.vehicle_detail.weight || 0,
       vehicle_distance: data.vehicle_detail.kingpin_distance || 0,
       vehicle_color: data.vehicle_detail.color || '',
@@ -91,7 +92,7 @@ const Content = (props: ContentProps) => {
       vehicle_detail: {
         vehicle_type_id: value.vehicle_type || '',
         plate_no: value.license_plate || '',
-        plate_province: value.province || '',
+        plate_province: province.find(item => item.id === value.province)?.name_th || '',
         brand: value.vehicle_model || '',
         weight: Number(value.vehicle_weight) || 0,
         color: value.vehicle_color || '',
@@ -163,7 +164,7 @@ const Content = (props: ContentProps) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch, vehicle.overview.search, id, setOpen])
+  }, [dispatch, vehicle.overview.search, id, setOpen, province])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
