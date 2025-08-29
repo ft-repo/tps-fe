@@ -228,7 +228,6 @@ const FormVehicle: React.FC<Props> = (props) => {
             : null}
         </Row>
       </section>
-      {JSON.stringify(toweringVehicleWheel)}
       {toweringVehicleWheel !== 0 ?
         <section className='mt-3'>
           <h5>น้ำหนักลงเพลา รถลากจูง (กิโลกรัม)</h5>
@@ -467,7 +466,6 @@ const FormVehicle: React.FC<Props> = (props) => {
           </Row>
         </section>
         : null}
-      {JSON.stringify(semiVehicleWheel)}
       {semiVehicleWheel !== 0 ?
         <section className='mt-3'>
           <h5>น้ำหนักลงเพลา รถกึ่งพ่วง (กิโลกรัม)</h5>

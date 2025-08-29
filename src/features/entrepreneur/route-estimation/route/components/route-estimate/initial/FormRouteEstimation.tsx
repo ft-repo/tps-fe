@@ -115,12 +115,12 @@ const FormRouteEstimation: FC<Props> = (props: Props) => {
         </div>
       </section>
       <section className="mt-5">
-        <FormVehicle
+        {/* <FormVehicle
           vehicleType={vehicleType}
           formIndex={formIndex}
           control={control}
           vehicleList={overview}
-        />
+        /> */}
       </section>
       {loading ? <Spin /> : <DetailSection />}
     </div>

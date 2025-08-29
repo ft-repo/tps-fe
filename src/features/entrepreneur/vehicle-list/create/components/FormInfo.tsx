@@ -16,7 +16,7 @@ interface Props {
 
 const FormInfo: React.FC<Props> = (props) => {
   const { control, setValue } = props
-  const { vehicle_type } = useAppSelector(state => state.master)
+  const { vehicle_type, province } = useAppSelector(state => state.master)
   const { errors } = useFormState({ control })
 
   const uploadFile = useCallback(async (file: any) => {
@@ -141,16 +141,25 @@ const FormInfo: React.FC<Props> = (props) => {
               name='province'
               control={control}
               rules={{
-                required: 'กรุณาระบุจังหวัด'
+                required: 'กรุณาเลือกจังหวัด'
               }}
               render={({ field }) => {
                 return (
                   <fieldset>
                     <label>จังหวัด</label>
-                    <Input
+                    <Select
                       {...field}
-                      name={field.name}
-                      placeholder='กรุณาระบุ'
+                      allowClear
+                      showSearch
+                      placeholder='กรุณาเลือก'
+                      options={province}
+                      fieldNames={{
+                        label: 'name_th',
+                        value: 'id'
+                      }}
+                      filterOption={(input, option) => {
+                        return option ? option.name_th.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                      }}
                       className='w-full'
                       size='large'
                       style={{

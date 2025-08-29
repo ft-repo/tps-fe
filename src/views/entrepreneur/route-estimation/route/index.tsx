@@ -4,7 +4,7 @@
 import React, { useEffect } from 'react'
 import RouteEstimationScreen from '@/features/entrepreneur/route-estimation/route/screen'
 import { RouteProvider } from '@/features/entrepreneur/route-estimation/route/context'
-import { getVehicleType, useAppDispatch } from '@/store'
+import { getProvince, getVehicleSelection, getVehicleType, useAppDispatch } from '@/store'
 import { ConfigProvider } from 'antd'
 
 interface Props { }
@@ -15,6 +15,15 @@ const RouteIndex: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(getVehicleType())
+    dispatch(getVehicleSelection(
+      {
+        page: 1,
+        limit: 100,
+        search: '',
+        vehicle_type_id: ''
+      }
+    ))
+    dispatch(getProvince())
   }, [dispatch])
 
   return (

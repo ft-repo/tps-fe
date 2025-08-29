@@ -170,3 +170,86 @@ export interface PetitionExtendedAuditDocument {
   operation_plan_url: string;
   contact_info_url: string;
 }
+
+// PETITION
+export interface PetitionEstimateRequest {
+  vehicle: VehicleRequestArr[];
+  start_point: StartPoint;
+  end_point: EndPoint;
+  vehicle_route: VehicleRoute;
+}
+
+export interface VehicleRequestArr {
+  turn_radius: number;
+  towing_vehicle_id: number;
+  semi_trailer_vehicle_id: number;
+  etc_vehicle_id: any;
+  towing_axis_weight: number[];
+  semi_trailer_axis_weight: number[];
+}
+
+export interface StartPoint {
+  type: string;
+  coordinates: number[];
+}
+
+export interface EndPoint {
+  type: string;
+  coordinates: number[];
+}
+
+export interface VehicleRoute {
+  type: string;
+  coordinates: number[][];
+}
+
+
+export interface PetitionEstimateResponse {
+  estimate: EstimateResponse[];
+  set_id: string;
+}
+
+export interface EstimateResponse {
+  estimate_id: string
+  vehicle: Vehicle[]
+}
+
+export interface Vehicle {
+  id: number;
+  vehicle_type: string
+  plate_no: string
+  plate_province: string
+}
+
+// REQUEST
+export interface PetitionConfirmRequest {
+  set_id: string;
+  start_date: string;
+  end_date: string;
+  contact_name: string;
+  phone_number: string;
+  project_name: string;
+  start_point: string;
+  end_point: string;
+  start_province: string;
+  end_Povince: string;
+  poa_url: string;
+  mach_book_url: string;
+  vehicle: VehicleArray[];
+}
+export interface VehicleArray {
+  estimate_id: string;
+  truck_dimension_url: string;
+  semi_trailer_dimension_url: string;
+  combined_vehicle_url: string;
+  turning_radius_url: string;
+  cargo_dimension_url: string;
+  highway_dept_permit_url: string;
+  highway_dept_permit_number_url: string;
+  rural_highway_dept_permit_url: string;
+  rural_highway_dept_permit_number_url: string;
+}
+
+export interface PetitionConfirmResponse {
+  message: string;
+}

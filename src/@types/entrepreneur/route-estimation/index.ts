@@ -182,6 +182,7 @@ export interface EstimateResponse {
 }
 
 export interface VehicleResponse {
+  id: number
   vehicle_type: string
   plate_no: string
   plate_province: string
@@ -249,4 +250,36 @@ export type RouteBridgeResponse = {
   page: number
   limit: number
   total_pages: number
+}
+
+
+// NORMAL
+export interface FieldTypeArr {
+  start_latitude: number;
+  start_longitude: number;
+  end_latitude: number;
+  end_longitude: number;
+  route_form: FieldTypeForRoute[];
+}
+
+export interface FieldTypeForRoute {
+  match_type: number | null;
+  turn_radius: number;
+  towering_vehicle: number | null;
+  semi_trailer_vehicle: number | null;
+  etc_vehicle: number | null;
+  towering_weight1: number;
+  towering_weight2: number;
+  towering_weight3: number;
+  towering_weight4: number;
+  towering_weight5: number;
+  towering_weight6: number;
+  towering_weight7: number;
+  semi_weight1: number;
+  semi_weight2: number;
+  semi_weight3: number;
+  semi_weight4: number;
+  semi_weight5: number;
+  semi_weight6: number;
+  semi_weight7: number;
 }

@@ -2,6 +2,7 @@
 export interface PetitionState {
   petition: Petition;
   petition_extended: PetitionExtended;
+  estimate: RouteEstimate;
   loading: boolean;
 }
 
@@ -629,4 +630,52 @@ export interface BusinessAddress {
   province: PoaProvince;
   district: PoaDistrict;
   sub_district: PoaSubDistrict;
+}
+
+// ROUTE ESTIMATE
+export interface RouteEstimate {
+  detail: ClientEstimateDetail;
+  summary: EstimateSummaryDetail;
+  bridge: EstimateBridgeDetail;
+  turn_radius: EstimateTurnRadiusDetail;
+}
+
+export interface ClientEstimateDetail {
+  towing_vehicle: ClientTowingVehicle
+  semi_trailer_vehicle: ClientSemiTrailerVehicle
+  etc_vehicle: ClientETCVehicle
+  towing_axis_weight: number[]
+  semi_trailer_axis_weight: number[]
+  start_point: number[]
+  end_point: number[]
+  vehicle_route: number[][]
+  estimate_rural_roads: any
+  start_road: string
+  end_road: string
+  start_road_code: string
+  end_road_code: string
+}
+
+export interface ClientTowingVehicle {
+  vehicle_type: string
+  vehicle_weight: number
+  vehicle_plate: string
+  vehicle_province: string
+  vehicle_picture: string
+}
+
+export interface ClientSemiTrailerVehicle {
+  vehicle_type: string
+  vehicle_weight: number
+  vehicle_plate: string
+  vehicle_province: string
+  vehicle_picture: string
+}
+
+export interface ClientETCVehicle {
+  vehicle_type: string
+  vehicle_weight: number
+  vehicle_plate: string
+  vehicle_province: string
+  vehicle_picture: string
 }

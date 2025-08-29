@@ -11,3 +11,8 @@ export { default as TableResult } from './route-estimate/result/TableResult'
 // PERMIT ROUTE
 export { default as FormPermitRoute } from './route-estimate/petition/FormPermitRoute'
 export { default as FormPermitDocument } from './route-estimate/petition/FormPermitDocument'
+
+// NEW
+export { default as ContentTab } from './route-estimate/initial/ContentTab'
+export { default as FormSearchRoute } from './route-estimate/result/FormSearchRoute'
+export { default as TableRoute } from './route-estimate/result/TableRoute'

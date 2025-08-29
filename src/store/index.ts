@@ -9,4 +9,5 @@ export * from './rootReducer'
 export * from './hook'
 export * from './slices/master/masterSlice'
 export * from './slices/layout/LayoutSlice'
+export * from './slices/route/routeDirectionSlice'
 export default store
