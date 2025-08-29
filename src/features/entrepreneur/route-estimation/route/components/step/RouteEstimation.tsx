@@ -2,14 +2,15 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldTypeArr } from '@/@types/entrepreneur/route-estimation'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
-import { Button, Modal } from 'antd'
+import { Button, Col, Input, Modal, Row } from 'antd'
 import React, { useCallback, useRef } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { ContentTab } from '../../components'
 import { PetitionEstimateRequest } from '@/@types/services/petition'
 import { postPetitionEstimateAPI } from '@/services/entrepreneur/PetitionService'
 import { useRouteContext } from '../../context'
+import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
 
 interface Props {
 
@@ -23,8 +24,14 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const navigate = useNavigate()
   const { dataParser, setStep, setDataParser } = useRouteContext()
 
+  console.log(dataParser.raw_body.route_form)
+
   const form = useForm<FieldTypeArr>({
     defaultValues: {
+      start_latitude: dataParser.raw_body.start_latitude || 0,
+      start_longitude: dataParser.raw_body.start_longitude || 0,
+      end_latitude: dataParser.raw_body.end_latitude || 0,
+      end_longitude: dataParser.raw_body.end_longitude || 0,
       route_form: dataParser.raw_body.route_form.length ? dataParser.raw_body.route_form :
         [
           {
@@ -47,16 +54,17 @@ const RouteEstimation: React.FC<Props> = (props) => {
             semi_weight5: 0,
             semi_weight6: 0,
             semi_weight7: 0,
-            start_latitude: 0,
-            start_longitude: 0,
-            end_latitude: 0,
-            end_longitude: 0,
           }
         ]
     }
   })
 
-  const { handleSubmit, control, setValue } = form
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors }
+  } = form
 
   const onSubmit = useCallback(async (value: FieldTypeArr) => {
     const body: PetitionEstimateRequest = {
@@ -88,26 +96,18 @@ const RouteEstimation: React.FC<Props> = (props) => {
       }),
       start_point: {
         type: "Point",
-        coordinates: value.route_form.flatMap((item) => {
-          return [
-            Number(item.start_longitude), Number(item.start_latitude)
-          ]
-        })
+        coordinates: [Number(value.start_longitude), Number(value.start_latitude)]
       },
       end_point: {
         type: "Point",
-        coordinates: value.route_form.flatMap((item) => {
-          return [
-            Number(item.end_longitude), Number(item.end_latitude)
-          ]
-        })
+        coordinates: [Number(value.end_longitude), Number(value.end_latitude)]
       },
       vehicle_route: {
         type: "LineString",
-        coordinates: value.route_form.flatMap((item) => [
-          [Number(item.start_longitude), Number(item.start_latitude)],
-          [Number(item.end_longitude), Number(item.end_latitude)]
-        ])
+        coordinates: [
+          [Number(value.start_longitude), Number(value.start_latitude)],
+          [Number(value.end_longitude), Number(value.end_latitude)]
+        ]
       }
     }
     dispatch(setLoading(true))
@@ -188,10 +188,155 @@ const RouteEstimation: React.FC<Props> = (props) => {
         </div>
       </section>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <ContentTab
-          control={control}
-          setValue={setValue}
-        />
+        <Row gutter={[16, 16]}>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={14}>
+            <ContentTab
+              control={control}
+              setValue={setValue}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={10}>
+            <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
+              <MapRouteEstimation
+                firstPoint={null}
+                secondPoint={null}
+              />
+            </div>
+            <section className='mt-5'>
+              <h5>เส้นทาง</h5>
+              <Row gutter={[16, 16]}>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                  <Controller
+                    name='start_latitude'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาระบุละติจูด (ต้นทาง)'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>ละติจูด (ต้นทาง)</label>
+                          <Input
+                            {...field}
+                            name={field.name}
+                            placeholder='กรุณาระบุ'
+                            className='w-full'
+                            size='large'
+                            style={{
+                              fontFamily: 'Noto Sans Thai'
+                            }}
+                            onChange={(e) => {
+                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            }}
+                          />
+                          {!!errors.start_latitude &&
+                            <p className='text-red-500'>{errors.start_latitude.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                  <Controller
+                    name='start_longitude'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาระบุลองจิจูด (ต้นทาง)'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>ลองจิจูด (ต้นทาง)</label>
+                          <Input
+                            {...field}
+                            name={field.name}
+                            placeholder='กรุณาระบุ'
+                            className='w-full'
+                            size='large'
+                            style={{
+                              fontFamily: 'Noto Sans Thai'
+                            }}
+                            onChange={(e) => {
+                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            }}
+                          />
+                          {!!errors.start_longitude &&
+                            <p className='text-red-500'>{errors.start_longitude.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                  <Controller
+                    name='end_latitude'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาระบุละติจูด (ปลายทาง)'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>ละติจูด (ปลายทาง)</label>
+                          <Input
+                            {...field}
+                            name={field.name}
+                            placeholder='กรุณาระบุ'
+                            className='w-full'
+                            size='large'
+                            style={{
+                              fontFamily: 'Noto Sans Thai'
+                            }}
+                            onChange={(e) => {
+                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            }}
+                          />
+                          {!!errors.end_latitude &&
+                            <p className='text-red-500'>{errors.end_latitude.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+                  <Controller
+                    name='end_longitude'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาระบุลองจิจูด (ปลายทาง)'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>ลองจิจูด (ปลายทาง)</label>
+                          <Input
+                            {...field}
+                            name={field.name}
+                            placeholder='กรุณาระบุ'
+                            className='w-full'
+                            size='large'
+                            style={{
+                              fontFamily: 'Noto Sans Thai'
+                            }}
+                            onChange={(e) => {
+                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            }}
+                          />
+                          {!!errors.end_longitude &&
+                            <p className='text-red-500'>{errors.end_longitude.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+              </Row>
+            </section>
+          </Col>
+        </Row>
         <button ref={submitRef} hidden type='submit' />
       </form>
     </main>

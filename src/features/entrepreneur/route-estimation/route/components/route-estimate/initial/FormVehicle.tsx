@@ -4,7 +4,7 @@ import { useAppSelector } from '@/store';
 import { Card, Col, Image, Input, message, Row, Select, Spin } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
-import { VehicleDetail } from '@/services/master/MasterService';
+// import { VehicleDetail } from '@/services/master/MasterService';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
@@ -14,29 +14,29 @@ interface Props {
   setValue: UseFormSetValue<FieldTypeArr>;
 }
 
-interface PropertieState {
-  id: number;
-  vehicle_type_name: string;
-  plate_no: string;
-  plate_province: string;
-  weight: number;
-  width: number;
-  length: number;
-  height: number;
-  axis_number: number;
-}
+// interface PropertieState {
+//   id: number;
+//   vehicle_type_name: string;
+//   plate_no: string;
+//   plate_province: string;
+//   weight: number;
+//   width: number;
+//   length: number;
+//   height: number;
+//   axis_number: number;
+// }
 
-const INIT_VALUE: PropertieState = {
-  id: 0,
-  vehicle_type_name: '',
-  plate_no: '',
-  plate_province: '',
-  weight: 0,
-  width: 0,
-  length: 0,
-  height: 0,
-  axis_number: 0,
-}
+// const INIT_VALUE: PropertieState = {
+//   id: 0,
+//   vehicle_type_name: '',
+//   plate_no: '',
+//   plate_province: '',
+//   weight: 0,
+//   width: 0,
+//   length: 0,
+//   height: 0,
+//   axis_number: 0,
+// }
 
 const FormVehicle: React.FC<Props> = (props) => {
   const { formIndex, control, setValue } = props
@@ -46,13 +46,13 @@ const FormVehicle: React.FC<Props> = (props) => {
   const [toweringVehicleWheel, setToweringVehicleWheel] = useState<number>(0)
   const [semiVehicleWheel, setSemiVehicleWheel] = useState<number>(0)
   // WEIGHT
-  const [towingProperties, setTowingProperties] = useState<PropertieState>(INIT_VALUE)
-  const [semiProperties, setSemiProperties] = useState<PropertieState>(INIT_VALUE)
-  const [etcProperties, setEtcProperties] = useState<PropertieState>(INIT_VALUE)
+  // const [towingProperties, setTowingProperties] = useState<PropertieState>(INIT_VALUE)
+  // const [semiProperties, setSemiProperties] = useState<PropertieState>(INIT_VALUE)
+  // const [etcProperties, setEtcProperties] = useState<PropertieState>(INIT_VALUE)
   // IMG
-  const [towingImage, setTowingImage] = useState('')
-  const [semiImage, setSemiImage] = useState('')
-  const [etcImage, setEtcImage] = useState('')
+  const [towingImage, setTowingImage] = useState<string>('')
+  const [semiImage, setSemiImage] = useState<string>('')
+  const [etcImage, setEtcImage] = useState<string>('')
 
   const {
     match_type,
@@ -111,6 +111,12 @@ const FormVehicle: React.FC<Props> = (props) => {
     }
   }, [])
 
+  const renderLicensePlate = useCallback((plateNo: string, plateProvince: string) => {
+    const nameArr = [plateNo, plateProvince]
+    if (!nameArr.length) return '-'
+    return nameArr.join(' ').trim()
+  }, [])
+
   useEffect(() => {
     if (selectTowing?.vehicle_pictures.front_rear_url) {
       fetchImage('towing', extractUrl(selectTowing?.vehicle_pictures.front_rear_url))
@@ -122,6 +128,33 @@ const FormVehicle: React.FC<Props> = (props) => {
       fetchImage('etc', extractUrl(selectETC?.vehicle_pictures.front_rear_url))
     }
   }, [fetchImage, extractUrl, selectTowing?.vehicle_pictures.front_rear_url, selectSemi?.vehicle_pictures.front_rear_url, selectETC?.vehicle_pictures.front_rear_url])
+
+  useEffect(() => {
+    if (towering_vehicle) {
+      setToweringVehicleWheel(towering_vehicle)
+    }
+    if (semi_trailer_vehicle) {
+      setSemiVehicleWheel(semi_trailer_vehicle)
+    }
+    if (!match_type) {
+      setToweringVehicleWheel(0)
+      setSemiVehicleWheel(0)
+      setTowingImage('')
+      setSemiImage('')
+      setEtcImage('')
+    }
+    if (!towering_vehicle) {
+      setTowingImage('')
+      setToweringVehicleWheel(0)
+    }
+    if (!semi_trailer_vehicle) {
+      setSemiImage('')
+      setSemiVehicleWheel(0)
+    }
+    if (!etc_vehicle) {
+      setEtcImage('')
+    }
+  }, [towering_vehicle, semi_trailer_vehicle, etc_vehicle, match_type])
 
   return (
     <>
@@ -169,9 +202,31 @@ const FormVehicle: React.FC<Props> = (props) => {
                         setValue(`route_form.${formIndex}.towering_vehicle`, null)
                         setValue(`route_form.${formIndex}.semi_trailer_vehicle`, null)
                         setValue(`route_form.${formIndex}.etc_vehicle`, null)
+                        // SET TOWER WEIGHT
+                        setValue(`route_form.${formIndex}.towering_weight1`, 0)
+                        setValue(`route_form.${formIndex}.towering_weight2`, 0)
+                        setValue(`route_form.${formIndex}.towering_weight3`, 0)
+                        setValue(`route_form.${formIndex}.towering_weight4`, 0)
+                        setValue(`route_form.${formIndex}.towering_weight5`, 0)
+                        setValue(`route_form.${formIndex}.towering_weight6`, 0)
+                        setValue(`route_form.${formIndex}.towering_weight7`, 0)
+                        // SET SEMI WEIGHT
+                        setValue(`route_form.${formIndex}.semi_weight1`, 0)
+                        setValue(`route_form.${formIndex}.semi_weight2`, 0)
+                        setValue(`route_form.${formIndex}.semi_weight3`, 0)
+                        setValue(`route_form.${formIndex}.semi_weight4`, 0)
+                        setValue(`route_form.${formIndex}.semi_weight5`, 0)
+                        setValue(`route_form.${formIndex}.semi_weight6`, 0)
+                        setValue(`route_form.${formIndex}.semi_weight7`, 0)
                         // ON STATE CHANGE
-                        setToweringVehicleWheel(0)
-                        setSemiVehicleWheel(0)
+                        // setToweringVehicleWheel(0)
+                        // setSemiVehicleWheel(0)
+                        // setTowingProperties(INIT_VALUE)
+                        // setSemiProperties(INIT_VALUE)
+                        // setEtcProperties(INIT_VALUE)
+                        // setTowingImage('')
+                        // setSemiImage('')
+                        // setEtcImage('')
                       }}
                     />
                     {!!errors.route_form?.[formIndex]?.match_type &&
@@ -248,18 +303,18 @@ const FormVehicle: React.FC<Props> = (props) => {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        onChange={(value, option) => {
-                          const axis: VehicleDetail | any = option
-                          field.onChange(value)
-                          if (!value) {
-                            setToweringVehicleWheel(0)
-                            setTowingProperties(INIT_VALUE)
-                          } else {
-                            setToweringVehicleWheel(axis.axis_number)
-                            setTowingProperties(axis)
-
-                          }
-                        }}
+                      // onChange={(value, option) => {
+                      //   const axis: VehicleDetail | any = option
+                      //   field.onChange(value)
+                      //   if (!value) {
+                      //     setToweringVehicleWheel(0)
+                      //     setTowingProperties(INIT_VALUE)
+                      //     setTowingImage('')
+                      //   } else {
+                      //     setToweringVehicleWheel(axis.axis_number)
+                      //     setTowingProperties(axis)
+                      //   }
+                      // }}
                       />
                       {!!errors.route_form?.[formIndex]?.towering_vehicle &&
                         <p className='text-red-500'>{errors.route_form[formIndex].towering_vehicle.message}</p>
@@ -302,17 +357,18 @@ const FormVehicle: React.FC<Props> = (props) => {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        onChange={(value, option) => {
-                          const axis: VehicleDetail | any = option
-                          field.onChange(value)
-                          if (!value) {
-                            setSemiVehicleWheel(0)
-                            setSemiProperties(INIT_VALUE)
-                          } else {
-                            setSemiVehicleWheel(axis.axis_number)
-                            setSemiProperties(axis)
-                          }
-                        }}
+                      // onChange={(value, option) => {
+                      //   const axis: VehicleDetail | any = option
+                      //   field.onChange(value)
+                      //   if (!value) {
+                      //     setSemiVehicleWheel(0)
+                      //     setSemiProperties(INIT_VALUE)
+                      //     setSemiImage('')
+                      //   } else {
+                      //     setSemiVehicleWheel(axis.axis_number)
+                      //     setSemiProperties(axis)
+                      //   }
+                      // }}
                       />
                       {!!errors.route_form?.[formIndex]?.semi_trailer_vehicle &&
                         <p className='text-red-500'>{errors.route_form[formIndex].semi_trailer_vehicle.message}</p>
@@ -355,16 +411,16 @@ const FormVehicle: React.FC<Props> = (props) => {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        onChange={(value, option) => {
-                          console.log(option)
-                          const axis: VehicleDetail | any = option
-                          field.onChange(value)
-                          if (!value) {
-                            setEtcProperties(INIT_VALUE)
-                          } else {
-                            setEtcProperties(axis)
-                          }
-                        }}
+                      // onChange={(value, option) => {
+                      //   const axis: VehicleDetail | any = option
+                      //   field.onChange(value)
+                      //   if (!value) {
+                      //     setEtcProperties(INIT_VALUE)
+                      //     setEtcImage('')
+                      //   } else {
+                      //     setEtcProperties(axis)
+                      //   }
+                      // }}
                       />
                       {!!errors.route_form?.[formIndex]?.etc_vehicle &&
                         <p className='text-red-500'>{errors.route_form[formIndex].etc_vehicle.message}</p>
@@ -867,150 +923,17 @@ const FormVehicle: React.FC<Props> = (props) => {
         </section>
         : null}
       <section className='mt-5'>
-        <h5>เส้นทาง</h5>
-        <Row gutter={[16, 16]}>
-          <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-            <Controller
-              name={`route_form.${formIndex}.start_latitude`}
-              control={control}
-              rules={{
-                required: 'กรุณาระบุละติจูด (ต้นทาง)'
-              }}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>ละติจูด (ต้นทาง)</label>
-                    <Input
-                      {...field}
-                      name={field.name}
-                      placeholder='กรุณาระบุ'
-                      className='w-full'
-                      size='large'
-                      style={{
-                        fontFamily: 'Noto Sans Thai'
-                      }}
-                      onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                      }}
-                    />
-                    {!!errors.route_form?.[formIndex]?.semi_weight7 &&
-                      <p className='text-red-500'>{errors.route_form[formIndex].semi_weight7.message}</p>
-                    }
-                  </fieldset>
-                )
-              }}
-            />
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-            <Controller
-              name={`route_form.${formIndex}.start_longitude`}
-              control={control}
-              rules={{
-                required: 'กรุณาระบุลองจิจูด (ต้นทาง)'
-              }}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>ลองจิจูด (ต้นทาง)</label>
-                    <Input
-                      {...field}
-                      name={field.name}
-                      placeholder='กรุณาระบุ'
-                      className='w-full'
-                      size='large'
-                      style={{
-                        fontFamily: 'Noto Sans Thai'
-                      }}
-                      onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                      }}
-                    />
-                    {!!errors.route_form?.[formIndex]?.semi_weight7 &&
-                      <p className='text-red-500'>{errors.route_form[formIndex].semi_weight7.message}</p>
-                    }
-                  </fieldset>
-                )
-              }}
-            />
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-            <Controller
-              name={`route_form.${formIndex}.end_latitude`}
-              control={control}
-              rules={{
-                required: 'กรุณาระบุละติจูด (ปลายทาง)'
-              }}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>ละติจูด (ปลายทาง)</label>
-                    <Input
-                      {...field}
-                      name={field.name}
-                      placeholder='กรุณาระบุ'
-                      className='w-full'
-                      size='large'
-                      style={{
-                        fontFamily: 'Noto Sans Thai'
-                      }}
-                      onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                      }}
-                    />
-                    {!!errors.route_form?.[formIndex]?.semi_weight7 &&
-                      <p className='text-red-500'>{errors.route_form[formIndex].semi_weight7.message}</p>
-                    }
-                  </fieldset>
-                )
-              }}
-            />
-          </Col>
-          <Col xs={24} sm={24} md={12} lg={6} xl={6} xxl={6}>
-            <Controller
-              name={`route_form.${formIndex}.end_longitude`}
-              control={control}
-              rules={{
-                required: 'กรุณาระบุลองจิจูด (ปลายทาง)'
-              }}
-              render={({ field }) => {
-                return (
-                  <fieldset>
-                    <label>ลองจิจูด (ปลายทาง)</label>
-                    <Input
-                      {...field}
-                      name={field.name}
-                      placeholder='กรุณาระบุ'
-                      className='w-full'
-                      size='large'
-                      style={{
-                        fontFamily: 'Noto Sans Thai'
-                      }}
-                      onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                      }}
-                    />
-                    {!!errors.route_form?.[formIndex]?.semi_weight7 &&
-                      <p className='text-red-500'>{errors.route_form[formIndex].semi_weight7.message}</p>
-                    }
-                  </fieldset>
-                )
-              }}
-            />
-          </Col>
-        </Row>
-      </section>
-      <section className='mt-5'>
         <div className='bg-gray-200 rounded-md p-3'>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>น้ำหนักรถเปล่ารวม:</strong></p>
-            <p>{(Number(towingProperties.weight) + Number(semiProperties.weight) + Number(etcProperties.weight)) || 0} กก.</p>
+            <p>{(Number(selectTowing?.vehicle_detail.weight) + Number(selectSemi?.vehicle_detail.weight) + Number(selectETC?.vehicle_detail.weight)) || 0} กก.</p>
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>น้ำหนักรถเปล่ารวมน้ำหนักเพลา:</strong></p>
             <p>{(
-              Number(towingProperties.weight) +
-              Number(semiProperties.weight) +
-              Number(etcProperties.weight) +
+              Number(selectTowing?.vehicle_detail.weight) +
+              Number(selectSemi?.vehicle_detail.weight) +
+              Number(selectETC?.vehicle_detail.weight) +
               Number(towering_weight1) +
               Number(towering_weight2) +
               Number(towering_weight3) +
@@ -1029,17 +952,17 @@ const FormVehicle: React.FC<Props> = (props) => {
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>มิติรถเปล่า (ม.):</strong></p>
-            <p>{`กว้าง ${Math.max(Number(towingProperties.width || 0), Number(semiProperties.width || 0))} X ยาว ${Math.max(Number(towingProperties.length || 0), Number(semiProperties.length || 0))} X สูง ${Math.max(Number(towingProperties.height || 0), Number(semiProperties.height || 0))}`}</p>
+            <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail.width || 0), Number(selectSemi?.vehicle_detail.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail.length || 0), Number(selectSemi?.vehicle_detail.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail.height || 0), Number(selectSemi?.vehicle_detail.height || 0))}`}</p>
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.):</strong></p>
-            <p>{`กว้าง ${Math.max(Number(towingProperties.width || 0), Number(semiProperties.width || 0), Number(etcProperties.width || 0))} X ยาว ${Math.max(Number(towingProperties.length || 0), Number(semiProperties.length || 0), Number(etcProperties.length || 0))} X สูง ${Math.max(Number(towingProperties.height || 0), Number(semiProperties.height || 0), Number(etcProperties.height || 0))}`}</p>
+            <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail.width || 0), Number(selectSemi?.vehicle_detail.width || 0), Number(selectETC?.vehicle_detail.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail.length || 0), Number(selectSemi?.vehicle_detail.length || 0), Number(selectETC?.vehicle_detail.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail.height || 0), Number(selectSemi?.vehicle_detail.height || 0), Number(selectETC?.vehicle_detail.height || 0))}`}</p>
           </div>
         </div>
       </section>
       <section className='mt-5'>
         <Row gutter={[16, 16]}>
-          {towingProperties.id ?
+          {selectTowing?.vehicle_detail.id ?
             <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <Card
                 cover={(
@@ -1061,15 +984,15 @@ const FormVehicle: React.FC<Props> = (props) => {
                   title="รถลากจูง"
                   description={(
                     <>
-                      <p>{towingProperties.weight || 0} กก.</p>
-                      <p>{[towingProperties.plate_no, towingProperties.plate_province].filter(item => item !== '').length ? [towingProperties.plate_no, towingProperties.plate_province].join(' ').trim() : '-'}</p>
+                      <p>{selectTowing.vehicle_detail.weight || 0} กก.</p>
+                      <p>{renderLicensePlate(selectTowing.vehicle_detail.plate_no, selectTowing.vehicle_detail.plate_province)}</p>
                     </>
                   )}
                 />
               </Card>
             </Col>
             : null}
-          {semiProperties.id ?
+          {selectSemi?.vehicle_detail.id ?
             <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <Card
                 cover={(
@@ -1091,15 +1014,15 @@ const FormVehicle: React.FC<Props> = (props) => {
                   title="รถกึ่งพ่วง 4 เพลา 8"
                   description={(
                     <>
-                      <p>{semiProperties.weight || 0} กก.</p>
-                      <p>{[semiProperties.plate_no, semiProperties.plate_province].filter(item => item !== '').length ? [semiProperties.plate_no, semiProperties.plate_province].join(' ').trim() : '-'}</p>
+                      <p>{selectSemi.vehicle_detail.weight || 0} กก.</p>
+                      <p>{renderLicensePlate(selectSemi.vehicle_detail.plate_no, selectSemi.vehicle_detail.plate_province)}</p>
                     </>
                   )}
                 />
               </Card>
             </Col>
             : null}
-          {etcProperties.id ?
+          {selectETC?.vehicle_detail.id ?
             <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <Card
                 cover={(
@@ -1121,8 +1044,8 @@ const FormVehicle: React.FC<Props> = (props) => {
                   title="เครื่องจักร"
                   description={(
                     <>
-                      <p>{etcProperties.weight || 0} กก.</p>
-                      <p>{[etcProperties.plate_no, etcProperties.plate_province].filter(item => item !== '').length ? [etcProperties.plate_no, etcProperties.plate_province].join(' ').trim() : '-'}</p>
+                      <p>{selectETC.vehicle_detail.weight || 0} กก.</p>
+                      <p>{renderLicensePlate(selectETC.vehicle_detail.plate_no, selectETC.vehicle_detail.plate_province)}</p>
                     </>
                   )}
                 />
