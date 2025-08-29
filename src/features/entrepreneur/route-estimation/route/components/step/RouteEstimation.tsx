@@ -21,6 +21,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const submitRef = useRef<HTMLButtonElement>(null)
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
+  const { routeDirection } = useAppSelector(state => state.routeDirection)
   const navigate = useNavigate()
   const { dataParser, setStep, setDataParser } = useRouteContext()
 
@@ -110,7 +111,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
       },
       vehicle_route: {
         type: "LineString",
-        coordinates: [
+        coordinates: routeDirection?.features[0]?.geometry?.coordinates || [
           [Number(value.start_longitude), Number(value.start_latitude)],
           [Number(value.end_longitude), Number(value.end_latitude)]
         ]
