@@ -27,7 +27,7 @@ export type MapRouteProps = {
  * @param max_speed Maximum speed
  * @param isRouteEstimate If true, will call API to fetch route distance. If false, must provide geometry
  */
-function MapRoute({ coordinates, radiuses, geometry, isRouteEstimate = false }: MapRouteProps) {
+function MapRoute({ coordinates, geometry, isRouteEstimate = false }: MapRouteProps) {
   const dispatch = useAppDispatch()
   const { routeDirection } = useAppSelector((state) => state.routeDirection)
   const [geometryData, setGeometryData] = useState<GeoJsonObject | null>(null)
@@ -53,9 +53,13 @@ function MapRoute({ coordinates, radiuses, geometry, isRouteEstimate = false }: 
   }, [coordinates, isRouteEstimate, geometry])
 
   useEffect(() => {
-    if (isRouteEstimate && validateData()) {
-      dispatch(getRouteDirectionAPI({ coordinates: coordinates as [number, number][] }))
-    }
+    const timeoutId = setTimeout(() => {
+      if (isRouteEstimate && validateData()) {
+        dispatch(getRouteDirectionAPI({ coordinates: coordinates as [number, number][] }))
+      }
+    }, 1500)
+
+    return () => clearTimeout(timeoutId)
   }, [coordinates, isRouteEstimate, dispatch, validateData])
 
   useEffect(() => {
