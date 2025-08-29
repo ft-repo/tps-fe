@@ -18,6 +18,8 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	const direction = useAppSelector((state) => state.theme.direction)
 
+	const { authority } = useAppSelector(state => state.auth.user)
+
 	const openPanel = () => {
 		dispatch(setPanelExpand(true))
 	}
@@ -32,13 +34,15 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	return (
 		<>
-			<div
-				className={classNames('text-2xl', className)}
-				onClick={openPanel}
-				{...rest}
-			>
-				<HiOutlineBell />
-			</div>
+			{authority[0] === 'ADMIN' ?
+				<div
+					className={classNames('text-2xl', className)}
+					onClick={openPanel}
+					{...rest}
+				>
+					<HiOutlineBell />
+				</div>
+				: null}
 			<Drawer
 				title="แจ้งเตือน"
 				isOpen={panelExpand}

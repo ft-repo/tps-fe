@@ -175,7 +175,8 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           name='business_no'
           control={control}
           rules={{
-            required: 'กรุณาระบุเลขทะเบียนนิติบุคคล'
+            required: 'กรุณาระบุเลขทะเบียนนิติบุคคล',
+            validate: (value) => value.length >= 13 || 'เลขทะเบียนนิติบุคคลไม่ถูกต้อง',
           }}
           render={({ field }) => {
             return (
@@ -191,6 +192,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                   style={{
                     fontFamily: 'Noto Sans Thai'
                   }}
+                  maxLength={13}
                 />
                 {!!errors.business_no &&
                   <p className='text-red-500'>{errors.business_no.message}</p>
@@ -261,7 +263,8 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           name='citizen_id'
           control={control}
           rules={{
-            required: 'กรุณาระบุหมายเลขบัตรประชาชน'
+            required: 'กรุณาระบุหมายเลขบัตรประชาชน',
+            validate: (value) => value.length >= 13 || 'เลขบัตรประชาชนไม่ถูกต้อง',
           }}
           render={({ field }) => {
             return (
@@ -276,6 +279,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                   style={{
                     fontFamily: 'Noto Sans Thai'
                   }}
+                  maxLength={13}
                 />
                 {!!errors.citizen_id &&
                   <p className='text-red-500'>{errors.citizen_id.message}</p>

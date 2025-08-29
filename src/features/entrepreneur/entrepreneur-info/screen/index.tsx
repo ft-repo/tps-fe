@@ -74,13 +74,13 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         file: fileList.length ? [fileList[1] || { uid: '2', name: userData.business_document.cid_card_file_url, url: userData.business_document.cid_card_file_url }] : [],
         url: userData.business_document.cid_card_file_url
       },
-      file_legal_entity_id: {
-        file: fileList.length ? [fileList[2] || { uid: '3', name: userData.business_document.business_file_url, url: userData.business_document.business_file_url }] : [],
-        url: userData.business_document.business_file_url
-      },
       file_trasfer_ownership_image_id: {
-        file: fileList.length ? [fileList[3] || { uid: '4', name: userData.business_document.certificate_file_url, url: userData.business_document.certificate_file_url }] : [],
+        file: fileList.length ? [fileList[2] || { uid: '3', name: userData.business_document.certificate_file_url, url: userData.business_document.certificate_file_url }] : [],
         url: userData.business_document.certificate_file_url
+      },
+      file_legal_entity_id: {
+        file: fileList.length ? [fileList[3] || { uid: '4', name: userData.business_document.business_file_url, url: userData.business_document.business_file_url }] : [],
+        url: userData.business_document.business_file_url
       },
     },
   })
