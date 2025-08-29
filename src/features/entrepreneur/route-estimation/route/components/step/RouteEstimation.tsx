@@ -10,7 +10,7 @@ import { ContentTab } from '../../components'
 import { PetitionEstimateRequest } from '@/@types/services/petition'
 import { postPetitionEstimateAPI } from '@/services/entrepreneur/PetitionService'
 import { useRouteContext } from '../../context'
-import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
+import MapRoute from '@/components/ui/Maps'
 
 interface Props {
 
@@ -63,8 +63,14 @@ const RouteEstimation: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     setValue,
-    formState: { errors }
+    formState: { errors },
+    watch
   } = form
+
+  const startLatitude = watch('start_latitude')
+  const startLongitude = watch('start_longitude')
+  const endLatitude = watch('end_latitude')
+  const endLongitude = watch('end_longitude')
 
   const onSubmit = useCallback(async (value: FieldTypeArr) => {
     const body: PetitionEstimateRequest = {
@@ -163,7 +169,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
   return (
     <main>
       <section className='flex justify-between items-center flex-wrap gap-5 mb-5'>
-        <h3>ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)</h3>
+        <h3>ขออนุญาตหมวด 2 (4 - 7 เพลา)</h3>
         <div className='flex items-center gap-3'>
           <Button
             disabled={loading}
@@ -197,9 +203,9 @@ const RouteEstimation: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={10}>
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
-              <MapRouteEstimation
-                firstPoint={null}
-                secondPoint={null}
+              <MapRoute 
+                coordinates={[[startLongitude, startLatitude], [endLongitude, endLatitude]]}
+                isRouteEstimate={true}
               />
             </div>
             <section className='mt-5'>
