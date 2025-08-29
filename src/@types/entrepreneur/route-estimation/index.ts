@@ -255,6 +255,10 @@ export type RouteBridgeResponse = {
 
 // NORMAL
 export interface FieldTypeArr {
+  start_latitude: number;
+  start_longitude: number;
+  end_latitude: number;
+  end_longitude: number;
   route_form: FieldTypeForRoute[];
 }
 
@@ -278,8 +282,4 @@ export interface FieldTypeForRoute {
   semi_weight5: number;
   semi_weight6: number;
   semi_weight7: number;
-  start_latitude: number;
-  start_longitude: number;
-  end_latitude: number;
-  end_longitude: number;
 }

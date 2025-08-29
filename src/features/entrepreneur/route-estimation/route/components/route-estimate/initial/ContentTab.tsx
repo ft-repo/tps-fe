@@ -4,7 +4,7 @@ import React, { useCallback, useState } from 'react'
 import { Tabs, type TabsProps } from 'antd'
 import { Control, useFieldArray, UseFormSetValue } from 'react-hook-form'
 import { FieldTypeArr } from '@/@types/entrepreneur/route-estimation'
-import Content from './Content';
+import FormVehicle from './FormVehicle';
 
 interface Props {
   control: Control<FieldTypeArr>;
@@ -23,7 +23,7 @@ const ContentTab: React.FC<Props> = (props) => {
       key: '1',
       label: 'รถคู่ที่ 1',
       children: (
-        <Content
+        <FormVehicle
           formItem={fields[0]}
           formIndex={0}
           control={control}
@@ -46,7 +46,7 @@ const ContentTab: React.FC<Props> = (props) => {
         key: `${tabItems.length + 1}`,
         label: `รถคู่ที่ ${tabItems.length + 1}`,
         children: (
-          <Content
+          <FormVehicle
             formItem={fields[tabItems.length]}
             formIndex={tabItems.length}
             control={control}
