@@ -40,18 +40,18 @@ const PermitListScreen: React.FC<Props> = (props) => {
         <Button
           htmlType='button'
           type='primary'
+          onClick={() => navigate('/route-estimation/route')}
+        >
+          ขอใบอนุญาตรถหมวด 2 (4 - 7 เพลา)
+        </Button>
+        <Button
+          htmlType='button'
+          type='primary'
           color='yellow'
           variant='solid'
           onClick={() => navigate('/route-estimation/other')}
         >
           ขอใบอนุญาตรถนอกเหนือ (4 - 7 เพลา)
-        </Button>
-        <Button
-          htmlType='button'
-          type='primary'
-          onClick={() => navigate('/route-estimation/route')}
-        >
-          ขอใบอนุญาตรถหมวด 2 (4 - 7 เพลา)
         </Button>
       </Flex>
     )

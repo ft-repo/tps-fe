@@ -27,13 +27,7 @@ const dropdownItemList: DropdownList[] = [
 const _UserDropdown = ({ className }: CommonProps) => {
 	const { signOut } = useAuth()
 	const dispatch = useAppDispatch()
-	const { authority, details, id, name, userName } = useAppSelector(state => state.auth.user)
-
-	console.log(authority)
-	console.log(details)
-	console.log(id)
-	console.log(name)
-	console.log(userName)
+	const { authority, name } = useAppSelector(state => state.auth.user)
 
 	const UserAvatar = (
 		<div className={classNames(className, 'flex items-center gap-2')}>
