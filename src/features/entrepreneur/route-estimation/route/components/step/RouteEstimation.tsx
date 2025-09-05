@@ -165,7 +165,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch, setDataParser, setStep])
+  }, [dispatch, setDataParser, setStep, routeDirection?.features])
 
   return (
     <main>
@@ -206,7 +206,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
               <MapRoute 
                 coordinates={[[startLongitude, startLatitude], [endLongitude, endLatitude]]}
-                isRouteEstimate={true}
+                isRouteEstimate={false}
               />
             </div>
             <section className='mt-5'>
