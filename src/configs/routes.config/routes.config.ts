@@ -130,6 +130,18 @@ export const protectedRoutes = [
         authority: ['ADMIN'],
     },
     {
+        key: 'approval_sign_extended',
+        path: '/request-list/approval/sign-extended',
+        component: lazy(() => import('@/views/staff/request-list/approval/sign_extended')),
+        authority: ['ADMIN'],
+    },
+    {
+        key: 'approval_permit_extended',
+        path: '/request-list/approval/permit-extended',
+        component: lazy(() => import('@/views/staff/request-list/approval/permit_extended')),
+        authority: ['ADMIN'],
+    },
+    {
         key: 'request_history',
         path: '/request-history/overview',
         component: lazy(() => import('@/views/staff/request-history/overview')),

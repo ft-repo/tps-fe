@@ -1,12 +1,14 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { PetitionPostBody } from '@/@types/services/petition';
 import { postUploadFileAPI } from '@/services/entrepreneur/PetitionService';
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 import { postPetitionApproveAPI } from '@/services/staff/PetitionService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getAdminPetitionData } from '@/store/slices/staff';
 import { Flex, Input, message, Modal, Radio, Upload, Button } from 'antd';
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -57,7 +59,7 @@ const ContentForm: React.FC<Props> = (props) => {
   const statusId = params.get('status_id')
   const isApproved = params.get('is_approved')
   // REDUX MANAGE
-  const { petition } = useAppSelector(state => state.staff.petition)
+  const { petition, petition_status } = useAppSelector(state => state.staff.petition)
   const dispatch = useAppDispatch()
   // NAVIGATE
   const navigate = useNavigate()
@@ -66,13 +68,13 @@ const ContentForm: React.FC<Props> = (props) => {
 
   const form = useForm<FieldType>({
     defaultValues: {
-      is_approved: null,
-      reply_message: '',
+      is_approved: typeof petition_status[2]?.is_approved === 'boolean' ? (petition_status[2]?.is_approved === true ? '1' : '2') : null,
+      reply_message: petition_status[2]?.remark || '',
       file_id: {
         file: [],
         url: ''
       },
-      is_signed: null,
+      is_signed: typeof petition_status[2]?.is_skipped === 'boolean' ? (petition_status[2]?.is_skipped === true ? '1' : '2') : null,
     },
     disabled: disabled
   })
@@ -82,6 +84,7 @@ const ContentForm: React.FC<Props> = (props) => {
     control,
     setValue,
     reset,
+    watch,
     formState: { errors }
   } = form
 
@@ -123,7 +126,7 @@ const ContentForm: React.FC<Props> = (props) => {
           okText: 'ตกลง',
           onOk: () => {
             dispatch(getAdminPetitionData(petition.overview.search))
-            navigate(-1)
+            navigate('/request-list/overview')
           },
           okButtonProps: {
             style: {
@@ -159,6 +162,54 @@ const ContentForm: React.FC<Props> = (props) => {
     }
   }, [petitionId, statusId, dispatch, navigate, petition.overview.search])
 
+  const extractFileName = useCallback((url: string | null) => {
+    const match = url?.match(/\/([^\/]+)$/);
+    return match ? match[1] : '';
+  }, [])
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
+
+  const fetchImage = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(petition_status[2]?.document_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, petition_status, setValue])
+
+  useEffect(() => {
+    if (petition_status[2]?.document_url) {
+      fetchImage(extractUrl(petition_status[2]?.document_url))
+    }
+  }, [extractUrl, fetchImage, petition_status])
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <section>
@@ -193,6 +244,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
+          disabled={watch('is_approved') === '1' ? true : false}
           name='reply_message'
           control={control}
           rules={{
@@ -219,6 +271,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
+          disabled={watch('is_approved') === '1' ? true : false}
           name='file_id.file'
           control={control}
           rules={{
@@ -262,7 +315,7 @@ const ContentForm: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      disabled={disabled}
+                      disabled={(watch('is_approved') === '1' ? true : false) || disabled}
                       icon={<HiOutlineCloudUpload />}
                       htmlType='button'
                       type='primary'
@@ -282,6 +335,7 @@ const ContentForm: React.FC<Props> = (props) => {
       <section className='mt-3'>
         <h5 className='mb-3'>เอกสารลงนาม</h5>
         <Controller
+          disabled={watch('is_approved') === '2' ? true : false}
           name='is_signed'
           control={control}
           rules={{

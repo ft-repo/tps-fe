@@ -1,12 +1,14 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { PetitionPostBody } from '@/@types/services/petition';
 import { postUploadFileAPI } from '@/services/entrepreneur/PetitionService';
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 import { postPetitionApproveAPI } from '@/services/staff/PetitionService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
-import { getAdminPetitionData } from '@/store/slices/staff';
+import { getAdminPetitionData, getAdminPetitionHistoryData } from '@/store/slices/staff';
 import { Flex, Input, message, Modal, Upload, Button } from 'antd';
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -33,7 +35,7 @@ const ContentForm: React.FC<Props> = (props) => {
   const statusId = params.get('status_id')
   const isApproved = params.get('is_approved')
   // REDUX MANAGE
-  const { petition } = useAppSelector(state => state.staff.petition)
+  const { petition, petition_status, petition_history } = useAppSelector(state => state.staff.petition)
   const dispatch = useAppDispatch()
   // NAVIGATE
   const navigate = useNavigate()
@@ -46,7 +48,7 @@ const ContentForm: React.FC<Props> = (props) => {
         file: [],
         url: ''
       },
-      remark: '',
+      remark: petition_status[4]?.remark || '',
     },
     disabled: disabled
   })
@@ -100,7 +102,8 @@ const ContentForm: React.FC<Props> = (props) => {
           okText: 'ตกลง',
           onOk: () => {
             dispatch(getAdminPetitionData(petition.overview.search))
-            navigate(-1)
+            dispatch(getAdminPetitionHistoryData(petition_history.overview.search))
+            navigate('/request-history/overview')
           },
           okButtonProps: {
             style: {
@@ -134,7 +137,55 @@ const ContentForm: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [petitionId, statusId, dispatch, navigate, petition.overview.search])
+  }, [petitionId, statusId, dispatch, navigate, petition.overview.search, petition_history.overview.search])
+
+  const extractFileName = useCallback((url: string | null) => {
+    const match = url?.match(/\/([^\/]+)$/);
+    return match ? match[1] : '';
+  }, [])
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
+
+  const fetchImage = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(petition_status[4]?.document_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, petition_status, setValue])
+
+  useEffect(() => {
+    if (petition_status[4]?.document_url) {
+      fetchImage(extractUrl(petition_status[4]?.document_url))
+    }
+  }, [extractUrl, fetchImage, petition_status])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -205,6 +256,9 @@ const ContentForm: React.FC<Props> = (props) => {
         <Controller
           name='remark'
           control={control}
+          rules={{
+            required: 'กรุณาระบุหมายเหตุ'
+          }}
           render={({ field }) => {
             return (
               <fieldset>
@@ -217,7 +271,7 @@ const ContentForm: React.FC<Props> = (props) => {
                   rows={10}
                 />
                 {!!errors.remark &&
-                  <p>{errors.remark.message}</p>
+                  <p className='text-red-500'>{errors.remark.message}</p>
                 }
               </fieldset>
             )

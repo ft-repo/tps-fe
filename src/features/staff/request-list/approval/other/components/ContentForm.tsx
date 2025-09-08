@@ -1,13 +1,13 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { PetitionExtendedPostBody } from '@/@types/services/petition';
-import { Button } from '@/components/ui';
 import { postUploadFileAPI } from '@/services/entrepreneur/PetitionService';
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 import { postPetitionExtendedApproveAPI } from '@/services/staff/PetitionService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getAdminPetitionExtendedData } from '@/store/slices/staff';
-import { Flex, Input, message, Modal, Radio, Upload } from 'antd';
-import React, { useCallback } from 'react'
+import { Button, Flex, Input, message, Modal, Radio, Upload } from 'antd';
+import React, { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -47,7 +47,7 @@ const ContentForm: React.FC<Props> = (props) => {
   const statusId = params.get('status_id')
   const isApproved = params.get('is_approved')
   // REDUX MANAGE
-  const { petition_history } = useAppSelector(state => state.staff.petition)
+  const { petition_history, petition_extended_status } = useAppSelector(state => state.staff.petition)
   const dispatch = useAppDispatch()
   // NAVIGATE
   const navigate = useNavigate()
@@ -56,13 +56,13 @@ const ContentForm: React.FC<Props> = (props) => {
 
   const form = useForm<FieldType>({
     defaultValues: {
-      is_approved: null,
-      reply_message: '',
+      is_approved: typeof petition_extended_status[0]?.is_approved === 'boolean' ? (petition_extended_status[0]?.is_approved === true ? '1' : '2') : null,
+      reply_message: petition_extended_status[0]?.reply_message || '',
       file_id: {
         file: [],
         url: ''
       },
-      remark: '',
+      remark: petition_extended_status[0]?.remark || '',
     },
     disabled: disabled
   })
@@ -71,6 +71,8 @@ const ContentForm: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     setValue,
+    reset,
+    watch,
     formState: { errors }
   } = form
 
@@ -112,7 +114,7 @@ const ContentForm: React.FC<Props> = (props) => {
           okText: 'ตกลง',
           onOk: () => {
             dispatch(getAdminPetitionExtendedData(petition_history.overview.search))
-            navigate(-1)
+            navigate('/request-list/overview?tabKey=2')
           },
           okButtonProps: {
             style: {
@@ -148,6 +150,54 @@ const ContentForm: React.FC<Props> = (props) => {
     }
   }, [petitionId, statusId, dispatch, navigate, petition_history.overview.search])
 
+  const extractFileName = useCallback((url: string | null) => {
+    const match = url?.match(/\/([^\\/]+)$/);
+    return match ? match[1] : '';
+  }, [])
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
+
+  const fetchImage = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(petition_extended_status[0]?.document_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, petition_extended_status, setValue])
+
+  useEffect(() => {
+    if (petition_extended_status[0]?.document_url) {
+      fetchImage(extractUrl(petition_extended_status[0]?.document_url))
+    }
+  }, [extractUrl, fetchImage, petition_extended_status])
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <section>
@@ -182,6 +232,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
+          disabled={watch('is_approved') === '1' ? true : false}
           name='reply_message'
           control={control}
           rules={{
@@ -198,8 +249,8 @@ const ContentForm: React.FC<Props> = (props) => {
                   size='large'
                   rows={6}
                 />
-                {!!errors.remark &&
-                  <p className='text-red-500'>{errors.remark.message}</p>
+                {!!errors.reply_message &&
+                  <p className='text-red-500'>{errors.reply_message.message}</p>
                 }
               </fieldset>
             )
@@ -208,6 +259,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
+          disabled={watch('is_approved') === '1' ? true : false}
           name='file_id.file'
           control={control}
           rules={{
@@ -251,10 +303,10 @@ const ContentForm: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      variant="solid"
+                      disabled={(watch('is_approved') === '1' ? true : false) || disabled}
                       icon={<HiOutlineCloudUpload />}
-                      size='sm'
-                      type='button'
+                      htmlType='button'
+                      type='primary'
                     >
                       เพิ่มไฟล์ .pdf
                     </Button>
@@ -303,18 +355,19 @@ const ContentForm: React.FC<Props> = (props) => {
         >
           <Button
             disabled={disabled}
-            type='button'
-            variant='default'
-            size='sm'
+            htmlType='button'
+            type='default'
+            size='large'
             className='w-full lg:w-auto'
+            onClick={() => reset()}
           >
             ล้างข้อมูล
           </Button>
           <Button
             disabled={disabled}
-            type='submit'
-            variant='solid'
-            size='sm'
+            htmlType='submit'
+            type='primary'
+            size='large'
             className='w-full lg:w-auto'
           >
             บันทึกข้อมูล

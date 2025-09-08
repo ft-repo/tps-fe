@@ -54,10 +54,9 @@ const ContentForm: React.FC<Props> = (props) => {
   // IS DISABLED
   const disabled = isApproved !== 'null' ? true : false
 
-
   const form = useForm<FieldType>({
     defaultValues: {
-      is_approved: petition_status[0]?.is_approved ? (petition_status[0]?.is_approved === true ? '1' : '2') : null,
+      is_approved: typeof petition_status[0]?.is_approved === 'boolean' ? (petition_status[0]?.is_approved === true ? '1' : '2') : null,
       reply_message: petition_status[0]?.remark || '',
       file_id: {
         file: [],
@@ -114,7 +113,7 @@ const ContentForm: React.FC<Props> = (props) => {
           okText: 'ตกลง',
           onOk: () => {
             dispatch(getAdminPetitionData(petition.overview.search))
-            navigate(-1)
+            navigate('/request-list/overview')
           },
           okButtonProps: {
             style: {
@@ -259,6 +258,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
+          disabled={watch('is_approved') === '1' ? true : false}
           name='file_id.file'
           control={control}
           rules={{
@@ -302,7 +302,7 @@ const ContentForm: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      disabled={disabled}
+                      disabled={(watch('is_approved') === '1' ? true : false) || disabled}
                       icon={<HiOutlineCloudUpload />}
                       htmlType='button'
                       type='primary'

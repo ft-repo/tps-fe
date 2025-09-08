@@ -1,11 +1,12 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Spin } from 'antd';
 import { ContentForm } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
-import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/store';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { getPetitionExtendedStatus } from '@/store/slices/staff';
 
 interface Props {
 
@@ -13,8 +14,15 @@ interface Props {
 
 const PermitScreen: React.FC<Props> = (props) => {
   const { } = props
+  const [params] = useSearchParams()
+  const petitionId = params.get('petition_id')
   const navigate = useNavigate()
-  const loading = useAppSelector(state => state.layout.loading)
+  const dispatch = useAppDispatch()
+  const { loading } = useAppSelector(state => state.staff.petition)
+
+  useEffect(() => {
+    dispatch(getPetitionExtendedStatus({ petition_exid: String(petitionId) }))
+  }, [dispatch, petitionId])
 
   return (
     <Spin spinning={loading}>
@@ -31,7 +39,9 @@ const PermitScreen: React.FC<Props> = (props) => {
         <h3>บันทึกผลการพิจารณา</h3>
       </section>
       <section className='mt-5'>
-        <ContentForm />
+        {!loading ?
+          <ContentForm />
+          : null}
       </section>
     </Spin>
   )

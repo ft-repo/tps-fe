@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants'
 import { PetitionAdminState } from '@/@types/reducer/petition'
-import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionCountAPI, getPetitionDocumentAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateRouteAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedDetailAPI, getPetitionNotificationAPI, getPetitionStatusAPI, getPetitionVehicleAPI } from '@/services/staff/PetitionService'
-import { GetEstimateDetailParams, GetPetitionDetailParams, GetPetitionParams } from '@/@types/services/petition'
+import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionCountAPI, getPetitionDocumentAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateRouteAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedDetailAPI, getPetitionExtendedStatusAPI, getPetitionNotificationAPI, getPetitionStatusAPI, getPetitionVehicleAPI } from '@/services/staff/PetitionService'
+import { GetEstimateDetailParams, GetPetitionDetailParams, GetPetitionExtendedDetailParams, GetPetitionParams } from '@/@types/services/petition'
 import { GetPaginateParams } from '@/@types/shared'
 
 const initialState: PetitionAdminState = {
@@ -49,7 +49,11 @@ const initialState: PetitionAdminState = {
           estimate: [],
           estimate_rural_roads: [],
           start_point: '',
-          end_point: ''
+          end_point: '',
+          start_road_code: '',
+          start_road: '',
+          end_road_code: '',
+          end_road: ''
         },
         summary: {
           search: {
@@ -317,7 +321,11 @@ const initialState: PetitionAdminState = {
           estimate: [],
           estimate_rural_roads: [],
           start_point: '',
-          end_point: ''
+          end_point: '',
+          start_road_code: '',
+          start_road: '',
+          end_road_code: '',
+          end_road: ''
         },
         summary: {
           search: {
@@ -543,6 +551,7 @@ const initialState: PetitionAdminState = {
     },
   },
   petition_status: [],
+  petition_extended_status: [],
   notification: {
     search: {
       page: 1,
@@ -641,6 +650,12 @@ export const getPetitionStatus = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPeti
   return response.data
 })
 
+export const getPetitionExtendedStatus = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionExtendedStatus', async (params: GetPetitionExtendedDetailParams) => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionExtendedStatusAPI(params)
+  return response.data
+})
+
 export const getPetitionCount = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionCount', async () => {
   // assume someService required reesponse & require type as generic
   const response = await getPetitionCountAPI()
@@ -697,6 +712,9 @@ const petitionSlice = createSlice({
     },
     setAdminPetitionStatus: (state, action) => {
       state.petition_status = action.payload
+    },
+    setAdminPetitionExtendedStatus: (state, action) => {
+      state.petition_extended_status = action.payload
     },
     setPetitionCount: (state, action) => {
       state.petition_count = action.payload
@@ -847,6 +865,17 @@ const petitionSlice = createSlice({
       .addCase(getPetitionStatus.rejected, (state) => {
         state.loading = false
       })
+    // GET PETITION EXTENDED STATUS
+    builder.addCase(getPetitionExtendedStatus.fulfilled, (state, action) => {
+      state.petition_extended_status = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionExtendedStatus.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionExtendedStatus.rejected, (state) => {
+        state.loading = false
+      })
     // GET PETITION COUNT
     builder.addCase(getPetitionCount.fulfilled, (state, action) => {
       state.petition_count = action.payload,
@@ -875,7 +904,8 @@ export const {
   setAdminPetitionExtendedDetail,
   setAdminPetitionNotification,
   setAdminPetitionStatus,
-  setPetitionCount
+  setPetitionCount,
+  setAdminPetitionExtendedStatus
 } = petitionSlice.actions
 
 export default petitionSlice.reducer

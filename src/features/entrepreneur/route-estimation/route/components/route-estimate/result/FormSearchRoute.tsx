@@ -52,7 +52,7 @@ const FormSearchRoute: React.FC<Props> = (props) => {
 
   const renderRoadCodeName = useCallback((roadCode: string, roadName: string) => {
     const nameArr = [roadCode, roadName]
-    if (!nameArr.length) return '-'
+    if (!nameArr?.length) return '-'
     return nameArr.join(' ')
   }, [])
 
