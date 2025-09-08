@@ -1,7 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { Button, Col, Input, Radio, Row } from 'antd';
-import React, { useCallback } from 'react'
+import { useAppSelector } from '@/store';
+import { Badge, Button, Col, Input, Row } from 'antd';
+import React, { useCallback, useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
@@ -13,49 +14,61 @@ export interface FieldType {
   status_id: string;
 }
 
-const STATUS_OPTION = [
-  {
-    label: 'ตรวจเอกสาร',
-    value: '1',
-  },
-  {
-    label: 'ตรวจเส้นทาง',
-    value: '2',
-  },
-  {
-    label: 'ตรวจยานพาหนะ',
-    value: '3',
-  },
-  {
-    label: 'รอลงนาม',
-    value: '4',
-  },
-  {
-    label: 'ออกใบอนุญาต',
-    value: '5',
-  },
-]
+let timeout: any;
 
 const FormSearchPetition: React.FC<Props> = (props) => {
   const { handleSearch } = props
+  const { petition_count } = useAppSelector(state => state.staff.petition)
+  const submitRef = useRef<HTMLButtonElement>(null)
 
   const form = useForm<FieldType>({
     defaultValues: {
       search: '',
-      status_id: '1'
+      status_id: ''
     }
   })
 
-  const { handleSubmit, control } = form
+  const { handleSubmit, control, setValue } = form
 
   const onSubmit = useCallback((value: FieldType) => {
     handleSearch(value)
   }, [handleSearch])
 
+  const renderButton = useMemo(() => {
+    if (!petition_count.length) return
+
+    const filterArr = petition_count.filter(item => item.status_id !== 4).filter(item => item.status_id !== 7)
+
+    return filterArr.map((item, index) => {
+      return (
+        <Col key={index} xs={24} sm={12} md={12} lg={8} xl={4} xxl={2}>
+          <Badge
+            count={item.count}
+            styles={{
+              root: {
+                width: '100%'
+              }
+            }}
+          >
+            <Button
+              block
+              htmlType='submit'
+              type='primary'
+              size='large'
+              onClick={() => setValue('status_id', String(item.status_id))}
+            >
+              {item.status_name}
+            </Button>
+          </Badge>
+        </Col>
+      )
+    })
+  }, [petition_count, setValue])
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Row gutter={[16, 16]} align={'middle'}>
-        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+        <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={8}>
           <Controller
             name='search'
             control={control}
@@ -70,42 +83,33 @@ const FormSearchPetition: React.FC<Props> = (props) => {
                   style={{
                     fontFamily: 'Noto Sans Thai'
                   }}
+                  onChange={(e) => {
+                    field.onChange(e)
+
+                    if (timeout) clearTimeout(timeout)
+                    timeout = setTimeout(() => {
+                      submitRef.current?.click()
+                    }, 700)
+                  }}
                 />
               )
             }}
           />
         </Col>
-        <Col xs={24} sm={24} md={24} lg={10} xl={10} xxl={10}>
-          <Controller
-            name='status_id'
-            control={control}
-            render={({ field }) => {
-              return (
-                <Radio.Group
-                  block
-                  {...field}
-                  name={field.name}
-                  value={field.value}
-                  optionType="button"
-                  buttonStyle="solid"
-                  size='large'
-                  options={STATUS_OPTION}
-                />
-              )
-            }}
-          />
-        </Col>
-        <Col xs={24} sm={24} md={24} lg={2} xl={2} xxl={2}>
+        <Col xs={24} sm={12} md={12} lg={8} xl={4} xxl={2}>
           <Button
             block
             htmlType='submit'
             type='primary'
             size='large'
+            onClick={() => setValue('status_id', '')}
           >
-            ค้นหา
+            ทั้งหมด
           </Button>
         </Col>
+        {renderButton}
       </Row>
+      <button ref={submitRef} hidden type='submit' />
     </form>
   )
 }

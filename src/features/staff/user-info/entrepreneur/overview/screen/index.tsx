@@ -15,7 +15,7 @@ interface Props { }
 const OverviewScreen: React.FC<Props> = (props) => {
   const { } = props
   const dispatch = useAppDispatch()
-  const {client, loading} = useAppSelector(state => state.staff.staff)
+  const { client, loading } = useAppSelector(state => state.staff.staff)
   // const loading = useAppSelector(state => state.layout.loading)
 
   useEffect(() => {
@@ -66,7 +66,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
     }
   }, [dispatch, client.overview])
 
-    const deleteRecord = useCallback(async (id: string | number) => {
+  const deleteRecord = useCallback(async (id: string | number) => {
     dispatch(setLoading(true))
     try {
       const response = await deleteClientAPI(id)

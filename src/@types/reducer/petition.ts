@@ -151,7 +151,14 @@ export interface PetitionAdminState {
   petition_history_extended: AdminPetitionExtended;
   notification: AdminPetitionNotification;
   petition_status: AdminPetitionStatus[];
+  petition_count: AdminPetitionCount[];
   loading: boolean;
+}
+
+export interface AdminPetitionCount {
+  status_id: number;
+  status_name: string;
+  count: number;
 }
 
 export interface AdminPetitionStatus {

@@ -12,13 +12,13 @@ const VehicleListDetail: React.FC<Props> = (props) => {
   const { item } = props
 
   const renderAxisWeight = useCallback((arr: number[]) => {
-    if (!arr.length) return '-'
+    if (!arr?.length) return '-'
     return arr.join(' : ')
   }, [])
 
   const renderLicensePlate = useCallback((plateNo: string, plateProvince: string) => {
     const licenseArr = [plateNo, plateProvince]
-    if (!licenseArr.length) return '-'
+    if (!licenseArr?.length) return '-'
     return licenseArr.join(' ').trim()
   }, [])
 

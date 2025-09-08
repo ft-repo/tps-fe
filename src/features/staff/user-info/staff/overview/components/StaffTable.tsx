@@ -8,6 +8,7 @@ import {
 import { Button } from '@/components/ui'
 import { Table, TableProps } from 'antd'
 import { StaffList, StaffListsResponse } from '@/@types/services/user';
+import { useAppSelector } from '@/store';
 
 interface Props {
   data: StaffListsResponse;
@@ -19,6 +20,7 @@ interface Props {
 
 const SeachTable: React.FC<Props> = (props) => {
   const { data, loading, handleTableChange, confirmDelete, setOpen } = props
+  const { details } = useAppSelector(state => state.auth.user)
 
   const columns: TableProps<StaffList>['columns'] = [
     {
@@ -102,6 +104,7 @@ const SeachTable: React.FC<Props> = (props) => {
 
   return (
     <Table
+      rowKey={'id'}
       columns={columns}
       dataSource={data.data || []}
       loading={loading}

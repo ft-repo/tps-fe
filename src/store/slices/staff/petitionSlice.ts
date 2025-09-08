@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants'
 import { PetitionAdminState } from '@/@types/reducer/petition'
-import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionDocumentAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateRouteAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedDetailAPI, getPetitionNotificationAPI, getPetitionStatusAPI, getPetitionVehicleAPI } from '@/services/staff/PetitionService'
+import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionCountAPI, getPetitionDocumentAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateRouteAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedDetailAPI, getPetitionNotificationAPI, getPetitionStatusAPI, getPetitionVehicleAPI } from '@/services/staff/PetitionService'
 import { GetEstimateDetailParams, GetPetitionDetailParams, GetPetitionParams } from '@/@types/services/petition'
 import { GetPaginateParams } from '@/@types/shared'
 
@@ -557,6 +557,7 @@ const initialState: PetitionAdminState = {
       totalPages: 0,
     }
   },
+  petition_count: [],
   loading: false
 }
 
@@ -640,6 +641,12 @@ export const getPetitionStatus = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPeti
   return response.data
 })
 
+export const getPetitionCount = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionCount', async () => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionCountAPI()
+  return response.data
+})
+
 const petitionSlice = createSlice({
   name: `${SLICE_BASE_NAME}/petition`,
   initialState,
@@ -690,6 +697,9 @@ const petitionSlice = createSlice({
     },
     setAdminPetitionStatus: (state, action) => {
       state.petition_status = action.payload
+    },
+    setPetitionCount: (state, action) => {
+      state.petition_count = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -837,6 +847,17 @@ const petitionSlice = createSlice({
       .addCase(getPetitionStatus.rejected, (state) => {
         state.loading = false
       })
+    // GET PETITION COUNT
+    builder.addCase(getPetitionCount.fulfilled, (state, action) => {
+      state.petition_count = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionCount.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionCount.rejected, (state) => {
+        state.loading = false
+      })
   }
 })
 
@@ -853,7 +874,8 @@ export const {
   setAdminPetitionVehicle,
   setAdminPetitionExtendedDetail,
   setAdminPetitionNotification,
-  setAdminPetitionStatus
+  setAdminPetitionStatus,
+  setPetitionCount
 } = petitionSlice.actions
 
 export default petitionSlice.reducer

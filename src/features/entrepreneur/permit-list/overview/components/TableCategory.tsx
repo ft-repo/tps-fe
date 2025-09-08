@@ -203,7 +203,6 @@ const TableCategory: React.FC<Props> = ({ data, loading, handleTableChange, open
         return '-'
       }
     },
-
     { title: 'ตรวจเอกสาร', key: 'validate_document', width: 150, align: 'center', render: makeStatusCell(1) },
     { title: 'ตรวจเส้นทาง', key: 'validate_route', width: 150, align: 'center', render: makeStatusCell(2) },
     { title: 'ตรวจยานพาหนะ', key: 'validate_vehicle', width: 150, align: 'center', render: makeStatusCell(3) },
