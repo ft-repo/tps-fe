@@ -81,7 +81,9 @@ const OtherInfo: React.FC<Props> = (props) => {
       semi_weight7: dataParser.data.petition_extended_vehicle.axis_weight_semi_trailer[6] || 0,
       // 3. REMARK
       petition_number: String(dataParser.data.petition_extended_detail.ref_form_no) || '',
-      remark: dataParser.data.petition_extended_detail.remark || ''
+      remark: dataParser.data.petition_extended_detail.remark || '',
+      // 4. IS SAME
+      is_same: dataParser.value.is_same.length ? [true] : [],
     }
   })
 
@@ -123,9 +125,9 @@ const OtherInfo: React.FC<Props> = (props) => {
         }
       },
       petition_extended_vehicle: {
-        towing_vehicle_id: Number(value.towering_vehicle),
-        semi_trailer_vehicle_id: Number(value.semi_trailer_vehicle),
-        etc_vehicle_id: Number(value.etc_vehicle),
+        towing_vehicle_id: value.match_type === 3 ? null : Number(value.towering_vehicle),
+        semi_trailer_vehicle_id: value.match_type === 3 ? null : Number(value.semi_trailer_vehicle),
+        etc_vehicle_id: value.match_type === 2 ? null : Number(value.etc_vehicle),
         axis_weight_towing: [
           Number(value.towering_weight1),
           Number(value.towering_weight2),
@@ -159,6 +161,7 @@ const OtherInfo: React.FC<Props> = (props) => {
             setStep(2)
             setDataParser({
               data: body,
+              value: value,
               temporary_id: response.data.temporary_id,
               match_type: Number(value.match_type)
             })

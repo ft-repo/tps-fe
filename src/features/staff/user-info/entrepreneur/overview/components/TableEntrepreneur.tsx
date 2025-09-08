@@ -7,6 +7,7 @@ import { Table, TableProps } from 'antd';
 import { Button } from '@/components/ui';
 import dayjs from 'dayjs';
 import { ClientList, ClientListsResponse } from '@/@types/services/user';
+import { useAppSelector } from '@/store';
 
 interface Props {
   data: ClientListsResponse;
@@ -18,6 +19,7 @@ interface Props {
 const TableEntrepreneur: React.FC<Props> = (props) => {
   const { data, loading, handleTableChange, confirmDelete } = props
   const navigate = useNavigate();
+  const { details } = useAppSelector(state => state.auth.user)
 
   const columns: TableProps<ClientList>['columns'] = [
     {
@@ -86,13 +88,15 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
               color='blue-600'
               onClick={() => navigate(`/user-info/entrepreneur/view/${record.id}`)}
             />
-            <Button
-              size='xs'
-              variant='solid'
-              icon={<DeleteIcon />}
-              color='red-600'
-              onClick={() => confirmDelete(record.id, record)}
-            />
+            {details?.role?.name === "ผู้ดูแลระบบ" ?
+              <Button
+                size='xs'
+                variant='solid'
+                icon={<DeleteIcon />}
+                color='red-600'
+                onClick={() => confirmDelete(record.id, record)}
+              />
+              : null}
           </div>
         )
       }
@@ -101,6 +105,7 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
 
   return (
     <Table
+      rowKey={'id'}
       columns={columns}
       dataSource={data.data || []}
       loading={loading}

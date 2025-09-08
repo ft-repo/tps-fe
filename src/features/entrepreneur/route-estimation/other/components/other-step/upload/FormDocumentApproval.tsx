@@ -400,9 +400,9 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
         <Controller
           name='petition_extended_audit_document.safety_management_plan_url.file'
           control={control}
-          rules={{
-            required: 'กรุณาอัปโหลดรูปแบบการบริหารจัดการด้านความปลอดภัยในการใช้ทางหลวง'
-          }}
+          // rules={{
+          //   required: 'กรุณาอัปโหลดรูปแบบการบริหารจัดการด้านความปลอดภัยในการใช้ทางหลวง'
+          // }}
           render={({ field }) => {
             return (
               <fieldset>
@@ -472,9 +472,9 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
         <Controller
           name='petition_extended_audit_document.route_map_url.file'
           control={control}
-          rules={{
-            required: 'กรุณาอัปโหลดรูปแผนที่เส้นทางเดินบนทางหลวง'
-          }}
+          // rules={{
+          //   required: 'กรุณาอัปโหลดรูปแผนที่เส้นทางเดินบนทางหลวง'
+          // }}
           render={({ field }) => {
             return (
               <fieldset>
@@ -616,9 +616,9 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
         <Controller
           name='petition_extended_audit_document.contact_info_url.file'
           control={control}
-          rules={{
-            required: 'กรุณาอัปโหลดที่อยู่และอีเมลในการจัดส่งเอกสาร'
-          }}
+          // rules={{
+          //   required: 'กรุณาอัปโหลดที่อยู่และอีเมลในการจัดส่งเอกสาร'
+          // }}
           render={({ field }) => {
             return (
               <fieldset>

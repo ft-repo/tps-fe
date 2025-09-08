@@ -6,7 +6,7 @@ import { TitleSection, ContentSection } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { getPetitionEstimateRoute } from '@/store/slices/staff';
+import { getPetitionEstimateRoute, getPetitionStatus } from '@/store/slices/staff';
 
 interface Props {
 
@@ -23,6 +23,7 @@ const RouteScreen: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
+    dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
   }, [dispatch, petitionId])
 
   return (

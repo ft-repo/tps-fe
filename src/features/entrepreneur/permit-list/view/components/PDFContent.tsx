@@ -12,7 +12,7 @@ const PDFContent: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <PDFViewer/>
+      <PDFViewer />
     </div>
   )
 }

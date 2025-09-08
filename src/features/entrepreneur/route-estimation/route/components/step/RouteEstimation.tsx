@@ -29,15 +29,15 @@ const RouteEstimation: React.FC<Props> = (props) => {
 
   const form = useForm<FieldTypeArr>({
     defaultValues: {
-      start_latitude: dataParser.raw_body.start_latitude || 0,
-      start_longitude: dataParser.raw_body.start_longitude || 0,
-      end_latitude: dataParser.raw_body.end_latitude || 0,
-      end_longitude: dataParser.raw_body.end_longitude || 0,
+      start_latitude: dataParser.raw_body.start_latitude || '',
+      start_longitude: dataParser.raw_body.start_longitude || '',
+      end_latitude: dataParser.raw_body.end_latitude || '',
+      end_longitude: dataParser.raw_body.end_longitude || '',
       route_form: dataParser.raw_body.route_form.length ? dataParser.raw_body.route_form :
         [
           {
             match_type: null,
-            turn_radius: 0,
+            turn_radius: '',
             towering_vehicle: null,
             semi_trailer_vehicle: null,
             etc_vehicle: null,
@@ -78,9 +78,9 @@ const RouteEstimation: React.FC<Props> = (props) => {
       vehicle: value.route_form.map((item) => {
         return {
           turn_radius: Number(item.turn_radius),
-          towing_vehicle_id: Number(item.towering_vehicle),
-          semi_trailer_vehicle_id: Number(item.semi_trailer_vehicle),
-          etc_vehicle_id: Number(item.etc_vehicle),
+          towing_vehicle_id: item.match_type === 3 ? null : Number(item.towering_vehicle),
+          semi_trailer_vehicle_id: item.match_type === 3 ? null : Number(item.semi_trailer_vehicle),
+          etc_vehicle_id: item.match_type === 2 ? null : Number(item.etc_vehicle),
           towing_axis_weight: [
             Number(item.towering_weight1),
             Number(item.towering_weight2),
@@ -204,8 +204,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={10}>
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
-              <MapRoute 
-                coordinates={[[startLongitude, startLatitude], [endLongitude, endLatitude]]}
+              <MapRoute
+                coordinates={[[Number(startLongitude || 0), Number(startLatitude || 0)], [Number(endLongitude || 0), Number(endLatitude || 0)]]}
                 isRouteEstimate={false}
               />
             </div>

@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { getPetitionNotification } from '@/store/slices/staff';
 import { Avatar, Button, ConfigProvider, List, Spin } from 'antd';
 import dayjs from 'dayjs';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
 export type SidePanelContentProps = ThemeConfiguratorProps
 
@@ -62,12 +62,7 @@ const Content = (props: ContentProps) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const NotificationContent = (props: SidePanelContentProps) => {
   const { } = props;
-  const dispatch = useAppDispatch()
-  const { notification, loading } = useAppSelector(state => state.staff.petition)
-
-  useEffect(() => {
-    dispatch(getPetitionNotification(notification.search))
-  }, [dispatch, notification.search])
+  const { loading } = useAppSelector(state => state.staff.petition)
 
   return (
     <ConfigProvider

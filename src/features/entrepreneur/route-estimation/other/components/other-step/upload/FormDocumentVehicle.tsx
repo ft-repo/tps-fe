@@ -328,9 +328,9 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
         <Controller
           name='petition_extended_vehicle_document.prefab_parts_details_url.file'
           control={control}
-          rules={{
-            required: 'กรุณาอัปโหลดชิ้นส่วนสำเร็จรูปให้แสดงจำนวนชิ้น ขนาดมิติ และน้ำหนัก พร้อมจำนวนเที่ยวที่ขนส่ง'
-          }}
+          // rules={{
+          //   required: 'กรุณาอัปโหลดชิ้นส่วนสำเร็จรูปให้แสดงจำนวนชิ้น ขนาดมิติ และน้ำหนัก พร้อมจำนวนเที่ยวที่ขนส่ง'
+          // }}
           render={({ field }) => {
             return (
               <fieldset>

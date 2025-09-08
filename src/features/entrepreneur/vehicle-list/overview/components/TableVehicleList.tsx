@@ -94,7 +94,7 @@ const TableVehicleList: React.FC<Props> = (props) => {
   return (
     <Table
       columns={columns}
-      dataSource={data.data || []}
+      dataSource={[...data.data].sort((a, b) => a.id - b.id) || []}
       loading={loading}
       pagination={{
         defaultCurrent: 1,

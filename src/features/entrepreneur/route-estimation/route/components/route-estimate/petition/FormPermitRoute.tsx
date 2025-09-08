@@ -45,7 +45,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <fieldset>
-              <label>ข้าพเจ้า (ชื่อบริษัท / ห้าง / ร้าน)</label>
+              <label>ข้าพเจ้า (ชื่อบริษัท / ห้าง / ร้าน) <span className='text-red-500'>*</span></label>
               <Input
                 disabled
                 placeholder='กรุณาระบุ'
@@ -68,7 +68,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>วันที่ (เริ่มต้น)</label>
+                    <label>วันที่ (เริ่มต้น) <span className='text-red-500'>*</span></label>
                     <DatePicker
                       {...field}
                       name={field.name}
@@ -98,7 +98,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>วันที่ (สิ้นสุด)</label>
+                    <label>วันที่ (สิ้นสุด) <span className='text-red-500'>*</span></label>
                     <DatePicker
                       {...field}
                       name={field.name}
@@ -128,7 +128,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ชื่อผู้ติดต่อ / มอบอำนาจ</label>
+                    <label>ชื่อผู้ติดต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -157,7 +157,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เบอร์โทรศัพท์</label>
+                    <label>เบอร์โทรศัพท์ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -186,7 +186,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ชื่อโครงการ</label>
+                    <label>ชื่อโครงการ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -215,7 +215,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ขนส่งจาก</label>
+                    <label>ขนส่งจาก <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -244,7 +244,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จังหวัด</label>
+                    <label>จังหวัด <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -282,7 +282,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ขนส่งจาก</label>
+                    <label>ขนส่งจาก <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -311,7 +311,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จังหวัด</label>
+                    <label>จังหวัด <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -354,7 +354,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>หนังสือมอบอำนาจ</label>
+                    <label>หนังสือมอบอำนาจ <span className='text-red-500'>*</span></label>
                     <Upload
                       {...field}
                       fileList={field.value || []}
@@ -419,7 +419,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>หนังสือวิศวะเครื่องกล</label>
+                    <label>หนังสือวิศวะเครื่องกล <span className='text-red-500'>*</span></label>
                     <Upload
                       {...field}
                       fileList={field.value || []}

@@ -12,7 +12,7 @@
 .ant-upload-wrapper .ant-upload-select {
   display: block;
 }
-
+/* 
 .ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
   overflow: hidden;
   white-space: normal;
@@ -21,4 +21,4 @@
   line-height: 1.5714285714285714;
   flex: auto;
   transition: all 0.3s;
-}
+} */

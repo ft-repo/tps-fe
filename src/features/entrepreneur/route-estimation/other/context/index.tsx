@@ -12,11 +12,16 @@ export interface ContextProps {
 }
 export interface DataParser extends MatchType {
   data: PetitionExtendedPostRequest;
+  value: FieldValue;
   temporary_id: string;
 }
 
 export interface MatchType {
   match_type: number;
+}
+
+export interface FieldValue {
+  is_same: boolean[];
 }
 
 export const PageContext = createContext<ContextProps | null>(null)
@@ -78,6 +83,9 @@ export const OtherProvider = (props: any) => {
           0,
         ],
       },
+    },
+    value: {
+      is_same: [],
     },
     match_type: 0,
     temporary_id: ''

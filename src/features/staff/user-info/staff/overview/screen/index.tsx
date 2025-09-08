@@ -48,6 +48,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { admin, loading } = useAppSelector(state => state.staff.staff)
+  const { details } = useAppSelector(state => state.auth.user)
   // const loading = useAppSelector(state => state.layout.loading)
   const [open, setOpen] = useState(INIT_MODAL)
 
@@ -109,7 +110,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
           content: 'บันทึกข้อมูลสำเร็จ',
           okText: 'ตกลง',
           onOk: () => {
-            dispatch(setAdminData(admin.overview.search))
+            dispatch(getAdminData(admin.overview.search))
             Modal.destroyAll()
           },
           okButtonProps: {
@@ -184,16 +185,18 @@ const OverviewScreen: React.FC<Props> = (props) => {
     <div>
       <section className="flex justify-between items-center flex-wrap gap-5">
         <h3>ข้อมูลเจ้าหน้าที่</h3>
-        <Button
-          htmlType='button'
-          type='primary'
-          size='large'
-          className='w-full lg:w-auto'
-          icon={<PlusIcon />}
-          onClick={() => navigate('/user-info/staff/create')}
-        >
-          เพิ่มผู้ใช้งาน
-        </Button>
+        {details?.role?.name === "ผู้ดูแลระบบ" ?
+          <Button
+            htmlType='button'
+            type='primary'
+            // size='large'
+            className='w-full lg:w-auto'
+            icon={<PlusIcon />}
+            onClick={() => navigate('/user-info/staff/create')}
+          >
+            เพิ่มผู้ใช้งาน
+          </Button>
+          : null}
       </section>
       <section className="mt-5">
         <SeachStaff

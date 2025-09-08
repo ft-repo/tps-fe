@@ -42,22 +42,22 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '3',
       label: 'น้ำหนักรถเปล่า (กิโลกรัม)',
-      children: <p>{Number(item?.towing_vehicle.weight || 0) + Number(item?.semi_trailer_vehicle.weight || 0)}</p>,
+      children: <p>{Number(item?.towing_vehicle?.weight || 0) + Number(item?.semi_trailer_vehicle?.weight || 0)}</p>,
     },
     {
       key: '4',
       label: 'น้ำหนักรถเปล่ารวมน้ำหนักเพลา (กิโลกรัม)',
-      children: <p>{Number(item?.towing_vehicle.weight || 0) + Number(item?.semi_trailer_vehicle.weight || 0) + Number(item?.towing_vehicle.axis_weight[0]) + Number(item?.towing_vehicle.axis_weight[1]) + Number(item?.towing_vehicle.axis_weight[2]) + Number(item?.semi_trailer_vehicle.axis_weight[0]) + Number(item?.semi_trailer_vehicle.axis_weight[1]) + Number(item?.semi_trailer_vehicle.axis_weight[2])}</p>,
+      children: <p>{Number(item?.towing_vehicle?.weight || 0) + Number(item?.semi_trailer_vehicle?.weight || 0) + Number(item?.towing_vehicle?.axis_weight[0] || 0) + Number(item?.towing_vehicle?.axis_weight[1] || 0) + Number(item?.towing_vehicle?.axis_weight[2] || 0) + Number(item?.semi_trailer_vehicle?.axis_weight[0] || 0) + Number(item?.semi_trailer_vehicle?.axis_weight[1] || 0) + Number(item?.semi_trailer_vehicle?.axis_weight[2] || 0)}</p>,
     },
     {
       key: '5',
       label: 'มิติรถเปล่า (เมตร)',
-      children: <p>{`กว้าง ${Math.max(Number(item?.towing_vehicle.width || 0), Number(item?.semi_trailer_vehicle.width || 0))} X ยาว ${Math.max(Number(item?.towing_vehicle.length || 0), Number(item?.semi_trailer_vehicle.length || 0))} X สูง ${Math.max(Number(item?.towing_vehicle.height || 0), Number(item?.semi_trailer_vehicle.height || 0))}`}</p>,
+      children: <p>{`กว้าง ${Math.max(Number(item?.towing_vehicle?.width || 0), Number(item?.semi_trailer_vehicle?.width || 0))} X ยาว ${Math.max(Number(item?.towing_vehicle?.length || 0), Number(item?.semi_trailer_vehicle?.length || 0))} X สูง ${Math.max(Number(item?.towing_vehicle?.height || 0), Number(item?.semi_trailer_vehicle?.height || 0))}`}</p>,
     },
     {
       key: '6',
       label: 'มิติรถเปล่ารวมสินค้า เครื่องจักร (เมตร)',
-      children: <p>{`กว้าง ${Math.max(Number(item?.towing_vehicle.width || 0), Number(item?.semi_trailer_vehicle.width || 0), Number(item?.etc_vehicle?.width || 0))} X ยาว ${Math.max(Number(item?.towing_vehicle.length || 0), Number(item?.semi_trailer_vehicle.length || 0), Number(item?.etc_vehicle?.length || 0))} X สูง ${Math.max(Number(item?.towing_vehicle.height || 0), Number(item?.semi_trailer_vehicle.height || 0), Number(item?.etc_vehicle?.height || 0))}`}</p>,
+      children: <p>{`กว้าง ${Math.max(Number(item?.towing_vehicle?.width || 0), Number(item?.semi_trailer_vehicle?.width || 0), Number(item?.etc_vehicle?.width || 0))} X ยาว ${Math.max(Number(item?.towing_vehicle?.length || 0), Number(item?.semi_trailer_vehicle?.length || 0), Number(item?.etc_vehicle?.length || 0))} X สูง ${Math.max(Number(item?.towing_vehicle?.height || 0), Number(item?.semi_trailer_vehicle?.height || 0), Number(item?.etc_vehicle?.height || 0))}`}</p>,
     },
     {
       key: '7',

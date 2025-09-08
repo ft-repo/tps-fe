@@ -8,7 +8,8 @@ import type { FieldType } from './FormSearchPetition'
 
 interface Props { }
 
-const ContentPetitionExtended: React.FC<Props> = (_props) => {
+const ContentPetitionExtended: React.FC<Props> = (props) => {
+  const { } = props
   const dispatch = useAppDispatch()
 
   // ⬇️ ตาม state structure เดิม: state.staff.petition มีทั้ง petition และ petition_extended
@@ -56,11 +57,11 @@ const ContentPetitionExtended: React.FC<Props> = (_props) => {
   return (
     <div>
       <h3>รายการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)</h3>
-
       <section className="mt-5">
-        <FormSearchPetitionExtended handleSearch={handleSearch} />
+        <FormSearchPetitionExtended
+          handleSearch={handleSearch}
+        />
       </section>
-
       <section className="mt-5">
         <TablePetitionExtended
           data={petition_extended.overview.data}

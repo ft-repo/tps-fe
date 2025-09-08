@@ -1,12 +1,12 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useEffect } from 'react'
-import { TitleSection, ContentSection } from '../components'
-import { Button, Spin } from 'antd'
+import { ContentDetail, ContentForm, ContentPreviewPDF } from '../components'
+import { Button, Col, Row, Spin } from 'antd'
 import { AiOutlineLeft } from 'react-icons/ai'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { getPetitionDocument } from '@/store/slices/staff'
+import { getPetitionDocument, getPetitionStatus } from '@/store/slices/staff'
 
 interface Props {
 
@@ -23,25 +23,43 @@ const DocumentScreen: React.FC<Props> = (props) => {
 
 	useEffect(() => {
 		dispatch(getPetitionDocument({ petition_id: String(petitionId) }))
+		dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
 	}, [dispatch, petitionId])
 
 	return (
 		<Spin spinning={loading || defaultLoading}>
-			<section>
-				<Button
-					type='text'
-					icon={<AiOutlineLeft />}
-					onClick={() => navigate(-1)}
-				>
-					ย้อนกลับ
-				</Button>
-			</section>
-			<section>
-				<TitleSection />
-			</section>
-			<section className='mt-5'>
-				<ContentSection />
-			</section>
+			<Row gutter={[16, 16]}>
+				<Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
+					<section>
+						<Button
+							type='text'
+							icon={<AiOutlineLeft />}
+							onClick={() => navigate(-1)}
+						>
+							ย้อนกลับ
+						</Button>
+					</section>
+					<section>
+						<h3>ตรวจสอบเอกสาร</h3>
+					</section>
+					<section className='mt-5'>
+						{!loading ?
+							<ContentDetail />
+							: null}
+					</section>
+					<section className='mt-5'>
+						{!loading ?
+							<ContentForm />
+							: null
+						}
+					</section>
+				</Col>
+				<Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
+					{!loading ?
+						<ContentPreviewPDF />
+						: null}
+				</Col>
+			</Row>
 		</Spin>
 	)
 }

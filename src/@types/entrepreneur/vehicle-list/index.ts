@@ -3,12 +3,12 @@ export interface FieldType {
   license_plate: string;
   vehicle_model: string;
   province: string | number | null;
-  vehicle_weight: number;
+  vehicle_weight: string | number;
   vehicle_color: string;
-  vehicle_distance: number
-  wide_unit: number
-  long_unit: number;
-  tall_unit: number;
+  vehicle_distance: string | number;
+  wide_unit: string | number;
+  long_unit: string | number;
+  tall_unit: string | number;
   vehicle_axles: number | null;
   // DOCUMENT ID
   file_registered_document_id: FileType;

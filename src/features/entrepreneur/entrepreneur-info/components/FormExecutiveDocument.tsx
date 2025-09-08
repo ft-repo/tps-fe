@@ -49,7 +49,7 @@ const FormExecutiveDocument: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>สำเนาบัตรประชาชนผู้มีอำนาจ</label>
+                <label>สำเนาบัตรประชาชนผู้มีอำนาจ <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -112,7 +112,7 @@ const FormExecutiveDocument: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>หนังสือรับรองนิติบุคคล</label>
+                <label>หนังสือรับรองนิติบุคคล <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -175,7 +175,7 @@ const FormExecutiveDocument: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ</label>
+                <label>รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}

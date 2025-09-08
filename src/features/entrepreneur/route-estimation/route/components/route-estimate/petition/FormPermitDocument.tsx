@@ -86,9 +86,9 @@ const FormPermitDocument: React.FC<Props> = (props) => {
             <Controller
               name={`vehicle.${index}.truck_dimension_url.file`}
               control={control}
-              rules={{
-                required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ รถลากจูง'
-              }}
+              // rules={{
+              //   required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ รถลากจูง'
+              // }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -151,9 +151,9 @@ const FormPermitDocument: React.FC<Props> = (props) => {
             <Controller
               name={`vehicle.${index}.semi_trailer_dimension_url.file`}
               control={control}
-              rules={{
-                required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ รถกึ่งพ่วง'
-              }}
+              // rules={{
+              //   required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ รถกึ่งพ่วง'
+              // }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -216,9 +216,9 @@ const FormPermitDocument: React.FC<Props> = (props) => {
             <Controller
               name={`vehicle.${index}.cargo_dimension_url.file`}
               control={control}
-              rules={{
-                required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ สินค้า / เครื่องจักร'
-              }}
+              // rules={{
+              //   required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ สินค้า / เครื่องจักร'
+              // }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -281,9 +281,9 @@ const FormPermitDocument: React.FC<Props> = (props) => {
             <Controller
               name={`vehicle.${index}.combined_vehicle_url.file`}
               control={control}
-              rules={{
-                required: 'กรุณาอัปโหลดรูปแบบยานพาหนะรวมสิ่งของ'
-              }}
+              // rules={{
+              //   required: 'กรุณาอัปโหลดรูปแบบยานพาหนะรวมสิ่งของ'
+              // }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -346,9 +346,9 @@ const FormPermitDocument: React.FC<Props> = (props) => {
             <Controller
               name={`vehicle.${index}.turning_radius_url.file`}
               control={control}
-              rules={{
-                required: 'กรุณาอัปโหลดรูปแบบที่แสดงรัศมีวงเลี่ยว'
-              }}
+              // rules={{
+              //   required: 'กรุณาอัปโหลดรูปแบบที่แสดงรัศมีวงเลี่ยว'
+              // }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -411,9 +411,9 @@ const FormPermitDocument: React.FC<Props> = (props) => {
             <Controller
               name={`vehicle.${index}.highway_dept_permit_url.file`}
               control={control}
-              rules={{
-                required: 'กรุณาอัปโหลดเอกสารขออนุญาตจาก ทล.'
-              }}
+              // rules={{
+              //   required: 'กรุณาอัปโหลดเอกสารขออนุญาตจาก ทล.'
+              // }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -476,9 +476,9 @@ const FormPermitDocument: React.FC<Props> = (props) => {
             <Controller
               name={`vehicle.${index}.highway_dept_permit_number_url.file`}
               control={control}
-              rules={{
-                required: 'กรุณาอัปโหลดเลขที่ขออนุญาตเดิมจาก ทล.'
-              }}
+              // rules={{
+              //   required: 'กรุณาอัปโหลดเลขที่ขออนุญาตเดิมจาก ทล.'
+              // }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -541,9 +541,9 @@ const FormPermitDocument: React.FC<Props> = (props) => {
             <Controller
               name={`vehicle.${index}.rural_highway_dept_permit_url.file`}
               control={control}
-              rules={{
-                required: 'กรุณาอัปโหลดเอกสารขออนุญาตจาก ทช.'
-              }}
+              // rules={{
+              //   required: 'กรุณาอัปโหลดเอกสารขออนุญาตจาก ทช.'
+              // }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -606,9 +606,9 @@ const FormPermitDocument: React.FC<Props> = (props) => {
             <Controller
               name={`vehicle.${index}.rural_highway_dept_permit_number_url.file`}
               control={control}
-              rules={{
-                required: 'กรุณาอัปโหลดเลขที่ขออนุญาตเดิมจาก ทช.'
-              }}
+              // rules={{
+              //   required: 'กรุณาอัปโหลดเลขที่ขออนุญาตเดิมจาก ทช.'
+              // }}
               render={({ field }) => {
                 return (
                   <fieldset>

@@ -37,7 +37,7 @@ const FormVehicle: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เลือกประเภทจับคู่</label>
+                    <label>เลือกประเภทจับคู่ <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -68,6 +68,22 @@ const FormVehicle: React.FC<Props> = (props) => {
                         setValue('towering_vehicle', null)
                         setValue('semi_trailer_vehicle', null)
                         setValue('etc_vehicle', null)
+                        // SET TOWER WEIGHT
+                        setValue(`towering_weight1`, 0)
+                        setValue(`towering_weight2`, 0)
+                        setValue(`towering_weight3`, 0)
+                        setValue(`towering_weight4`, 0)
+                        setValue(`towering_weight5`, 0)
+                        setValue(`towering_weight6`, 0)
+                        setValue(`towering_weight7`, 0)
+                        // SET SEMI WEIGHT
+                        setValue(`semi_weight1`, 0)
+                        setValue(`semi_weight2`, 0)
+                        setValue(`semi_weight3`, 0)
+                        setValue(`semi_weight4`, 0)
+                        setValue(`semi_weight5`, 0)
+                        setValue(`semi_weight6`, 0)
+                        setValue(`semi_weight7`, 0)
                         // ON STATE CHANGE
                         setToweringVehicleWheel(0)
                         setSemiVehicleWheel(0)
@@ -93,13 +109,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   return (
                     <fieldset>
                       <h5>รถลากจูง</h5>
-                      <label>เลขทะเบียน / เลขตัวรถ</label>
+                      <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear
                         showSearch
                         placeholder='กรุณาเลือก'
-                        options={vehicle_selection.data.map(item => {
+                        options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'รถลากจูง').map(item => {
                           return item.vehicle_detail
                         })}
                         fieldNames={{
@@ -119,6 +135,14 @@ const FormVehicle: React.FC<Props> = (props) => {
                           field.onChange(value)
                           if (!value) {
                             setToweringVehicleWheel(0)
+                            // SET TOWING WEIGHT
+                            setValue(`towering_weight1`, 0)
+                            setValue(`towering_weight2`, 0)
+                            setValue(`towering_weight3`, 0)
+                            setValue(`towering_weight4`, 0)
+                            setValue(`towering_weight5`, 0)
+                            setValue(`towering_weight6`, 0)
+                            setValue(`towering_weight7`, 0)
                           } else {
                             setToweringVehicleWheel(axis.axis_number)
                           }
@@ -145,15 +169,16 @@ const FormVehicle: React.FC<Props> = (props) => {
                   return (
                     <fieldset>
                       <h5>รถกึ่งพ่วง</h5>
-                      <label>เลขทะเบียน / เลขตัวรถ</label>
+                      <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear
                         showSearch
                         placeholder='กรุณาเลือก'
-                        options={vehicle_selection.data.map(item => {
+                        options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'รถกึ่งพ่วง').map(item => {
                           return item.vehicle_detail
-                        })} fieldNames={{
+                        })}
+                        fieldNames={{
                           label: 'plate_no',
                           value: 'id'
                         }}
@@ -170,6 +195,14 @@ const FormVehicle: React.FC<Props> = (props) => {
                           field.onChange(value)
                           if (!value) {
                             setSemiVehicleWheel(0)
+                            // SET SEMI WEIGHT
+                            setValue(`semi_weight1`, 0)
+                            setValue(`semi_weight2`, 0)
+                            setValue(`semi_weight3`, 0)
+                            setValue(`semi_weight4`, 0)
+                            setValue(`semi_weight5`, 0)
+                            setValue(`semi_weight6`, 0)
+                            setValue(`semi_weight7`, 0)
                           } else {
                             setSemiVehicleWheel(axis.axis_number)
                           }
@@ -196,15 +229,16 @@ const FormVehicle: React.FC<Props> = (props) => {
                   return (
                     <fieldset>
                       <h5>สินค้า / เครื่องจักร</h5>
-                      <label>ชื่อสินค้า / เครื่องจักร</label>
+                      <label>ชื่อสินค้า / เครื่องจักร <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear
                         showSearch
                         placeholder='กรุณาเลือก'
-                        options={vehicle_selection.data.map(item => {
+                        options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'เครื่องจักร / สินค้า').map(item => {
                           return item.vehicle_detail
-                        })} fieldNames={{
+                        })}
+                        fieldNames={{
                           label: 'plate_no',
                           value: 'id'
                         }}

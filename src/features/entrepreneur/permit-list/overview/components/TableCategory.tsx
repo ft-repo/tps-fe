@@ -123,30 +123,86 @@ const TableCategory: React.FC<Props> = ({ data, loading, handleTableChange, open
       }
 
   const columns: TableProps<PetitionTableData>['columns'] = [
-    { title: 'เลขที่', dataIndex: 'petition_no', key: 'petition_no', width: 100, align: 'center' },
+    {
+      title: 'เลขที่',
+      dataIndex: 'petition_no',
+      key: 'petition_no',
+      width: 100,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
+    },
     {
       title: 'รหัสสายทาง',
       dataIndex: 'road_code',
       key: 'road_code',
       width: 150,
-      align: 'center'
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'ชื่อสายทาง',
       dataIndex: 'road_name',
       key: 'road_name',
-      width: 200,
+      width: 500,
       align: 'center',
       render: (item, record) => {
-        return (
-          <p onClick={() => openDataModal(record.petition_id, record)}>{item}</p>
-        )
+        if (item) {
+          return (
+            <p onClick={() => openDataModal(record.petition_id, record)}>{item}</p>
+          )
+        }
+        return '-'
       }
     },
-    { title: 'วันที่เริ่มต้น', dataIndex: 'start_date', key: 'start_date', width: 150, align: 'center' },
-    { title: 'วันที่สิ้นสุด', dataIndex: 'end_date', key: 'end_date', width: 150, align: 'center' },
-    { title: 'วันที่ขออนุญาต', dataIndex: 'petition_date', key: 'petition_date', width: 150, align: 'center' },
-
+    {
+      title: 'วันที่เริ่มต้น',
+      dataIndex: 'start_date',
+      key: 'start_date',
+      width: 150,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
+        }
+        return '-'
+      }
+    },
+    {
+      title: 'วันที่สิ้นสุด',
+      dataIndex: 'end_date',
+      key: 'end_date',
+      width: 150,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
+        }
+        return '-'
+      }
+    },
+    {
+      title: 'วันที่ขออนุญาต',
+      dataIndex: 'petition_date',
+      key: 'petition_date',
+      width: 150,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
+        }
+        return '-'
+      }
+    },
     { title: 'ตรวจเอกสาร', key: 'validate_document', width: 150, align: 'center', render: makeStatusCell(1) },
     { title: 'ตรวจเส้นทาง', key: 'validate_route', width: 150, align: 'center', render: makeStatusCell(2) },
     { title: 'ตรวจยานพาหนะ', key: 'validate_vehicle', width: 150, align: 'center', render: makeStatusCell(3) },
