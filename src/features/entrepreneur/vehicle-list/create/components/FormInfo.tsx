@@ -55,7 +55,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ประเภทรถ</label>
+                    <label>ประเภทรถ <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       placeholder='กรุณาเลือก'
@@ -88,7 +88,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เลขทะเบียน / เลขตัวรถ</label>
+                    <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -97,6 +97,14 @@ const FormInfo: React.FC<Props> = (props) => {
                       size='large'
                       style={{
                         fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(e) => {
+                        field.onChange(
+                          e.target.value
+                            .replace(/[^0-9]/g, "") // Remove non-digits
+                            .replace(/(\d{2})(\d{4})/, "$1-$2") // Format as XX-XXXX
+                            .slice(0, 7) // Limit to 7 characters (including dash)
+                        )
                       }}
                     />
                     {!!errors.license_plate &&
@@ -117,7 +125,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ยี่ห้อ</label>
+                    <label>ยี่ห้อ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -146,7 +154,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จังหวัด</label>
+                    <label>จังหวัด <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -184,7 +192,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>น้ำหนักรถเปล่า (กก.)</label>
+                    <label>น้ำหนักรถเปล่า (กก.) <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -194,9 +202,9 @@ const FormInfo: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
-                      suffix='กก.'
+                      // suffix='กก.'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                       }}
                     />
                     {!!errors.vehicle_weight &&
@@ -217,7 +225,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>สีรถ</label>
+                    <label>สีรถ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -246,7 +254,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ระยะ kingpin (ม.)</label>
+                    <label>ระยะ kingpin (ม.) <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -256,9 +264,9 @@ const FormInfo: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
-                      suffix='ม.'
+                      // suffix='ม.'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                       }}
                     />
                     {!!errors.vehicle_distance &&
@@ -279,7 +287,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จำนวนเพลา</label>
+                    <label>จำนวนเพลา <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -335,7 +343,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>กว้าง (ม.)</label>
+                    <label>กว้าง (ม.) <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -345,9 +353,9 @@ const FormInfo: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
-                      suffix='ม.'
+                      // suffix='ม.'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                       }}
                     />
                     {!!errors.wide_unit &&
@@ -368,7 +376,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>กว้าง (ม.)</label>
+                    <label>กว้าง (ม.) <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -378,9 +386,9 @@ const FormInfo: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
-                      suffix='ม.'
+                      // suffix='ม.'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                       }}
                     />
                     {!!errors.long_unit &&
@@ -401,7 +409,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>สูง (ม.)</label>
+                    <label>สูง (ม.) <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -411,9 +419,9 @@ const FormInfo: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
-                      suffix='ม.'
+                      // suffix='ม.'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                       }}
                     />
                     {!!errors.tall_unit &&
@@ -434,7 +442,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label className='block'>เอกสารเล่มทะเบียน</label>
+                    <label className='block'>เอกสารเล่มทะเบียน <span className='text-red-500'>*</span></label>
                     <Upload
                       {...field}
                       fileList={field.value || []}

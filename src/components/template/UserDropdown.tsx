@@ -6,9 +6,11 @@ import { Link } from 'react-router-dom'
 import classNames from 'classnames'
 import { HiOutlineLogout, HiOutlineUser, HiLockClosed } from 'react-icons/hi'
 import type { CommonProps } from '@/@types/common'
-import type { JSX } from 'react'
+import { useCallback, useEffect, useState, type JSX } from 'react'
 import { setOpenModal, useAppDispatch, useAppSelector } from '@/store'
 import ChangePassword from '../custom/modal/ChangePassword'
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
+import { message, Spin } from 'antd'
 
 type DropdownList = {
 	label: string
@@ -27,11 +29,53 @@ const dropdownItemList: DropdownList[] = [
 const _UserDropdown = ({ className }: CommonProps) => {
 	const { signOut } = useAuth()
 	const dispatch = useAppDispatch()
-	const { authority, name } = useAppSelector(state => state.auth.user)
+	const { authority, name, details } = useAppSelector(state => state.auth.user)
+	const [avatarImage, setAvatarImage] = useState<string>('')
+	const [loading, setLoading] = useState<boolean>(false)
+
+	const extractUrl = useCallback((url: string) => {
+		const path = url.split('/upload')[1];
+		return path
+	}, []);
+
+	const fetchImage = useCallback(async (imgUrl: string) => {
+		setLoading(true)
+		try {
+			const response = await getUploadAPI(imgUrl)
+			if (response.status === 200) {
+				const blobFile = new Blob([response.data], { type: response.data.type })
+				const url = URL.createObjectURL(blobFile)
+				setAvatarImage(url)
+			}
+		} catch (error) {
+			if (error instanceof Error) {
+				message.error(error.message)
+			} else {
+				console.error(error)
+			}
+		} finally {
+			setLoading(false)
+		}
+	}, [])
+
+	useEffect(() => {
+		if (authority[0] === 'USER') {
+			fetchImage(extractUrl(details.profile_url))
+		}
+	}, [details, extractUrl, fetchImage, authority])
 
 	const UserAvatar = (
 		<div className={classNames(className, 'flex items-center gap-2')}>
-			<Avatar size={32} shape="circle" icon={<HiOutlineUser />} />
+			{authority[0] === 'USER' ?
+				<Spin spinning={loading}>
+					<Avatar
+						size={32}
+						shape="circle"
+						icon={<HiOutlineUser />}
+						src={avatarImage}
+					/>
+				</Spin>
+				: null}
 			<div className="hidden md:block">
 				{/* <div className="text-xs capitalize">admin</div> */}
 				{/* <div className="font-bold">User01</div> */}
@@ -49,7 +93,15 @@ const _UserDropdown = ({ className }: CommonProps) => {
 			>
 				<Dropdown.Item variant="header">
 					<div className="py-2 px-3 flex items-center gap-2">
-						<Avatar shape="circle" icon={<HiOutlineUser />} />
+						{authority[0] === 'USER' ?
+							<Spin spinning={loading}>
+								<Avatar
+									shape="circle"
+									icon={<HiOutlineUser />}
+									src={avatarImage}
+								/>
+							</Spin>
+							: null}
 						<div>
 							{/* <div className="font-bold text-gray-900 dark:text-gray-100">
 								User01

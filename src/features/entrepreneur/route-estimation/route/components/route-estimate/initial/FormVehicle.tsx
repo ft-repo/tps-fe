@@ -131,10 +131,10 @@ const FormVehicle: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (towering_vehicle) {
-      setToweringVehicleWheel(towering_vehicle)
+      setToweringVehicleWheel(Number(selectTowing?.vehicle_detail.axis_number))
     }
     if (semi_trailer_vehicle) {
-      setSemiVehicleWheel(semi_trailer_vehicle)
+      setSemiVehicleWheel(Number(selectSemi?.vehicle_detail.axis_number))
     }
     if (!match_type) {
       setToweringVehicleWheel(0)
@@ -154,7 +154,7 @@ const FormVehicle: React.FC<Props> = (props) => {
     if (!etc_vehicle) {
       setEtcImage('')
     }
-  }, [towering_vehicle, semi_trailer_vehicle, etc_vehicle, match_type])
+  }, [towering_vehicle, semi_trailer_vehicle, etc_vehicle, match_type, selectTowing?.vehicle_detail.axis_number, selectSemi?.vehicle_detail.axis_number])
 
   return (
     <>
@@ -171,7 +171,7 @@ const FormVehicle: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เลือกประเภทจับคู่</label>
+                    <label>เลือกประเภทจับคู่ <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -247,7 +247,7 @@ const FormVehicle: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>รัศมีวงเลี้ยว (เมตร)</label>
+                    <label>รัศมีวงเลี้ยว (เมตร) <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -257,9 +257,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
-                      suffix='เมตร'
+                      // suffix='เมตร'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                       }}
                     />
                     {!!errors.route_form?.[formIndex]?.turn_radius &&
@@ -282,7 +282,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                   return (
                     <fieldset>
                       <h5>รถลากจูง</h5>
-                      <label>เลขทะเบียน / เลขตัวรถ</label>
+                      <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear
@@ -302,6 +302,17 @@ const FormVehicle: React.FC<Props> = (props) => {
                         size='large'
                         style={{
                           fontFamily: 'Noto Sans Thai'
+                        }}
+                        onChange={(value) => {
+                          field.onChange(value)
+                          // SET TOWER WEIGHT
+                          setValue(`route_form.${formIndex}.towering_weight1`, 0)
+                          setValue(`route_form.${formIndex}.towering_weight2`, 0)
+                          setValue(`route_form.${formIndex}.towering_weight3`, 0)
+                          setValue(`route_form.${formIndex}.towering_weight4`, 0)
+                          setValue(`route_form.${formIndex}.towering_weight5`, 0)
+                          setValue(`route_form.${formIndex}.towering_weight6`, 0)
+                          setValue(`route_form.${formIndex}.towering_weight7`, 0)
                         }}
                       // onChange={(value, option) => {
                       //   const axis: VehicleDetail | any = option
@@ -337,7 +348,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                   return (
                     <fieldset>
                       <h5>รถกึ่งพ่วง</h5>
-                      <label>เลขทะเบียน / เลขตัวรถ</label>
+                      <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear
@@ -345,7 +356,8 @@ const FormVehicle: React.FC<Props> = (props) => {
                         placeholder='กรุณาเลือก'
                         options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'รถกึ่งพ่วง').map(item => {
                           return item.vehicle_detail
-                        })} fieldNames={{
+                        })} 
+                        fieldNames={{
                           label: 'plate_no',
                           value: 'id'
                         }}
@@ -356,6 +368,17 @@ const FormVehicle: React.FC<Props> = (props) => {
                         size='large'
                         style={{
                           fontFamily: 'Noto Sans Thai'
+                        }}
+                        onChange={(value) => {
+                          field.onChange(value)
+                          // SET SEMI WEIGHT
+                          setValue(`route_form.${formIndex}.semi_weight1`, 0)
+                          setValue(`route_form.${formIndex}.semi_weight2`, 0)
+                          setValue(`route_form.${formIndex}.semi_weight3`, 0)
+                          setValue(`route_form.${formIndex}.semi_weight4`, 0)
+                          setValue(`route_form.${formIndex}.semi_weight5`, 0)
+                          setValue(`route_form.${formIndex}.semi_weight6`, 0)
+                          setValue(`route_form.${formIndex}.semi_weight7`, 0)
                         }}
                       // onChange={(value, option) => {
                       //   const axis: VehicleDetail | any = option
@@ -391,7 +414,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                   return (
                     <fieldset>
                       <h5>สินค้า / เครื่องจักร</h5>
-                      <label>ชื่อสินค้า / เครื่องจักร</label>
+                      <label>ชื่อสินค้า / เครื่องจักร <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear
@@ -399,7 +422,8 @@ const FormVehicle: React.FC<Props> = (props) => {
                         placeholder='กรุณาเลือก'
                         options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'เครื่องจักร / สินค้า').map(item => {
                           return item.vehicle_detail
-                        })} fieldNames={{
+                        })}
+                        fieldNames={{
                           label: 'plate_no',
                           value: 'id'
                         }}
@@ -458,9 +482,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             style={{
                               fontFamily: 'Noto Sans Thai'
                             }}
-                            suffix='กิโลกรัม'
+                            // suffix='กิโลกรัม'
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                             }}
                           />
                           {!!errors.route_form?.[formIndex]?.towering_weight1 &&
@@ -490,9 +514,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             style={{
                               fontFamily: 'Noto Sans Thai'
                             }}
-                            suffix='กิโลกรัม'
+                            // suffix='กิโลกรัม'
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                             }}
                           />
                           {!!errors.route_form?.[formIndex]?.towering_weight2 &&
@@ -525,9 +549,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             fontFamily: 'Noto Sans Thai'
                           }}
-                          suffix='กิโลกรัม'
+                          // suffix='กิโลกรัม'
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.towering_weight3 &&
@@ -559,9 +583,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             fontFamily: 'Noto Sans Thai'
                           }}
-                          suffix='กิโลกรัม'
+                          // suffix='กิโลกรัม'
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.towering_weight4 &&
@@ -593,9 +617,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             fontFamily: 'Noto Sans Thai'
                           }}
-                          suffix='กิโลกรัม'
+                          // suffix='กิโลกรัม'
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.towering_weight5 &&
@@ -627,9 +651,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             fontFamily: 'Noto Sans Thai'
                           }}
-                          suffix='กิโลกรัม'
+                          // suffix='กิโลกรัม'
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.towering_weight6 &&
@@ -661,9 +685,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             fontFamily: 'Noto Sans Thai'
                           }}
-                          suffix='กิโลกรัม'
+                          // suffix='กิโลกรัม'
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.towering_weight7 &&
@@ -703,9 +727,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             style={{
                               fontFamily: 'Noto Sans Thai'
                             }}
-                            suffix='กิโลกรัม'
+                            // suffix='กิโลกรัม'
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                             }}
                           />
                           {!!errors.route_form?.[formIndex]?.semi_weight1 &&
@@ -735,9 +759,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             style={{
                               fontFamily: 'Noto Sans Thai'
                             }}
-                            suffix='กิโลกรัม'
+                            // suffix='กิโลกรัม'
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                             }}
                           />
                           {!!errors.route_form?.[formIndex]?.semi_weight2 &&
@@ -770,9 +794,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             fontFamily: 'Noto Sans Thai'
                           }}
-                          suffix='กิโลกรัม'
+                          // suffix='กิโลกรัม'
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.semi_weight3 &&
@@ -804,9 +828,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             fontFamily: 'Noto Sans Thai'
                           }}
-                          suffix='กิโลกรัม'
+                          // suffix='กิโลกรัม'
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.semi_weight4 &&
@@ -838,9 +862,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             fontFamily: 'Noto Sans Thai'
                           }}
-                          suffix='กิโลกรัม'
+                          // suffix='กิโลกรัม'
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.semi_weight5 &&
@@ -873,7 +897,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.semi_weight6 &&
@@ -905,9 +929,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             fontFamily: 'Noto Sans Thai'
                           }}
-                          suffix='กิโลกรัม'
+                          // suffix='กิโลกรัม'
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                           }}
                         />
                         {!!errors.route_form?.[formIndex]?.semi_weight7 &&
@@ -926,28 +950,28 @@ const FormVehicle: React.FC<Props> = (props) => {
         <div className='bg-gray-200 rounded-md p-3'>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>น้ำหนักรถเปล่ารวม:</strong></p>
-            <p>{(Number(selectTowing?.vehicle_detail.weight) + Number(selectSemi?.vehicle_detail.weight) + Number(selectETC?.vehicle_detail.weight)) || 0} กก.</p>
+            <p>{(Number(selectTowing?.vehicle_detail.weight || 0) + Number(selectSemi?.vehicle_detail.weight || 0) + Number(selectETC?.vehicle_detail.weight || 0)) || 0} กก.</p>
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>น้ำหนักรถเปล่ารวมน้ำหนักเพลา:</strong></p>
             <p>{(
-              Number(selectTowing?.vehicle_detail.weight) +
-              Number(selectSemi?.vehicle_detail.weight) +
-              Number(selectETC?.vehicle_detail.weight) +
-              Number(towering_weight1) +
-              Number(towering_weight2) +
-              Number(towering_weight3) +
-              Number(towering_weight4) +
-              Number(towering_weight5) +
-              Number(towering_weight6) +
-              Number(towering_weight7) +
-              Number(semi_weight1) +
-              Number(semi_weight2) +
-              Number(semi_weight3) +
-              Number(semi_weight4) +
-              Number(semi_weight5) +
-              Number(semi_weight6) +
-              Number(semi_weight7)
+              Number(selectTowing?.vehicle_detail.weight || 0) +
+              Number(selectSemi?.vehicle_detail.weight || 0) +
+              Number(selectETC?.vehicle_detail.weight || 0) +
+              Number(towering_weight1 || 0) +
+              Number(towering_weight2 || 0) +
+              Number(towering_weight3 || 0) +
+              Number(towering_weight4 || 0) +
+              Number(towering_weight5 || 0) +
+              Number(towering_weight6 || 0) +
+              Number(towering_weight7 || 0) +
+              Number(semi_weight1 || 0) +
+              Number(semi_weight2 || 0) +
+              Number(semi_weight3 || 0) +
+              Number(semi_weight4 || 0) +
+              Number(semi_weight5 || 0) +
+              Number(semi_weight6 || 0) +
+              Number(semi_weight7 || 0)
             ) || 0}  กก.</p>
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>

@@ -8,6 +8,8 @@ import {
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { getPetitionExtendedData, setPetitionExtendedData } from '@/store/slices/entrepreneur'
 import { FieldType } from '@/@types/entrepreneur/permit-list'
+import { Button, Flex } from 'antd'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
 
@@ -15,6 +17,7 @@ interface Props {
 
 const ContentSearchOther: React.FC<Props> = (props) => {
   const { } = props
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const petition_extended = useAppSelector(state => state.entrepreneur.permitList.petition_extended)
   const loading = useAppSelector(state => state.layout.loading)
@@ -69,7 +72,23 @@ const ContentSearchOther: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <h3>รายการขออนุญาตรถนอกเหนือ (4 - 7 เพลา)</h3>
+      <Flex
+        wrap
+        align='center'
+        justify='space-between'
+        gap={5}
+      >
+        <h3>รายการขออนุญาตรถนอกเหนือ (4 - 7 เพลา)</h3>
+        <Button
+          htmlType='button'
+          type='primary'
+          color='yellow'
+          variant='solid'
+          onClick={() => navigate('/route-estimation/other')}
+        >
+          ขอใบอนุญาตรถนอกเหนือ (4 - 7 เพลา)
+        </Button>
+      </Flex>
       <section className='mt-5'>
         <FormSearchPetitionExtended
           handleSearch={handleSearch}

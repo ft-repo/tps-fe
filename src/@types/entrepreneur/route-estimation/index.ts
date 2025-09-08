@@ -115,6 +115,8 @@ export interface FieldTypeForOther {
   // 3. REMARK
   petition_number: string;
   remark: string;
+  // 4. IS SAME
+  is_same: boolean[];
 }
 
 export interface ContextProps {
@@ -255,16 +257,16 @@ export type RouteBridgeResponse = {
 
 // NORMAL
 export interface FieldTypeArr {
-  start_latitude: number;
-  start_longitude: number;
-  end_latitude: number;
-  end_longitude: number;
+  start_latitude: number | string;
+  start_longitude: number | string;
+  end_latitude: number | string;
+  end_longitude: number | string;
   route_form: FieldTypeForRoute[];
 }
 
 export interface FieldTypeForRoute {
   match_type: number | null;
-  turn_radius: number;
+  turn_radius: number | string;
   towering_vehicle: number | null;
   semi_trailer_vehicle: number | null;
   etc_vehicle: number | null;

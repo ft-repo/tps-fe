@@ -53,7 +53,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>ประเภทนิติบุคคล</label>
+                <label>ประเภทนิติบุคคล <span className='text-red-500'>*</span></label>
                 <Select
                   {...field}
                   disabled
@@ -86,7 +86,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>ชื่อบริษัท / ห้าง / ร้าน</label>
+                <label>ชื่อบริษัท / ห้าง / ร้าน <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
@@ -116,7 +116,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ที่อยู่บริษัท</label>
+                  <label>ที่อยู่บริษัท <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -149,7 +149,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>เบอร์โทรสำนักงาน</label>
+                <label>เบอร์โทรสำนักงาน <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
@@ -181,7 +181,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>เลขทะเบียนนิติบุคคล</label>
+                <label>เลขทะเบียนนิติบุคคล <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
@@ -210,7 +210,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>ชื่อผู้ติต่อ / มอบอำนาจ</label>
+                <label>ชื่อผู้ติต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
@@ -237,7 +237,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>ประเภทผู้ติดต่อ / มอบอำนาจ</label>
+                <label>ประเภทผู้ติดต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
                 <Select
                   {...field}
                   placeholder='กรุณาเลือก'
@@ -269,7 +269,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>หมายเลขบัตรประชาชน</label>
+                <label>หมายเลขบัตรประชาชน <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
@@ -301,7 +301,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>เบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ</label>
+                <label>เบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
@@ -328,7 +328,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label className='block'>อัปโหลดรูป</label>
+                <label className='block'>อัปโหลดรูป <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -386,7 +386,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>วันที่รับอนุฐาต</label>
+                <label>วันที่รับอนุญาต <span className='text-red-500'>*</span></label>
                 <DatePicker
                   {...field}
                   name={field.name}

@@ -39,8 +39,8 @@ const RequestPermit: React.FC<Props> = (props) => {
       project_name: '',
       start_point: '',
       end_point: '',
-      start_province: '',
-      end_Povince: '',
+      start_province: null,
+      end_Povince: null,
       poa_url: {
         file: [],
         url: ''
@@ -105,8 +105,8 @@ const RequestPermit: React.FC<Props> = (props) => {
       project_name: value.project_name,
       start_point: value.start_point,
       end_point: value.end_point,
-      start_province: province.find(item => item.id === value.start_province)?.name_th || value.start_province,
-      end_Povince: province.find(item => item.id === value.end_Povince)?.name_th || value.end_Povince,
+      start_province: String(province.find(item => item.id === value.start_province)?.name_th) || String(value.start_province),
+      end_Povince: String(province.find(item => item.id === value.end_Povince)?.name_th) || String(value.end_Povince),
       poa_url: value.poa_url.url,
       mach_book_url: value.mach_book_url.url,
       vehicle: value.vehicle.map((item) => {

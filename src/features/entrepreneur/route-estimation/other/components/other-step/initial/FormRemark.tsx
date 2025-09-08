@@ -28,7 +28,7 @@ const FormRemark: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ขออนุญาตให้ยานพาหนะเดินบนทางหลวงชนบท ข้อที่</label>
+                  <label>ขออนุญาตให้ยานพาหนะเดินบนทางหลวงชนบท ข้อที่ <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -55,7 +55,7 @@ const FormRemark: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset className='mt-3'>
-                  <label>เหตุผลที่ขอ</label>
+                  <label>เหตุผลที่ขอ <span className='text-red-500'>*</span></label>
                   <Input.TextArea
                     {...field}
                     name={field.name}

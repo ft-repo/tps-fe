@@ -56,7 +56,7 @@ const FormDocument: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>เอกสารถือครองสิทธิ์</label>
+                  <label>เอกสารถือครองสิทธิ์ <span className='text-red-500'>*</span></label>
                   <Upload
                     {...field}
                     fileList={field.value || []}
@@ -119,7 +119,7 @@ const FormDocument: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>สัญญาจ้างหรือเช่า</label>
+                  <label>สัญญาจ้างหรือเช่า <span className='text-red-500'>*</span></label>
                   <Upload
                     {...field}
                     fileList={field.value || []}
@@ -182,7 +182,7 @@ const FormDocument: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>สัญญาเช่าซื้อ</label>
+                  <label>สัญญาเช่าซื้อ <span className='text-red-500'>*</span></label>
                   <Upload
                     {...field}
                     fileList={field.value || []}
@@ -245,7 +245,7 @@ const FormDocument: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>สัญญามอบสิทธิ์</label>
+                  <label>สัญญามอบสิทธิ์ <span className='text-red-500'>*</span></label>
                   <Upload
                     {...field}
                     fileList={field.value || []}
@@ -313,7 +313,7 @@ const FormDocument: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>รูปด้านหน้า</label>
+                  <label>รูปด้านหน้า <span className='text-red-500'>*</span></label>
                   <Upload
                     {...field}
                     fileList={field.value || []}
@@ -376,7 +376,7 @@ const FormDocument: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>รูปด้านข้าง</label>
+                  <label>รูปด้านข้าง <span className='text-red-500'>*</span></label>
                   <Upload
                     {...field}
                     fileList={field.value || []}
@@ -439,7 +439,7 @@ const FormDocument: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>รูปด้านหลัง</label>
+                  <label>รูปด้านหลัง <span className='text-red-500'>*</span></label>
                   <Upload
                     {...field}
                     fileList={field.value || []}
@@ -487,7 +487,7 @@ const FormDocument: React.FC<Props> = (props) => {
                     }
                   </Upload>
                   {!!errors.file_back_image_id?.file &&
-                    <p className='text-red-500'>{errors.file_back_image_id.message}</p>
+                    <p className='text-red-500'>{errors.file_back_image_id?.file.message}</p>
                   }
                 </fieldset>
               )

@@ -174,7 +174,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
           <p className='text-base'><strong>ยี่ห้อ</strong> : {data.brand || '-'}</p>
           <p className='text-base'><strong>ป้ายทะเบียน / เลขตัวรถ</strong> : {data.plate_no}</p>
           <p className='text-base'><strong>จังหวัด</strong> : {data.plate_province}</p>
-          <p className='text-base'><strong>น้ำหนัก</strong> : {data.weight}</p>
+          <p className='text-base'><strong>น้ำหนัก</strong> : {data.weight} กก.</p>
         </>
       ),
       okText: 'ลบข้อมูล',

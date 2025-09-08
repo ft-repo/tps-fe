@@ -6,6 +6,9 @@ import NotificationContent, { SidePanelContentProps } from './NotificationConten
 import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import { setPanelExpand, useAppSelector, useAppDispatch } from '@/store'
 import type { CommonProps } from '@/@types/common'
+import { useEffect } from 'react'
+import { getPetitionNotification } from '@/store/slices/staff'
+import { Badge } from 'antd'
 
 type SidePanelProps = SidePanelContentProps & CommonProps
 
@@ -19,6 +22,21 @@ const _SidePanel = (props: SidePanelProps) => {
 	const direction = useAppSelector((state) => state.theme.direction)
 
 	const { authority } = useAppSelector(state => state.auth.user)
+
+	const { notification } = useAppSelector(state => state.staff.petition)
+
+	useEffect(() => {
+		if (authority[0] === 'ADMIN') {
+			// INIT API RECALL
+			dispatch(getPetitionNotification(notification.search))
+			// RECALL API EVERY 10 MINUTE
+			const interval = setInterval(() => {
+				dispatch(getPetitionNotification(notification.search))
+			}, 600000);
+			// CLEAR INTERVAL
+			return () => clearInterval(interval);
+		}
+	}, [dispatch, notification.search, authority])
 
 	const openPanel = () => {
 		dispatch(setPanelExpand(true))
@@ -35,13 +53,15 @@ const _SidePanel = (props: SidePanelProps) => {
 	return (
 		<>
 			{authority[0] === 'ADMIN' ?
-				<div
-					className={classNames('text-2xl', className)}
-					onClick={openPanel}
-					{...rest}
-				>
-					<HiOutlineBell />
-				</div>
+				<Badge count={notification.data.length} offset={[-5, 5]}>
+					<div
+						className={classNames('text-2xl', className)}
+						onClick={openPanel}
+						{...rest}
+					>
+						<HiOutlineBell />
+					</div>
+				</Badge>
 				: null}
 			<Drawer
 				title="แจ้งเตือน"

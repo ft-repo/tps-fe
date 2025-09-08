@@ -11,9 +11,10 @@ import { getPetitionData, setPetitionData } from '@/store/slices/entrepreneur'
 import { FieldType } from '@/@types/entrepreneur/permit-list'
 import { PetitionInfo, RoadInfo } from './ModalRuralRoadDetails'
 import { getRuralRoadDetailAPI } from '@/services/entrepreneur/PetitionService'
-import { message } from 'antd'
+import { Button, Flex, message } from 'antd'
 import { PetitionTableData } from '@/@types/reducer/petition'
 import dayjs from 'dayjs'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
 
@@ -36,6 +37,7 @@ export const INIT_MODAL: ModalStateProps = {
 
 const ContentSearchCategory: React.FC<Props> = (props) => {
   const { } = props
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const petition = useAppSelector(state => state.entrepreneur.permitList.petition)
   const loading = useAppSelector(state => state.layout.loading)
@@ -121,7 +123,22 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <h3>รายการขออนุญาตรถหมวด 2 (4 - 7 เพลา)</h3>
+      <Flex
+        wrap
+        align='center'
+        justify='space-between'
+        gap={5}
+      >
+        <h3>รายการขออนุญาตรถหมวด 2 (4 - 7 เพลา)</h3>
+
+        <Button
+          htmlType='button'
+          type='primary'
+          onClick={() => navigate('/route-estimation/route')}
+        >
+          ขอใบอนุญาตรถหมวด 2 (4 - 7 เพลา)
+        </Button>
+      </Flex>
       <section className='mt-5'>
         <FormSearchPetition
           handleSearch={handleSearch}

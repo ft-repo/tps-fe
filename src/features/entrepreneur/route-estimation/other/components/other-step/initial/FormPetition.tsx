@@ -4,7 +4,7 @@
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
 import { getNewDistrictAPI, getNewProvinceAPI, getNewSubDistrictAPI, ProvinceAPIResponse, SubDistrictAPIResponse } from '@/services/master/MasterService';
 import { useAppSelector } from '@/store';
-import { Col, DatePicker, Input, message, Row, Select } from 'antd';
+import { Checkbox, Col, DatePicker, Input, message, Row, Select } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form'
 
@@ -17,9 +17,14 @@ const FormPetition: React.FC<Props> = (props) => {
   const { control, setValue } = props
   const { province, district, sub_district, entity_type } = useAppSelector((state) => state.master)
   const {
+    company_address,
+    company_village_number,
+    company_alley,
+    company_road,
     company_province,
     company_district,
     company_sub_district,
+    company_postcode,
     transferer_company_province,
     transferer_company_district,
     transferer_company_sub_district,
@@ -146,7 +151,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ข้าพเจ้า (ชื่อบริษัท / ห้าง / ร้าน)</label>
+                    <label>ข้าพเจ้า (ชื่อบริษัท / ห้าง / ร้าน) <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -176,7 +181,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ชื่อผู้ติดต่อ / มอบอำนาจ</label>
+                    <label>ชื่อผู้ติดต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -205,7 +210,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>บ้านเลขที่</label>
+                    <label>บ้านเลขที่ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -234,7 +239,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>หมู่ที่</label>
+                    <label>หมู่ที่ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -263,7 +268,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ตรอก / ซอย</label>
+                    <label>ตรอก / ซอย <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -292,7 +297,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ถนน</label>
+                    <label>ถนน <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -321,7 +326,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จังหวัด</label>
+                    <label>จังหวัด <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -373,7 +378,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เขต / อำเภอ</label>
+                    <label>เขต / อำเภอ <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -421,7 +426,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>แขวง / ตำบล</label>
+                    <label>แขวง / ตำบล <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -468,7 +473,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>รหัสไปรษณีย์</label>
+                    <label>รหัสไปรษณีย์ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -504,7 +509,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ประเภทนิติบุคคล</label>
+                    <label>ประเภทนิติบุคคล <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -543,7 +548,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>วันที่จดทะเบียน</label>
+                    <label>วันที่จดทะเบียน <span className='text-red-500'>*</span></label>
                     <DatePicker
                       {...field}
                       name={field.name}
@@ -574,7 +579,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>บ้านเลขที่</label>
+                    <label>บ้านเลขที่ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -604,7 +609,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>หมู่ที่</label>
+                    <label>หมู่ที่ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -634,7 +639,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ตรอก / ซอย</label>
+                    <label>ตรอก / ซอย <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -664,7 +669,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ถนน</label>
+                    <label>ถนน <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -694,7 +699,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จังหวัด</label>
+                    <label>จังหวัด <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -733,7 +738,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เขต / อำเภอ</label>
+                    <label>เขต / อำเภอ <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -772,7 +777,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>แขวง / ตำบล</label>
+                    <label>แขวง / ตำบล <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -811,7 +816,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>รหัสไปรษณีย์</label>
+                    <label>รหัสไปรษณีย์ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -845,7 +850,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ชื่อผู้ได้รับมอบอำนาจ</label>
+                    <label>ชื่อผู้ได้รับมอบอำนาจ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -874,7 +879,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เบอร์โทรศัพท์</label>
+                    <label>เบอร์โทรศัพท์ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -903,7 +908,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>บ้านเลขที่</label>
+                    <label>บ้านเลขที่ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -932,7 +937,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>หมู่ที่</label>
+                    <label>หมู่ที่ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -961,7 +966,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ตรอก / ซอย</label>
+                    <label>ตรอก / ซอย <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -990,7 +995,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ถนน</label>
+                    <label>ถนน <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -1019,7 +1024,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จังหวัด</label>
+                    <label>จังหวัด <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -1070,7 +1075,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เขต / อำเภอ</label>
+                    <label>เขต / อำเภอ <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -1118,7 +1123,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>แขวง / ตำบล</label>
+                    <label>แขวง / ตำบล <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       allowClear
@@ -1166,7 +1171,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>รหัสไปรษณีย์</label>
+                    <label>รหัสไปรษณีย์ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -1181,6 +1186,50 @@ const FormPetition: React.FC<Props> = (props) => {
                     {!!errors.transferer_company_postcode &&
                       <p className='text-red-500'>{errors.transferer_company_postcode.message}</p>
                     }
+                  </fieldset>
+                )
+              }}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+            <Controller
+              name='is_same'
+              control={control}
+              render={({ field }) => {
+                return (
+                  <fieldset>
+                    <Checkbox.Group
+                      {...field}
+                      name={field.name}
+                      options={[
+                        {
+                          label: 'ใช้ที่อยู่ตามข้อมูลผู้ประสงค์ขออนุญาต',
+                          value: true
+                        }
+                      ]}
+                      onChange={(e) => {
+                        field.onChange(e)
+                        if (e.length) {
+                          setValue('transferer_company_address', String(company_address))
+                          setValue('transferer_company_village_no', String(company_village_number))
+                          setValue('transferer_company_alley', String(company_alley))
+                          setValue('transferer_company_road', String(company_road))
+                          setValue('transferer_company_province', company_province ? Number(company_province) : null)
+                          setValue('transferer_company_district', company_district ? Number(company_district) : null)
+                          setValue('transferer_company_sub_district', company_sub_district ? Number(company_sub_district) : null)
+                          setValue('transferer_company_postcode', String(company_postcode))
+                        } else {
+                          setValue('transferer_company_address', '')
+                          setValue('transferer_company_village_no', '')
+                          setValue('transferer_company_alley', '')
+                          setValue('transferer_company_road', '')
+                          setValue('transferer_company_province', null)
+                          setValue('transferer_company_district', null)
+                          setValue('transferer_company_sub_district', null)
+                          setValue('transferer_company_postcode', '')
+                        }
+                      }}
+                    />
                   </fieldset>
                 )
               }}

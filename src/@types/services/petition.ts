@@ -124,9 +124,9 @@ export interface PoaAddress {
 }
 
 export interface PetitionExtendedVehicle {
-  towing_vehicle_id: number;
-  semi_trailer_vehicle_id: number;
-  etc_vehicle_id: number;
+  towing_vehicle_id: number | null;
+  semi_trailer_vehicle_id: number | null;
+  etc_vehicle_id: number | null;
   axis_weight_towing: number[];
   axis_weight_semi_trailer: number[];
 }
@@ -181,9 +181,9 @@ export interface PetitionEstimateRequest {
 
 export interface VehicleRequestArr {
   turn_radius: number;
-  towing_vehicle_id: number;
-  semi_trailer_vehicle_id: number;
-  etc_vehicle_id: any;
+  towing_vehicle_id: number | null;
+  semi_trailer_vehicle_id: number | null;
+  etc_vehicle_id: number | null;
   towing_axis_weight: number[];
   semi_trailer_axis_weight: number[];
 }

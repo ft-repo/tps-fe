@@ -23,9 +23,9 @@ const ContentDetail: React.FC<Props> = (props) => {
   const [semiImage, setSemiImage] = useState('')
   const [etcImage, setEtcImage] = useState('')
 
-  const selectTowing = vehicle_selection.data.find(item => item.vehicle_detail.id === dataParser.raw_body.route_form[index].towering_vehicle) || null
-  const selectSemi = vehicle_selection.data.find(item => item.vehicle_detail.id === dataParser.raw_body.route_form[index].semi_trailer_vehicle) || null
-  const selectETC = vehicle_selection.data.find(item => item.vehicle_detail.id === dataParser.raw_body.route_form[index].etc_vehicle) || null
+  const selectTowing = vehicle_selection.data.find(item => item.vehicle_detail?.id === dataParser.raw_body.route_form[index]?.towering_vehicle) || null
+  const selectSemi = vehicle_selection.data.find(item => item.vehicle_detail?.id === dataParser.raw_body.route_form[index]?.semi_trailer_vehicle) || null
+  const selectETC = vehicle_selection.data.find(item => item.vehicle_detail?.id === dataParser.raw_body.route_form[index]?.etc_vehicle) || null
 
   const extractUrl = useCallback((url: string) => {
     const path = url.split('/upload')[1];
@@ -58,16 +58,16 @@ const ContentDetail: React.FC<Props> = (props) => {
   }, [])
 
   useEffect(() => {
-    if (detail.towing_vehicle.vehicle_picture) {
-      fetchImage('towing', extractUrl(detail.towing_vehicle.vehicle_picture))
+    if (detail?.towing_vehicle?.vehicle_picture) {
+      fetchImage('towing', extractUrl(detail?.towing_vehicle?.vehicle_picture))
     }
-    if (detail.semi_trailer_vehicle.vehicle_picture) {
-      fetchImage('semi', extractUrl(detail.semi_trailer_vehicle.vehicle_picture))
+    if (detail?.semi_trailer_vehicle?.vehicle_picture) {
+      fetchImage('semi', extractUrl(detail?.semi_trailer_vehicle?.vehicle_picture))
     }
-    if (detail.etc_vehicle.vehicle_picture) {
-      fetchImage('etc', extractUrl(detail.etc_vehicle.vehicle_picture))
+    if (detail?.etc_vehicle?.vehicle_picture) {
+      fetchImage('etc', extractUrl(detail?.etc_vehicle?.vehicle_picture))
     }
-  }, [fetchImage, extractUrl, detail.towing_vehicle.vehicle_picture, detail.semi_trailer_vehicle.vehicle_picture, detail.etc_vehicle.vehicle_picture])
+  }, [fetchImage, extractUrl, detail?.towing_vehicle?.vehicle_picture, detail?.semi_trailer_vehicle?.vehicle_picture, detail?.etc_vehicle?.vehicle_picture])
 
   const mapPlaceholder = useMemo(() => {
     switch (dataParser.raw_body.route_form[index].match_type) {
@@ -92,22 +92,22 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'น้ำหนักลงเพลา รถลากจูง (กิโลกรัม)',
-      children: <p>{detail.towing_axis_weight.join(' : ')}</p>,
+      children: <p>{detail?.towing_axis_weight.join(' : ')}</p>,
     },
     {
       key: '2',
       label: 'น้ำหนักลงเพลา กึ่งรถพ่วง (กิโลกรัม)',
-      children: <p>{detail.semi_trailer_axis_weight.join(' : ')}</p>,
+      children: <p>{detail?.semi_trailer_axis_weight.join(' : ')}</p>,
     },
     {
       key: '3',
       label: 'ต้นทาง',
-      children: <p>{detail.start_point.join(',')}</p>,
+      children: <p>{detail?.start_point.join(',')}</p>,
     },
     {
       key: '4',
       label: 'ปลายทาง',
-      children: <p>{detail.end_point.join(',')}</p>,
+      children: <p>{detail?.end_point.join(',')}</p>,
     },
   ]
 
@@ -116,7 +116,7 @@ const ContentDetail: React.FC<Props> = (props) => {
       <h5>{`รายละเอียด รถคู่ที่ ${index + 1} : ${mapPlaceholder}`}</h5>
       <section className='mt-5'>
         <Row gutter={[16, 16]}>
-          {detail.towing_vehicle ?
+          {detail?.towing_vehicle ?
             <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <Card
                 cover={(
@@ -138,15 +138,15 @@ const ContentDetail: React.FC<Props> = (props) => {
                   title="รถลากจูง"
                   description={(
                     <>
-                      <p>{detail.towing_vehicle.vehicle_weight || 0} กก.</p>
-                      <p>{renderLicensePlate(detail.towing_vehicle.vehicle_plate, detail.towing_vehicle.vehicle_province)}</p>
+                      <p>{detail?.towing_vehicle?.vehicle_weight || 0} กก.</p>
+                      <p>{renderLicensePlate(detail?.towing_vehicle?.vehicle_plate, detail?.towing_vehicle?.vehicle_province)}</p>
                     </>
                   )}
                 />
               </Card>
             </Col>
             : null}
-          {detail.semi_trailer_vehicle ?
+          {detail?.semi_trailer_vehicle ?
             <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <Card
                 cover={(
@@ -168,15 +168,15 @@ const ContentDetail: React.FC<Props> = (props) => {
                   title="รถกึ่งพ่วง 4 เพลา 8"
                   description={(
                     <>
-                      <p>{detail.semi_trailer_vehicle.vehicle_weight || 0} กก.</p>
-                      <p>{renderLicensePlate(detail.semi_trailer_vehicle.vehicle_plate, detail.semi_trailer_vehicle.vehicle_province)}</p>
+                      <p>{detail?.semi_trailer_vehicle?.vehicle_weight || 0} กก.</p>
+                      <p>{renderLicensePlate(detail?.semi_trailer_vehicle?.vehicle_plate, detail?.semi_trailer_vehicle?.vehicle_province)}</p>
                     </>
                   )}
                 />
               </Card>
             </Col>
             : null}
-          {detail.etc_vehicle ?
+          {detail?.etc_vehicle ?
             <Col xs={24} sm={12} md={12} lg={8} xl={8} xxl={8}>
               <Card
                 cover={(
@@ -198,8 +198,8 @@ const ContentDetail: React.FC<Props> = (props) => {
                   title="เครื่องจักร"
                   description={(
                     <>
-                      <p>{detail.etc_vehicle.vehicle_weight || 0} กก.</p>
-                      <p>{renderLicensePlate(detail.etc_vehicle.vehicle_plate, detail.etc_vehicle.vehicle_province)}</p>
+                      <p>{detail?.etc_vehicle?.vehicle_weight || 0} กก.</p>
+                      <p>{renderLicensePlate(detail?.etc_vehicle?.vehicle_plate, detail?.etc_vehicle?.vehicle_province)}</p>
                     </>
                   )}
                 />
@@ -213,41 +213,41 @@ const ContentDetail: React.FC<Props> = (props) => {
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>น้ำหนักรถเปล่ารวม:</strong></p>
             <p>{(
-              Number(detail.towing_vehicle.vehicle_weight || 0) +
-              Number(detail.semi_trailer_vehicle.vehicle_weight || 0) +
-              Number(detail.etc_vehicle.vehicle_weight)
+              Number(detail?.towing_vehicle?.vehicle_weight || 0) +
+              Number(detail?.semi_trailer_vehicle?.vehicle_weight || 0) +
+              Number(detail?.etc_vehicle?.vehicle_weight || 0)
               || 0)} กก.
             </p>
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>น้ำหนักรถเปล่ารวมน้ำหนักเพลา:</strong></p>
             <p>{(
-              Number(detail.towing_vehicle.vehicle_weight || 0) +
-              Number(detail.semi_trailer_vehicle.vehicle_weight || 0) +
-              Number(detail.towing_axis_weight[0] || 0) +
-              Number(detail.towing_axis_weight[1] || 0) +
-              Number(detail.towing_axis_weight[2] || 0) +
-              Number(detail.towing_axis_weight[3] || 0) +
-              Number(detail.towing_axis_weight[4] || 0) +
-              Number(detail.towing_axis_weight[5] || 0) +
-              Number(detail.towing_axis_weight[6] || 0) +
-              Number(detail.semi_trailer_axis_weight[0]) +
-              Number(detail.semi_trailer_axis_weight[1]) +
-              Number(detail.semi_trailer_axis_weight[2]) +
-              Number(detail.semi_trailer_axis_weight[3]) +
-              Number(detail.semi_trailer_axis_weight[4]) +
-              Number(detail.semi_trailer_axis_weight[5]) +
-              Number(detail.semi_trailer_axis_weight[6])
+              Number(detail?.towing_vehicle?.vehicle_weight || 0) +
+              Number(detail?.semi_trailer_vehicle?.vehicle_weight || 0) +
+              Number(detail?.towing_axis_weight[0] || 0) +
+              Number(detail?.towing_axis_weight[1] || 0) +
+              Number(detail?.towing_axis_weight[2] || 0) +
+              Number(detail?.towing_axis_weight[3] || 0) +
+              Number(detail?.towing_axis_weight[4] || 0) +
+              Number(detail?.towing_axis_weight[5] || 0) +
+              Number(detail?.towing_axis_weight[6] || 0) +
+              Number(detail?.semi_trailer_axis_weight[0] || 0) +
+              Number(detail?.semi_trailer_axis_weight[1] || 0) +
+              Number(detail?.semi_trailer_axis_weight[2] || 0) +
+              Number(detail?.semi_trailer_axis_weight[3] || 0) +
+              Number(detail?.semi_trailer_axis_weight[4] || 0) +
+              Number(detail?.semi_trailer_axis_weight[5] || 0) +
+              Number(detail?.semi_trailer_axis_weight[6] || 0)
             ) || 0}  กก.
             </p>
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>มิติรถเปล่า (ม.):</strong></p>
-            <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail.width || 0), Number(selectSemi?.vehicle_detail.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail.length || 0), Number(selectSemi?.vehicle_detail.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail.height || 0), Number(selectTowing?.vehicle_detail.height || 0))}`}</p>
+            <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail?.width || 0), Number(selectSemi?.vehicle_detail?.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail?.length || 0), Number(selectSemi?.vehicle_detail?.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail?.height || 0), Number(selectTowing?.vehicle_detail?.height || 0))}`}</p>
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
             <p><strong>มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.):</strong></p>
-            <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail.width || 0), Number(selectSemi?.vehicle_detail.width || 0), Number(selectETC?.vehicle_detail.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail.length || 0), Number(selectSemi?.vehicle_detail.length || 0), Number(selectETC?.vehicle_detail.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail.height || 0), Number(selectSemi?.vehicle_detail.height || 0), Number(selectETC?.vehicle_detail.height || 0))}`}</p>
+            <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail?.width || 0), Number(selectSemi?.vehicle_detail?.width || 0), Number(selectETC?.vehicle_detail?.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail?.length || 0), Number(selectSemi?.vehicle_detail?.length || 0), Number(selectETC?.vehicle_detail?.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail?.height || 0), Number(selectSemi?.vehicle_detail?.height || 0), Number(selectETC?.vehicle_detail?.height || 0))}`}</p>
           </div>
         </div>
       </section>

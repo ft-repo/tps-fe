@@ -77,8 +77,8 @@ export interface FieldTypePetition {
   project_name: string;
   start_point: string;
   end_point: string;
-  start_province: string;
-  end_Povince: string;
+  start_province: string | null;
+  end_Povince: string | null;
   poa_url: FileType;
   mach_book_url: FileType;
   vehicle: VehicleList[]

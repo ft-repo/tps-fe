@@ -12,14 +12,16 @@ interface Props {
 const ContentDetail: React.FC<Props> = (props) => {
   const { item } = props
 
+  console.log(item)
+
   const renderAxisWeight = useCallback((arr: number[]) => {
-    if (!arr.length) return '-'
+    if (!arr?.length) return '-'
     return arr.join(' : ')
   }, [])
 
   const renderLicensePlate = useCallback((plateNo: string, plateProvince: string) => {
     const licenseArr = [plateNo, plateProvince]
-    if (!licenseArr.length) return '-'
+    if (!licenseArr?.length) return '-'
     return licenseArr.join(' ').trim()
   }, [])
 
@@ -42,7 +44,7 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '4',
       label: 'น้ำหนักรถเปล่ารวมน้ำหนักเพลา (กิโลกรัม)',
-      children: <p>{Number(item?.towing_vehicle?.weight || 0) + Number(item?.semi_trailer_vehicle?.weight || 0) + Number(item?.towing_vehicle?.axis_weight[0]) + Number(item?.towing_vehicle?.axis_weight[1]) + Number(item?.towing_vehicle?.axis_weight[2]) + Number(item?.semi_trailer_vehicle?.axis_weight[0]) + Number(item?.semi_trailer_vehicle?.axis_weight[1]) + Number(item?.semi_trailer_vehicle?.axis_weight[2])}</p>,
+      children: <p>{Number(item?.towing_vehicle?.weight || 0) + Number(item?.semi_trailer_vehicle?.weight || 0) + Number(item?.towing_vehicle?.axis_weight[0] || 0) + Number(item?.towing_vehicle?.axis_weight[1] || 0) + Number(item?.towing_vehicle?.axis_weight[2] || 0) + Number(item?.semi_trailer_vehicle?.axis_weight[0] || 0) + Number(item?.semi_trailer_vehicle?.axis_weight[1] || 0) + Number(item?.semi_trailer_vehicle?.axis_weight[2] || 0)}</p>,
     },
     {
       key: '5',
