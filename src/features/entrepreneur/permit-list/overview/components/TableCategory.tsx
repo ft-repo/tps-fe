@@ -93,13 +93,13 @@ const TableCategory: React.FC<Props> = ({ data, loading, handleTableChange, open
             : null
 
         const STATUS_TAG_STYLE: React.CSSProperties = {
-          width: 120,               // ✅ ความกว้างเท่ากันทุกอัน (px หรือ '10rem' ก็ได้)
-          minHeight: 48,            // ✅ ความสูงขั้นต่ำพอสำหรับ 2 บรรทัด (มีวันที่/ไม่มีวันที่ก็ไม่กระดิก)
+          width: 120,              
+          minHeight: 48,            
           display: 'inline-flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 2,                   // เว้นบรรทัดระหว่างข้อความกับวันที่นิดนึง
+          gap: 2,
           borderRadius: 6,
           padding: '4px 8px',
           color: '#fff',

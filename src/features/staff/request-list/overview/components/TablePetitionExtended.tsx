@@ -69,7 +69,21 @@ const isStepUnlocked = (record: AdminPetitionExtendedTableData, stepId: StepId) 
   return prev.key === 'APPROVE'
 }
 
-// ✅ ส่ง is_approved (true/false/null) ไปกับ navigate
+const STATUS_TAG_STYLE: React.CSSProperties = {
+  width: 120,
+  minHeight: 48,
+  display: 'inline-flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 2,
+  borderRadius: 6,
+  padding: '4px 8px',
+  textAlign: 'center',
+  fontWeight: 500,
+  lineHeight: 1.2,
+}
+
 const makeStepRenderer =
   (stepId: StepId, path: string, navigate: ReturnType<typeof useNavigate>) =>
     (_val: unknown, record: AdminPetitionExtendedTableData) => {
@@ -80,8 +94,9 @@ const makeStepRenderer =
 
       const flow = latestFlowByStatus(getFlows(record), stepId)
       const approvedParam =
-        flow?.is_approved === true ? 'true' :
-          flow?.is_approved === false ? 'false' : 'null'
+        flow?.is_approved === true ? 'true'
+          : flow?.is_approved === false ? 'false'
+            : 'null'
 
       const pid = (record as any).id ?? ''
       const href = `${path}?petition_id=${encodeURIComponent(String(pid))}&status_id=${record.status_id}&is_approved=${approvedParam}`
@@ -93,8 +108,13 @@ const makeStepRenderer =
 
       const content = (
         <Tag
-          color={clickable ? cfg.color : 'default'}
-          style={{ cursor: clickable ? 'pointer' : 'not-allowed', opacity: clickable ? 1 : 0.6, userSelect: 'none' }}
+          color={clickable ? cfg.color : 'default'}  // ✅ ปลดล็อก: ใช้สีสถานะ, ล็อก: ใช้ default
+          style={{
+            ...STATUS_TAG_STYLE,
+            cursor: clickable ? 'pointer' : 'not-allowed',
+            opacity: clickable ? 1 : 0.85,
+            userSelect: 'none',
+          }}
           onClick={clickable ? go : undefined}
           role={clickable ? 'button' : undefined}
           tabIndex={clickable ? 0 : -1}
@@ -122,6 +142,7 @@ const makeStepRenderer =
         </Tooltip>
       )
     }
+
 
 // ---------- component ----------
 const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChange }) => {
