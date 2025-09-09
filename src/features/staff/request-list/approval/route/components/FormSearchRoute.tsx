@@ -36,15 +36,12 @@ const FormSearchRoute: React.FC<Props> = (props) => {
     return nameArr.join(' ')
   }, [])
 
-  console.log(estimate.route)
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Row gutter={[16, 16]} align={'middle'}>
         <Col xs={24} sm={24} md={24} lg={24} xl={15} xxl={15}>
           <h5>ทางหลวงชนบทหมายเลข {renderRoadCodeName(estimate.route.start_road_code, estimate.route.start_road)} - {renderRoadCodeName(estimate.route.end_road_code, estimate.route.end_road)}</h5>
           <p>แยกทางหลวงหมายเลข {renderRoadCodeName(estimate.route.start_road_code, estimate.route.start_road)} - {renderRoadCodeName(estimate.route.end_road_code, estimate.route.end_road)}</p>
-
           {/* <h5>ทางหลวงชนบทหมายเลข อย.3035 - ทางหลวงชนบทหมายเลข รย.2043</h5>
           <p>แยกทางหลวงหมายเลข 35 (กม.ที่ 30+500) - แยกทางหลวงหมายเลข 43 (กม.ที่ 20+100) </p> */}
         </Col>

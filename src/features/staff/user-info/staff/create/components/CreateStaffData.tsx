@@ -146,7 +146,7 @@ const CreateStaffData: React.FC<Props> = (props) => {
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>Username</label>
+                      <label>Username <span className='text-red-500'>*</span></label>
                       <Input
                         disabled
                         {...field}
@@ -178,7 +178,7 @@ const CreateStaffData: React.FC<Props> = (props) => {
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>คำนำหน้า</label>
+                      <label>คำนำหน้า <span className='text-red-500'>*</span></label>
                       <Input
                         disabled
                         {...field}
@@ -208,7 +208,7 @@ const CreateStaffData: React.FC<Props> = (props) => {
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>ชื่อ</label>
+                      <label>ชื่อ <span className='text-red-500'>*</span></label>
                       <Input
                         disabled
                         {...field}
@@ -238,7 +238,7 @@ const CreateStaffData: React.FC<Props> = (props) => {
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>นามสกุล</label>
+                      <label>นามสกุล <span className='text-red-500'>*</span></label>
                       <Input
                         disabled
                         {...field}
@@ -268,7 +268,7 @@ const CreateStaffData: React.FC<Props> = (props) => {
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>หน่วยงาน</label>
+                      <label>หน่วยงาน <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear
@@ -306,7 +306,7 @@ const CreateStaffData: React.FC<Props> = (props) => {
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>สิทธิ์การเข้าใช้งาน</label>
+                      <label>สิทธิ์การเข้าใช้งาน <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear

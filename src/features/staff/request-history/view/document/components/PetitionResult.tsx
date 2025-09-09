@@ -9,7 +9,7 @@ import {
   TablePetitionDocument,
   TableVehicleDocument,
   TablePermitDocument,
-  ResultDocumentDetail
+  // ResultDocumentDetail
 } from '../components'
 
 interface Props {
@@ -40,9 +40,9 @@ const PetitionResult: React.FC<Props> = (props) => {
         <TableVehicleDocument />
         <TablePermitDocument />
       </section>
-      <section className='mt-5'>
+      {/* <section className='mt-5'>
         <ResultDocumentDetail />
-      </section>
+      </section> */}
     </div>
   )
 }

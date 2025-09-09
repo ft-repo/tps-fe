@@ -29,11 +29,10 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       width: 300,
       align: 'center',
       render: (item, record) => {
-        return (
-          <div className='flex items-center justify-center gap-2'>
-            <span>{record.business_details?.business_name}</span>
-          </div>
-        )
+        if (record.business_details?.business_name) {
+          return record.business_details?.business_name
+        }
+        return '-'
       }
     },
     {
@@ -43,11 +42,10 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       width: 200,
       align: 'center',
       render: (item, record) => {
-        return (
-          <div className='flex items-center justify-center gap-2'>
-            <span>{record.business_details?.entity_type?.name}</span>
-          </div>
-        )
+        if (record.business_details?.entity_type?.name) {
+          return record.business_details?.entity_type?.name
+        }
+        return '-'
       }
     },
     {
@@ -55,7 +53,13 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       dataIndex: 'registration_no',
       key: 'registration_no',
       width: 200,
-      align: 'center'
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'วันที่ได้รับอนุญาต',
@@ -63,12 +67,11 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       key: 'created_at',
       width: 200,
       align: 'center',
-      render: (item, record) => {
-        return (
-          <div className='flex items-center justify-center gap-2'>
-            <span>{dayjs(record.created_at).locale('th').format('DD MMM YYYY')}</span>
-          </div>
-        )
+      render: (item) => {
+        if (item) {
+          return dayjs(item).locale('th').format('DD/MM/YYYY')
+        }
+        return '-'
       }
     },
     {

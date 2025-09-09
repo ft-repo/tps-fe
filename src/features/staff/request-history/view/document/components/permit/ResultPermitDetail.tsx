@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
-import { useAppSelector } from '@/store'
+import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { Col, Descriptions, DescriptionsProps, message, Row } from 'antd'
 import dayjs from 'dayjs'
 import React, { useCallback } from 'react'
@@ -14,6 +14,12 @@ interface Props {
 const ResultPermitDetail: React.FC<Props> = (props) => {
   const { } = props
   const { petition_status } = useAppSelector(state => state.staff.petition)
+  const dispatch = useAppDispatch()
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
 
   const renderName = useCallback((title: string, firstName: string, lastName: string) => {
     const nameArr = [title, firstName, lastName]
@@ -22,10 +28,12 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
   }, [])
 
   const showFile = useCallback(async (fileUrl: string) => {
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(fileUrl)
       if (response.status === 200) {
-        console.log(response)
+        const url = URL.createObjectURL(response.data);
+        window.open(url);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -33,24 +41,26 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
       } else {
         console.error(error)
       }
+    } finally {
+      dispatch(setLoading(false))
     }
-  }, [])
+  }, [dispatch])
 
   const signed_document: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'เอกสารลงนาม',
-      children: (
+      children: petition_status[3]?.document_url ? (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(petition_status[3]?.document_url || '-')}
+          onClick={() => showFile(extractUrl(petition_status[3]?.document_url) || '-')}
         />
-      )
+      ) : '-'
     },
     {
       key: '2',
       label: 'วันที่นำเข้าเอกสาร',
-      children: <p>{petition_status[3]?.created_at ? dayjs(petition_status[3]?.created_at).format('DD MMMM YYYY') : '-'}</p>,
+      children: <p>{petition_status[3]?.created_at ? dayjs(petition_status[3]?.created_at).format('DD/MM/YYYY') : '-'}</p>,
     },
     {
       key: '3',
@@ -63,17 +73,17 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'เอกสารใบอนุญาต',
-      children: (
+      children: petition_status[4]?.document_url ? (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(petition_status[4]?.document_url || '-')}
+          onClick={() => showFile(extractUrl(petition_status[4]?.document_url) || '-')}
         />
-      )
+      ) : '-'
     },
     {
       key: '2',
       label: 'วันที่นำเข้าเอกสาร',
-      children: <p>{petition_status[4]?.created_at ? dayjs(petition_status[4]?.created_at).format('DD MMMM YYYY') : '-'}</p>,
+      children: <p>{petition_status[4]?.created_at ? dayjs(petition_status[4]?.created_at).format('DD/MM/YYYY') : '-'}</p>,
     },
     {
       key: '3',

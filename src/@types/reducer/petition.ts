@@ -167,7 +167,7 @@ export interface AdminPetitionStatus {
   petition_id: number;
   status_id: number;
   remark: string;
-  document_url?: string;
+  document_url: string;
   is_approved: boolean;
   is_skipped: boolean;
   created_by: string;

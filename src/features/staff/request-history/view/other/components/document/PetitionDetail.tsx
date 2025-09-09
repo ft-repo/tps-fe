@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback } from 'react'
 import { Descriptions, DescriptionsProps, message } from 'antd'
-import { useAppSelector } from '@/store'
+import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import dayjs from 'dayjs'
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
 import { AiOutlineFilePdf } from 'react-icons/ai'
@@ -15,12 +15,20 @@ const PetitionDetail: React.FC<Props> = (props) => {
   const { } = props
   const { petition } = useAppSelector(state => state.staff.petition)
   const document = petition?.detail?.document
+  const dispatch = useAppDispatch()
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
 
   const showFile = useCallback(async (fileUrl: string) => {
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(fileUrl)
       if (response.status === 200) {
-        console.log(response)
+        const url = URL.createObjectURL(response.data);
+        window.open(url);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -28,8 +36,10 @@ const PetitionDetail: React.FC<Props> = (props) => {
       } else {
         console.error(error)
       }
+    } finally {
+      dispatch(setLoading(false))
     }
-  }, [])
+  }, [dispatch])
 
   const items: DescriptionsProps['items'] = [
     {
@@ -80,12 +90,12 @@ const PetitionDetail: React.FC<Props> = (props) => {
     {
       key: '10',
       label: 'วันที่เริ่มต้น',
-      children: <p>{document?.start_date ? dayjs(document?.start_date).format('DD MMMM YYYY') : '-'}</p>,
+      children: <p>{document?.start_date ? dayjs(document?.start_date).format('DD/MM/YYYY') : '-'}</p>,
     },
     {
       key: '11',
       label: 'วันที่สิ้นสุด',
-      children: <p>{document?.end_date ? dayjs(document?.end_date).format('DD MMMM YYYY') : '-'}</p>,
+      children: <p>{document?.end_date ? dayjs(document?.end_date).format('DD/MM/YYYY') : '-'}</p>,
     },
     {
       key: '12',
@@ -100,22 +110,22 @@ const PetitionDetail: React.FC<Props> = (props) => {
     {
       key: '14',
       label: 'หนังสือมอบอำนาจ',
-      children: (
+      children: document?.poa_url ? (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(document?.poa_url)}
+          onClick={() => showFile(extractUrl(document?.poa_url))}
         />
-      )
+      ) : '-'
     },
     {
       key: '15',
       label: 'หนังสือวิศวะเครื่องกล',
-      children: (
+      children: document?.mach_book_url ? (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(document?.mach_book_url)}
+          onClick={() => showFile(extractUrl(document?.mach_book_url))}
         />
-      )
+      ) : '-'
     },
   ];
 

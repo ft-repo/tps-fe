@@ -3,6 +3,7 @@ export { default as EvaluateDocument } from './EvaluateDocument'
 export { default as EvaluateRoute } from './EvaluateRoute'
 export { default as EvaluateVehicle } from './EvaluateVehicle'
 export { default as EvaluatePermission } from './EvaluatePermission'
+export { default as EvaluateExtendedPermission } from './EvaluateExtendedPermission'
 // DOCUMENT
 export { default as PetitionDetail } from './document/PetitionDetail'
 export { default as EvaluateDocumentDetail } from './document/EvaluateDetail'

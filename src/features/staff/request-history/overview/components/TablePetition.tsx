@@ -102,12 +102,84 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
     }
 
   const columns: TableProps<AdminPetitionTableData>['columns'] = [
-    { title: 'เลขที่ชื่อบริษัท / ห้าง / ร้าน', dataIndex: 'business_name', key: 'business_name', width: 500, align: 'center' },
-    { title: 'รหัสสายทาง', dataIndex: 'road_code', key: 'road_code', width: 150, align: 'center' },
-    { title: 'ชื่อสายทาง', dataIndex: 'road_name', key: 'road_name', width: 200, align: 'center' },
-    { title: 'วันที่เริ่มต้น', dataIndex: 'start_date', key: 'start_date', width: 150, align: 'center' },
-    { title: 'วันที่สิ้นสุด', dataIndex: 'end_date', key: 'end_date', width: 150, align: 'center' },
-    { title: 'วันที่ขออนุญาต', dataIndex: 'petition_date', key: 'petition_date', width: 150, align: 'center' },
+    {
+      title: 'เลขที่ชื่อบริษัท / ห้าง / ร้าน',
+      dataIndex: 'business_name',
+      key: 'business_name',
+      width: 500,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
+    },
+    {
+      title: 'รหัสสายทาง',
+      dataIndex: 'road_code',
+      key: 'road_code',
+      width: 150,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
+    },
+    {
+      title: 'ชื่อสายทาง',
+      dataIndex: 'road_name',
+      key: 'road_name',
+      width: 200,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
+    },
+    {
+      title: 'วันที่เริ่มต้น',
+      dataIndex: 'start_date',
+      key: 'start_date',
+      width: 150,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      }
+    },
+    {
+      title: 'วันที่สิ้นสุด',
+      dataIndex: 'end_date',
+      key: 'end_date',
+      width: 150,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      }
+    },
+    {
+      title: 'วันที่ขออนุญาต',
+      dataIndex: 'petition_date',
+      key: 'petition_date',
+      width: 150,
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      }
+    },
 
     { title: 'ตรวจเอกสาร', key: 'validate_document', width: 150, align: 'center', render: makeStatusCell(1) },
     { title: 'ตรวจเส้นทาง', key: 'validate_route', width: 150, align: 'center', render: makeStatusCell(2) },
@@ -124,7 +196,7 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       loading={loading}
       onRow={(record) => ({
         onClick: () => {
-                    const href = `/request-history/view/other?petition_id=${(record as any).petition_id ?? ''}`
+          const href = `/request-history/view/other?petition_id=${(record as any).petition_id ?? ''}`
 
           navigate(href)
         },

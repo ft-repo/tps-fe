@@ -34,7 +34,7 @@ const OtherScreen: React.FC<Props> = (props) => {
         <Button
           type='text'
           icon={<AiOutlineLeft />}
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/request-history/overview')}
         >
           ย้อนกลับ
         </Button>

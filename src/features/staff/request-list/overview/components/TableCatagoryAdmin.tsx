@@ -9,6 +9,7 @@ import ConfirmModal from './ConfirmPermitModal';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { getStaffPetitionData } from '@/store/slices/staff/staffPetitionSlice';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 
 const TableCatagoryAdmin: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -49,42 +50,78 @@ const TableCatagoryAdmin: React.FC = () => {
       dataIndex: 'business_name',
       key: 'business_name',
       width: 500,
-      align: 'center'
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'รหัสสายทาง',
       dataIndex: 'road_code',
       key: 'road_code',
       width: 150,
-      align: 'center'
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'ชื่อสายทาง',
       dataIndex: 'road_name',
       key: 'road_name',
       width: 200,
-      align: 'center'
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'วันที่เริ่มต้น',
       dataIndex: 'start_date',
       key: 'start_date',
       width: 150,
-      align: 'center'
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      }
     },
     {
       title: 'วันที่สิ้นสุด',
       dataIndex: 'end_date',
       key: 'end_date',
       width: 150,
-      align: 'center'
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      }
     },
     {
       title: 'วันที่ขออนุญาต',
       dataIndex: 'petition_date',
       key: 'petition_date',
       width: 150,
-      align: 'center'
+      align: 'center',
+      render: (item) => {
+        if (item) {
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      }
     },
     {
       title: 'ตรวจเอกสาร',

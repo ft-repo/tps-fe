@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import { PetitionResult, EvaluationHistory, PermitDocument } from '../components'
+import { PetitionResult, EvaluationHistory, PermitExtendedDocument } from '../components'
 
 interface Props {
 
@@ -19,7 +19,7 @@ const ContentSection: React.FC<Props> = (props) => {
         <EvaluationHistory />
       </section>
       <section className='mt-5'>
-        <PermitDocument />
+        <PermitExtendedDocument />
       </section>
     </>
   )

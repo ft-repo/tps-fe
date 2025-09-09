@@ -53,7 +53,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ประเภทรถ</label>
+                  <label>ประเภทรถ <span className='text-red-500'>*</span></label>
                   <Select
                     {...field}
                     placeholder='กรุณาเลือก'
@@ -86,7 +86,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>เลขทะเบียน / เลขตัวรถ</label>
+                  <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -115,7 +115,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ยี่ห้อ</label>
+                  <label>ยี่ห้อ <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -144,7 +144,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>จังหวัด</label>
+                  <label>จังหวัด <span className='text-red-500'>*</span></label>
                   <Select
                     {...field}
                     allowClear
@@ -182,7 +182,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>น้ำหนักรถเปล่า (กก.)</label>
+                  <label>น้ำหนักรถเปล่า (กก.) <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -214,7 +214,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>สีรถ</label>
+                  <label>สีรถ <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -243,7 +243,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ระยะ kingpin (ม.)</label>
+                  <label>ระยะ kingpin (ม.) <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -275,7 +275,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>จำนวนเพลา</label>
+                  <label>จำนวนเพลา <span className='text-red-500'>*</span></label>
                   <Select
                     {...field}
                     allowClear
@@ -331,7 +331,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>กว้าง (ม.)</label>
+                  <label>กว้าง (ม.) <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -363,7 +363,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ยาว (ม.)</label>
+                  <label>ยาว (ม.) <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -395,7 +395,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>สูง (ม.)</label>
+                  <label>สูง (ม.) <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -427,7 +427,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label className='block'>เอกสารเล่มทะเบียน</label>
+                  <label className='block'>เอกสารเล่มทะเบียน <span className='text-red-500'>*</span></label>
                   <Upload
                     {...field}
                     fileList={field.value || []}

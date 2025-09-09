@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback } from 'react'
 import { message, Table, TableProps } from 'antd'
-import { useAppSelector } from '@/store';
+import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 import { AiOutlineFilePdf } from 'react-icons/ai';
 
@@ -19,12 +19,20 @@ const TableVehicleDocument: React.FC<Props> = (props) => {
   const { } = props
   const { petition_extended } = useAppSelector(state => state.staff.petition)
   const detail = petition_extended.detail
+  const dispatch = useAppDispatch()
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
 
   const showFile = useCallback(async (fileUrl: string) => {
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(fileUrl)
       if (response.status === 200) {
-        console.log(response)
+        const url = URL.createObjectURL(response.data);
+        window.open(url);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -32,9 +40,10 @@ const TableVehicleDocument: React.FC<Props> = (props) => {
       } else {
         console.error(error)
       }
+    } finally {
+      dispatch(setLoading(false))
     }
-  }, [])
-
+  }, [dispatch])
 
   const columns: TableProps<TableData>['columns'] = [
     {
@@ -58,12 +67,15 @@ const TableVehicleDocument: React.FC<Props> = (props) => {
       width: 200,
       align: 'center',
       render: (item, record) => {
-        return (
-          <AiOutlineFilePdf
-            className='w-8 h-8 cursor-pointer inline-flex justify-center items-center'
-            onClick={() => showFile(record.file_id)}
-          />
-        )
+        if (record.file_id) {
+          return (
+            <AiOutlineFilePdf
+              className='w-8 h-8 cursor-pointer inline-flex justify-center items-center'
+              onClick={() => showFile(extractUrl(record.file_id))}
+            />
+          )
+        }
+        return '-'
       }
     },
   ];

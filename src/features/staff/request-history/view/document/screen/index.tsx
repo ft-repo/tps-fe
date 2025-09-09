@@ -6,7 +6,7 @@ import { ContentSection } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { getPetitionExtendedDetail, getPetitionStatus } from '@/store/slices/staff';
+import { getPetitionExtendedDetail, getPetitionExtendedStatus } from '@/store/slices/staff';
 
 interface Props {
 
@@ -23,7 +23,7 @@ const DocumentScreen: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(getPetitionExtendedDetail(String(petitionId)))
-    dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
+    dispatch(getPetitionExtendedStatus({ petition_exid: String(petitionId) }))
   }, [dispatch, petitionId])
 
   return (
@@ -32,7 +32,7 @@ const DocumentScreen: React.FC<Props> = (props) => {
         <Button
           type='text'
           icon={<AiOutlineLeft />}
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/request-history/overview?tabKey=2')}
         >
           ย้อนกลับ
         </Button>

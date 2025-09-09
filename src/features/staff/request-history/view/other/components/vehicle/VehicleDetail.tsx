@@ -5,6 +5,7 @@ import { Descriptions, DescriptionsProps, message } from 'antd'
 import { VehicleList } from '@/@types/reducer/petition';
 import { AiOutlineFilePdf } from 'react-icons/ai';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
+import { setLoading, useAppDispatch } from '@/store';
 
 interface Props {
   item: VehicleList;
@@ -12,12 +13,20 @@ interface Props {
 
 const ContentDetail: React.FC<Props> = (props) => {
   const { item } = props
+  const dispatch = useAppDispatch()
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
 
   const showFile = useCallback(async (fileUrl: string) => {
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(fileUrl)
       if (response.status === 200) {
-        console.log(response)
+        const url = URL.createObjectURL(response.data);
+        window.open(url);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -25,8 +34,10 @@ const ContentDetail: React.FC<Props> = (props) => {
       } else {
         console.error(error)
       }
+    } finally {
+      dispatch(setLoading(false))
     }
-  }, [])
+  }, [dispatch])
 
   const vehicle_detail: DescriptionsProps['items'] = [
     {
@@ -62,12 +73,12 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '7',
       label: 'เอกสารขออนุญาตจาก ทช.',
-      children: (
+      children: item?.rural_highway_dept_permit_url ? (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(item?.rural_highway_dept_permit_url)}
+          onClick={() => showFile(extractUrl(item?.rural_highway_dept_permit_url))}
         />
-      ),
+      ) : '-',
     },
   ];
 

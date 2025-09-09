@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { Tabs, type TabsProps } from 'antd'
 import { ContentPetition, ContentPetitionExtended } from '../components'
+import { useSearchParams } from 'react-router-dom'
 
 interface Props {
 
@@ -11,6 +12,9 @@ interface Props {
 const OverviewScreen: React.FC<Props> = (props) => {
   const { } = props
   const [tabKey, setTabKey] = useState<string>('1')
+  // RETURN TAB
+  const [params] = useSearchParams()
+  const returnTab = params.get('tabKey')
 
   const items: TabsProps['items'] = [
     {
@@ -24,10 +28,10 @@ const OverviewScreen: React.FC<Props> = (props) => {
       children: <ContentPetitionExtended />,
     },
   ];
-  
+
   return (
     <Tabs
-      defaultActiveKey={tabKey}
+      defaultActiveKey={returnTab ? returnTab : tabKey}
       items={items}
       onChange={(tabKey) => setTabKey(tabKey)}
     />

@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable no-empty-pattern */
 import React from 'react'
-import { } from '../components'
+import { } from '.'
 import { ResultPermitDetail } from '../../document/components'
 
 interface Props {

@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
+import React, { useCallback } from 'react'
 import {
   FaPenToSquare as EditIcon,
   FaTrash as DeleteIcon,
@@ -22,6 +22,12 @@ const SeachTable: React.FC<Props> = (props) => {
   const { data, loading, handleTableChange, confirmDelete, setOpen } = props
   const { details } = useAppSelector(state => state.auth.user)
 
+  const renderName = useCallback((title: string, firstName: string, lastName: string) => {
+    const nameArr = [title, firstName, lastName]
+    if (!nameArr?.length) return '-'
+    return nameArr.join(' ').trim()
+  }, [])
+
   const columns: TableProps<StaffList>['columns'] = [
     {
       title: 'Username',
@@ -29,6 +35,12 @@ const SeachTable: React.FC<Props> = (props) => {
       key: 'username',
       width: 150,
       align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'ชื่อ - นามสกุล',
@@ -36,13 +48,7 @@ const SeachTable: React.FC<Props> = (props) => {
       key: 'name',
       width: 200,
       align: 'center',
-      render: (item, record) => {
-        return (
-          <div className="flex items-center justify-center gap-2">
-            <span>{record.title} {record.first_name} {record.last_name}</span>
-          </div>
-        )
-      },
+      render: (item, record) => renderName(record.title, record.first_name, record.last_name),
     },
     {
       title: 'หน่วยงาน',
@@ -51,11 +57,10 @@ const SeachTable: React.FC<Props> = (props) => {
       width: 150,
       align: 'center',
       render: (item, record) => {
-        return (
-          <div className="flex items-center justify-center gap-2">
-            <span>{record.department?.dept_name}</span>
-          </div>
-        )
+        if (record.department?.dept_name) {
+          return record.department?.dept_name
+        }
+        return '-'
       },
     },
     {
@@ -65,11 +70,10 @@ const SeachTable: React.FC<Props> = (props) => {
       width: 150,
       align: 'center',
       render: (item, record) => {
-        return (
-          <div className="flex items-center justify-center gap-2">
-            <span>{record.role?.name}</span>
-          </div>
-        )
+        if (record.role?.name) {
+          return record.role?.name
+        }
+        return '-'
       },
     },
     {
@@ -80,24 +84,27 @@ const SeachTable: React.FC<Props> = (props) => {
       width: 70,
       align: 'center',
       render: (item, record) => {
-        return (
-          <div className="flex items-center justify-center gap-2">
-            <Button
-              size="xs"
-              variant="solid"
-              icon={<EditIcon />}
-              color="yellow-600"
-              onClick={() => setOpen({ id: record.id, open: true, data: record })}
-            />
-            <Button
-              size="xs"
-              variant="solid"
-              icon={<DeleteIcon />}
-              color="red-600"
-              onClick={() => confirmDelete(record.id, record)}
-            />
-          </div>
-        )
+        if (details?.role?.name === "ผู้ดูแลระบบ") {
+          return (
+            <div className="flex items-center justify-center gap-2">
+              <Button
+                size="xs"
+                variant="solid"
+                icon={<EditIcon />}
+                color="yellow-600"
+                onClick={() => setOpen({ id: record.id, open: true, data: record })}
+              />
+              <Button
+                size="xs"
+                variant="solid"
+                icon={<DeleteIcon />}
+                color="red-600"
+                onClick={() => confirmDelete(record.id, record)}
+              />
+            </div>
+          )
+        }
+        return '-'
       },
     },
   ]
