@@ -6,7 +6,7 @@ import { ContentForm, ContentPreviewPDF } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
-import { getPetitionStatus } from '@/store/slices/staff';
+import { getPetitionExtendedStatus } from '@/store/slices/staff';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
@@ -19,12 +19,12 @@ const SignScreen: React.FC<Props> = (props) => {
 	const petitionId = params.get('petition_id')
 	const navigate = useNavigate()
 	const dispatch = useAppDispatch()
-	const { petition_status, loading } = useAppSelector(state => state.staff.petition)
+	const { petition_extended_status, loading } = useAppSelector(state => state.staff.petition)
 	// STATE
 	const [url, setUrl] = useState<string>('')
 
 	useEffect(() => {
-		dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
+		dispatch(getPetitionExtendedStatus({ petition_exid: String(petitionId) }))
 	}, [dispatch, petitionId])
 
 	const extractUrl = useCallback((url: string) => {
@@ -53,10 +53,10 @@ const SignScreen: React.FC<Props> = (props) => {
 	}, [dispatch])
 
 	useEffect(() => {
-		if (petition_status[3]?.document_url) {
-			fetchImage(extractUrl(petition_status[3]?.document_url))
+		if (petition_extended_status[1]?.document_url) {
+			fetchImage(extractUrl(petition_extended_status[1]?.document_url))
 		}
-	}, [fetchImage, extractUrl, petition_status])
+	}, [fetchImage, extractUrl, petition_extended_status])
 
 	return (
 		<Spin spinning={loading}>
@@ -66,7 +66,7 @@ const SignScreen: React.FC<Props> = (props) => {
 						<Button
 							type='text'
 							icon={<AiOutlineLeft />}
-							onClick={() => navigate('/request-list/overview')}
+							onClick={() => navigate('/request-list/overview?tabKey=2')}
 						>
 							ย้อนกลับ
 						</Button>

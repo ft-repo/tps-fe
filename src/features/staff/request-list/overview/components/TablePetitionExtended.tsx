@@ -175,11 +175,11 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
     },
     {
       title: 'รอลงนาม', key: 'wait_signed', width: 150, align: 'center',
-      render: makeStepRenderer(STEP.SIGN, '/request-list/approval/sign', navigate)
+      render: makeStepRenderer(STEP.SIGN, '/request-list/approval/sign-extended', navigate)
     },
     {
       title: 'ออกใบอนุญาต', key: 'permit', width: 150, align: 'center',
-      render: makeStepRenderer(STEP.PERMIT, '/request-list/approval/permit', navigate)
+      render: makeStepRenderer(STEP.PERMIT, '/request-list/approval/permit-extended', navigate)
     },
   ]
 

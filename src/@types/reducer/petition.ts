@@ -151,6 +151,7 @@ export interface PetitionAdminState {
   petition_history_extended: AdminPetitionExtended;
   notification: AdminPetitionNotification;
   petition_status: AdminPetitionStatus[];
+  petition_extended_status: AdminPetitionExtendedStatus[];
   petition_count: AdminPetitionCount[];
   loading: boolean;
 }
@@ -171,6 +172,21 @@ export interface AdminPetitionStatus {
   is_skipped: boolean;
   created_by: string;
   created_at: string;
+  status: Status;
+  admin_creaded: AdminCreaded;
+}
+
+export interface AdminPetitionExtendedStatus {
+  id: number;
+  petition_exid: number;
+  status_id: number;
+  reply_message: string;
+  remark: string;
+  document_url: string;
+  is_approved: boolean;
+  created_by: string;
+  created_at: string;
+  is_readed: boolean
   status: Status;
   admin_creaded: AdminCreaded;
 }
@@ -281,9 +297,13 @@ export interface EstimateRouteDetail {
   petition_id: number;
   vehicle_route: number[][];
   estimate: EstimateRouteSubDetail[];
-  estimate_rural_roads: EstimateRuralRoad[];
   start_point: string;
   end_point: string;
+  estimate_rural_roads: EstimateRuralRoad[];
+  start_road: string;
+  end_road: string;
+  start_road_code: string;
+  end_road_code: string;
 }
 
 export interface EstimateRouteSubDetail {

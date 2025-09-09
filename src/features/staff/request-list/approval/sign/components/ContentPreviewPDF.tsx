@@ -7,6 +7,7 @@ import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { useAppSelector } from '@/store';
+import { Empty } from 'antd';
 
 
 interface Props {
@@ -21,17 +22,23 @@ const ContentPDFViewer: React.FC<Props> = (props) => {
   return (
     <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
       <div className='h-screen w-full'>
-        <Viewer
-          fileUrl={url || '/mock/c4611_sample_explain.pdf'}
-          plugins={[
-            defaultLayoutPluginInstance,
-          ]}
-          httpHeaders={{
-            'Authorization': `Bearer ${token}`,
-            'x-api-key': 'TlDUgcAzXWdy1kyB40IHVpgL9g4ELXdPxx4GKpxF'
-          }}
-          withCredentials={true}
-        />
+        {url ?
+          <Viewer
+            fileUrl={url}
+            plugins={[
+              defaultLayoutPluginInstance,
+            ]}
+            httpHeaders={{
+              'Authorization': `Bearer ${token}`,
+              'x-api-key': 'TlDUgcAzXWdy1kyB40IHVpgL9g4ELXdPxx4GKpxF'
+            }}
+            withCredentials={true}
+          />
+          :
+          <Empty
+            description='ไม่มีข้อมูล'
+          />
+        }
       </div>
     </Worker>
   )

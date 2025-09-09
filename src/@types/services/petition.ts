@@ -69,6 +69,10 @@ export interface GetPetitionDetailParams {
   petition_id: string;
 }
 
+export interface GetPetitionExtendedDetailParams {
+  petition_exid: string;
+}
+
 export interface GetEstimateParams {
   estimate_id: string;
 }

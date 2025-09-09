@@ -6,7 +6,7 @@ import { TitleSection, ContentTab } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { getPetitionVehicle } from '@/store/slices/staff';
+import { getPetitionStatus, getPetitionVehicle } from '@/store/slices/staff';
 
 interface Props {
 
@@ -23,6 +23,7 @@ const VehicleScreen: React.FC<Props> = (props) => {
 
 	useEffect(() => {
 		dispatch(getPetitionVehicle({ petition_id: String(petitionId) }))
+		dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
 	}, [dispatch, petitionId])
 
 	return (
@@ -31,7 +32,7 @@ const VehicleScreen: React.FC<Props> = (props) => {
 				<Button
 					type='text'
 					icon={<AiOutlineLeft />}
-					onClick={() => navigate(-1)}
+					onClick={() => navigate('/request-list/overview')}
 				>
 					ย้อนกลับ
 				</Button>
