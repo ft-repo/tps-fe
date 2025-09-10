@@ -63,12 +63,12 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '10',
       label: 'วันที่เริ่มต้น',
-      children: <p>{document?.start_date ? dayjs(document?.start_date).format('DD MMMM YYYY') : '-'}</p>,
+      children: <p>{document?.start_date ? dayjs(document?.start_date).format('DD/MM/YYYY') : '-'}</p>,
     },
     {
       key: '11',
       label: 'วันที่สิ้นสุด',
-      children: <p>{document?.end_date ? dayjs(document?.end_date).format('DD MMMM YYYY') : '-'}</p>,
+      children: <p>{document?.end_date ? dayjs(document?.end_date).format('DD/MM/YYYY') : '-'}</p>,
     },
     {
       key: '12',

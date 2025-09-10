@@ -58,7 +58,7 @@ const PetitionDetail: React.FC<Props> = (props) => {
     {
       key: '4',
       label: 'วันที่จดทะเบียน',
-      children: <p>{detail?.user_created?.created_at ? dayjs(detail?.user_created?.created_at).format('DD MMMM YYYY') : '-'}</p>,
+      children: <p>{detail?.user_created?.created_at ? dayjs(detail?.user_created?.created_at).format('DD/MM/YYYY') : '-'}</p>,
     },
     {
       key: '5',

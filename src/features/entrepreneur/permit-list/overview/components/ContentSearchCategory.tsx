@@ -142,7 +142,7 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
           data: response.data,
           info: {
             petition_no: record.petition_no,
-            petition_date: dayjs(record.petition_date).format('DD MMMM YYYY'),
+            petition_date: dayjs(record.petition_date).format('DD/MM/YYYY'),
           }
         })
       }
