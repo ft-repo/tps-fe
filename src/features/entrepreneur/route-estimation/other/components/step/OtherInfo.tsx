@@ -211,7 +211,7 @@ const OtherInfo: React.FC<Props> = (props) => {
             type='default'
             // size='large'
             className='w-full lg:w-auto'
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/permit-list?tabKey=2')}
           >
             ย้อนกลับ
           </Button>

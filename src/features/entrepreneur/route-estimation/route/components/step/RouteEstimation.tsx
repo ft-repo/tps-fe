@@ -178,7 +178,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
             type='default'
             // size='large'
             className='w-full lg:w-auto'
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/permit-list')}
           >
             ย้อนกลับ
           </Button>

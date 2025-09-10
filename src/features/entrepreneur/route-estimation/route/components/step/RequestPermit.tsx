@@ -20,7 +20,7 @@ interface Props {
 
 const RequestPermit: React.FC<Props> = (props) => {
   const { } = props
-  const { dataParser } = useRouteContext()
+  const { dataParser, setStep } = useRouteContext()
   const submitRef = useRef<HTMLButtonElement>(null)
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
@@ -208,7 +208,7 @@ const RequestPermit: React.FC<Props> = (props) => {
             type='default'
             // size='large'
             className='w-full lg:w-auto'
-            onClick={() => navigate(-1)}
+            onClick={() => setStep((prev: number) => prev - 1)}
           >
             ย้อนกลับ
           </Button>

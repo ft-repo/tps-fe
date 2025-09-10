@@ -7,6 +7,7 @@ import {
   ContentSearchOther as ContentPetitionExtended
 } from '../components'
 import { Tabs, TabsProps } from 'antd'
+import { useSearchParams } from 'react-router-dom'
 
 interface Props {
 }
@@ -14,6 +15,9 @@ interface Props {
 const PermitListScreen: React.FC<Props> = (props) => {
   const { } = props
   const [tabKey, setTabKey] = useState<string>('1')
+  // RETURN TAB
+  const [params] = useSearchParams()
+  const returnTab = params.get('tabKey')
 
   const items: TabsProps['items'] = [
     {
@@ -30,7 +34,7 @@ const PermitListScreen: React.FC<Props> = (props) => {
 
   return (
     <Tabs
-      defaultActiveKey={tabKey}
+      defaultActiveKey={returnTab ? returnTab : tabKey}
       items={items}
       onChange={(tabKey) => setTabKey(tabKey)}
     />

@@ -159,7 +159,7 @@ const OtherDocument: React.FC<Props> = (props) => {
           okText: 'ตกลง',
           onOk: () => {
             dispatch(getPetitionExtendedData(petition_extended.overview.search))
-            navigate('/permit-list')
+            navigate('/permit-list?tabKey=2')
           },
           okButtonProps: {
             style: {

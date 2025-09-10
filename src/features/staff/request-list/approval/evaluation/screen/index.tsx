@@ -31,7 +31,7 @@ const EvaluationScreen: React.FC<Props> = (props) => {
 				<Button
 					type='text'
 					icon={<AiOutlineLeft />}
-					onClick={() => navigate(-1)}
+					onClick={() => navigate('/request-list/overview?tabKey=2')}
 				>
 					ย้อนกลับ
 				</Button>
