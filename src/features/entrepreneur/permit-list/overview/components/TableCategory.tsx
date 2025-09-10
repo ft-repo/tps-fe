@@ -46,6 +46,19 @@ const TableCategory: React.FC<Props> = (props) => {
       }
     }
 
+    const tagBg = (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow.is_readed) ?
+      '#5A9BC3'
+      : CLIENT_PETITION_STATUS[text]?.color // ใช้สีจาก CLIENT_PETITION_STATUS
+
+    const tagText = (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow.is_readed) ?
+      'ข้อความใหม่'
+      : CLIENT_PETITION_STATUS[text]?.text
+
+    const tagSubText = (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow.is_readed) ?
+      <Badge count={1} />
+      : (text === 'IN_PROGRESS' || text === 'REJECTED') ? null :
+        <span style={{ fontSize: 12 }}>{dayjs(petitionFlow?.created_date).format('DD/MM/YYYY')}</span>
+
     return (
       <figure
         className={
@@ -61,20 +74,11 @@ const TableCategory: React.FC<Props> = (props) => {
         <Tag
           style={{
             ...STATUS_TAG_STYLE,
-            backgroundColor: (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow.is_readed) ?
-              '#5A9BC3'
-              : CLIENT_PETITION_STATUS[text]?.color, // ใช้สีจาก CLIENT_PETITION_STATUS
+            backgroundColor: tagBg
           }}
         >
-          {(typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow.is_readed) ?
-            'ข้อความใหม่'
-            : CLIENT_PETITION_STATUS[text]?.text
-          }
-          {(typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow.is_readed) ?
-            <Badge count={1} />
-            : (text === 'IN_PROGRESS' || text === 'REJECTED') ? null :
-              <span style={{ fontSize: 12 }}>{dayjs(petitionFlow?.created_date).format('DD/MM/YYYY')}</span>
-          }
+          {tagText}
+          {tagSubText}
         </Tag>
       </figure>
     );
