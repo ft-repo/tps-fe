@@ -86,6 +86,8 @@ export interface PetitionFlow {
   created_date: string;
   created_by: string;
   is_approved: boolean;
+  is_skipped: boolean;
+  is_readed: boolean;
   status: PetitionStatus;
 }
 
@@ -117,6 +119,7 @@ export interface PetitionExtendedFlow {
   is_approved: boolean;
   created_by: string;
   created_at: string;
+  is_readed: boolean;
   status: PetitionStatus;
   admin_creaded: AdminCreaded;
 }

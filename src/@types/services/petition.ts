@@ -257,3 +257,46 @@ export interface VehicleArray {
 export interface PetitionConfirmResponse {
   message: string;
 }
+
+export interface PetitionMessageResponse {
+  id: number;
+  petition_id: number;
+  status_id: number;
+  remark: string;
+  document_url: string;
+  is_approved: boolean;
+  is_skipped: boolean;
+  created_by: string;
+  created_at: string;
+  is_readed: boolean;
+  status: Status;
+  admin_creaded: AdminCreaded;
+}
+export interface AdminCreaded {
+  id: string;
+  username: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  department_id: number;
+  role_id: number;
+}
+
+export interface PetitionExtendedMessageResponse {
+  id: number
+  petition_exid: number
+  status_id: number
+  reply_message: string
+  remark: string
+  document_url: string
+  is_approved: boolean
+  created_by: string
+  created_at: string
+  is_readed: boolean
+  status: Status
+  admin_creaded: AdminCreaded
+}
+
+export interface PetitionMessageRequest {
+  message_id: string | number;
+}

@@ -84,7 +84,7 @@ const Content = (props: ContentProps) => {
         render={({ field }) => {
           return (
             <fieldset>
-              <label>รหัสผ่าน</label>
+              <label>รหัสผ่าน <span className='text-red-500'>*</span></label>
               <Input
                 {...field}
                 name={field.name}
@@ -111,7 +111,7 @@ const Content = (props: ContentProps) => {
         render={({ field }) => {
           return (
             <fieldset className='mt-3'>
-              <label>ยืนยันรหัสผ่าน</label>
+              <label>ยืนยันรหัสผ่าน <span className='text-red-500'>*</span></label>
               <Input
                 {...field}
                 name={field.name}
