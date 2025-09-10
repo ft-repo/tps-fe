@@ -1,11 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
-import { Table, type TableProps, Tag } from 'antd'
+import { Table, type TableProps } from 'antd'
 import dayjs from 'dayjs'
 import type { AdminPetitionData, AdminPetitionTableData } from '@/@types/reducer/petition'
 import { ADMIN_PETITION_HISTORY_STATUS } from '@/utils/constant'
 import { useNavigate } from 'react-router-dom'
-
+import { Tag } from '@/components/ui'
 
 interface Props {
   data: AdminPetitionData;
@@ -81,6 +81,22 @@ const computeHistory = (record: AdminPetitionTableData):
   return out
 }
 
+const STATUS_TAG_STYLE: React.CSSProperties = {
+  width: 120,               // ✅ ความกว้างเท่ากันทุกอัน (px หรือ '10rem' ก็ได้)
+  minHeight: 48,            // ✅ ความสูงขั้นต่ำพอสำหรับ 2 บรรทัด (มีวันที่/ไม่มีวันที่ก็ไม่กระดิก)
+  display: 'inline-flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 2,                   // เว้นบรรทัดระหว่างข้อความกับวันที่นิดนึง
+  borderRadius: 6,
+  padding: '4px 8px',
+  color: '#fff',
+  textAlign: 'center',
+  fontWeight: 500,
+  lineHeight: 1.2,
+};
+
 const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) => {
   const makeStatusCell = (step: StepId) =>
     (_val: unknown, record: AdminPetitionTableData) => {
@@ -94,7 +110,16 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
         : null
 
       return (
-        <Tag color={cfg.color}>
+        // <Tag color={cfg.color}>
+        //   {cfg.text}
+        //   {dateText ? (<><br />{dateText}</>) : null}
+        // </Tag>
+        <Tag
+          style={{
+            ...STATUS_TAG_STYLE,
+            backgroundColor: cfg.color
+          }}
+        >
           {cfg.text}
           {dateText ? (<><br />{dateText}</>) : null}
         </Tag>
