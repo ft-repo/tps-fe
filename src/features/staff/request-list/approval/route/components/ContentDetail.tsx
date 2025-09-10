@@ -1,15 +1,16 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
+import { EstimateRouteSubDetail } from '@/@types/reducer/petition';
 import { useAppSelector } from '@/store'
 import { Descriptions, DescriptionsProps } from 'antd'
 import React from 'react'
 
 interface Props {
-
+  item: EstimateRouteSubDetail;
 }
 
 const ContentDetail: React.FC<Props> = (props) => {
-  const { } = props
+  const { item } = props
   const { petition } = useAppSelector(state => state.staff.petition)
   const route = petition.detail.estimate.route
 
@@ -28,7 +29,7 @@ const ContentDetail: React.FC<Props> = (props) => {
 
   return (
     <Descriptions
-      title="ข้อมูลเส้นทาง (รถคู่ที่ 1)"
+      title={`ข้อมูลเส้นทาง (รถ${item?.sort || 'คู่ที่ 1'})`}
       items={items}
       column={1}
       layout='vertical'

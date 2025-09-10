@@ -18,31 +18,33 @@ const ContentRouteList: React.FC<Props> = (props) => {
   const { estimate, loading } = useAppSelector(state => state.entrepreneur.permitList)
 
   useEffect(() => {
-    switch (showTable) {
-      case 'summary':
-        dispatch(getEstimateSummaryData({
-          ...estimate.summary.search,
-          estimate_id: item.estimate_id
-        }))
-        break
-      case 'bridge':
-        dispatch(getEstimateBridgeData({
-          ...estimate.bridge.search,
-          estimate_id: item.estimate_id
-        }))
-        break
-      case 'turn_radius':
-        dispatch(getEstimateTurnRadiusData({
-          ...estimate.turn_radius.search,
-          estimate_id: item.estimate_id
-        }))
-        break
-      default:
-        dispatch(getEstimateSummaryData({
-          ...estimate.summary.search,
-          estimate_id: item.estimate_id
-        }))
-        break
+    if (item.estimate_id) {
+      switch (showTable) {
+        case 'summary':
+          dispatch(getEstimateSummaryData({
+            ...estimate.summary.search,
+            estimate_id: item.estimate_id
+          }))
+          break
+        case 'bridge':
+          dispatch(getEstimateBridgeData({
+            ...estimate.bridge.search,
+            estimate_id: item.estimate_id
+          }))
+          break
+        case 'turn_radius':
+          dispatch(getEstimateTurnRadiusData({
+            ...estimate.turn_radius.search,
+            estimate_id: item.estimate_id
+          }))
+          break
+        default:
+          dispatch(getEstimateSummaryData({
+            ...estimate.summary.search,
+            estimate_id: item.estimate_id
+          }))
+          break
+      }
     }
   }, [
     dispatch,

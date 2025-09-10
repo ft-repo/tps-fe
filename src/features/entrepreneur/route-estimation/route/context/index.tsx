@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldTypeArr } from '@/@types/entrepreneur/route-estimation';
-import { PetitionEstimateRequest, PetitionEstimateResponse } from '@/@types/services/petition';
+import { PetitionEstimateRequest, PetitionEstimateResponse, EstimateResponse } from '@/@types/services/petition';
 import { createContext, useContext, useState } from 'react'
 
 export interface ContextProps {
@@ -10,6 +10,10 @@ export interface ContextProps {
   setStep: (step: number | any) => void;
   dataParser: DataParser;
   setDataParser: (dataParser: DataParser) => void;
+  index: number;
+  item: EstimateResponse;
+  setIndex: (value: number) => void;
+  setItem: (value: EstimateResponse) => void;
 }
 
 export interface DataParser {
@@ -51,6 +55,11 @@ export const RouteProvider = (props: any) => {
       route_form: []
     }
   })
+  const [index, setIndex] = useState<number>(0)
+  const [item, setItem] = useState<EstimateResponse>({
+    estimate_id: '',
+    vehicle: []
+  })
 
   return (
     <PageContext.Provider
@@ -58,7 +67,11 @@ export const RouteProvider = (props: any) => {
         step,
         setStep,
         dataParser,
-        setDataParser
+        setDataParser,
+        index,
+        item,
+        setIndex,
+        setItem
       }}
     >
       {children}

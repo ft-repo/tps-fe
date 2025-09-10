@@ -3,6 +3,7 @@
 import React from 'react'
 import { ConfigProvider } from 'antd'
 import RouteScreen from '@/features/staff/request-list/approval/route/screen'
+import { RouteProvider } from '@/features/staff/request-list/approval/route/context'
 
 interface Props {
 
@@ -19,7 +20,9 @@ const RouteIndex: React.FC<Props> = (props) => {
         }
       }}
     >
-      <RouteScreen />
+      <RouteProvider>
+        <RouteScreen />
+      </RouteProvider>
     </ConfigProvider>
   )
 }

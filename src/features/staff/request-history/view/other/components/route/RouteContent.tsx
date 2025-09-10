@@ -1,12 +1,11 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { Col, Row } from 'antd'
 import React, { useCallback, useEffect } from 'react'
-import { RouteDetail, EvaluateRouteDetail, TableSummary, TableBridge, TableTurnRadius } from '../../components'
-import MapRouteEstimation from '@/features/entrepreneur/route-estimation/route/components/route-estimate/initial/MapRouteEstimation'
+import { RouteDetail, TableSummary, TableBridge, TableTurnRadius } from '../../components'
 import { EstimateRouteSubDetail } from '@/@types/reducer/petition';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getPetitionEstimateBridge, getPetitionEstimateSummary, getPetitionEstimateTurnRadius, setAdminPetitionBridgeEstimation, setAdminPetitionSummaryEstimation, setAdminPetitionTurnRadiusEstimation } from '@/store/slices/staff';
+import { useOtherContext } from '../../context';
 
 interface Props {
   index: number;
@@ -14,10 +13,16 @@ interface Props {
 }
 
 const RouteContent: React.FC<Props> = (props) => {
-  const { item } = props
+  const { item, index } = props
   const dispatch = useAppDispatch()
   const { petition, loading } = useAppSelector(state => state.staff.petition)
   const estimate = petition.detail.estimate
+  const { setIndex, setItem } = useOtherContext()
+
+  useEffect(() => {
+    setIndex(index)
+    setItem(item)
+  }, [index, item, setIndex, setItem])
 
   useEffect(() => {
     dispatch(getPetitionEstimateSummary({
@@ -112,41 +117,32 @@ const RouteContent: React.FC<Props> = (props) => {
   }, [dispatch, estimate.turn_radius.search, estimate.turn_radius.data])
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={8}>
-        <section>
-          <RouteDetail />
-        </section>
-        <section className='mt-5'>
-          <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[40vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
-            <MapRouteEstimation
-              firstPoint={null}
-              secondPoint={null}
-            />
-          </div>
-        </section>
-        <section className='mt-5'>
-          <EvaluateRouteDetail />
-        </section>
-      </Col>
-      <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={16}>
+    <>
+      <section>
+        <RouteDetail />
+      </section>
+      <section className='mt-5'>
         <TableSummary
           data={petition.detail.estimate.summary.data}
           loading={loading}
           handleTableChange={handleTableSummaryChange}
         />
+      </section>
+      <section>
         <TableBridge
           data={petition.detail.estimate.bridge.data}
           loading={loading}
           handleTableChange={handleTableBridgeChange}
         />
+      </section>
+      <section>
         <TableTurnRadius
           data={petition.detail.estimate.turn_radius.data}
           loading={loading}
           handleTableChange={handleTableTurnRadiusChange}
         />
-      </Col>
-    </Row>
+      </section>
+    </>
   )
 }
 

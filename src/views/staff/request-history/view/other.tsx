@@ -3,6 +3,7 @@
 import { ConfigProvider } from 'antd'
 import React from 'react'
 import OtherScreen from '@/features/staff/request-history/view/other/screen'
+import { OtherProvider } from '@/features/staff/request-history/view/other/context'
 
 interface Props {
 
@@ -19,7 +20,9 @@ const OtherIndex: React.FC<Props> = (props) => {
         }
       }}
     >
-      <OtherScreen />
+      <OtherProvider>
+        <OtherScreen />
+      </OtherProvider>
     </ConfigProvider>
   )
 }

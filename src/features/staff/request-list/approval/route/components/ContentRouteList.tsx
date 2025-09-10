@@ -19,31 +19,33 @@ const ContentRouteList: React.FC<Props> = (props) => {
   const estimate = petition.detail.estimate
 
   useEffect(() => {
-    switch (showTable) {
-      case 'summary':
-        dispatch(getPetitionEstimateSummary({
-          ...estimate.summary.search,
-          estimate_id: item.estimate_id
-        }))
-        break
-      case 'bridge':
-        dispatch(getPetitionEstimateBridge({
-          ...estimate.bridge.search,
-          estimate_id: item.estimate_id
-        }))
-        break
-      case 'turn_radius':
-        dispatch(getPetitionEstimateTurnRadius({
-          ...estimate.turn_radius.search,
-          estimate_id: item.estimate_id
-        }))
-        break
-      default:
-        dispatch(getPetitionEstimateSummary({
-          ...estimate.summary.search,
-          estimate_id: item.estimate_id
-        }))
-        break
+    if (item.estimate_id) {
+      switch (showTable) {
+        case 'summary':
+          dispatch(getPetitionEstimateSummary({
+            ...estimate.summary.search,
+            estimate_id: item.estimate_id
+          }))
+          break
+        case 'bridge':
+          dispatch(getPetitionEstimateBridge({
+            ...estimate.bridge.search,
+            estimate_id: item.estimate_id
+          }))
+          break
+        case 'turn_radius':
+          dispatch(getPetitionEstimateTurnRadius({
+            ...estimate.turn_radius.search,
+            estimate_id: item.estimate_id
+          }))
+          break
+        default:
+          dispatch(getPetitionEstimateSummary({
+            ...estimate.summary.search,
+            estimate_id: item.estimate_id
+          }))
+          break
+      }
     }
   }, [
     dispatch,
