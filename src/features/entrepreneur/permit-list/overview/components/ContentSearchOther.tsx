@@ -55,8 +55,8 @@ const ContentSearchOther: React.FC<Props> = (props) => {
   const { } = props
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const petition_extended = useAppSelector(state => state.entrepreneur.permitList.petition_extended)
-  const loading = useAppSelector(state => state.layout.loading)
+  const { petition_extended, loading } = useAppSelector(state => state.entrepreneur.permitList)
+  // const loading = useAppSelector(state => state.layout.loading)
   const [open, setOpen] = useState<ModalStateProps>(INIT_MODAL)
 
   useEffect(() => {

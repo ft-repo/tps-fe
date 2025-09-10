@@ -252,7 +252,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
         />
         <TableVehicleList
           data={vehicle.overview.data}
-          loading={loading}
+          loading={vehicle.loading}
           handleTableChange={handleTableChange}
           confirmDelete={confirmDeleteRecord}
           openDataModal={openDataModal}

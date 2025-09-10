@@ -74,8 +74,8 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
   const { } = props
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const petition = useAppSelector(state => state.entrepreneur.permitList.petition)
-  const loading = useAppSelector(state => state.layout.loading)
+  const { petition, loading } = useAppSelector(state => state.entrepreneur.permitList)
+  // const loading = useAppSelector(state => state.layout.loading)
   // STATE
   const [open, setOpen] = useState<ModalStateProps>(INIT_MODAL)
   const [openMessage, setOpenMessage] = useState<ModalMessageStateProps>(INIT_MODAL_MESSAGE)
