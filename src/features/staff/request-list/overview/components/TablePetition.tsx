@@ -7,12 +7,11 @@ import { ADMIN_PETITION_STATUS } from '@/utils/constant'
 import type { AdminPetitionData, AdminPetitionTableData } from '@/@types/reducer/petition'
 
 type ApprovalKey = keyof typeof ADMIN_PETITION_STATUS
-// สถานะที่ render ได้: รวม 'SKIPPED' แยกจาก ApprovalKey
 type StepStatus =
   | { key: ApprovalKey; date?: string | null }
   | { key: 'SKIPPED'; date?: string | null }
 
-// --- Step ids แบบ literal ---
+// --- Step ids ---
 const STEP = {
   DOCUMENT: 1,
   ROUTE: 2,
@@ -30,6 +29,23 @@ type FlowItem = {
   is_skipped?: boolean
 }
 type MaybeFlow = FlowItem | null
+
+// ✅ ทำให้สถานะกว้าง/สูงเท่ากันทุกอัน
+const STATUS_TAG_STYLE: React.CSSProperties = {
+  width: 100,
+  minHeight: 48,
+  display: 'inline-flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: 2,
+  borderRadius: 6,
+  padding: '4px 8px',
+  // color: '#ffff',
+  textAlign: 'center',
+  fontWeight: 500,
+  lineHeight: 1.2,
+}
 
 // ---------- helpers ----------
 const isTrue = (v: unknown) =>
@@ -85,54 +101,62 @@ const isStepUnlocked = (record: AdminPetitionTableData, stepId: StepId) => {
 const makeStepRenderer =
   (stepId: StepId, path: string, navigate: ReturnType<typeof useNavigate>) =>
     (_val: any, record: AdminPetitionTableData) => {
-      const st = getStepStatus(record, stepId)        // st: StepStatus
+      const st = getStepStatus(record, stepId)
       const unlocked = isStepUnlocked(record, stepId)
 
-      // กรณี SKIPPED -> เทา/คลิกไม่ได้ และไม่ index constant
+      // กรณี SKIPPED -> เทา/คลิกไม่ได้ และใช้ STATUS_TAG_STYLE
       if (st.key === 'SKIPPED') {
         const content = (
-          <Tag color="default" style={{ cursor: 'not-allowed', opacity: 0.6, userSelect: 'none' }}>
+          <Tag
+            color="default"
+            style={{ ...STATUS_TAG_STYLE, cursor: 'not-allowed', opacity: 1, userSelect: 'none' }}
+          >
             ข้ามขั้นตอน
           </Tag>
         )
         return <Tooltip title="ขั้นตอนนี้ถูกข้าม"><span>{content}</span></Tooltip>
       }
 
-      // จากบรรทัดนี้ st.key ถูก narrowed เป็น ApprovalKey แล้ว ✅
+      // จากบรรทัดนี้ st.key เป็น ApprovalKey
       const cfg = ADMIN_PETITION_STATUS[st.key]
       const clickable = unlocked
 
       const content = (
         <Tag
           color={clickable ? cfg.color : 'default'}
-          style={{ cursor: clickable ? 'pointer' : 'not-allowed', opacity: clickable ? 1 : 0.6, userSelect: 'none' }}
+          style={{
+            ...STATUS_TAG_STYLE,
+            cursor: clickable ? 'pointer' : 'not-allowed',
+            opacity: clickable ? 1 : 0.6,
+            userSelect: 'none',
+          }}
           onClick={
             clickable
               ? () => {
-                const flow = latestFlowByStatus((record as any).petition_flow, stepId);
+                const flow = latestFlowByStatus((record as any).petition_flow, stepId)
                 const approved =
                   flow?.is_approved === true ? 'true' :
                     flow?.is_approved === false ? 'false' :
-                      'null';
+                      'null'
 
                 navigate(
                   `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`
-                );
+                )
               }
               : undefined
           }
           role={clickable ? 'button' : undefined}
           tabIndex={clickable ? 0 : -1}
           onKeyDown={e => {
-            if (!clickable || e.key !== 'Enter') return;
-            const flow = latestFlowByStatus((record as any).petition_flow, stepId);
+            if (!clickable || e.key !== 'Enter') return
+            const flow = latestFlowByStatus((record as any).petition_flow, stepId)
             const approved =
               flow?.is_approved === true ? 'true' :
                 flow?.is_approved === false ? 'false' :
-                  'null';
+                  'null'
             navigate(
               `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`
-            );
+            )
           }}
         >
           {cfg.text}
@@ -165,12 +189,7 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'business_name',
       width: 500,
       align: 'center',
-      render: (item) => {
-        if (item) {
-          return item
-        }
-        return '-'
-      }
+      render: (item) => item ?? '-'
     },
     {
       title: 'รหัสสายทาง',
@@ -178,12 +197,7 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'road_code',
       width: 150,
       align: 'center',
-      render: (item) => {
-        if (item) {
-          return item
-        }
-        return '-'
-      }
+      render: (item) => item ?? '-'
     },
     {
       title: 'ชื่อสายทาง',
@@ -191,12 +205,7 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'road_name',
       width: 500,
       align: 'center',
-      render: (item) => {
-        if (item) {
-          return item
-        }
-        return '-'
-      }
+      render: (item) => item ?? '-'
     },
     {
       title: 'วันที่เริ่มต้น',
@@ -204,12 +213,7 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'start_date',
       width: 150,
       align: 'center',
-      render: (item) => {
-        if (item) {
-          return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
-        }
-        return '-'
-      }
+      render: (item) => item ? dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY') : '-'
     },
     {
       title: 'วันที่สิ้นสุด',
@@ -217,12 +221,7 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'end_date',
       width: 150,
       align: 'center',
-      render: (item) => {
-        if (item) {
-          return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
-        }
-        return '-'
-      }
+      render: (item) => item ? dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY') : '-'
     },
     {
       title: 'วันที่ขออนุญาต',
@@ -230,12 +229,7 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'petition_date',
       width: 150,
       align: 'center',
-      render: (item) => {
-        if (item) {
-          return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
-        }
-        return '-'
-      }
+      render: (item) => item ? dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY') : '-'
     },
     {
       title: 'ตรวจเอกสาร', key: 'validate_document', width: 150, align: 'center',

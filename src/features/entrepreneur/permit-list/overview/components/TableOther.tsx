@@ -19,7 +19,7 @@ interface Props {
 }
 
 const STATUS_TAG_STYLE: React.CSSProperties = {
-  width: 120,               // ✅ ความกว้างเท่ากันทุกอัน (px หรือ '10rem' ก็ได้)
+  width: 100,               // ✅ ความกว้างเท่ากันทุกอัน (px หรือ '10rem' ก็ได้)
   minHeight: 48,            // ✅ ความสูงขั้นต่ำพอสำหรับ 2 บรรทัด (มีวันที่/ไม่มีวันที่ก็ไม่กระดิก)
   display: 'inline-flex',
   flexDirection: 'column',

@@ -70,8 +70,7 @@ const isStepUnlocked = (record: AdminPetitionExtendedTableData, stepId: StepId) 
 }
 
 const STATUS_TAG_STYLE: React.CSSProperties = {
-  width: 120,
-  minHeight: 48,
+  width: 100, minHeight: 48,
   display: 'inline-flex',
   flexDirection: 'column',
   alignItems: 'center',
