@@ -6,7 +6,7 @@ import React from 'react'
 import { useRouteContext } from '../../context'
 import ContentTab from '../route-estimate/result/ContentTab'
 import ContentRouteList from '../route-estimate/result/ContentRouteList'
-import MapRouteEstimation from '../route-estimate/initial/MapRouteEstimation'
+import MapRoute from '@/components/ui/Maps'
 
 interface Props {
 
@@ -15,7 +15,9 @@ interface Props {
 const EstimateResult: React.FC<Props> = (props) => {
   const { } = props
   const { loading } = useAppSelector(state => state.layout)
+  const { estimate } = useAppSelector(state => state.entrepreneur.permitList)
   const { setStep, index, item } = useRouteContext()
+  const detail = estimate.detail
 
   return (
     <main>
@@ -51,9 +53,9 @@ const EstimateResult: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[77vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
-              <MapRouteEstimation
-                firstPoint={null}
-                secondPoint={null}
+              <MapRoute
+                coordinates={[[Number(detail.start_point[0] || 0), Number(detail.start_point[1] || 0)], [Number(detail.end_point[0] || 0), Number(detail.end_point[1] || 0)]]}
+                isRouteEstimate={true}
               />
             </div>
           </Col>

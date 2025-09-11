@@ -206,7 +206,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
               <MapRoute
                 coordinates={[[Number(startLongitude || 0), Number(startLatitude || 0)], [Number(endLongitude || 0), Number(endLatitude || 0)]]}
-                isRouteEstimate={false}
+                isRouteEstimate={true}
               />
             </div>
             <section className='mt-5'>
