@@ -209,6 +209,9 @@ export interface NotificationData {
   business_name: string;
   created_at: string;
   from: string;
+  petition_id: number;
+  status_id: number;
+  profile_url: string;
 }
 
 export interface NotificationPagination {
