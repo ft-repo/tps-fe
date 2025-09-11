@@ -8,6 +8,7 @@ import { FieldType } from '@/@types/entrepreneur/executive-data';
 import { DatePicker, Select, Input, Upload, message, Button } from 'antd';
 import { useAppSelector } from '@/store';
 import { postUploadProfileImageAPI } from '@/services/entrepreneur/UserService';
+import { RcFile } from 'antd/es/upload';
 
 interface Props {
   control: Control<FieldType>;
@@ -359,6 +360,10 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                     } else {
                       setValue('file_id.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :

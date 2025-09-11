@@ -8,6 +8,7 @@ import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-f
 import { FieldTypePetition } from '@/@types/entrepreneur/permit-list';
 import { useAppSelector } from '@/store';
 import { postUploadVehicleRegistrationDocumentAPI } from '@/services/entrepreneur/PetitionService';
+import { RcFile } from 'antd/es/upload';
 
 interface Props {
   item: EstimateResponse;
@@ -124,6 +125,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.truck_dimension_url.url`, '')
                         }
                       }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
+                      }}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -188,6 +193,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                         } else {
                           setValue(`vehicle.${index}.semi_trailer_dimension_url.url`, '')
                         }
+                      }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
                       }}
                     >
                       {field.value.length ? null :
@@ -254,6 +263,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.cargo_dimension_url.url`, '')
                         }
                       }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
+                      }}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -318,6 +331,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                         } else {
                           setValue(`vehicle.${index}.combined_vehicle_url.url`, '')
                         }
+                      }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
                       }}
                     >
                       {field.value.length ? null :
@@ -384,6 +401,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.turning_radius_url.url`, '')
                         }
                       }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
+                      }}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -448,6 +469,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                         } else {
                           setValue(`vehicle.${index}.highway_dept_permit_url.url`, '')
                         }
+                      }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
                       }}
                     >
                       {field.value.length ? null :
@@ -514,6 +539,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.highway_dept_permit_number_url.url`, '')
                         }
                       }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
+                      }}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -579,6 +608,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.rural_highway_dept_permit_url.url`, '')
                         }
                       }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
+                      }}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -643,6 +676,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                         } else {
                           setValue(`vehicle.${index}.rural_highway_dept_permit_number_url.url`, '')
                         }
+                      }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
                       }}
                     >
                       {field.value.length ? null :

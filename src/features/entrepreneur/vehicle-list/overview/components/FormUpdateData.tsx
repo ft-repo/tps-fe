@@ -7,6 +7,7 @@ import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-f
 import { Select, Input, Upload, message, Button, Row, Col } from 'antd';
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService';
+import { RcFile } from 'antd/es/upload';
 
 interface Props {
   control: Control<FieldType>;
@@ -458,6 +459,10 @@ const FormUpdateData: React.FC<Props> = (props) => {
                       } else {
                         setValue('file_registered_document_id.url', '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :

@@ -6,6 +6,7 @@ import { FileType } from '@/@types/shared';
 import { getUploadAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 import { setLoading, useAppDispatch } from '@/store';
 import { Col, message, Row, Upload } from 'antd'
+import { RcFile } from 'antd/es/upload';
 import React, { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
@@ -420,6 +421,10 @@ const ContentImage: React.FC<Props> = (props) => {
                         setValue('towing_image.url', '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -486,6 +491,10 @@ const ContentImage: React.FC<Props> = (props) => {
                       } else {
                         setValue('semi_image.url', '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :
@@ -554,6 +563,10 @@ const ContentImage: React.FC<Props> = (props) => {
                         setValue('etc_image.url', '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -620,6 +633,10 @@ const ContentImage: React.FC<Props> = (props) => {
                       } else {
                         setValue(`truck_dimension_image.url`, '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :
@@ -688,6 +705,10 @@ const ContentImage: React.FC<Props> = (props) => {
                         setValue(`semi_dimension_image.url`, '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -754,6 +775,10 @@ const ContentImage: React.FC<Props> = (props) => {
                       } else {
                         setValue(`cargo_dimension_image.url`, '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :
@@ -822,6 +847,10 @@ const ContentImage: React.FC<Props> = (props) => {
                         setValue(`combined_vehicle_image.url`, '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -888,6 +917,10 @@ const ContentImage: React.FC<Props> = (props) => {
                       } else {
                         setValue(`turn_radius_image.url`, '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :
@@ -956,6 +989,10 @@ const ContentImage: React.FC<Props> = (props) => {
                         setValue(`highway_permit_image.url`, '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -1022,6 +1059,10 @@ const ContentImage: React.FC<Props> = (props) => {
                       } else {
                         setValue(`highway_number_image.url`, '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :
@@ -1090,6 +1131,10 @@ const ContentImage: React.FC<Props> = (props) => {
                         setValue(`rural_permit_image.url`, '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -1156,6 +1201,10 @@ const ContentImage: React.FC<Props> = (props) => {
                       } else {
                         setValue(`rural_number_image.url`, '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :

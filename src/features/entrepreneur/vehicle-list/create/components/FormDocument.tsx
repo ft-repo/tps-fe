@@ -7,6 +7,7 @@ import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-f
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { postUploadFileAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 import { message, Upload } from 'antd';
+import { RcFile } from 'antd/es/upload';
 
 interface Props {
   control: Control<FieldType>;
@@ -88,6 +89,10 @@ const FormDocument: React.FC<Props> = (props) => {
                         setValue('file_property_document_id.url', '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -150,6 +155,10 @@ const FormDocument: React.FC<Props> = (props) => {
                       } else {
                         setValue('file_hire_contact_document_id.url', '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :
@@ -214,6 +223,10 @@ const FormDocument: React.FC<Props> = (props) => {
                         setValue('file_purchase_contact_document_id.url', '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -276,6 +289,10 @@ const FormDocument: React.FC<Props> = (props) => {
                       } else {
                         setValue('file_transfer_contact_document_id.url', '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :
@@ -345,6 +362,10 @@ const FormDocument: React.FC<Props> = (props) => {
                         setValue('file_front_image_id.url', '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -408,6 +429,10 @@ const FormDocument: React.FC<Props> = (props) => {
                         setValue('file_side_image_id.url', '')
                       }
                     }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -470,6 +495,10 @@ const FormDocument: React.FC<Props> = (props) => {
                       } else {
                         setValue('file_back_image_id.url', '')
                       }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
                     }}
                   >
                     {field.value.length ? null :

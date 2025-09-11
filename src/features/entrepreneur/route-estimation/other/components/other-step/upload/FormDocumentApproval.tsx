@@ -3,6 +3,7 @@
 import { DocumentFieldType } from '@/@types/entrepreneur/route-estimation';
 import { postUploadVehicleRegistrationDocumentAPI } from '@/services/entrepreneur/PetitionService';
 import { Button, Input, message, Upload } from 'antd';
+import { RcFile } from 'antd/es/upload';
 import React, { useCallback } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 
@@ -78,6 +79,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.bridge_structure_calculation_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -149,6 +154,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                     } else {
                       setValue('petition_extended_audit_document.road_structure_calculation_url.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :
@@ -222,6 +231,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.bridge_engineer_certificate_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -293,6 +306,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                     } else {
                       setValue('petition_extended_audit_document.road_engineer_certificate_url.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :
@@ -366,6 +383,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.mechanical_engineer_certificate_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -437,6 +458,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                     } else {
                       setValue('petition_extended_audit_document.safety_management_plan_url.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :
@@ -510,6 +535,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.route_map_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -582,6 +611,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.operation_plan_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -653,6 +686,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                     } else {
                       setValue('petition_extended_audit_document.contact_info_url.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :

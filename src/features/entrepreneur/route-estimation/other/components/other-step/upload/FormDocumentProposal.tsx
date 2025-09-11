@@ -3,6 +3,7 @@
 import { DocumentFieldType } from '@/@types/entrepreneur/route-estimation'
 import { postUploadPermitDocumentAPI } from '@/services/entrepreneur/PetitionService'
 import { Button, Input, message, Upload } from 'antd'
+import { RcFile } from 'antd/es/upload'
 import React, { useCallback } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form'
 
@@ -78,6 +79,10 @@ const FormDocumentProposal: React.FC<Props> = (props) => {
                       setValue('petition_extended_user_document.cid_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -149,6 +154,10 @@ const FormDocumentProposal: React.FC<Props> = (props) => {
                     } else {
                       setValue('petition_extended_user_document.company_certificate_url.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :
@@ -222,6 +231,10 @@ const FormDocumentProposal: React.FC<Props> = (props) => {
                       setValue('petition_extended_user_document.vehicle_permit_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -293,6 +306,10 @@ const FormDocumentProposal: React.FC<Props> = (props) => {
                     } else {
                       setValue('petition_extended_user_document.power_of_attorney_url.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :

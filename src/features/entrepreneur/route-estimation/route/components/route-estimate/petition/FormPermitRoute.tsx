@@ -8,6 +8,7 @@ import { FieldTypePetition } from '@/@types/entrepreneur/permit-list';
 import { useAppSelector } from '@/store';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { postUploadSignedDocumentAPI } from '@/services/entrepreneur/PetitionService';
+import { RcFile } from 'antd/es/upload';
 
 interface Props {
   control: Control<FieldTypePetition>;
@@ -386,6 +387,10 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                           setValue('poa_url.url', '')
                         }
                       }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
+                      }}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -450,6 +455,10 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                         } else {
                           setValue('mach_book_url.url', '')
                         }
+                      }}
+                      onPreview={(e) => {
+                        const url = URL.createObjectURL(e.originFileObj as RcFile);
+                        window.open(url);
                       }}
                     >
                       {field.value.length ? null :

@@ -8,6 +8,7 @@ import { postPetitionApproveAPI } from '@/services/staff/PetitionService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getAdminPetitionData } from '@/store/slices/staff';
 import { Button, Flex, Input, message, Modal, Radio, Upload } from 'antd';
+import { RcFile } from 'antd/es/upload';
 import React, { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
@@ -290,6 +291,10 @@ const ContentForm: React.FC<Props> = (props) => {
                       return Upload.LIST_IGNORE
                     }
                     return false
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                   onChange={(e) => {
                     field.onChange(e.fileList);

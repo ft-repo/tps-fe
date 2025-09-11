@@ -7,6 +7,7 @@ import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-f
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 import { message, Upload } from 'antd';
+import { RcFile } from 'antd/es/upload';
 
 interface Props {
   control: Control<FieldType>;
@@ -81,6 +82,10 @@ const FormExecutiveDocument: React.FC<Props> = (props) => {
                       setValue('file_copied_of_citizen_id.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className="my-8 text-center">
@@ -144,6 +149,10 @@ const FormExecutiveDocument: React.FC<Props> = (props) => {
                       setValue('file_trasfer_ownership_image_id.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className="my-8 text-center">
@@ -206,6 +215,10 @@ const FormExecutiveDocument: React.FC<Props> = (props) => {
                     } else {
                       setValue('file_legal_entity_id.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :

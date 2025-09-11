@@ -3,6 +3,7 @@
 import { DocumentFieldType } from '@/@types/entrepreneur/route-estimation';
 import { postUploadVehicleOwnerDocumentAPI } from '@/services/entrepreneur/PetitionService';
 import { Button, Input, message, Upload } from 'antd';
+import { RcFile } from 'antd/es/upload';
 import React, { useCallback } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 
@@ -78,6 +79,10 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
                       setValue('petition_extended_vehicle_document.vehicle_registration_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -149,6 +154,10 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
                     } else {
                       setValue('petition_extended_vehicle_document.vehicle_photos_url.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :
@@ -222,6 +231,10 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
                       setValue('petition_extended_vehicle_document.vehicle_dimensions_empty_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -293,6 +306,10 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
                     } else {
                       setValue('petition_extended_vehicle_document.vehicle_dimensions_loaded_url.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :
@@ -366,6 +383,10 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
                       setValue('petition_extended_vehicle_document.prefab_parts_details_url.url', '')
                     }
                   }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -437,6 +458,10 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
                     } else {
                       setValue('petition_extended_vehicle_document.vehicle_turning_radius_url.url', '')
                     }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
                   }}
                 >
                   {field.value.length ? null :
