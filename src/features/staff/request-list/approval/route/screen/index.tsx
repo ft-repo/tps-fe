@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Button, Col, Row, Spin } from 'antd';
 import { TitleSection, ContentSection, ContentRouteList } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { getPetitionEstimateRoute, getPetitionStatus } from '@/store/slices/staff';
 import { useRouteContext } from '../context';
 import MapRoute from '@/components/ui/Maps';
+import { GeoJsonObject } from 'geojson'
 
 interface Props {
 
@@ -30,6 +31,13 @@ const RouteScreen: React.FC<Props> = (props) => {
     dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
     dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
   }, [dispatch, petitionId])
+
+  const geometryData = useMemo(() => {
+    if (detail?.vehicle_route) {
+      return { type: 'LineString', coordinates: detail?.vehicle_route } as unknown as GeoJsonObject
+    }
+    return undefined
+  }, [detail])
 
   return (
     <Spin spinning={loading || defaultLoading}>
@@ -54,7 +62,8 @@ const RouteScreen: React.FC<Props> = (props) => {
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[75vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
               <MapRoute
                 coordinates={[[Number(detail?.vehicle_route?.[0]?.[0] || 0), Number(detail?.vehicle_route?.[0]?.[1] || 0)], [Number(detail.vehicle_route?.[1]?.[0] || 0), Number(detail.vehicle_route?.[1]?.[1] || 0)]]}
-                isRouteEstimate={true}
+                isRouteEstimate={false}
+                geometry={geometryData}
               />
             </div>
           </Col>
