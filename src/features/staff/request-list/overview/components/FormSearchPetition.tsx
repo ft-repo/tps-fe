@@ -37,7 +37,7 @@ const FormSearchPetition: React.FC<Props> = (props) => {
   const renderButton = useMemo(() => {
     if (!petition_count.length) return
 
-    const filterArr = petition_count.filter(item => item.status_id !== 4).filter(item => item.status_id !== 7)
+    const filterArr = petition_count.filter(item => item.status_id !== 4).filter(item => item.status_id !== 7).filter(item => item.status_id !== 8)
 
     return filterArr.map((item, index) => {
       return (
