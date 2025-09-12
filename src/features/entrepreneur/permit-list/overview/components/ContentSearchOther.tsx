@@ -141,8 +141,6 @@ const ContentSearchOther: React.FC<Props> = (props) => {
         <Button
           htmlType='button'
           type='primary'
-          color='yellow'
-          variant='solid'
           onClick={() => navigate('/route-estimation/other')}
         >
           ขอใบอนุญาตรถนอกเหนือ (4 - 7 เพลา)

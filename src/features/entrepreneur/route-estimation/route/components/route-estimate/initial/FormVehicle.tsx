@@ -1,11 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldTypeArr, FieldTypeForRoute } from '@/@types/entrepreneur/route-estimation';
 import { useAppSelector } from '@/store';
-import { Card, Col, Image, Input, message, Row, Select, Spin } from 'antd';
+import { Card, Col, Image, Input, message, Modal, Row, Select, Spin } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
 // import { VehicleDetail } from '@/services/master/MasterService';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   formItem: FieldTypeForRoute;
@@ -53,6 +54,8 @@ const FormVehicle: React.FC<Props> = (props) => {
   const [towingImage, setTowingImage] = useState<string>('')
   const [semiImage, setSemiImage] = useState<string>('')
   const [etcImage, setEtcImage] = useState<string>('')
+  // NAVIGATE
+  const navigate = useNavigate()
 
   const {
     match_type,
@@ -155,6 +158,34 @@ const FormVehicle: React.FC<Props> = (props) => {
       setEtcImage('')
     }
   }, [towering_vehicle, semi_trailer_vehicle, etc_vehicle, match_type, selectTowing?.vehicle_detail.axis_number, selectSemi?.vehicle_detail.axis_number])
+
+  useEffect(() => {
+    if (Number(selectTowing?.vehicle_detail.axis_number) + Number(selectSemi?.vehicle_detail.axis_number) > 7) {
+      Modal.confirm({
+        title: 'จำนวนเพลาเกินกำหนด',
+        content: 'กรุณากดยืนยันเพื่อเข้าสู่ขบวนการขอใบอนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)',
+        okText: 'ยืนยัน',
+        cancelText: 'ยกเลิก',
+        onOk: () => navigate('/route-estimation/other'),
+        onCancel: () => Modal.destroyAll(),
+        okButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          },
+          loading: loading
+        },
+        cancelButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          },
+          disabled: loading
+        },
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        }
+      })
+    }
+  }, [selectTowing?.vehicle_detail.axis_number, selectSemi?.vehicle_detail.axis_number, loading, navigate])
 
   return (
     <>
@@ -276,7 +307,8 @@ const FormVehicle: React.FC<Props> = (props) => {
                 name={`route_form.${formIndex}.towering_vehicle`}
                 control={control}
                 rules={{
-                  required: 'กรุณาระบุเลขทะเบียน / เลขตัวรถ'
+                  required: 'กรุณาระบุเลขทะเบียน / เลขตัวรถ',
+                  validate: () => Number(selectTowing?.vehicle_detail.axis_number) + Number(selectSemi?.vehicle_detail.axis_number) < 7 || 'จำนวนเพลาเกินที่กำหนด'
                 }}
                 render={({ field }) => {
                   return (
@@ -342,7 +374,8 @@ const FormVehicle: React.FC<Props> = (props) => {
                 name={`route_form.${formIndex}.semi_trailer_vehicle`}
                 control={control}
                 rules={{
-                  required: 'กรุณาระบุเลขทะเบียน / เลขตัวรถ'
+                  required: 'กรุณาระบุเลขทะเบียน / เลขตัวรถ',
+                  validate: () => Number(selectTowing?.vehicle_detail.axis_number) + Number(selectSemi?.vehicle_detail.axis_number) < 7 || 'จำนวนเพลาเกินที่กำหนด'
                 }}
                 render={({ field }) => {
                   return (
@@ -356,7 +389,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                         placeholder='กรุณาเลือก'
                         options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'รถกึ่งพ่วง').map(item => {
                           return item.vehicle_detail
-                        })} 
+                        })}
                         fieldNames={{
                           label: 'plate_no',
                           value: 'id'

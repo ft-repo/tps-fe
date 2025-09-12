@@ -34,7 +34,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
 	const [loading, setLoading] = useState<boolean>(false)
 
 	const extractUrl = useCallback((url: string) => {
-		const path = url.split('/upload')[1];
+		const path = url?.split('/upload')[1];
 		return path
 	}, []);
 
