@@ -1,11 +1,11 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
 import { Col, Input, Row, Select } from 'antd';
 import { useAppSelector } from '@/store';
-import { VehicleDetail } from '@/services/master/MasterService';
+// import { VehicleDetail } from '@/services/master/MasterService';
 
 interface Props {
   control: Control<FieldTypeForOther>;
@@ -18,9 +18,44 @@ const FormVehicle: React.FC<Props> = (props) => {
   const [toweringVehicleWheel, setToweringVehicleWheel] = useState<number>(0)
   const [semiVehicleWheel, setSemiVehicleWheel] = useState<number>(0)
 
-  const { match_type } = useWatch({ control })
+  const {
+    match_type,
+    towering_vehicle,
+    semi_trailer_vehicle,
+  } = useWatch({ control })
 
   const { errors } = useFormState({ control })
+
+  const selectTowing = vehicle_selection.data.find(item => item.vehicle_detail.id === towering_vehicle) || null
+  const selectSemi = vehicle_selection.data.find(item => item.vehicle_detail.id === semi_trailer_vehicle) || null
+
+  useEffect(() => {
+    if (towering_vehicle) {
+      setToweringVehicleWheel(Number(selectTowing?.vehicle_detail.axis_number))
+    }
+    if (semi_trailer_vehicle) {
+      setSemiVehicleWheel(Number(selectSemi?.vehicle_detail.axis_number))
+    }
+    if (!match_type) {
+      setToweringVehicleWheel(0)
+      setSemiVehicleWheel(0)
+
+    }
+    if (!towering_vehicle) {
+      setToweringVehicleWheel(0)
+    }
+    if (!semi_trailer_vehicle) {
+      setSemiVehicleWheel(0)
+    }
+
+  }, [
+    towering_vehicle,
+    selectTowing?.vehicle_detail.axis_number,
+    semi_trailer_vehicle,
+    selectSemi?.vehicle_detail.axis_number,
+    match_type
+  ])
+
 
   return (
     <div className='border-2 rounded-md p-4 mb-3'>
@@ -85,8 +120,8 @@ const FormVehicle: React.FC<Props> = (props) => {
                         setValue(`semi_weight6`, 0)
                         setValue(`semi_weight7`, 0)
                         // ON STATE CHANGE
-                        setToweringVehicleWheel(0)
-                        setSemiVehicleWheel(0)
+                        // setToweringVehicleWheel(0)
+                        // setSemiVehicleWheel(0)
                       }}
                     />
                     {!!errors.match_type &&
@@ -130,23 +165,34 @@ const FormVehicle: React.FC<Props> = (props) => {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        onChange={(value, option) => {
-                          const axis: VehicleDetail | any = option
+                        onChange={(value) => {
                           field.onChange(value)
-                          if (!value) {
-                            setToweringVehicleWheel(0)
-                            // SET TOWING WEIGHT
-                            setValue(`towering_weight1`, 0)
-                            setValue(`towering_weight2`, 0)
-                            setValue(`towering_weight3`, 0)
-                            setValue(`towering_weight4`, 0)
-                            setValue(`towering_weight5`, 0)
-                            setValue(`towering_weight6`, 0)
-                            setValue(`towering_weight7`, 0)
-                          } else {
-                            setToweringVehicleWheel(axis.axis_number)
-                          }
+                          // SET TOWER WEIGHT
+                          setValue(`towering_weight1`, '')
+                          setValue(`towering_weight2`, '')
+                          setValue(`towering_weight3`, '')
+                          setValue(`towering_weight4`, '')
+                          setValue(`towering_weight5`, '')
+                          setValue(`towering_weight6`, '')
+                          setValue(`towering_weight7`, '')
                         }}
+                      // onChange={(value, option) => {
+                      //   const axis: VehicleDetail | any = option
+                      //   field.onChange(value)
+                      //   if (!value) {
+                      //     setToweringVehicleWheel(0)
+                      //     // SET TOWING WEIGHT
+                      //     setValue(`towering_weight1`, 0)
+                      //     setValue(`towering_weight2`, 0)
+                      //     setValue(`towering_weight3`, 0)
+                      //     setValue(`towering_weight4`, 0)
+                      //     setValue(`towering_weight5`, 0)
+                      //     setValue(`towering_weight6`, 0)
+                      //     setValue(`towering_weight7`, 0)
+                      //   } else {
+                      //     setToweringVehicleWheel(axis.axis_number)
+                      //   }
+                      // }}
                       />
                       {!!errors.towering_vehicle &&
                         <p className='text-red-500'>{errors.towering_vehicle.message}</p>
@@ -190,23 +236,34 @@ const FormVehicle: React.FC<Props> = (props) => {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        onChange={(value, option) => {
-                          const axis: VehicleDetail | any = option
+                        onChange={(value) => {
                           field.onChange(value)
-                          if (!value) {
-                            setSemiVehicleWheel(0)
-                            // SET SEMI WEIGHT
-                            setValue(`semi_weight1`, 0)
-                            setValue(`semi_weight2`, 0)
-                            setValue(`semi_weight3`, 0)
-                            setValue(`semi_weight4`, 0)
-                            setValue(`semi_weight5`, 0)
-                            setValue(`semi_weight6`, 0)
-                            setValue(`semi_weight7`, 0)
-                          } else {
-                            setSemiVehicleWheel(axis.axis_number)
-                          }
+                          // SET SEMI WEIGHT
+                          setValue(`semi_weight1`, '')
+                          setValue(`semi_weight2`, '')
+                          setValue(`semi_weight3`, '')
+                          setValue(`semi_weight4`, '')
+                          setValue(`semi_weight5`, '')
+                          setValue(`semi_weight6`, '')
+                          setValue(`semi_weight7`, '')
                         }}
+                      // onChange={(value, option) => {
+                      //   const axis: VehicleDetail | any = option
+                      //   field.onChange(value)
+                      //   if (!value) {
+                      //     setSemiVehicleWheel(0)
+                      //     // SET SEMI WEIGHT
+                      //     setValue(`semi_weight1`, 0)
+                      //     setValue(`semi_weight2`, 0)
+                      //     setValue(`semi_weight3`, 0)
+                      //     setValue(`semi_weight4`, 0)
+                      //     setValue(`semi_weight5`, 0)
+                      //     setValue(`semi_weight6`, 0)
+                      //     setValue(`semi_weight7`, 0)
+                      //   } else {
+                      //     setSemiVehicleWheel(axis.axis_number)
+                      //   }
+                      // }}
                       />
                       {!!errors.semi_trailer_vehicle &&
                         <p className='text-red-500'>{errors.semi_trailer_vehicle.message}</p>
@@ -594,8 +651,8 @@ const FormVehicle: React.FC<Props> = (props) => {
                             field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
                           }}
                         />
-                        {!!errors.towering_weight7 &&
-                          <p className='text-red-500'>{errors.towering_weight7.message}</p>
+                        {!!errors.semi_weight3 &&
+                          <p className='text-red-500'>{errors.semi_weight3.message}</p>
                         }
                       </fieldset>
                     )

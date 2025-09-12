@@ -98,20 +98,20 @@ export interface FieldTypeForOther {
   towering_vehicle: number | null,
   semi_trailer_vehicle: number | null,
   etc_vehicle: number | null,
-  towering_weight1: number;
-  towering_weight2: number;
-  towering_weight3: number;
-  towering_weight4: number;
-  towering_weight5: number;
-  towering_weight6: number;
-  towering_weight7: number;
-  semi_weight1: number;
-  semi_weight2: number;
-  semi_weight3: number;
-  semi_weight4: number;
-  semi_weight5: number;
-  semi_weight6: number;
-  semi_weight7: number;
+  towering_weight1: number | string;
+  towering_weight2: number | string;
+  towering_weight3: number | string;
+  towering_weight4: number | string;
+  towering_weight5: number | string;
+  towering_weight6: number | string;
+  towering_weight7: number | string;
+  semi_weight1: number | string;
+  semi_weight2: number | string;
+  semi_weight3: number | string;
+  semi_weight4: number | string;
+  semi_weight5: number | string;
+  semi_weight6: number | string;
+  semi_weight7: number | string;
   // 3. REMARK
   petition_number: string;
   remark: string;
@@ -270,18 +270,18 @@ export interface FieldTypeForRoute {
   towering_vehicle: number | null;
   semi_trailer_vehicle: number | null;
   etc_vehicle: number | null;
-  towering_weight1: number;
-  towering_weight2: number;
-  towering_weight3: number;
-  towering_weight4: number;
-  towering_weight5: number;
-  towering_weight6: number;
-  towering_weight7: number;
-  semi_weight1: number;
-  semi_weight2: number;
-  semi_weight3: number;
-  semi_weight4: number;
-  semi_weight5: number;
-  semi_weight6: number;
-  semi_weight7: number;
+  towering_weight1: number | string;
+  towering_weight2: number | string;
+  towering_weight3: number | string;
+  towering_weight4: number | string;
+  towering_weight5: number | string;
+  towering_weight6: number | string;
+  towering_weight7: number | string;
+  semi_weight1: number | string;
+  semi_weight2: number | string;
+  semi_weight3: number | string;
+  semi_weight4: number | string;
+  semi_weight5: number | string;
+  semi_weight6: number | string;
+  semi_weight7: number | string;
 }

@@ -338,13 +338,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                         onChange={(value) => {
                           field.onChange(value)
                           // SET TOWER WEIGHT
-                          setValue(`route_form.${formIndex}.towering_weight1`, 0)
-                          setValue(`route_form.${formIndex}.towering_weight2`, 0)
-                          setValue(`route_form.${formIndex}.towering_weight3`, 0)
-                          setValue(`route_form.${formIndex}.towering_weight4`, 0)
-                          setValue(`route_form.${formIndex}.towering_weight5`, 0)
-                          setValue(`route_form.${formIndex}.towering_weight6`, 0)
-                          setValue(`route_form.${formIndex}.towering_weight7`, 0)
+                          setValue(`route_form.${formIndex}.towering_weight1`, '')
+                          setValue(`route_form.${formIndex}.towering_weight2`, '')
+                          setValue(`route_form.${formIndex}.towering_weight3`, '')
+                          setValue(`route_form.${formIndex}.towering_weight4`, '')
+                          setValue(`route_form.${formIndex}.towering_weight5`, '')
+                          setValue(`route_form.${formIndex}.towering_weight6`, '')
+                          setValue(`route_form.${formIndex}.towering_weight7`, '')
                         }}
                       // onChange={(value, option) => {
                       //   const axis: VehicleDetail | any = option
@@ -405,13 +405,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                         onChange={(value) => {
                           field.onChange(value)
                           // SET SEMI WEIGHT
-                          setValue(`route_form.${formIndex}.semi_weight1`, 0)
-                          setValue(`route_form.${formIndex}.semi_weight2`, 0)
-                          setValue(`route_form.${formIndex}.semi_weight3`, 0)
-                          setValue(`route_form.${formIndex}.semi_weight4`, 0)
-                          setValue(`route_form.${formIndex}.semi_weight5`, 0)
-                          setValue(`route_form.${formIndex}.semi_weight6`, 0)
-                          setValue(`route_form.${formIndex}.semi_weight7`, 0)
+                          setValue(`route_form.${formIndex}.semi_weight1`, '')
+                          setValue(`route_form.${formIndex}.semi_weight2`, '')
+                          setValue(`route_form.${formIndex}.semi_weight3`, '')
+                          setValue(`route_form.${formIndex}.semi_weight4`, '')
+                          setValue(`route_form.${formIndex}.semi_weight5`, '')
+                          setValue(`route_form.${formIndex}.semi_weight6`, '')
+                          setValue(`route_form.${formIndex}.semi_weight7`, '')
                         }}
                       // onChange={(value, option) => {
                       //   const axis: VehicleDetail | any = option
