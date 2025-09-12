@@ -45,7 +45,7 @@ function MapRoute({ coordinates, geometry, isRouteEstimate = false }: MapRoutePr
       return false
     }
 
-    if (!isRouteEstimate && (!geometry || geometry.type !== 'LineString')) {
+    if (!isRouteEstimate && !geometry) {
       return false
     }
 
@@ -68,7 +68,7 @@ function MapRoute({ coordinates, geometry, isRouteEstimate = false }: MapRoutePr
 
       setGeometryData(routeDirection.features[0].geometry as GeoJsonObject)
     } else {
-      setGeometryData(geometry as GeoJsonObject)
+      setGeometryData(geometry || null)
     }
   }, [routeDirection, isRouteEstimate, geometry])
 

@@ -1,11 +1,11 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable no-empty-pattern */
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Col, Row } from 'antd'
 import { EvaluateRouteDetail, ContentRouteTab } from '../components'
 import MapRoute from '@/components/ui/Maps'
 import { useAppSelector } from '@/store'
-
+import { GeoJsonObject } from 'geojson'
 
 interface Props {
 
@@ -15,6 +15,13 @@ const EvaluationRoute: React.FC<Props> = (props) => {
   const { } = props
   const { petition } = useAppSelector(state => state.staff.petition)
   const detail = petition.detail.estimate.route
+
+  const geometryData = useMemo(() => {
+    if (detail?.vehicle_route) {
+      return { type: 'LineString', coordinates: detail?.vehicle_route } as unknown as GeoJsonObject
+    }
+    return undefined
+  }, [detail])
 
   return (
     <div className='border-2 rounded-md p-4 mb-3'>
@@ -26,7 +33,8 @@ const EvaluationRoute: React.FC<Props> = (props) => {
               <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[40vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
                 <MapRoute
                   coordinates={[[Number(detail?.vehicle_route?.[0]?.[0] || 0), Number(detail?.vehicle_route?.[0]?.[1] || 0)], [Number(detail.vehicle_route?.[1]?.[0] || 0), Number(detail.vehicle_route?.[1]?.[1] || 0)]]}
-                  isRouteEstimate={true}
+                  isRouteEstimate={false}
+                  geometry={geometryData}
                 />
               </div>
             </section>

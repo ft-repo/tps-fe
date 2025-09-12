@@ -2,11 +2,12 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useAppSelector } from '@/store'
 import { Button, Col, Row } from 'antd'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useRouteContext } from '../../context'
 import ContentTab from '../route-estimate/result/ContentTab'
 import ContentRouteList from '../route-estimate/result/ContentRouteList'
 import MapRoute from '@/components/ui/Maps'
+import { GeoJsonObject } from 'geojson'
 
 interface Props {
 
@@ -18,6 +19,13 @@ const EstimateResult: React.FC<Props> = (props) => {
   const { estimate } = useAppSelector(state => state.entrepreneur.permitList)
   const { setStep, index, item } = useRouteContext()
   const detail = estimate.detail
+
+  const geometryData = useMemo(() => {
+    if (detail?.vehicle_route) {
+      return { type: 'LineString', coordinates: detail?.vehicle_route } as unknown as GeoJsonObject
+    }
+    return undefined
+  }, [detail])
 
   return (
     <main>
@@ -55,7 +63,8 @@ const EstimateResult: React.FC<Props> = (props) => {
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[77vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
               <MapRoute
                 coordinates={[[Number(detail.start_point[0] || 0), Number(detail.start_point[1] || 0)], [Number(detail.end_point[0] || 0), Number(detail.end_point[1] || 0)]]}
-                isRouteEstimate={true}
+                isRouteEstimate={false}
+                geometry={geometryData}
               />
             </div>
           </Col>
