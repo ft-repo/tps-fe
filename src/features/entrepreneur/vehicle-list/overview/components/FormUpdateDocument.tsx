@@ -1,12 +1,16 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
-import React, { useCallback } from 'react'
+import React, { ReactElement, useCallback } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 import { postUploadFileAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { message, Upload } from 'antd';
-import { RcFile } from 'antd/es/upload';
+import { RcFile, UploadFile } from 'antd/es/upload';
+import {
+  AiOutlineEye as EyeOutlined,
+  AiOutlineDelete as DeleteOutlined
+} from "react-icons/ai";
 
 interface Props {
   control: Control<FieldType>;
@@ -40,6 +44,38 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
       }
     }
   }, [setValue])
+
+  const _itemRender = useCallback((
+    originNode: ReactElement,
+    file: UploadFile,
+    fileList: UploadFile[],
+    actions: {
+      download: (file: UploadFile) => void,
+      preview: (file: UploadFile) => void,
+      remove: (file: UploadFile) => void
+    }) => {
+    if (file.type === 'application/pdf') {
+      return (
+        <div className='custom-upload-item'>
+          {originNode}
+          <div className='preview-overlay rounded-md'>
+            <EyeOutlined
+              className='preview-icon'
+              onClick={() => {
+                const url = URL.createObjectURL(file.originFileObj as RcFile);
+                window.open(url);
+              }}
+            />
+            <DeleteOutlined
+              className='delete-icon'
+              onClick={() => actions.remove(file)}
+            />
+          </div>
+        </div>
+      )
+    }
+    return originNode
+  }, []);
 
   return (
     <div className='mt-5'>
@@ -80,6 +116,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -147,6 +184,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -214,6 +252,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -281,6 +320,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {

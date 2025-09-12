@@ -6,10 +6,14 @@ import { FileType } from '@/@types/shared';
 import { getUploadAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 import { setLoading, useAppDispatch } from '@/store';
 import { Col, message, Row, Upload } from 'antd'
-import { RcFile } from 'antd/es/upload';
-import React, { useCallback, useEffect } from 'react'
+import { RcFile, UploadFile } from 'antd/es/upload';
+import React, { ReactElement, useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
+import {
+  AiOutlineEye as EyeOutlined,
+  AiOutlineDelete as DeleteOutlined
+} from "react-icons/ai";
 
 interface Props {
   index: number;
@@ -376,6 +380,38 @@ const ContentImage: React.FC<Props> = (props) => {
     }
   }, [item, extractUrl, fetchImage])
 
+  const _itemRender = useCallback((
+    originNode: ReactElement,
+    file: UploadFile,
+    fileList: UploadFile[],
+    actions: {
+      download: (file: UploadFile) => void,
+      preview: (file: UploadFile) => void,
+      remove: (file: UploadFile) => void
+    }) => {
+    if (file.type === 'application/pdf') {
+      return (
+        <div className='custom-upload-item'>
+          {originNode}
+          <div className='preview-overlay rounded-md'>
+            <EyeOutlined
+              className='preview-icon'
+              onClick={() => {
+                const url = URL.createObjectURL(file.originFileObj as RcFile);
+                window.open(url);
+              }}
+            />
+            <DeleteOutlined
+              className='delete-icon'
+              onClick={() => actions.remove(file)}
+            />
+          </div>
+        </div>
+      )
+    }
+    return originNode
+  }, []);
+
   return (
     <Row gutter={[16, 16]}>
       {item?.towing_vehicle?.vehicle_picture?.front_rear_url ?
@@ -626,6 +662,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -697,6 +734,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -768,6 +806,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -839,6 +878,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -910,6 +950,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -981,6 +1022,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -1052,6 +1094,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -1123,6 +1166,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -1194,6 +1238,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
+                    itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {

@@ -1,14 +1,18 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback } from 'react'
+import React, { ReactElement, useCallback } from 'react'
 import { Col, DatePicker, Input, Row, Select, message, Upload } from 'antd';
 import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 import { FieldTypePetition } from '@/@types/entrepreneur/permit-list';
 import { useAppSelector } from '@/store';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { postUploadSignedDocumentAPI } from '@/services/entrepreneur/PetitionService';
-import { RcFile } from 'antd/es/upload';
+import { RcFile, UploadFile } from 'antd/es/upload';
+import {
+  AiOutlineEye as EyeOutlined,
+  AiOutlineDelete as DeleteOutlined
+} from "react-icons/ai";
 
 interface Props {
   control: Control<FieldTypePetition>;
@@ -39,6 +43,38 @@ const FormPermitRoute: React.FC<Props> = (props) => {
       }
     }
   }, [setValue])
+
+  const _itemRender = useCallback((
+    originNode: ReactElement,
+    file: UploadFile,
+    fileList: UploadFile[],
+    actions: {
+      download: (file: UploadFile) => void,
+      preview: (file: UploadFile) => void,
+      remove: (file: UploadFile) => void
+    }) => {
+    if (file.type === 'application/pdf') {
+      return (
+        <div className='custom-upload-item'>
+          {originNode}
+          <div className='preview-overlay rounded-md'>
+            <EyeOutlined
+              className='preview-icon'
+              onClick={() => {
+                const url = URL.createObjectURL(file.originFileObj as RcFile);
+                window.open(url);
+              }}
+            />
+            <DeleteOutlined
+              className='delete-icon'
+              onClick={() => actions.remove(file)}
+            />
+          </div>
+        </div>
+      )
+    }
+    return originNode
+  }, []);
 
   return (
     <>
@@ -379,6 +415,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                         }
                         return false
                       }}
+                      itemRender={_itemRender}
                       onChange={(e) => {
                         field.onChange(e.fileList);
                         if (e.fileList.length) {
@@ -448,6 +485,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                         }
                         return false
                       }}
+                      itemRender={_itemRender}
                       onChange={(e) => {
                         field.onChange(e.fileList);
                         if (e.fileList.length) {
