@@ -22,7 +22,7 @@ const EstimateResult: React.FC<Props> = (props) => {
   return (
     <main>
       <section className='flex justify-between items-center flex-wrap gap-5 mb-5'>
-        <h3>ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)</h3>
+        <h3>ขออนุญาตหมวด 2 (4 - 7 เพลา)</h3>
         <div className='flex items-center gap-3'>
           <Button
             disabled={loading}
