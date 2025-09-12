@@ -127,6 +127,9 @@ const ContentForm: React.FC<Props> = (props) => {
           okText: 'ตกลง',
           onOk: () => {
             dispatch(getAdminPetitionData(petition.overview.search))
+            if (!body.is_approved) {
+              navigate('/request-history/overview')
+            }
             navigate('/request-list/overview')
           },
           okButtonProps: {
