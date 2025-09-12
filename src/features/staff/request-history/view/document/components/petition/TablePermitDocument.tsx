@@ -1,45 +1,38 @@
-/* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback } from 'react'
-import { message, Table, TableProps } from 'antd'
-import { setLoading, useAppDispatch, useAppSelector } from '@/store';
-import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
-import { AiOutlineFilePdf } from 'react-icons/ai';
+import { Grid, message, Table, type TableProps } from 'antd'
+import { setLoading, useAppDispatch, useAppSelector } from '@/store'
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
+import { AiOutlineFilePdf } from 'react-icons/ai'
 
-interface Props {
-}
+interface Props { }
 
 interface TableData {
-  no: string;
-  petition_list: string;
-  file_id: string;
+  no: string
+  petition_list: string
+  file_id?: string
 }
 
-const TablePermitDocument: React.FC<Props> = (props) => {
-  const { } = props
-  const { petition_extended } = useAppSelector(state => state.staff.petition)
+const TablePermitDocument: React.FC<Props> = () => {
+  const { petition_extended } = useAppSelector(s => s.staff.petition)
   const detail = petition_extended.detail
   const dispatch = useAppDispatch()
+  const screens = Grid.useBreakpoint()
+  const isCompact = !screens.md // < md
 
-  const extractUrl = useCallback((url: string) => {
-    const path = url.split('/upload')[1];
-    return path
-  }, []);
+  const extractUrl = useCallback((url: string) => url.split('/upload')[1], [])
 
   const showFile = useCallback(async (fileUrl: string) => {
     dispatch(setLoading(true))
     try {
-      const response = await getUploadAPI(fileUrl)
-      if (response.status === 200) {
-        const url = URL.createObjectURL(response.data);
-        window.open(url);
+      const res = await getUploadAPI(fileUrl)
+      if (res.status === 200) {
+        const url = URL.createObjectURL(res.data)
+        window.open(url)
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
+    } catch (e) {
+      if (e instanceof Error) message.error(e.message)
+      else console.error(e)
     } finally {
       dispatch(setLoading(false))
     }
@@ -50,96 +43,84 @@ const TablePermitDocument: React.FC<Props> = (props) => {
       title: 'ลำดับ',
       dataIndex: 'no',
       key: 'no',
-      width: 200,
-      align: 'center'
+      width: 120,
+      align: 'center',
+      responsive: ['md'], // ✅ โชว์เฉพาะ md ขึ้นไป
     },
     {
       title: 'รายการ',
       dataIndex: 'petition_list',
       key: 'petition_list',
-      width: 500,
-      align: 'center'
+      align: 'center',
     },
     {
       title: 'จัดการ',
       dataIndex: 'action',
       key: 'action',
-      width: 200,
+      width: 100,
       align: 'center',
-      render: (item, record) => {
-        if (record.file_id) {
-          return (
-            <AiOutlineFilePdf
-              className='w-8 h-8 cursor-pointer inline-flex justify-center items-center'
-              onClick={() => showFile(extractUrl(record.file_id))}
-            />
-          )
-        }
-        return '-'
-      }
+      render: (_v, record) =>
+        record.file_id ? (
+          <AiOutlineFilePdf
+            className="w-6 h-6 cursor-pointer inline-flex justify-center items-center"
+            onClick={() => showFile(extractUrl(record.file_id!))}
+          />
+        ) : (
+          '-'
+        ),
     },
-  ];
+  ]
 
   const data: TableData[] = [
     {
       no: '1',
-      petition_list: 'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างสะพานรายสะพานที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก',
-      file_id: detail?.audit_document?.bridge_structure_calculation_url
+      petition_list:
+        'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างสะพานรายสะพานที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก',
+      file_id: detail?.audit_document?.bridge_structure_calculation_url,
     },
     {
       no: '2',
-      petition_list: 'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างทางตลอดเส้นทางที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก',
-      file_id: detail?.audit_document?.road_structure_calculation_url
+      petition_list:
+        'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างทางตลอดเส้นทางที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก',
+      file_id: detail?.audit_document?.road_structure_calculation_url,
     },
     {
       no: '3',
-      petition_list: 'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างสะพานพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
-      file_id: detail?.audit_document?.bridge_engineer_certificate_url
+      petition_list:
+        'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างสะพานพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
+      file_id: detail?.audit_document?.bridge_engineer_certificate_url,
     },
     {
       no: '4',
-      petition_list: 'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างทางพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
-      file_id: detail?.audit_document?.road_engineer_certificate_url
+      petition_list:
+        'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างทางพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
+      file_id: detail?.audit_document?.road_engineer_certificate_url,
     },
     {
       no: '5',
       petition_list: 'หนังสือรับรองของวิศวกรเครื่องกลผู้คำนวณรัศมีวงเลี้ยว (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
-      file_id: detail?.audit_document?.mechanical_engineer_certificate_url
+      file_id: detail?.audit_document?.mechanical_engineer_certificate_url,
     },
     {
       no: '6',
       petition_list: 'แผนและระยะเวลาการดำเนินงาน',
-      file_id: detail?.audit_document?.operation_plan_url
+      file_id: detail?.audit_document?.operation_plan_url,
     },
   ]
 
   return (
-    <div className='mt-5'>
+    <div className="mt-5">
       <h5>เอกสารรายการคำนวณและหนังสือรับรอง</h5>
       <Table
+        rowKey="no"
         columns={columns}
-        dataSource={data || []}
-        loading={false}
+        dataSource={data}
         pagination={false}
-        // pagination={{
-        //   defaultCurrent: 1,
-        //   defaultPageSize: 10,
-        //   current: 1,
-        //   pageSize: 10,
-        //   total: Number(10) || 0,
-        //   // onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
-        //   showSizeChanger: true,
-        //   position: ['bottomRight'],
-        //   showTotal: (total, range) => {
-        //     const totalPage = (range[1] + 1) - range[0]
-        //     return `ทั้งหมด ${totalPage || total} รายการ`
-        //   },
-        //   locale: { items_per_page: "/ หน้า" }
-        // }}
-        scroll={{ x: 1000 }}
+        // ถ้าจอเล็ก ไม่ต้องมีสกรอลล์แนวนอน
+        scroll={isCompact ? undefined : { x: 900 }}
       />
     </div>
   )
 }
 
-export default React.memo<Props>(TablePermitDocument)
+export default React.memo(TablePermitDocument)
