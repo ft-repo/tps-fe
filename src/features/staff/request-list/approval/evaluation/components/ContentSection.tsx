@@ -25,7 +25,7 @@ const ContentSection: React.FC<Props> = ({ forceCondensed }) => {
 
       <section className="mt-5">
         {/* ส่ง forceCondensed ให้ทุกตาราง */}
-        <TablePetitionDocument forceCondensed={forceCondensed} />
+        <TablePetitionDocument/>
         <TableVehicleDocument/>
         <TablePermitDocument/>
       </section>
