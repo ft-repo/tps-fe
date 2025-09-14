@@ -94,8 +94,9 @@ const TableVehicleList: React.FC<Props> = (props) => {
   return (
     <Table
       columns={columns}
-      dataSource={[...data.data].sort((a, b) => a.id - b.id) || []}
+      dataSource={[...data.data].sort((a, b) => Number(a.id) - Number(b.id))}
       loading={loading}
+      rowKey={(record) => String(record.id ?? `${record.plate_no}-${record.plate_province}`)} // ✅ ใส่คีย์ให้แถว
       pagination={{
         defaultCurrent: 1,
         defaultPageSize: 10,
@@ -105,15 +106,12 @@ const TableVehicleList: React.FC<Props> = (props) => {
         onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
         showSizeChanger: true,
         position: ['bottomRight'],
-        showTotal: (total, range) => {
-          const totalPage = (range[1] + 1) - range[0]
-          return `ทั้งหมด ${totalPage || total} รายการ`
-        },
-        locale: { items_per_page: "/ หน้า" }
+        showTotal: (total) => `ทั้งหมด ${total} รายการ`, // (อันเก่าคิดจำนวนหน้าในเพจ ไม่ใช่ total ทั้งหมด)
+        locale: { items_per_page: '/ หน้า' },
       }}
       scroll={{ x: 1000 }}
     />
-  )
+  );
 }
 
 export default React.memo<Props>(TableVehicleList)

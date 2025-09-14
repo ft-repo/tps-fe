@@ -106,8 +106,8 @@ const OtherInfo: React.FC<Props> = (props) => {
         contact_address: {
           house_number: value.company_address,
           village: value.company_village_number,
-          lane: value.company_road,
-          road: value.company_alley,
+          lane: value.company_alley,
+          road: value.company_road,
           sub_district_id: Number(value.company_sub_district),
           district_id: Number(value.company_district),
           province_id: Number(value.company_province),
@@ -116,8 +116,8 @@ const OtherInfo: React.FC<Props> = (props) => {
         poa_address: {
           house_number: value.transferer_company_address,
           village: value.transferer_company_village_no,
-          lane: value.transferer_company_road,
-          road: value.transferer_company_alley,
+          lane: value.transferer_company_alley,
+          road: value.transferer_company_road,
           sub_district_id: Number(value.transferer_company_sub_district),
           district_id: Number(value.transferer_company_district),
           province_id: Number(value.transferer_company_province),
