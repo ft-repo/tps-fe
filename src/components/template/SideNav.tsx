@@ -9,7 +9,7 @@ import {
 	SIDE_NAV_CONTENT_GUTTER,
 	LOGO_X_GUTTER,
 } from '@/constants/theme.constant'
-import Logo from '@/components/template/Logo'
+import CustomLogo from '@/components/template/CustomLogo'
 import navigationConfig from '@/configs/navigation.config'
 import VerticalMenuContent from '@/components/template/VerticalMenuContent'
 import useResponsive from '@/utils/hooks/useResponsive'
@@ -87,7 +87,7 @@ const SideNav = () => {
 					)}
 				>
 					<div className="side-nav-header">
-						<Logo
+						<CustomLogo
 							mode={logoMode()}
 							type={sideNavCollapse ? 'streamline' : 'full'}
 							className={
