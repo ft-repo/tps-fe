@@ -117,15 +117,15 @@ const ContentTab: React.FC<Props> = (props) => {
 
   const onEdit = useCallback((targetKey: React.MouseEvent | React.KeyboardEvent | string, action: 'add' | 'remove') => {
     if (action === 'add') {
-      // const MAX_TABS = 1;
-      // if (tabItems.length >= MAX_TABS) {
-      //   return; // Don't add if limit reached
-      // }
+      const MAX_TABS = 4;
+      if (tabItems.length >= MAX_TABS) {
+        return; // Don't add if limit reached
+      }
       onAdd()
     } else {
       onRemove(targetKey)
     }
-  }, [onAdd, onRemove])
+  }, [onAdd, onRemove, tabItems])
 
   const onChange = useCallback((newActiveKey: string) => {
     setTabKey(newActiveKey)
