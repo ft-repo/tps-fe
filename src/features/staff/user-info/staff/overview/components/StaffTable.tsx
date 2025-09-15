@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import {
   FaPenToSquare as EditIcon,
   FaTrash as DeleteIcon,
@@ -28,64 +28,65 @@ const SeachTable: React.FC<Props> = (props) => {
     return nameArr.join(' ').trim()
   }, [])
 
-  const columns: TableProps<StaffList>['columns'] = [
-    {
-      title: 'Username',
-      dataIndex: 'username',
-      key: 'username',
-      width: 150,
-      align: 'center',
-      render: (item) => {
-        if (item) {
-          return item
+  const columns: TableProps<StaffList>['columns'] = useMemo(() => {
+    return [
+      {
+        title: 'Username',
+        dataIndex: 'username',
+        key: 'username',
+        width: 150,
+        align: 'center',
+        render: (item) => {
+          if (item) {
+            return item
+          }
+          return '-'
         }
-        return '-'
-      }
-    },
-    {
-      title: 'ชื่อ - นามสกุล',
-      dataIndex: 'name',
-      key: 'name',
-      width: 200,
-      align: 'center',
-      render: (item, record) => renderName(record.title, record.first_name, record.last_name),
-    },
-    {
-      title: 'หน่วยงาน',
-      dataIndex: 'department',
-      key: 'department',
-      width: 150,
-      align: 'center',
-      render: (item, record) => {
-        if (record.department?.dept_name) {
-          return record.department?.dept_name
-        }
-        return '-'
       },
-    },
-    {
-      title: 'สิทธิ์การเข้าใช้งาน',
-      dataIndex: 'role',
-      key: 'role',
-      width: 150,
-      align: 'center',
-      render: (item, record) => {
-        if (record.role?.name) {
-          return record.role?.name
-        }
-        return '-'
+      {
+        title: 'ชื่อ - นามสกุล',
+        dataIndex: 'name',
+        key: 'name',
+        width: 200,
+        align: 'center',
+        render: (item, record) => renderName(record.title, record.first_name, record.last_name),
       },
-    },
-    {
-      title: 'จัดการ',
-      dataIndex: 'action',
-      key: 'action',
-      fixed: 'right',
-      width: 70,
-      align: 'center',
-      render: (item, record) => {
-        if (details?.role?.name === "ผู้ดูแลระบบ") {
+      {
+        title: 'หน่วยงาน',
+        dataIndex: 'department',
+        key: 'department',
+        width: 150,
+        align: 'center',
+        render: (item, record) => {
+          if (record.department?.dept_name) {
+            return record.department?.dept_name
+          }
+          return '-'
+        },
+      },
+      {
+        title: 'สิทธิ์การเข้าใช้งาน',
+        dataIndex: 'role',
+        key: 'role',
+        width: 150,
+        align: 'center',
+        render: (item, record) => {
+          if (record.role?.name) {
+            return record.role?.name
+          }
+          return '-'
+        },
+      },
+      {
+        title: 'จัดการ',
+        dataIndex: 'action',
+        key: 'action',
+        fixed: 'right',
+        width: 70,
+        align: 'center',
+        render: (item, record) => {
           return (
+
             <div className="flex items-center justify-center gap-2">
               <Button
                 size="xs"
@@ -103,16 +104,23 @@ const SeachTable: React.FC<Props> = (props) => {
               />
             </div>
           )
-        }
-        return '-'
+        },
       },
-    },
-  ]
+    ]
+  }, [confirmDelete, renderName, setOpen])
+
+  const modCol = useMemo(() => {
+    if (details?.role?.name === "ผู้ดูแลระบบ") {
+      return columns
+    }
+
+    return columns.filter(item => item.key !== 'action')
+  }, [columns, details?.role?.name])
 
   return (
     <Table
       rowKey={'id'}
-      columns={columns}
+      columns={modCol}
       dataSource={data.data || []}
       loading={loading}
       pagination={{

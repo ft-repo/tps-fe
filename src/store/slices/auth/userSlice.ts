@@ -58,6 +58,15 @@ export type UserState = {
 				name: string
 			}
 		}
+		department: {
+			dept_name: string;
+			dept_type: number;
+			dept_group: number;
+			dept_province: string;
+		}
+		role: {
+			name: string;
+		}
 	}
 	authority: string[]
 }
@@ -118,6 +127,15 @@ const initialState: UserState = {
 				id: 0,
 				name: '',
 			}
+		},
+		department: {
+			dept_name: '',
+			dept_type: 0,
+			dept_group: 0,
+			dept_province: ''
+		},
+		role: {
+			name: ''
 		}
 	},
 	authority: [],
