@@ -6,14 +6,14 @@ import { FileType } from '@/@types/shared';
 import { getUploadAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 import { setLoading, useAppDispatch } from '@/store';
 import { Col, message, Row, Upload } from 'antd'
-import { RcFile, UploadFile } from 'antd/es/upload';
-import React, { ReactElement, useCallback, useEffect } from 'react'
+import { RcFile/*, UploadFile*/ } from 'antd/es/upload';
+import React, { /*ReactElement,*/ useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
-import {
-  AiOutlineEye as EyeOutlined,
-  AiOutlineDelete as DeleteOutlined
-} from "react-icons/ai";
+// import {
+//   AiOutlineEye as EyeOutlined,
+//   AiOutlineDelete as DeleteOutlined
+// } from "react-icons/ai";
 
 interface Props {
   index: number;
@@ -380,43 +380,44 @@ const ContentImage: React.FC<Props> = (props) => {
     }
   }, [item, extractUrl, fetchImage])
 
-  const _itemRender = useCallback((
-    originNode: ReactElement,
-    file: UploadFile,
-    fileList: UploadFile[],
-    actions: {
-      download: (file: UploadFile) => void,
-      preview: (file: UploadFile) => void,
-      remove: (file: UploadFile) => void
-    }) => {
-    if (file.type === 'application/pdf') {
-      return (
-        <div className='custom-upload-item'>
-          {originNode}
-          <div className='preview-overlay rounded-md'>
-            <EyeOutlined
-              className='preview-icon'
-              onClick={() => {
-                const url = URL.createObjectURL(file.originFileObj as RcFile);
-                window.open(url);
-              }}
-            />
-            <DeleteOutlined
-              className='delete-icon'
-              onClick={() => actions.remove(file)}
-            />
-          </div>
-        </div>
-      )
-    }
-    return originNode
-  }, []);
+  // const _itemRender = useCallback((
+  //   originNode: ReactElement,
+  //   file: UploadFile,
+  //   fileList: UploadFile[],
+  //   actions: {
+  //     download: (file: UploadFile) => void,
+  //     preview: (file: UploadFile) => void,
+  //     remove: (file: UploadFile) => void
+  //   }) => {
+  //   if (file.type === 'application/pdf') {
+  //     return (
+  //       <div className='custom-upload-item'>
+  //         {originNode}
+  //         <div className='preview-overlay rounded-md'>
+  //           <EyeOutlined
+  //             className='preview-icon'
+  //             onClick={() => {
+  //               const url = URL.createObjectURL(file.originFileObj as RcFile);
+  //               window.open(url);
+  //             }}
+  //           />
+  //           <DeleteOutlined
+  //             className='delete-icon'
+  //             onClick={() => actions.remove(file)}
+  //           />
+  //         </div>
+  //       </div>
+  //     )
+  //   }
+  //   return originNode
+  // }, []);
 
   return (
     <Row gutter={[16, 16]}>
       {item?.towing_vehicle?.vehicle_picture?.front_rear_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='towing_image.file'
             control={control}
             rules={{
@@ -488,6 +489,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='semi_image.file'
             control={control}
             rules={{
@@ -559,6 +561,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.etc_vehicle?.vehicle_picture?.front_rear_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='etc_image.file'
             control={control}
             rules={{
@@ -630,6 +633,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.truck_dimension_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='truck_dimension_image.file'
             control={control}
             rules={{
@@ -662,7 +666,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
-                    itemRender={_itemRender}
+                    // itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -702,6 +706,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.semi_trailer_dimension_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='semi_dimension_image.file'
             control={control}
             rules={{
@@ -734,7 +739,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
-                    itemRender={_itemRender}
+                    // itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -774,6 +779,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.cargo_dimension_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='cargo_dimension_image.file'
             control={control}
             rules={{
@@ -806,7 +812,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
-                    itemRender={_itemRender}
+                    // itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -846,6 +852,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.combined_vehicle_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='combined_vehicle_image.file'
             control={control}
             rules={{
@@ -878,7 +885,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
-                    itemRender={_itemRender}
+                    // itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -918,6 +925,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.turning_radius_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='turn_radius_image.file'
             control={control}
             rules={{
@@ -950,7 +958,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
-                    itemRender={_itemRender}
+                    // itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -990,6 +998,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.highway_dept_permit_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='highway_permit_image.file'
             control={control}
             rules={{
@@ -1022,7 +1031,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
-                    itemRender={_itemRender}
+                    // itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -1062,6 +1071,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.highway_dept_permit_number_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='highway_number_image.file'
             control={control}
             rules={{
@@ -1094,7 +1104,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
-                    itemRender={_itemRender}
+                    // itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -1134,6 +1144,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.rural_highway_dept_permit_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='rural_permit_image.file'
             control={control}
             rules={{
@@ -1166,7 +1177,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
-                    itemRender={_itemRender}
+                    // itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {
@@ -1206,6 +1217,7 @@ const ContentImage: React.FC<Props> = (props) => {
       {item?.rural_highway_dept_permit_number_url ?
         <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
           <Controller
+            disabled
             name='rural_number_image.file'
             control={control}
             rules={{
@@ -1238,7 +1250,7 @@ const ContentImage: React.FC<Props> = (props) => {
                       }
                       return false
                     }}
-                    itemRender={_itemRender}
+                    // itemRender={_itemRender}
                     onChange={(e) => {
                       field.onChange(e.fileList);
                       if (e.fileList.length) {

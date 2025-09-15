@@ -162,7 +162,7 @@ const ViewScreen: React.FC<Props> = (props) => {
           <Button
             htmlType='button'
             type='default'
-            size='large'
+            // size='large'
             className='w-full lg:w-auto'
             loading={loading}
             onClick={() => navigate(-1)}
