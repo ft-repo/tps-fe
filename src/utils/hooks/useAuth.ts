@@ -44,6 +44,7 @@ function useAuth() {
 								id: resp.data.details.id,
 								userName: resp.data.details.registration_no,
 								name: resp.data.details.business_details.business_name,
+								profile_url: resp.data.details.profile_url,
 								details: { ...resp.data.details },
 								authority: ['USER'],
 							},

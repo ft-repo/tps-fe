@@ -327,6 +327,8 @@ function SignUpForm(props: Props) {
                       })}
                       onChange={(e: any) => {
                         setValue('business_address.district_id', e.value)
+                        setValue('business_address.sub_district_id', 0)
+                        setValue('business_address.zip_code', '')
                         setDistrictId(e.value)
                         field.onChange(e)
                       }}
@@ -355,6 +357,7 @@ function SignUpForm(props: Props) {
                       })}
                       onChange={(e: any) => {
                         setValue('business_address.sub_district_id', e.value)
+                        setValue('business_address.zip_code', sub_district.find(item => item.id === e.value)?.zip_code || '')
                         field.onChange(e)
                       }}
                       isDisabled={sub_district.length === 0}

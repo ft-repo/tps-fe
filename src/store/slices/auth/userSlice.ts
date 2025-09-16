@@ -5,6 +5,7 @@ export type UserState = {
 	id: string
 	userName: string
 	name: string
+	profile_url: string
 	details: {
 		id: string
 		registration_no: string
@@ -75,6 +76,7 @@ const initialState: UserState = {
 	id: '',
 	userName: '',
 	name: '',
+	profile_url: '',
 	details: {
 		id: '',
 		registration_no: '',
@@ -149,6 +151,7 @@ const userSlice = createSlice({
 			state.id = action.payload?.id
 			state.userName = action.payload?.userName
 			state.name = action.payload?.name
+			state.profile_url = action.payload?.profile_url
 			state.details = action.payload?.details
 			state.authority = action.payload?.authority
 		},

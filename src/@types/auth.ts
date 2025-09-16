@@ -13,6 +13,7 @@ export type SignInResponse = {
   details: {
     id: string;
     registration_no: string;
+    profile_url: string;
     business_details: {
       entity_type_id: number;
       business_name: string;
