@@ -24,8 +24,10 @@ type SignInFormSchema = {
 }
 
 const validationSchema = Yup.object().shape({
-    registration_no: Yup.string().required('Please enter your registration no'),
-    password: Yup.string().required('Please enter your password'),
+    registration_no: Yup.string().required('กรุณาระบุเลขทะเบียนนิติบุคคล'),
+    password: Yup.string().required('กรุณาระบุรหัสผ่าน'),
+    // registration_no: Yup.string().required('Please enter your registration no'),
+    // password: Yup.string().required('Please enter your password'),
     // rememberMe: Yup.bool(),
 })
 
