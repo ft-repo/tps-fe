@@ -171,4 +171,14 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/staff/request-history/approval/document')),
         authority: ['ADMIN'],
     },
+    // ACCESS DENIED
+    {
+        key: 'accessDenied',
+        path: `/access-denied`,
+        component: lazy(() => import('@/views/errors/access_denied')),
+        authority: [],
+        meta: {
+            layout: 'blank',
+        },
+    },
 ]
