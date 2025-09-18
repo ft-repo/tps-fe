@@ -21,6 +21,10 @@ const Logo = (props: LogoProps) => {
 		logoWidth = 'auto',
 	} = props
 
+	console.log(className)
+	console.log(style)
+	console.log(logoWidth)
+
 	return (
 		<div
 			className={classNames('logo', className)}
@@ -31,14 +35,14 @@ const Logo = (props: LogoProps) => {
 				paddingBottom: '16px'
 			}}
 		>
-			<div className={`flex items-center ${type === 'full' ? 'gap-3' : ''}`}>
+			<div className={`flex flex-col items-center ${type === 'full' ? 'gap-3' : ''}`}>
 				<img
 					className={imgClass}
 					src={`${LOGO_SRC_PATH}logo-TPS.png`}
 					alt={`${APP_NAME} ${mode} logo`}
 				/>
-				<div className={type === 'full' ? 'block' : 'hidden'}>
-					<h3 className='text-white text-[1.2rem] font-bold'>TRUCK PERMISSION SYSTEM</h3>
+				<div className={type === 'full' ? 'block text-center' : 'hidden'}>
+					<h3 className='text-white text-[1rem] font-bold'>TRUCK PERMISSION SYSTEM</h3>
 					<p className='text-white text-[0.8rem] opacity-80'>ระบบติดตามและควบคุมน้ำหนักรถบรรทุกบนโครงข่ายทางหลวงชนบท</p>
 				</div>
 			</div>

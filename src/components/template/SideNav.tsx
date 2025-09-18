@@ -26,10 +26,10 @@ const sideNavCollapseStyle = {
 }
 
 const SideNav = () => {
-	const themeColor = useAppSelector((state) => state.theme.themeColor)
-	const primaryColorLevel = useAppSelector(
-		(state) => state.theme.primaryColorLevel,
-	)
+	// const themeColor = useAppSelector((state) => state.theme.themeColor)
+	// const primaryColorLevel = useAppSelector(
+	// 	(state) => state.theme.primaryColorLevel,
+	// )
 	const navMode = useAppSelector((state) => state.theme.navMode)
 	const mode = useAppSelector((state) => state.theme.mode)
 	const direction = useAppSelector((state) => state.theme.direction)
@@ -45,7 +45,8 @@ const SideNav = () => {
 
 	const sideNavColor = () => {
 		if (navMode === NAV_MODE_THEMED) {
-			return `bg-${themeColor}-${primaryColorLevel} side-nav-${navMode}`
+			// return `bg-${themeColor}-${primaryColorLevel} side-nav-${navMode}`
+			return `bg-linear-to-b from-[#1F74AA] to-[#052940] side-nav-${navMode}`
 		}
 		return `side-nav-${navMode}`
 	}
@@ -83,7 +84,7 @@ const SideNav = () => {
 					className={classNames(
 						'side-nav',
 						sideNavColor(),
-						!sideNavCollapse && 'side-nav-expand',
+						!sideNavCollapse && 'side-nav-expand overflow-hidden',
 					)}
 				>
 					<div className="side-nav-header">

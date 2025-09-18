@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 import classNames from 'classnames'
 import { MenuContextProvider } from './context/menuContext'
-import { useConfig } from '../ConfigProvider'
+// import { useConfig } from '../ConfigProvider'
 import type { CommonProps, TypeAttributes } from '../@types/common'
 
 export interface MenuProps extends CommonProps {
@@ -28,11 +28,12 @@ const Menu = forwardRef<HTMLElement, MenuProps>((props, ref) => {
 
     const menuDefaultClass = 'menu'
 
-    const { themeColor, primaryColorLevel } = useConfig()
+    // const { themeColor, primaryColorLevel } = useConfig()
 
     const menuColor = () => {
         if (variant === 'themed') {
-            return `bg-${themeColor}-${primaryColorLevel} ${menuDefaultClass}-${variant}`
+            return `${menuDefaultClass}-${variant}`
+            // return `bg-${themeColor}-${primaryColorLevel} ${menuDefaultClass}-${variant}`
         }
         return `${menuDefaultClass}-${variant}`
     }
