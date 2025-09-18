@@ -36,30 +36,8 @@ function SignUpForm(props: Props) {
       <Notification type="danger" title="ผิดพลาด">
         {error}
       </Notification>,
-      {
-        placement: 'top-center',
-      },
+      { placement: 'top-center' }
     )
-  }, [])
-
-  const idCardCheck = useCallback((idCardNumber: string) => {
-    let sum = 0
-    if (idCardNumber.length != 13) return false
-    // STEP 1 - get only first 12 digits
-    for (let i = 0; i < 12; i++) {
-      // STEP 2 - multiply each digit with each index (reverse)
-      // STEP 3 - sum multiply value together
-      sum += parseInt(idCardNumber.charAt(i)) * (13 - i)
-    }
-    // STEP 4 - mod sum with 11
-    const mod = sum % 11
-    // STEP 5 - subtract 11 with mod, then mod 10 to get unit
-    const check = (11 - mod) % 10
-    // STEP 6 - if check is match the digit 13th is correct
-    if (check == parseInt(idCardNumber.charAt(12))) {
-      return true
-    }
-    return false
   }, [])
 
   return (
@@ -77,12 +55,10 @@ function SignUpForm(props: Props) {
                   {...field}
                   name={field.name}
                   placeholder="กรุณาเลือก"
-                  options={entity_type.map((item) => {
-                    return {
-                      label: item.name,
-                      value: item.id,
-                    }
-                  })}
+                  options={entity_type.map((item) => ({
+                    label: item.name,
+                    value: item.id,
+                  }))}
                   onChange={(e: any) => {
                     setValue('business_detail.entity_type_id', e.value)
                     field.onChange(e)
@@ -97,24 +73,19 @@ function SignUpForm(props: Props) {
             )
           }}
         />
+
+        {/* เลขทะเบียนนิติบุคคล: ตัวเลขล้วน + 13 หลัก */}
         <Controller
           name="business_detail.registration_no"
           control={control}
           rules={{
             required: 'กรุณาระบุ',
             pattern: {
-              value: /^[0-9]\d*$/,
-              message: 'กรุณาระบุเลขทะเบียนนิติบุคคลให้ถูกต้อง',
+              value: /^\d+$/,
+              message: 'กรุณากรอกเฉพาะตัวเลข',
             },
-            validate: (value) =>
-              idCardCheck(value) || 'กรุณาระบุเลขทะเบียนนิติบุคคลให้ถูกต้อง',
-            onBlur: (e) => {
-              if (!idCardCheck(e.target.value)) {
-                setError('business_detail.registration_no', {
-                  message: 'กรุณาระบุเลขทะเบียนนิติบุคคลให้ถูกต้อง',
-                })
-              }
-            },
+            minLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+            maxLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
           }}
           render={({ field }) => {
             return (
@@ -125,6 +96,7 @@ function SignUpForm(props: Props) {
                   name={field.name}
                   placeholder="กรุณาระบุ"
                   maxLength={13}
+                  inputMode="numeric"
                   onChange={(e) => {
                     setValue('business_detail.registration_no', e.target.value)
                     field.onChange(e)
@@ -139,6 +111,7 @@ function SignUpForm(props: Props) {
             )
           }}
         />
+
         <Controller
           name="business_detail.business_name"
           control={control}
@@ -165,10 +138,17 @@ function SignUpForm(props: Props) {
             )
           }}
         />
+
+        {/* เบอร์โทร: ตัวเลขล้วน */}
         <Controller
           name="business_address.phone_number"
           control={control}
-          rules={{ required: 'กรุณาระบุ' }}
+          rules={{
+            required: 'กรุณาระบุ',
+            pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
+            minLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+            maxLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+          }}
           render={({ field }) => {
             return (
               <fieldset className="col-span-2">
@@ -178,7 +158,9 @@ function SignUpForm(props: Props) {
                   name={field.name}
                   placeholder="กรุณาระบุ"
                   type="tel"
+                  inputMode="numeric"
                   autoComplete="off"
+                  maxLength={9}
                   onChange={(e) => {
                     setValue('business_address.phone_number', e.target.value)
                     field.onChange(e)
@@ -210,10 +192,7 @@ function SignUpForm(props: Props) {
                       name={field.name}
                       placeholder="กรุณาระบุ"
                       onChange={(e) => {
-                        setValue(
-                          'business_address.house_number',
-                          e.target.value,
-                        )
+                        setValue('business_address.house_number', e.target.value)
                         field.onChange(e)
                       }}
                     />
@@ -292,12 +271,10 @@ function SignUpForm(props: Props) {
                       {...field}
                       name={field.name}
                       placeholder="กรุณาเลือก"
-                      options={province.map((item) => {
-                        return {
-                          label: item.name_th,
-                          value: item.id,
-                        }
-                      })}
+                      options={province.map((item) => ({
+                        label: item.name_th,
+                        value: item.id,
+                      }))}
                       onChange={(e: any) => {
                         setValue('business_address.province_id', e.value)
                         setProvinceId(e.value)
@@ -319,12 +296,10 @@ function SignUpForm(props: Props) {
                       {...field}
                       name={field.name}
                       placeholder="กรุณาเลือก"
-                      options={district.map((item) => {
-                        return {
-                          label: item.name_th,
-                          value: item.id,
-                        }
-                      })}
+                      options={district.map((item) => ({
+                        label: item.name_th,
+                        value: item.id,
+                      }))}
                       onChange={(e: any) => {
                         setValue('business_address.district_id', e.value)
                         setValue('business_address.sub_district_id', 0)
@@ -349,15 +324,16 @@ function SignUpForm(props: Props) {
                       {...field}
                       name={field.name}
                       placeholder="กรุณาเลือก"
-                      options={sub_district.map((item) => {
-                        return {
-                          label: item.name_th,
-                          value: item.id,
-                        }
-                      })}
+                      options={sub_district.map((item) => ({
+                        label: item.name_th,
+                        value: item.id,
+                      }))}
                       onChange={(e: any) => {
                         setValue('business_address.sub_district_id', e.value)
-                        setValue('business_address.zip_code', sub_district.find(item => item.id === e.value)?.zip_code || '')
+                        setValue(
+                          'business_address.zip_code',
+                          sub_district.find((item) => item.id === e.value)?.zip_code || ''
+                        )
                         field.onChange(e)
                       }}
                       isDisabled={sub_district.length === 0}
@@ -389,9 +365,10 @@ function SignUpForm(props: Props) {
             />
           </div>
         </div>
-        {/* ผู้รับหมอบอำนาจ */}
+
+        {/* ผู้รับมอบอำนาจ / ผู้ติดต่อ */}
         <div className="mb-4 col-span-2">
-          <div className="font-semibold mb-2">ผู้ติดต่อ/รับหมอบอำนาจ</div>
+          <div className="font-semibold mb-2">ผู้ติดต่อ/รับมอบอำนาจ</div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Controller
               name="contact_info.contact_name"
@@ -431,12 +408,10 @@ function SignUpForm(props: Props) {
                       {...field}
                       name={field.name}
                       placeholder="กรุณาเลือก"
-                      options={contact_type.map((item) => {
-                        return {
-                          label: item.name,
-                          value: item.id,
-                        }
-                      })}
+                      options={contact_type.map((item) => ({
+                        label: item.name,
+                        value: item.id,
+                      }))}
                       onChange={(e: any) => {
                         setValue('contact_info.contact_type_id', e.value)
                         field.onChange(e)
@@ -451,10 +426,16 @@ function SignUpForm(props: Props) {
                 )
               }}
             />
+            {/* เบอร์โทรผู้ติดต่อ: ตัวเลขล้วน */}
             <Controller
               name="contact_info.phone_number"
               control={control}
-              rules={{ required: 'กรุณาระบุ' }}
+              rules={{
+                required: 'กรุณาระบุ',
+                pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
+                minLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                maxLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
@@ -464,7 +445,9 @@ function SignUpForm(props: Props) {
                       name={field.name}
                       placeholder="กรุณาระบุ"
                       type="tel"
+                      inputMode="numeric"
                       autoComplete="off"
+                      maxLength={9}
                       onChange={(e) => {
                         setValue('contact_info.phone_number', e.target.value)
                         field.onChange(e)
@@ -479,24 +462,15 @@ function SignUpForm(props: Props) {
                 )
               }}
             />
+            {/* เลขบัตร: ตัวเลขล้วน + 13 หลัก */}
             <Controller
               name="contact_info.cid"
               control={control}
               rules={{
                 required: 'กรุณาระบุ',
-                pattern: {
-                  value: /^[0-9]\d*$/,
-                  message: 'กรุณาระบุเลขบัตรประชาชนให้ถูกต้อง',
-                },
-                validate: (value) =>
-                  idCardCheck(value) || 'กรุณาระบุเลขบัตรประชาชนให้ถูกต้อง',
-                onBlur: (e) => {
-                  if (!idCardCheck(e.target.value)) {
-                    setError('contact_info.cid', {
-                      message: 'กรุณาระบุเลขบัตรประชาชนให้ถูกต้อง',
-                    })
-                  }
-                },
+                pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
+                minLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                maxLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
               }}
               render={({ field }) => {
                 return (
@@ -507,7 +481,9 @@ function SignUpForm(props: Props) {
                       name={field.name}
                       placeholder="กรุณาระบุ"
                       type="text"
+                      inputMode="numeric"
                       autoComplete="off"
+                      maxLength={13}
                       onChange={(e) => {
                         setValue('contact_info.cid', e.target.value)
                         field.onChange(e)
@@ -524,6 +500,7 @@ function SignUpForm(props: Props) {
             />
           </div>
         </div>
+
         {/* เอกสารที่ต้องมี */}
         <div className="mb-4 col-span-2">
           <Controller
@@ -616,6 +593,7 @@ function SignUpForm(props: Props) {
             )
           }}
         />
+
         <Controller
           name="password_confirmation"
           control={control}
