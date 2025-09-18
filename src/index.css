@@ -1,1 +1,14 @@
 @import './assets/styles/app.css';
+
+/* ขนาดกระดาษ
+@page {
+  size: A4 portrait;
+  margin: 16mm;
+}
+
+/* โหมดพิมพ์ */
+@media print {
+  /* บังคับขึ้นหน้าใหม่หลังบล็อกนี้ (เช่น แผนที่) */
+  .print-break { page-break-after: always; }
+
+} 

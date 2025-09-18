@@ -4,6 +4,8 @@ import 'leaflet'
 import { getRouteDirectionAPI, useAppDispatch, useAppSelector } from '@/store'
 import { useCallback, useEffect, useState } from 'react'
 import { GeoJsonObject } from 'geojson'
+import type { Map as LeafletMap } from 'leaflet'
+import { useRef } from 'react'
 
 /**
  * @param coordinates Points for drawing distance, coordinates [longitude, latitude] must have at least 2 points
@@ -18,6 +20,7 @@ export type MapRouteProps = {
   geometry?: GeoJsonObject,
   max_speed?: number,
   isRouteEstimate?: boolean,
+  onCreated?: (map: LeafletMap) => void
 }
 
 /**
@@ -27,7 +30,7 @@ export type MapRouteProps = {
  * @param max_speed Maximum speed
  * @param isRouteEstimate If true, will call API to fetch route distance. If false, must provide geometry
  */
-function MapRoute({ coordinates, geometry, isRouteEstimate = false }: MapRouteProps) {
+function MapRoute({ onCreated, coordinates, geometry, isRouteEstimate = false }: MapRouteProps) {
   const dispatch = useAppDispatch()
   const { routeDirection } = useAppSelector((state) => state.routeDirection)
   const [geometryData, setGeometryData] = useState<GeoJsonObject | null>(null)
@@ -71,10 +74,15 @@ function MapRoute({ coordinates, geometry, isRouteEstimate = false }: MapRoutePr
       setGeometryData(geometry || null)
     }
   }, [routeDirection, isRouteEstimate, geometry])
+  const mapRef = useRef<LeafletMap | null>(null)
 
   return (
     <div className="h-full w-full">
-      <MapContainer className="h-full w-full" center={[13.7563, 100.5018]} zoom={6} scrollWheelZoom={false}>
+      <MapContainer className="h-full w-full"
+        center={[13.7563, 100.5018]}
+        zoom={6}
+        scrollWheelZoom={false}
+        ref={mapRef}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
