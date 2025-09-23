@@ -552,20 +552,20 @@ function SignUpForm(props: Props) {
         {/* เอกสารที่ต้องมี */}
         <div className="mb-4 col-span-2">
           <Controller
-            name="business_document.business_file_url"
+            name="business_document.certificate_file_url"
             control={control}
             rules={{ required: 'กรุณาอัปโหลดหนังสือรับรองนิติบุคคล' }}
             render={({ field, fieldState }) => (
               <Upload
                 isRequired
-                name="business_document.business_file_url"
+                name="business_document.certificate_file_url"
                 label="หนังสือรับรองนิติบุคคล"
                 accept=".pdf"
                 maxSize={10}
                 value={field.value}
                 error={fieldState.error?.message}
                 control={control}
-                fieldName="business_document.business_file_url"
+                fieldName="business_document.certificate_file_url"
                 onUploadError={(error) => {
                   handleUploadError(error)
                 }}
@@ -595,13 +595,13 @@ function SignUpForm(props: Props) {
             )}
           />
           <Controller
-            name="business_document.certificate_file_url"
+            name="business_document.business_file_url"
             control={control}
             // rules={{ required: 'กรุณาอัปโหลดรูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ' }}
             render={({ field, fieldState }) => (
               <Upload
                 // isRequired
-                name="business_document.certificate_file_url"
+                name="business_document.business_file_url"
                 label="รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ"
                 accept=".pdf,.png,.jpeg,.jpg"
                 isImage={true}
@@ -609,7 +609,7 @@ function SignUpForm(props: Props) {
                 maxSize={10}
                 error={fieldState.error?.message}
                 control={control}
-                fieldName="business_document.certificate_file_url"
+                fieldName="business_document.business_file_url"
                 onUploadError={(error) => {
                   handleUploadError(error)
                 }}
