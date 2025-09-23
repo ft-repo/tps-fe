@@ -4,7 +4,7 @@
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService'
 import React, { useCallback } from 'react'
-import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form'
+import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
 import { Button, Col, Input, message, Row, Select, Upload } from 'antd'
@@ -17,8 +17,13 @@ interface Props {
 
 const FormInfo: React.FC<Props> = (props) => {
   const { control, setValue } = props
-  const { vehicle_type, province } = useAppSelector(state => state.master)
+  const { province } = useAppSelector(state => state.master)
+  const vehicleType = useAppSelector(state => state.master.vehicle_type)
   const { errors } = useFormState({ control })
+
+  const {
+    vehicle_type
+  } = useWatch({ control })
 
   const uploadFile = useCallback(async (file: any) => {
     try {
@@ -60,7 +65,7 @@ const FormInfo: React.FC<Props> = (props) => {
                     <Select
                       {...field}
                       placeholder='กรุณาเลือก'
-                      options={vehicle_type}
+                      options={vehicleType}
                       fieldNames={{
                         label: 'name',
                         value: 'id'
@@ -81,6 +86,7 @@ const FormInfo: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={vehicle_type === 3}
               name='license_plate'
               control={control}
               rules={{
@@ -118,6 +124,7 @@ const FormInfo: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={vehicle_type === 3}
               name='vehicle_model'
               control={control}
               rules={{
@@ -147,6 +154,7 @@ const FormInfo: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={vehicle_type === 3}
               name='province'
               control={control}
               rules={{
@@ -185,6 +193,7 @@ const FormInfo: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={vehicle_type === 3}
               name='vehicle_weight'
               control={control}
               rules={{
@@ -218,6 +227,7 @@ const FormInfo: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={vehicle_type === 3}
               name='vehicle_color'
               control={control}
               rules={{
@@ -247,6 +257,7 @@ const FormInfo: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={vehicle_type === 3}
               name='vehicle_distance'
               control={control}
               rules={{
@@ -267,7 +278,7 @@ const FormInfo: React.FC<Props> = (props) => {
                       }}
                       // suffix='ม.'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
                       }}
                     />
                     {!!errors.vehicle_distance &&
@@ -280,6 +291,7 @@ const FormInfo: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={vehicle_type === 3}
               name='vehicle_axles'
               control={control}
               rules={{
@@ -339,7 +351,7 @@ const FormInfo: React.FC<Props> = (props) => {
               name='wide_unit'
               control={control}
               rules={{
-                required: 'กรุณาระบุกว้าง (ม.)'
+                required: 'กรุณาระบุความกว้าง (ม.)'
               }}
               render={({ field }) => {
                 return (
@@ -356,7 +368,7 @@ const FormInfo: React.FC<Props> = (props) => {
                       }}
                       // suffix='ม.'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
                       }}
                     />
                     {!!errors.wide_unit &&
@@ -372,12 +384,12 @@ const FormInfo: React.FC<Props> = (props) => {
               name='long_unit'
               control={control}
               rules={{
-                required: 'กรุณาระบุกว้าง (ม.)'
+                required: 'กรุณาระบุความยาว (ม.)'
               }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>กว้าง (ม.) <span className='text-red-500'>*</span></label>
+                    <label>ยาว (ม.) <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -389,7 +401,7 @@ const FormInfo: React.FC<Props> = (props) => {
                       }}
                       // suffix='ม.'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
                       }}
                     />
                     {!!errors.long_unit &&
@@ -405,7 +417,7 @@ const FormInfo: React.FC<Props> = (props) => {
               name='tall_unit'
               control={control}
               rules={{
-                required: 'กรุณาระบุสูง (ม.)'
+                required: 'กรุณาระบุความสูง (ม.)'
               }}
               render={({ field }) => {
                 return (
@@ -422,7 +434,7 @@ const FormInfo: React.FC<Props> = (props) => {
                       }}
                       // suffix='ม.'
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
                       }}
                     />
                     {!!errors.tall_unit &&
