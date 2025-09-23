@@ -95,7 +95,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
+                    <label>เลขทะเบียน / เลขตัวรถ {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                     <Input
                       {...field}
                       name={field.name}
@@ -133,7 +133,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ยี่ห้อ <span className='text-red-500'>*</span></label>
+                    <label>ยี่ห้อ {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                     <Input
                       {...field}
                       name={field.name}
@@ -163,7 +163,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จังหวัด <span className='text-red-500'>*</span></label>
+                    <label>จังหวัด {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                     <Select
                       {...field}
                       allowClear
@@ -202,7 +202,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>น้ำหนักรถเปล่า (กก.) <span className='text-red-500'>*</span></label>
+                    <label>น้ำหนักรถเปล่า (กก.) {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                     <Input
                       {...field}
                       name={field.name}
@@ -236,7 +236,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>สีรถ <span className='text-red-500'>*</span></label>
+                    <label>สีรถ {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                     <Input
                       {...field}
                       name={field.name}
@@ -266,7 +266,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ระยะ kingpin (ม.) <span className='text-red-500'>*</span></label>
+                    <label>ระยะ kingpin (ม.) {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                     <Input
                       {...field}
                       name={field.name}
@@ -300,7 +300,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จำนวนเพลา <span className='text-red-500'>*</span></label>
+                    <label>จำนวนเพลา {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                     <Select
                       {...field}
                       allowClear

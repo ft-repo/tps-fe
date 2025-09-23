@@ -51,8 +51,11 @@ const TableCatagoryAdmin: React.FC = () => {
       key: 'business_name',
       width: 500,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
           return item
         }
         return '-'
@@ -64,8 +67,11 @@ const TableCatagoryAdmin: React.FC = () => {
       key: 'road_code',
       width: 150,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
           return item
         }
         return '-'
@@ -77,8 +83,11 @@ const TableCatagoryAdmin: React.FC = () => {
       key: 'road_name',
       width: 200,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
           return item
         }
         return '-'
@@ -90,8 +99,11 @@ const TableCatagoryAdmin: React.FC = () => {
       key: 'start_date',
       width: 150,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item).format('DD/MM/YYYY')}</strong>
+          }
           return dayjs(item).format('DD/MM/YYYY')
         }
         return '-'
@@ -103,8 +115,11 @@ const TableCatagoryAdmin: React.FC = () => {
       key: 'end_date',
       width: 150,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item).format('DD/MM/YYYY')}</strong>
+          }
           return dayjs(item).format('DD/MM/YYYY')
         }
         return '-'
@@ -116,8 +131,11 @@ const TableCatagoryAdmin: React.FC = () => {
       key: 'petition_date',
       width: 150,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item).format('DD/MM/YYYY')}</strong>
+          }
           return dayjs(item).format('DD/MM/YYYY')
         }
         return '-'

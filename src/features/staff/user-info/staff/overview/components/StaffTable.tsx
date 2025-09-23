@@ -36,8 +36,11 @@ const SeachTable: React.FC<Props> = (props) => {
         key: 'username',
         width: 150,
         align: 'center',
-        render: (item) => {
+        render: (item, record, index) => {
           if (item) {
+            if (data.data.length - 1 === index) {
+              return <strong>{item}</strong>
+            }
             return item
           }
           return '-'
@@ -49,7 +52,12 @@ const SeachTable: React.FC<Props> = (props) => {
         key: 'name',
         width: 200,
         align: 'center',
-        render: (item, record) => renderName(record.title, record.first_name, record.last_name),
+        render: (item, record, index) => {
+          if (data.data.length - 1 === index) {
+            return <strong>{renderName(record.title, record.first_name, record.last_name)}</strong>
+          }
+          return renderName(record.title, record.first_name, record.last_name)
+        },
       },
       {
         title: 'หน่วยงาน',
@@ -57,8 +65,11 @@ const SeachTable: React.FC<Props> = (props) => {
         key: 'department',
         width: 150,
         align: 'center',
-        render: (item, record) => {
+        render: (item, record, index) => {
           if (record.department?.dept_name) {
+            if (data.data.length - 1 === index) {
+              return <strong>{record.department?.dept_name}</strong>
+            }
             return record.department?.dept_name
           }
           return '-'
@@ -70,8 +81,11 @@ const SeachTable: React.FC<Props> = (props) => {
         key: 'role',
         width: 150,
         align: 'center',
-        render: (item, record) => {
+        render: (item, record, index) => {
           if (record.role?.name) {
+            if (data.data.length - 1 === index) {
+              return <strong>{record.role?.name}</strong>
+            }
             return record.role?.name
           }
           return '-'

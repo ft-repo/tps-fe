@@ -153,10 +153,21 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
       key: 'company',
       width: 300,
       align: 'center',
-      render: (_v, record) =>
-        (record as any).user_created?.business_details?.business_name
-        ?? (record as any).poa_name
-        ?? '-',
+      render: (item, record, index) => {
+        if (record.user_created?.business_details?.business_name) {
+          if (data.data.length - 1 === index) {
+            return <strong>{record.user_created?.business_details?.business_name}</strong>
+          }
+          return record.user_created?.business_details?.business_name
+        } else if (record.poa_name) {
+          if (data.data.length - 1 === index) {
+            return <strong>{record.poa_name}</strong>
+          }
+          return record.poa_name
+        } else {
+          return '-'
+        }
+      }
     },
     {
       title: 'วันที่ขออนุญาต',
@@ -164,7 +175,15 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
       key: 'created_at',
       width: 160,
       align: 'center',
-      render: (v: string) => (v ? dayjs(v).format('DD/MM/YYYY') : '-'),
+      render: (item, record, index) => {
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item).format('DD/MM/YYYY')}</strong>
+          }
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      }
     },
 
     // STEP by STEP (คลิกได้ตามลำดับ)

@@ -95,12 +95,15 @@ const TableOther: React.FC<Props> = (props) => {
       key: 'user_created.business_details.business_name',
       width: 200,
       align: 'center',
-      render: (_v, r) => {
-        if (r.user_created?.business_details?.business_name) {
-          return r.user_created?.business_details?.business_name
+      render: (item, record, index) => {
+        if (record.user_created?.business_details?.business_name) {
+          if (data.data.length - 1 === index) {
+            return <strong>{record.user_created?.business_details?.business_name}</strong>
+          }
+          return record.user_created?.business_details?.business_name
         }
         return '-'
-      },
+      }
     },
     {
       title: 'วันที่ขออนุญาต',
@@ -108,12 +111,15 @@ const TableOther: React.FC<Props> = (props) => {
       key: 'created_at',
       width: 160,
       align: 'center',
-      render: (_v, r) => {
-        if (r.created_at) {
-          return dayjs(r.created_at).format('DD/MM/YYYY')
+      render: (item, record, index) => {
+        if (record.created_at) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(record.created_at).format('DD/MM/YYYY')}</strong>
+          }
+          return dayjs(record.created_at).format('DD/MM/YYYY')
         }
         return '-'
-      },
+      }
     },
     {
       title: 'คณะกรรมการพิจารณา',

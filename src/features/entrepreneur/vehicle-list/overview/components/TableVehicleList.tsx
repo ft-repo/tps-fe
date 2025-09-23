@@ -25,14 +25,26 @@ const TableVehicleList: React.FC<Props> = (props) => {
       dataIndex: 'id',
       key: 'id',
       width: 100,
-      align: 'center'
+      align: 'center',
+      render: (item, record, index) => {
+        if (data.data.length - 1 === index) {
+          return <strong>{index + 1}</strong>
+        }
+        return index + 1
+      }
     },
     {
       title: 'ประเภท',
       dataIndex: 'vehicle_type_name',
       key: 'vehicle_type_name',
       width: 300,
-      align: 'center'
+      align: 'center',
+      render: (item, record, index) => {
+        if (data.data.length - 1 === index) {
+          return <strong>{item}</strong>
+        }
+        return item
+      }
     },
     {
 
@@ -40,28 +52,52 @@ const TableVehicleList: React.FC<Props> = (props) => {
       dataIndex: 'brand',
       key: 'brand',
       width: 300,
-      align: 'center'
+      align: 'center',
+      render: (item, record, index) => {
+        if (data.data.length - 1 === index) {
+          return <strong>{item}</strong>
+        }
+        return item
+      }
     },
     {
       title: 'เลขทะเบียน / เลขตัวรถ',
       dataIndex: 'plate_no',
       key: 'plate_no',
       width: 300,
-      align: 'center'
+      align: 'center',
+      render: (item, record, index) => {
+        if (data.data.length - 1 === index) {
+          return <strong>{item}</strong>
+        }
+        return item
+      }
     },
     {
       title: 'จังหวัด',
       dataIndex: 'plate_province',
       key: 'plate_province',
       width: 300,
-      align: 'center'
+      align: 'center',
+      render: (item, record, index) => {
+        if (data.data.length - 1 === index) {
+          return <strong>{item}</strong>
+        }
+        return item
+      }
     },
     {
       title: 'น้ำหนัก (กิโลกรัม)',
       dataIndex: 'weight',
       key: 'weight',
       width: 300,
-      align: 'center'
+      align: 'center',
+      render: (item, record, index) => {
+        if (data.data.length - 1 === index) {
+          return <strong>{item}</strong>
+        }
+        return item
+      }
     },
     {
       title: '',

@@ -189,7 +189,15 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'business_name',
       width: 500,
       align: 'center',
-      render: (item) => item ?? '-'
+      render: (item, record, index) => {
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'รหัสสายทาง',
@@ -197,7 +205,15 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'road_code',
       width: 150,
       align: 'center',
-      render: (item) => item ?? '-'
+      render: (item, record, index) => {
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'ชื่อสายทาง',
@@ -205,7 +221,15 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'road_name',
       width: 500,
       align: 'center',
-      render: (item) => item ?? '-'
+      render: (item, record, index) => {
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'วันที่เริ่มต้น',
@@ -213,7 +237,15 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'start_date',
       width: 150,
       align: 'center',
-      render: (item) => item ? dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY') : '-'
+      render: (item, record, index) => {
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
+          }
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      }
     },
     {
       title: 'วันที่สิ้นสุด',
@@ -221,7 +253,15 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'end_date',
       width: 150,
       align: 'center',
-      render: (item) => item ? dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY') : '-'
+      render: (item, record, index) => {
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
+          }
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      },
     },
     {
       title: 'วันที่ขออนุญาต',
@@ -229,7 +269,15 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
       key: 'petition_date',
       width: 150,
       align: 'center',
-      render: (item) => item ? dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY') : '-'
+      render: (item, record, index) => {
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
+          }
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      },
     },
     {
       title: 'ตรวจเอกสาร', key: 'validate_document', width: 150, align: 'center',
