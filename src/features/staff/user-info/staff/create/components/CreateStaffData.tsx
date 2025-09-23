@@ -32,7 +32,7 @@ const CreateStaffData: React.FC<Props> = (props) => {
   const loading = useAppSelector(state => state.layout.loading)
 
   const nameDestructure = useMemo(() => {
-    const prefixList = ['นาย', 'นาง', 'นางสาว'];
+    const prefixList = ['นาย', 'นางสาว', 'นาง'];
     const destructure = ldapPrefil.Description?.split(' ')
 
     if (destructure?.length === 2) {
