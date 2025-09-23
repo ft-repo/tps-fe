@@ -47,7 +47,7 @@ const FormDocumentProposal: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>สำเนาบัตรประชาชน (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label>สำเนาบัตรประชาชน (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -123,7 +123,7 @@ const FormDocumentProposal: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>สำเนาหนังสือรับรองนิติบุคคล (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label>สำเนาหนังสือรับรองนิติบุคคล (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -199,7 +199,7 @@ const FormDocumentProposal: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>แบบคำขออนุยาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label>แบบคำขออนุยาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -275,7 +275,7 @@ const FormDocumentProposal: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>หนังสือมอบอำนาจพร้อมตราประทับของผู้มีอำนาจลงนามแทนบริษัทหรือห้างหุ้นส่วน (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label>หนังสือมอบอำนาจพร้อมตราประทับของผู้มีอำนาจลงนามแทนบริษัทหรือห้างหุ้นส่วน (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}

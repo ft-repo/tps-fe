@@ -47,7 +47,7 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>สำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label>สำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -123,7 +123,7 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>รูปถ่ายสียานพาหนะ (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label>รูปถ่ายสียานพาหนะ (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -199,7 +199,7 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>รูปแบบยานพาหนะโดยแสดงถึงขนาดระยะและน้ำหนักลงเพลาของยานพาหนะเปล่า (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label>รูปแบบยานพาหนะโดยแสดงถึงขนาดระยะและน้ำหนักลงเพลาของยานพาหนะเปล่า (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -275,7 +275,7 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>รูปแบบยานพาหนะโดยแสดงถึงมิติของรถรวมสิ่งของที่บรรทุก น้ำหนักลงเพลา (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label>รูปแบบยานพาหนะโดยแสดงถึงมิติของรถรวมสิ่งของที่บรรทุก น้ำหนักลงเพลา (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -427,7 +427,7 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>รูปแบบยานพาหนะโดยแสดงถึงรัศมีวงเลี้ยว (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label>รูปแบบยานพาหนะโดยแสดงถึงรัศมีวงเลี้ยว (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
