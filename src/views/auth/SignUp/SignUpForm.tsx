@@ -46,15 +46,15 @@ function SignUpForm(props: Props) {
         <Controller
           name="business_detail.entity_type_id"
           control={control}
-          rules={{ required: 'กรุณาระบุ' }}
+          rules={{ required: 'กรุณาเลือกประเภทนิติบุคคล' }}
           render={({ field }) => {
             return (
               <fieldset>
-                <label>ประเภทนิติบุคคล</label>
+                <label>ประเภทนิติบุคคล <span className='text-red-500'>*</span></label>
                 <Select
                   {...field}
                   name={field.name}
-                  placeholder="กรุณาเลือก"
+                  placeholder="กรุณาเลือกประเภทนิติบุคคล"
                   options={entity_type.map((item) => ({
                     label: item.name,
                     value: item.id,
@@ -79,7 +79,7 @@ function SignUpForm(props: Props) {
           name="business_detail.registration_no"
           control={control}
           rules={{
-            required: 'กรุณาระบุ',
+            required: 'กรุณาระบุเลขทะเบียนนิติบุคคล',
             pattern: {
               value: /^\d+$/,
               message: 'กรุณากรอกเฉพาะตัวเลข',
@@ -90,11 +90,11 @@ function SignUpForm(props: Props) {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>เลขทะเบียนนิติบุคคล</label>
+                <label>เลขทะเบียนนิติบุคคล <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
-                  placeholder="กรุณาระบุ"
+                  placeholder="กรุณาระบุเลขทะเบียนนิติบุคคล"
                   maxLength={13}
                   inputMode="numeric"
                   onChange={(e) => {
@@ -115,15 +115,15 @@ function SignUpForm(props: Props) {
         <Controller
           name="business_detail.business_name"
           control={control}
-          rules={{ required: 'กรุณาระบุ' }}
+          rules={{ required: 'กรุณาระบุชื่อบริษัท/ห้าง/ร้าน' }}
           render={({ field }) => {
             return (
               <fieldset className="col-span-2">
-                <label>ชื่อบริษัท/ห้าง/ร้าน</label>
+                <label>ชื่อบริษัท/ห้าง/ร้าน <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
-                  placeholder="กรุณาระบุ"
+                  placeholder="กรุณาระบุชื่อบริษัท/ห้าง/ร้าน"
                   onChange={(e) => {
                     setValue('business_detail.business_name', e.target.value)
                     field.onChange(e)
@@ -144,7 +144,7 @@ function SignUpForm(props: Props) {
           name="business_address.phone_number"
           control={control}
           rules={{
-            required: 'กรุณาระบุ',
+            // required: 'กรุณาระบุเบอร์โทรสำนักงาน',
             pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
             minLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
             maxLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
@@ -156,7 +156,7 @@ function SignUpForm(props: Props) {
                 <Input
                   {...field}
                   name={field.name}
-                  placeholder="กรุณาระบุ"
+                  placeholder="กรุณาระบุเบอร์โทรสำนักงาน"
                   type="tel"
                   inputMode="numeric"
                   autoComplete="off"
@@ -178,24 +178,30 @@ function SignUpForm(props: Props) {
 
         {/* ข้อมูลที่อยู่ */}
         <div className="mb-4 col-span-2">
-          <div className="font-semibold mb-2">ที่อยู่ (Address)</div>
+          <div className="font-semibold mb-2">ที่อยู่</div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Controller
               name="business_address.house_number"
               control={control}
+              rules={{
+                required: 'กรุณาระบุเลขที่'
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เลขที่</label>
+                    <label>เลขที่ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาระบุ"
+                      placeholder="กรุณาระบุเลขที่"
                       onChange={(e) => {
                         setValue('business_address.house_number', e.target.value)
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.business_address?.house_number &&
+                      <p className='text-red-500'>{errors.business_address.house_number.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -203,19 +209,25 @@ function SignUpForm(props: Props) {
             <Controller
               name="business_address.village"
               control={control}
+              rules={{
+                required: 'กรุณาระบุหมู่ที่'
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>หมู่ที่</label>
+                    <label>หมู่ที่ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาระบุ"
+                      placeholder="กรุณาระบุหมู่ที่"
                       onChange={(e) => {
                         setValue('business_address.village', e.target.value)
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.business_address?.village &&
+                      <p className='text-red-500'>{errors.business_address.village.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -223,19 +235,25 @@ function SignUpForm(props: Props) {
             <Controller
               name="business_address.lane"
               control={control}
+              rules={{
+                required: 'กรุณาระบุซอย'
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ซอย</label>
+                    <label>ซอย <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาระบุ"
+                      placeholder="กรุณาระบุซอย"
                       onChange={(e) => {
                         setValue('business_address.lane', e.target.value)
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.business_address?.lane &&
+                      <p className='text-red-500'>{errors.business_address.lane.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -243,19 +261,25 @@ function SignUpForm(props: Props) {
             <Controller
               name="business_address.road"
               control={control}
+              rules={{
+                required: 'กรุณาระบุถนน'
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ถนน</label>
+                    <label>ถนน <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาระบุ"
+                      placeholder="กรุณาระบุถนน"
                       onChange={(e) => {
                         setValue('business_address.road', e.target.value)
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.business_address?.road &&
+                      <p className='text-red-500'>{errors.business_address.road.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -263,14 +287,17 @@ function SignUpForm(props: Props) {
             <Controller
               name="business_address.province_id"
               control={control}
+              rules={{
+                required: 'กรุณาเลือกจังหวัด'
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>จังหวัด</label>
+                    <label>จังหวัด <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาเลือก"
+                      placeholder="กรุณาเลือกจังหวัด"
                       options={province.map((item) => ({
                         label: item.name_th,
                         value: item.id,
@@ -281,6 +308,9 @@ function SignUpForm(props: Props) {
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.business_address?.province_id &&
+                      <p className='text-red-500'>{errors.business_address.province_id.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -288,14 +318,17 @@ function SignUpForm(props: Props) {
             <Controller
               name="business_address.district_id"
               control={control}
+              rules={{
+                required: 'กรุณาเลือกเขต/อำเภอ'
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เขต/อำเภอ</label>
+                    <label>เขต/อำเภอ <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาเลือก"
+                      placeholder="กรุณาเลือกเขต/อำเภอ"
                       options={district.map((item) => ({
                         label: item.name_th,
                         value: item.id,
@@ -309,6 +342,9 @@ function SignUpForm(props: Props) {
                       }}
                       isDisabled={district.length === 0}
                     />
+                    {!!errors.business_address?.district_id &&
+                      <p className='text-red-500'>{errors.business_address.district_id.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -316,14 +352,17 @@ function SignUpForm(props: Props) {
             <Controller
               name="business_address.sub_district_id"
               control={control}
+              rules={{
+                required: 'กรุณาเลือกแขวง/ตำบล'
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>แขวง/ตำบล</label>
+                    <label>แขวง/ตำบล <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาเลือก"
+                      placeholder="กรุณาเลือกแขวง/ตำบล"
                       options={sub_district.map((item) => ({
                         label: item.name_th,
                         value: item.id,
@@ -338,6 +377,9 @@ function SignUpForm(props: Props) {
                       }}
                       isDisabled={sub_district.length === 0}
                     />
+                    {!!errors.business_address?.sub_district_id &&
+                      <p className='text-red-500'>{errors.business_address.sub_district_id.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -345,20 +387,26 @@ function SignUpForm(props: Props) {
             <Controller
               name="business_address.zip_code"
               control={control}
+              rules={{
+                required: 'กรุณาระบุรหัสไปรษณีย์'
+              }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>รหัสไปรษณีย์</label>
+                    <label>รหัสไปรษณีย์ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาระบุ"
+                      placeholder="กรุณาระบุรหัสไปรษณีย์"
                       disabled
                       onChange={(e) => {
                         setValue('business_address.zip_code', e.target.value)
                         field.onChange(e)
                       }}
                     />
+                    {!!errors.business_address?.zip_code &&
+                      <p className='text-red-500'>{errors.business_address.zip_code.message}</p>
+                    }
                   </fieldset>
                 )
               }}
@@ -373,15 +421,15 @@ function SignUpForm(props: Props) {
             <Controller
               name="contact_info.contact_name"
               control={control}
-              rules={{ required: 'กรุณาระบุ' }}
+              rules={{ required: 'กรุณาระบุชื่อผู้ติดต่อ / มอบอำนาจ' }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ชื่อผู้ติดต่อ / มอบอำนาจ</label>
+                    <label>ชื่อผู้ติดต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาระบุ"
+                      placeholder="กรุณาระบุชื่อผู้ติดต่อ / มอบอำนาจ"
                       onChange={(e) => {
                         setValue('contact_info.contact_name', e.target.value)
                         field.onChange(e)
@@ -399,15 +447,15 @@ function SignUpForm(props: Props) {
             <Controller
               name="contact_info.contact_type_id"
               control={control}
-              rules={{ required: 'กรุณาระบุ' }}
+              rules={{ required: 'กรุณาเลือกประเภทผู้ติดต่อ / มอบอำนาจ' }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ประเภทผู้ติดต่อ / มอบอำนาจ</label>
+                    <label>ประเภทผู้ติดต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
                     <Select
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาเลือก"
+                      placeholder="กรุณาเลือกประเภทผู้ติดต่อ / มอบอำนาจ"
                       options={contact_type.map((item) => ({
                         label: item.name,
                         value: item.id,
@@ -431,7 +479,7 @@ function SignUpForm(props: Props) {
               name="contact_info.phone_number"
               control={control}
               rules={{
-                required: 'กรุณาระบุ',
+                // required: 'กรุณาระบุเบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ',
                 pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
                 minLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
                 maxLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
@@ -439,11 +487,11 @@ function SignUpForm(props: Props) {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เบอร์โทรผู้ติดต่อ</label>
+                    <label>เบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ</label>
                     <Input
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาระบุ"
+                      placeholder="กรุณาระบุเบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ"
                       type="tel"
                       inputMode="numeric"
                       autoComplete="off"
@@ -467,7 +515,7 @@ function SignUpForm(props: Props) {
               name="contact_info.cid"
               control={control}
               rules={{
-                required: 'กรุณาระบุ',
+                required: 'กรุณาระบุหมายเลขบัตรประชาชน',
                 pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
                 minLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
                 maxLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
@@ -475,11 +523,11 @@ function SignUpForm(props: Props) {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>หมายเลขบัตรประชาชน</label>
+                    <label>หมายเลขบัตรประชาชน <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
-                      placeholder="กรุณาระบุ"
+                      placeholder="กรุณาระบุหมายเลขบัตรประชาชน"
                       type="text"
                       inputMode="numeric"
                       autoComplete="off"
@@ -506,9 +554,10 @@ function SignUpForm(props: Props) {
           <Controller
             name="business_document.business_file_url"
             control={control}
-            rules={{ required: 'หนังสือรับรองนิติบุคคลต้องมี' }}
+            rules={{ required: 'กรุณาอัปโหลดหนังสือรับรองนิติบุคคล' }}
             render={({ field, fieldState }) => (
               <Upload
+                isRequired
                 name="business_document.business_file_url"
                 label="หนังสือรับรองนิติบุคคล"
                 accept=".pdf"
@@ -526,9 +575,10 @@ function SignUpForm(props: Props) {
           <Controller
             name="business_document.cid_card_file_url"
             control={control}
-            rules={{ required: 'รูปบัตรประชาชนต้องมี' }}
+            rules={{ required: 'กรุณาอัปโหลดรูปบัตรประชาชน' }}
             render={({ field, fieldState }) => (
               <Upload
+                isRequired
                 name="business_document.cid_card_file_url"
                 label="รูปบัตรประชาชน"
                 accept=".png,.jpeg,.jpg"
@@ -547,9 +597,10 @@ function SignUpForm(props: Props) {
           <Controller
             name="business_document.certificate_file_url"
             control={control}
-            rules={{ required: 'รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจต้องมี' }}
+            // rules={{ required: 'กรุณาอัปโหลดรูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ' }}
             render={({ field, fieldState }) => (
               <Upload
+                // isRequired
                 name="business_document.certificate_file_url"
                 label="รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ"
                 accept=".pdf,.png,.jpeg,.jpg"
@@ -570,15 +621,18 @@ function SignUpForm(props: Props) {
         <Controller
           name="password"
           control={control}
-          rules={{ required: 'กรุณาระบุ' }}
+          rules={{
+            required: 'กรุณาระบุรหัสผ่าน',
+            validate: (value) => value.length >= 6 || 'กรุณาระบุรหัสผ่านขั้นต่ำ 6 ตัวอักษร'
+          }}
           render={({ field }) => {
             return (
               <fieldset>
-                <label>รหัสผ่าน</label>
+                <label>รหัสผ่าน <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
-                  placeholder="กรุณาระบุ"
+                  placeholder="กรุณาระบุรหัสผ่าน"
                   type="password"
                   autoComplete="off"
                   onChange={(e) => {
@@ -598,12 +652,12 @@ function SignUpForm(props: Props) {
           name="password_confirmation"
           control={control}
           rules={{
-            required: 'กรุณาระบุ',
+            required: 'กรุณาระบุรหัสผ่าน',
             validate: (value) => value === password || 'รหัสผ่านไม่ตรงกัน',
             onBlur: (e) => {
               if (e.target.value !== password) {
                 setError('password_confirmation', {
-                  message: 'รหัสผ่านไม่ตรงกัน',
+                  message: 'รหัสผ่านไม่ถูกต้อง',
                 })
               }
             },
@@ -611,11 +665,11 @@ function SignUpForm(props: Props) {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>ยืนยันรหัสผ่าน</label>
+                <label>ยืนยันรหัสผ่าน <span className='text-red-500'>*</span></label>
                 <Input
                   {...field}
                   name={field.name}
-                  placeholder="กรุณาระบุ"
+                  placeholder="กรุณาระบุรหัสผ่าน"
                   type="password"
                   autoComplete="off"
                   onChange={(e) => {

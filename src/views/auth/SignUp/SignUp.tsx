@@ -14,6 +14,7 @@ import { Button, Notification, toast } from '@/components/ui'
 import { ActionLink } from '@/components/shared'
 import useAuth from '@/utils/hooks/useAuth'
 import { message } from 'antd'
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 const SignUp = () => {
   const dispatch = useAppDispatch()
@@ -21,7 +22,7 @@ const SignUp = () => {
   const [districtId, setDistrictId] = useState<string | number>('')
   const loading = useAppSelector(state => state.layout.loading)
   const { signUp } = useAuth()
-  
+
   const form = useForm<SignUpFieldType>({
     defaultValues: {
       password: '',
@@ -55,7 +56,7 @@ const SignUp = () => {
     }
   })
 
-  const { handleSubmit, control, setValue, setError , formState: { errors } } = form
+  const { handleSubmit, control, setValue, setError, formState: { errors } } = form
 
   useEffect(() => {
     dispatch(getProvince())
@@ -132,7 +133,7 @@ const SignUp = () => {
       }
 
       const errorMessage = error instanceof Error ? error.message : 'เกิดข้อผิดพลาดในการลงทะเบียน'
-      
+
       toast.push(
         <Notification
           type="danger"
@@ -152,7 +153,7 @@ const SignUp = () => {
       <div className="mb-8">
         <h3 className="mb-1">ลงทะเบียนผู้ประกอบการ</h3>
         <p>ลงทะเบียนผู้ประกอบการสำหรับการประเมินและขอใช้เส้นทาง</p>
-      </div>      
+      </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <SignUpForm
           control={control}
@@ -162,18 +163,21 @@ const SignUp = () => {
           setProvinceId={setProvinceId}
           setDistrictId={setDistrictId}
         />
-
+        <div className='flex items-center gap-3'>
+          <AiOutlineExclamationCircle />
+          <p className='text-gray-500'>ควรตั้งรหัสผ่านอย่างน้อย 6 หลัก</p>
+        </div>
         <div className="mt-4">
-          <Button 
-            block 
-            loading={loading} 
-            variant="solid" 
+          <Button
+            block
+            loading={loading}
+            variant="solid"
             type="submit"
           >
             {loading ? 'กำลังสร้างบัญชี...' : 'ลงทะเบียน'}
           </Button>
         </div>
-        
+
         <div className="mt-4 mb-8 text-center">
           <span>มีบัญชีอยู่แล้ว? </span>
           <ActionLink to={'/sign-in'}>เข้าสู่ระบบ</ActionLink>

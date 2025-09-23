@@ -20,6 +20,7 @@ export interface UploadProps<T extends FieldValues = FieldValues> {
   // Controller props
   control?: Control<T>
   fieldName?: FieldPath<T>
+  isRequired?: boolean;
 }
 
 function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
@@ -38,6 +39,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
     onUploadError,
     control,
     fieldName,
+    isRequired
   } = props
   
   // Use Controller if control is provided, otherwise use useFormContext
@@ -256,7 +258,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
             <div className={className}>
               {label && (
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  {label}
+                  {label} {isRequired && <span className='text-red-500'>*</span>}
                 </label>
               )}
               
@@ -346,7 +348,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
     <div className={className}>
       {label && (
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          {label}
+          {label} {isRequired && <span className='text-red-500'>*</span>}
         </label>
       )}
       
