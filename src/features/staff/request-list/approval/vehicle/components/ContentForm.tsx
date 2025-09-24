@@ -210,7 +210,9 @@ const ContentForm: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (petition_status[2]?.document_url) {
-      fetchImage(extractUrl(petition_status[2]?.document_url))
+      if (extractUrl(petition_status[2]?.document_url)) {
+        fetchImage(extractUrl(petition_status[2]?.document_url))
+      }
     }
   }, [extractUrl, fetchImage, petition_status])
 

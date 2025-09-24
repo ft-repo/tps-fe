@@ -54,7 +54,9 @@ const PermitScreen: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (petition_status[4]?.document_url) {
-      fetchImage(extractUrl(petition_status[4]?.document_url))
+      if (extractUrl(petition_status[4]?.document_url)) {
+        fetchImage(extractUrl(petition_status[4]?.document_url))
+      }
     }
   }, [fetchImage, extractUrl, petition_status])
 

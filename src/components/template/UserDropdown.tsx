@@ -60,7 +60,9 @@ const _UserDropdown = ({ className }: CommonProps) => {
 
 	useEffect(() => {
 		if (authority[0] === 'USER') {
-			fetchImage(extractUrl(details.profile_url))
+			if (extractUrl(details.profile_url)) {
+				fetchImage(extractUrl(details.profile_url))
+			}
 		}
 	}, [details, extractUrl, fetchImage, authority])
 

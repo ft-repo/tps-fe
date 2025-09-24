@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '../components';
 import { useForm } from 'react-hook-form';
 import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
-import { setLoading, useAppDispatch, useAppSelector } from '@/store';
+import { setLoading, setUser, useAppDispatch, useAppSelector } from '@/store';
 import { getUserData } from '@/store/slices/entrepreneur';
 import dayjs from 'dayjs';
 import { putUserAPI } from '@/services/entrepreneur/UserService';
@@ -22,6 +22,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   const userData = useAppSelector(state => state.entrepreneur.user)
   const loading = useAppSelector(state => state.layout.loading)
+  const auth = useAppSelector(state => state.auth)
 
   const renderBusinessAddress = useCallback((
     houseNumber: string,
@@ -117,7 +118,13 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
           title: 'สำเร็จ',
           content: 'บันทึกข้อมูลสำเร็จ',
           okText: 'ตกลง',
-          onOk: () => dispatch(getUserData()),
+          onOk: () => {
+            dispatch(getUserData())
+            dispatch(setUser({
+              ...auth.user,
+              profile_url: body.profile_url
+            }))
+          },
           okButtonProps: {
             style: {
               fontFamily: 'Noto Sans Thai'
@@ -150,7 +157,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch])
+  }, [dispatch, auth.user])
 
   const extractFileName = useCallback((url: string | null) => {
     const match = url?.match(/\/([^\/]+)$/);
@@ -296,16 +303,24 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (userData.profile_url) {
-      fetchProfileUrl(extractUrl(userData.profile_url))
+      if (extractUrl(userData.profile_url)) {
+        fetchProfileUrl(extractUrl(userData.profile_url))
+      }
     }
     if (userData.business_document.cid_card_file_url) {
-      fetchCIDUrl(extractUrl(userData.business_document.cid_card_file_url))
+      if (extractUrl(userData.business_document.cid_card_file_url)) {
+        fetchCIDUrl(extractUrl(userData.business_document.cid_card_file_url))
+      }
     }
     if (userData.business_document.certificate_file_url) {
-      fetchCertificateUrl(extractUrl(userData.business_document.certificate_file_url))
+      if (extractUrl(userData.business_document.certificate_file_url)) {
+        fetchCertificateUrl(extractUrl(userData.business_document.certificate_file_url))
+      }
     }
     if (userData.business_document.business_file_url) {
-      fetchBusinessUrl(extractUrl(userData.business_document.business_file_url))
+      if (extractUrl(userData.business_document.business_file_url)) {
+        fetchBusinessUrl(extractUrl(userData.business_document.business_file_url))
+      }
     }
   }, [
     extractUrl,

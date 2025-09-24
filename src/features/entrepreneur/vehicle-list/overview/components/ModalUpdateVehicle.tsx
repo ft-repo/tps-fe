@@ -442,29 +442,45 @@ const Content = (props: ContentProps) => {
 
   useEffect(() => {
     if (data.vehicle_detail.registration_document_url) {
-      fetchRegistrationUrl(extractUrl(data.vehicle_detail.registration_document_url))
+      if (extractUrl(data.vehicle_detail.registration_document_url)) {
+        fetchRegistrationUrl(extractUrl(data.vehicle_detail.registration_document_url))
+      }
     }
     if (data.vehicle_owner_documents.owner_document_url) {
-      fetchPropertyUrl(extractUrl(data.vehicle_owner_documents.owner_document_url))
+      if (extractUrl(data.vehicle_owner_documents.owner_document_url)) {
+        fetchPropertyUrl(extractUrl(data.vehicle_owner_documents.owner_document_url))
+      }
     }
     if (data.vehicle_owner_documents.employment_contact_url) {
-      fetchHireUrl(extractUrl(data.vehicle_owner_documents.employment_contact_url))
+      if (extractUrl(data.vehicle_owner_documents.employment_contact_url)) {
+        fetchHireUrl(extractUrl(data.vehicle_owner_documents.employment_contact_url))
+      }
     }
     if (data.vehicle_owner_documents.buyer_contact_url) {
-      fetchPurchaseUrl(extractUrl(data.vehicle_owner_documents.buyer_contact_url))
+      if (extractUrl(data.vehicle_owner_documents.buyer_contact_url)) {
+        fetchPurchaseUrl(extractUrl(data.vehicle_owner_documents.buyer_contact_url))
+      }
     }
     if (data.vehicle_owner_documents.assignment_contact_url) {
-      fetchTransferUrl(extractUrl(data.vehicle_owner_documents.assignment_contact_url))
+      if (extractUrl(data.vehicle_owner_documents.assignment_contact_url)) {
+        fetchTransferUrl(extractUrl(data.vehicle_owner_documents.assignment_contact_url))
+      }
     }
     //
     if (data.vehicle_pictures.front_rear_url) {
-      fetchFrontUrl(extractUrl(data.vehicle_pictures.front_rear_url))
+      if (extractUrl(data.vehicle_pictures.front_rear_url)) {
+        fetchFrontUrl(extractUrl(data.vehicle_pictures.front_rear_url))
+      }
     }
     if (data.vehicle_pictures.side_rear_url) {
-      fetchSideUrl(extractUrl(data.vehicle_pictures.side_rear_url))
+      if (extractUrl(data.vehicle_pictures.side_rear_url)) {
+        fetchSideUrl(extractUrl(data.vehicle_pictures.side_rear_url))
+      }
     }
     if (data.vehicle_pictures.back_rear_url) {
-      fetchBackUrl(extractUrl(data.vehicle_owner_documents.assignment_contact_url))
+      if (extractUrl(data.vehicle_owner_documents.assignment_contact_url)) {
+        fetchBackUrl(extractUrl(data.vehicle_owner_documents.assignment_contact_url))
+      }
     }
   }, [
     extractUrl,
