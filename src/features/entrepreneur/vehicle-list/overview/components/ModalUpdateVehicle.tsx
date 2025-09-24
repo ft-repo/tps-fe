@@ -620,15 +620,13 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
       onOk={() => submitRef.current?.click()}
       onCancel={() => setOpen(INIT_VEHICLE_MODAL)}
     >
-      {!loading ?
-        <Content
-          id={id}
-          data={data}
-          submitRef={submitRef}
-          fileList={fileList}
-          setOpen={setOpen}
-        />
-        : 'Loading...'}
+      <Content
+        id={id}
+        data={data}
+        submitRef={submitRef}
+        fileList={fileList}
+        setOpen={setOpen}
+      />
     </Modal>
   )
 }

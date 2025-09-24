@@ -1,10 +1,13 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback } from 'react'
-import { Badge, Table, type TableProps } from 'antd';
+import { Badge, message, Table, type TableProps } from 'antd';
 import dayjs from 'dayjs'
 import type { PetitionData, PetitionFlow, PetitionTableData } from '@/@types/reducer/petition';
 import { Tag } from '@/components/ui';
 import { CLIENT_PETITION_STATUS } from '@/utils/constant';
+import { setLoading, useAppDispatch } from '@/store';
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
+import { getPetitionMessageAPI } from '@/services/entrepreneur/PetitionService';
 
 interface Props {
   data: PetitionData;
@@ -32,6 +35,7 @@ const STATUS_TAG_STYLE: React.CSSProperties = {
 
 const TableCategory: React.FC<Props> = (props) => {
   const { data, loading, handleTableChange, openDataModal, openMessageModal } = props
+  const dispatch = useAppDispatch()
 
   const renderStatusTag = useCallback((petitionFlow: PetitionFlow, record: PetitionTableData) => {
     let text: 'IN_PROGRESS' | 'REJECTED' | 'APPROVE' | 'NOT_APPROVE' = 'IN_PROGRESS'
@@ -83,6 +87,48 @@ const TableCategory: React.FC<Props> = (props) => {
       </figure>
     );
   }, [openMessageModal])
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
+
+  const showFile = useCallback(async (fileUrl: string) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await getUploadAPI(fileUrl)
+      if (response.status === 200) {
+        const url = URL.createObjectURL(response.data);
+        window.open(url);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch])
+
+  const fetchStatusMessage = useCallback(async (messageId: number) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await getPetitionMessageAPI({ message_id: messageId })
+      if (response.status === 200) {
+        showFile(extractUrl(response.data.document_url))
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error('error: ', error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, showFile, extractUrl])
 
   const columns: TableProps<PetitionTableData>['columns'] = [
     {
@@ -250,6 +296,16 @@ const TableCategory: React.FC<Props> = (props) => {
         locale: { items_per_page: "/ หน้า" }
       }}
       scroll={{ x: 1000 }}
+      onRow={(record) => {
+        return {
+          onClick: () => {
+            if (record.petition_flow.length === 5 && record.petition_flow[4].status_id === 6) {
+              fetchStatusMessage(record.petition_flow[4].message_id)
+            }
+            return
+          }
+        };
+      }}
     />
   )
 }

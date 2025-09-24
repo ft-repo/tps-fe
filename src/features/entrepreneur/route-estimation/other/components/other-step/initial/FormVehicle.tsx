@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from 'react'
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
-import { Col, Input, Row, Select } from 'antd';
+import { Col, Input, Modal, Row, Select } from 'antd';
 import { useAppSelector } from '@/store';
+import { useNavigate } from 'react-router-dom';
 // import { VehicleDetail } from '@/services/master/MasterService';
 
 interface Props {
@@ -15,8 +16,10 @@ interface Props {
 const FormVehicle: React.FC<Props> = (props) => {
   const { control, setValue } = props
   const { vehicle_selection } = useAppSelector(state => state.master)
+  const { loading } = useAppSelector(state => state.layout)
   const [toweringVehicleWheel, setToweringVehicleWheel] = useState<number>(0)
   const [semiVehicleWheel, setSemiVehicleWheel] = useState<number>(0)
+  const navigate = useNavigate()
 
   const {
     match_type,
@@ -47,7 +50,6 @@ const FormVehicle: React.FC<Props> = (props) => {
     if (!semi_trailer_vehicle) {
       setSemiVehicleWheel(0)
     }
-
   }, [
     towering_vehicle,
     selectTowing?.vehicle_detail.axis_number,
@@ -56,6 +58,33 @@ const FormVehicle: React.FC<Props> = (props) => {
     match_type
   ])
 
+  useEffect(() => {
+    if (Number(selectTowing?.vehicle_detail.axis_number) + Number(selectSemi?.vehicle_detail.axis_number) < 7) {
+      Modal.confirm({
+        title: 'จำนวนเพลาต่ำกว่ากำหนด',
+        content: 'กรุณากดยืนยันเพื่อเข้าสู่ขบวนการขอใบอนุญาตหมวด 2 (4 - 7 เพลา)',
+        okText: 'ยืนยัน',
+        cancelText: 'ยกเลิก',
+        onOk: () => navigate('/route-estimation/route'),
+        onCancel: () => Modal.destroyAll(),
+        okButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          },
+          loading: loading
+        },
+        cancelButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          },
+          disabled: loading
+        },
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        }
+      })
+    }
+  }, [selectTowing?.vehicle_detail.axis_number, selectSemi?.vehicle_detail.axis_number, loading, navigate])
 
   return (
     <div className='border-2 rounded-md p-4 mb-3'>

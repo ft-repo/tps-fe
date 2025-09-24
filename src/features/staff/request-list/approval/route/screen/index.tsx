@@ -10,6 +10,7 @@ import { useRouteContext } from '../context'
 import MapRoute from '@/components/ui/Maps'
 import { GeoJsonObject } from 'geojson'
 import { useReactToPrint } from 'react-to-print'
+import Map from '@/features/entrepreneur/route-estimation/route/components/map/Map'
 
 interface Props { }
 
@@ -76,15 +77,8 @@ const RouteScreen: React.FC<Props> = () => {
             <div className="min-h-[200px]">
               <ContentSection />
             </div>
-            <div
-              className="
-        order-first xl:order-last
-        rounded-md border border-gray-200
-        h-[50vh] xl:h-[75vh] overflow-hidden
-        print-map print-keep-together
-      "
-            >
-              <MapRoute
+            <div className="order-first xl:order-last rounded-md border border-gray-200 h-[50vh] xl:h-[75vh] overflow-hidden print-map print-keep-together">
+              {/* <MapRoute
                 coordinates={[
                   [
                     Number(detail?.vehicle_route?.[0]?.[0] || 0),
@@ -97,7 +91,12 @@ const RouteScreen: React.FC<Props> = () => {
                 ]}
                 isRouteEstimate={false}
                 geometry={geometryData}
-              />
+              /> */}
+              {console.log(detail)}
+              {/* <Map
+                coord={[detail.start_point, detail.end_point]}
+                line={detail.vehicle_route}
+              /> */}
             </div>
           </div>
         </section>

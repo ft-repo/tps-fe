@@ -2,12 +2,13 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useAppSelector } from '@/store'
 import { Button, Col, Row } from 'antd'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useRouteContext } from '../../context'
 import ContentTab from '../route-estimate/result/ContentTab'
 import ContentRouteList from '../route-estimate/result/ContentRouteList'
-import MapRoute from '@/components/ui/Maps'
-import { GeoJsonObject } from 'geojson'
+// import MapRoute from '@/components/ui/Maps'
+// import { GeoJsonObject } from 'geojson'
+import Map from '../map/Map'
 
 interface Props {
 
@@ -20,12 +21,12 @@ const EstimateResult: React.FC<Props> = (props) => {
   const { setStep, index, item } = useRouteContext()
   const detail = estimate.detail
 
-  const geometryData = useMemo(() => {
-    if (detail?.vehicle_route) {
-      return { type: 'LineString', coordinates: detail?.vehicle_route } as unknown as GeoJsonObject
-    }
-    return undefined
-  }, [detail])
+  // const geometryData = useMemo(() => {
+  //   if (detail?.vehicle_route) {
+  //     return { type: 'LineString', coordinates: detail?.vehicle_route } as unknown as GeoJsonObject
+  //   }
+  //   return undefined
+  // }, [detail])
 
   return (
     <main>
@@ -61,10 +62,14 @@ const EstimateResult: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[77vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
-              <MapRoute
+              {/* <MapRoute
                 coordinates={[[Number(detail.start_point[0] || 0), Number(detail.start_point[1] || 0)], [Number(detail.end_point[0] || 0), Number(detail.end_point[1] || 0)]]}
                 isRouteEstimate={false}
                 geometry={geometryData}
+              /> */}
+              <Map
+                coord={[detail?.start_point || 0, detail?.end_point || 0]}
+                line={detail?.vehicle_route}
               />
             </div>
           </Col>

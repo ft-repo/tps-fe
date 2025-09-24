@@ -52,13 +52,17 @@ const ContentPreviewPDF: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (document.poa_url) {
-      fetchImage('poa', extractUrl(document.poa_url))
+      if (extractUrl(document.poa_url)) {
+        fetchImage('poa', extractUrl(document.poa_url))
+      }
     }
   }, [fetchImage, extractUrl, document.poa_url])
 
   useEffect(() => {
     if (document.mach_book_url) {
-      fetchImage('mach', extractUrl(document.mach_book_url))
+      if (extractUrl(document.mach_book_url)) {
+        fetchImage('mach', extractUrl(document.mach_book_url))
+      }
     }
   }, [fetchImage, extractUrl, document.mach_book_url])
 

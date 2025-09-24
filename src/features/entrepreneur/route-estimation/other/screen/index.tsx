@@ -1,8 +1,11 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { OtherInfo, OtherDocument } from '../components'
 import { useOtherContext } from '../context'
+import { useAppSelector } from '@/store'
+import { useNavigate } from 'react-router-dom'
+import { Modal } from 'antd'
 
 interface Props {
 
@@ -11,6 +14,33 @@ interface Props {
 const OtherScreen: React.FC<Props> = (props) => {
   const { } = props
   const { step } = useOtherContext()
+  const { vehicle_selection } = useAppSelector(state => state.master)
+  const navigate = useNavigate()
+  const openRef = useRef<boolean>(false)
+
+  useEffect(() => {
+    if (openRef.current) return
+    // IF NO
+    if (!vehicle_selection.data.length) {
+      // SET REF
+      openRef.current = true
+      // MODAL
+      Modal.warning({
+        title: 'ไม่พบรายการรถ',
+        content: 'กรุณาเพิ่มรายการรถก่อนทำรายการขออนุญาต',
+        okText: 'เพิ่มรายการรถ',
+        onOk: () => navigate('/vehicle-list/create'),
+        okButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        },
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        }
+      })
+    }
+  }, [navigate, vehicle_selection.data.length])
 
   const renderFormStep = useMemo(() => {
     switch (step) {

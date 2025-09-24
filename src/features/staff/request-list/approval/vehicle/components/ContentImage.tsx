@@ -343,40 +343,64 @@ const ContentImage: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (item?.towing_vehicle?.vehicle_picture?.front_rear_url) {
-      fetchImage('towing', extractUrl(item?.towing_vehicle?.vehicle_picture?.front_rear_url))
+      if (extractUrl(item?.towing_vehicle?.vehicle_picture?.front_rear_url)) {
+        fetchImage('towing', extractUrl(item?.towing_vehicle?.vehicle_picture?.front_rear_url))
+      }
     }
     if (item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url) {
-      fetchImage('semi', extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url))
+      if (extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url)) {
+        fetchImage('semi', extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url))
+      }
     }
     if (item?.etc_vehicle?.vehicle_picture?.front_rear_url) {
-      fetchImage('etc', extractUrl(item?.etc_vehicle?.vehicle_picture?.front_rear_url))
+      if (extractUrl(item?.etc_vehicle?.vehicle_picture?.front_rear_url)) {
+        fetchImage('etc', extractUrl(item?.etc_vehicle?.vehicle_picture?.front_rear_url))
+      }
     }
     if (item?.truck_dimension_url) {
-      fetchImage('truck_dimension', extractUrl(item?.truck_dimension_url))
+      if (extractUrl(item?.truck_dimension_url)) {
+        fetchImage('truck_dimension', extractUrl(item?.truck_dimension_url))
+      }
     }
     if (item?.semi_trailer_dimension_url) {
-      fetchImage('semi_dimension', extractUrl(item?.semi_trailer_dimension_url))
+      if (extractUrl(item?.semi_trailer_dimension_url)) {
+        fetchImage('semi_dimension', extractUrl(item?.semi_trailer_dimension_url))
+      }
     }
     if (item?.cargo_dimension_url) {
-      fetchImage('cargo_dimension', extractUrl(item?.cargo_dimension_url))
+      if (extractUrl(item?.cargo_dimension_url)) {
+        fetchImage('cargo_dimension', extractUrl(item?.cargo_dimension_url))
+      }
     }
     if (item?.combined_vehicle_url) {
-      fetchImage('combined_vehicle', extractUrl(item?.combined_vehicle_url))
+      if (extractUrl(item?.combined_vehicle_url)) {
+        fetchImage('combined_vehicle', extractUrl(item?.combined_vehicle_url))
+      }
     }
     if (item?.turning_radius_url) {
-      fetchImage('turn_radius', extractUrl(item?.turning_radius_url))
+      if (extractUrl(item?.turning_radius_url)) {
+        fetchImage('turn_radius', extractUrl(item?.turning_radius_url))
+      }
     }
     if (item?.highway_dept_permit_url) {
-      fetchImage('highway_permit', extractUrl(item?.highway_dept_permit_url))
+      if (extractUrl(item?.highway_dept_permit_url)) {
+        fetchImage('highway_permit', extractUrl(item?.highway_dept_permit_url))
+      }
     }
     if (item?.highway_dept_permit_number_url) {
-      fetchImage('highway_number', extractUrl(item?.highway_dept_permit_number_url))
+      if (extractUrl(item?.highway_dept_permit_number_url)) {
+        fetchImage('highway_number', extractUrl(item?.highway_dept_permit_number_url))
+      }
     }
     if (item?.rural_highway_dept_permit_url) {
-      fetchImage('rural_permit', extractUrl(item?.rural_highway_dept_permit_url))
+      if (extractUrl(item?.rural_highway_dept_permit_url)) {
+        fetchImage('rural_permit', extractUrl(item?.rural_highway_dept_permit_url))
+      }
     }
     if (item?.rural_highway_dept_permit_number_url) {
-      fetchImage('rural_number', extractUrl(item?.rural_highway_dept_permit_number_url))
+      if (extractUrl(item?.rural_highway_dept_permit_number_url)) {
+        fetchImage('rural_number', extractUrl(item?.rural_highway_dept_permit_number_url))
+      }
     }
   }, [item, extractUrl, fetchImage])
 

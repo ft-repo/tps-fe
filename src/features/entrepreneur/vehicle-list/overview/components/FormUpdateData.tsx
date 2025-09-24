@@ -181,7 +181,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <Controller
-            disabled={vehicle_type === 3}
             name='vehicle_weight'
             control={control}
             rules={{
@@ -190,7 +189,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>น้ำหนักรถเปล่า (กก.) {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
+                  <label>น้ำหนักรถเปล่า (กก.) <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}

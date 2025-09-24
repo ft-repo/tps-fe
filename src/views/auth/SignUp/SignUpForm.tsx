@@ -481,8 +481,8 @@ function SignUpForm(props: Props) {
               rules={{
                 // required: 'กรุณาระบุเบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ',
                 pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
-                minLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
-                maxLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                minLength: { value: 10, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                maxLength: { value: 10, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
               }}
               render={({ field }) => {
                 return (
@@ -495,7 +495,7 @@ function SignUpForm(props: Props) {
                       type="tel"
                       inputMode="numeric"
                       autoComplete="off"
-                      maxLength={9}
+                      maxLength={10}
                       onChange={(e) => {
                         setValue('contact_info.phone_number', e.target.value)
                         field.onChange(e)

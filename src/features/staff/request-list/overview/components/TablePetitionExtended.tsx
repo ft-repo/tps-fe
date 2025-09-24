@@ -206,12 +206,6 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
       columns={columns}
       dataSource={data.data || []}
       loading={loading}
-      onRow={(record) => ({
-        onClick: () => {
-          const href = `/request-list/approval/evaluation?petition_id=${(record as any).id ?? ''}&status_id=${record.status_id}`
-          navigate(href)
-        },
-      })}
       pagination={{
         defaultCurrent: 1,
         defaultPageSize: 10,
@@ -229,6 +223,12 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
       }}
       scroll={{ x: 1000 }}
       rowKey={(r: any) => r.id ?? r.key ?? JSON.stringify(r)}
+      onRow={(record) => ({
+        onClick: () => {
+          const href = `/request-list/approval/evaluation?petition_id=${(record as any).id ?? ''}&status_id=${record.status_id}`
+          navigate(href)
+        },
+      })}
     />
   )
 }

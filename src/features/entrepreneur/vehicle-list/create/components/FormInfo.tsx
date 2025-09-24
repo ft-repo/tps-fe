@@ -86,16 +86,16 @@ const FormInfo: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
-              disabled={vehicle_type === 3}
+              // disabled={vehicle_type === 3}
               name='license_plate'
               control={control}
               rules={{
-                required: 'กรุณาระบุเลขทะเบียน / เลขตัวรถ'
+                required: vehicle_type !== 3 ? 'กรุณาระบุเลขทะเบียน / เลขตัวรถ' : 'กรุณาระบุรายการสินค้า'
               }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>เลขทะเบียน / เลขตัวรถ {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
+                    <label>{vehicle_type !== 3 ? 'เลขทะเบียน / เลขตัวรถ' : 'รายการสินค้า'} <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
@@ -193,7 +193,7 @@ const FormInfo: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
-              disabled={vehicle_type === 3}
+              // disabled={vehicle_type === 3}
               name='vehicle_weight'
               control={control}
               rules={{
@@ -202,7 +202,7 @@ const FormInfo: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>น้ำหนักรถเปล่า (กก.) {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
+                    <label>น้ำหนักรถเปล่า (กก.) <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}

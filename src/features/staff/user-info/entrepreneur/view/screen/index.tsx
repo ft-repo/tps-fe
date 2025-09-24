@@ -1,7 +1,8 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '@/features/entrepreneur/entrepreneur-info/components';
 import { useForm } from 'react-hook-form';
 import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
@@ -9,15 +10,15 @@ import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getUserData } from '@/store/slices/entrepreneur';
 import dayjs from 'dayjs';
 import { putUserAPI } from '@/services/entrepreneur/UserService';
-import { Button, Modal } from 'antd';
+import { Button, message, Modal } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
-  fileList: any[];
 }
 
 const ViewScreen: React.FC<Props> = (props) => {
-  const { fileList } = props
+  const { } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const dispatch = useAppDispatch()
   const { detail } = useAppSelector(state => state.staff.staff.client)
@@ -35,10 +36,10 @@ const ViewScreen: React.FC<Props> = (props) => {
     zipCode: string
   ) => {
     const addressArr = [
-      houseNumber || null,
-      village || null,
-      lane || null,
-      road || null,
+      houseNumber ? `เลขที่${houseNumber}` : null,
+      village ? `หมู่ที่ ${village}` : null,
+      lane ? `ซอบ ${lane}` : null,
+      road ? `ถนน ${road}` : null,
       province || null,
       district || null,
       subDistrict || null,
@@ -68,21 +69,21 @@ const ViewScreen: React.FC<Props> = (props) => {
       citizen_id: detail.contact_info.cid,
       contact_tel: detail.contact_info.phone_number,
       file_id: {
-        file: fileList.length ? [fileList[0] || { uid: '1', name: detail.profile_url, url: detail.profile_url }] : [],
-        url: detail.profile_url
+        file: [],
+        url: ''
       },
       approved_date: dayjs(detail.created_at),
       file_copied_of_citizen_id: {
-        file: fileList.length ? [fileList[1] || { uid: '2', name: detail.documents.cid_card_file_url, url: detail.documents.cid_card_file_url }] : [],
-        url: detail.documents.cid_card_file_url
-      },
-      file_legal_entity_id: {
-        file: fileList.length ? [fileList[2] || { uid: '3', name: detail.documents.business_file_url, url: detail.documents.business_file_url }] : [],
-        url: detail.documents.business_file_url
+        file: [],
+        url: ''
       },
       file_trasfer_ownership_image_id: {
-        file: fileList.length ? [fileList[3] || { uid: '4', name: detail.documents.certificate_file_url, url: detail.documents.certificate_file_url }] : [],
-        url: detail.documents.certificate_file_url
+        file: [],
+        url: ''
+      },
+      file_legal_entity_id: {
+        file: [],
+        url: ''
       },
     },
     disabled: true
@@ -153,6 +154,181 @@ const ViewScreen: React.FC<Props> = (props) => {
       dispatch(setLoading(false))
     }
   }, [dispatch])
+
+  const extractFileName = useCallback((url: string | null) => {
+    const match = url?.match(/\/([^\/]+)$/);
+    return match ? match[1] : '';
+  }, [])
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
+
+  const fetchProfileUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(detail.profile_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_id.url', detail.profile_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, detail.profile_url, setValue])
+
+  const fetchCIDUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_copied_of_citizen_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(detail.documents.cid_card_file_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_copied_of_citizen_id.url', detail.documents.cid_card_file_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, detail.documents.cid_card_file_url, setValue])
+
+  const fetchCertificateUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_trasfer_ownership_image_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(detail.documents.certificate_file_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_trasfer_ownership_image_id.url', detail.documents.certificate_file_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, detail.documents.certificate_file_url, setValue])
+
+  const fetchBusinessUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_legal_entity_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(detail.documents.business_file_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_legal_entity_id.url', detail.documents.business_file_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, detail.documents.business_file_url, setValue])
+
+  useEffect(() => {
+    if (detail.profile_url) {
+      if (extractUrl(detail.profile_url)) {
+        fetchProfileUrl(extractUrl(detail.profile_url))
+      }
+    }
+    if (detail.documents.cid_card_file_url) {
+      if (extractUrl(detail.documents.cid_card_file_url)) {
+        fetchCIDUrl(extractUrl(detail.documents.cid_card_file_url))
+      }
+    }
+    if (detail.documents.certificate_file_url) {
+      if (extractUrl(detail.documents.certificate_file_url)) {
+        fetchCertificateUrl(extractUrl(detail.documents.certificate_file_url))
+      }
+    }
+    if (detail.documents.business_file_url) {
+      if (extractUrl(detail.documents.business_file_url)) {
+        fetchBusinessUrl(extractUrl(detail.documents.business_file_url))
+      }
+    }
+  }, [
+    extractUrl,
+    fetchProfileUrl,
+    fetchCIDUrl,
+    fetchCertificateUrl,
+    fetchBusinessUrl,
+    detail.profile_url,
+    detail.documents.cid_card_file_url,
+    detail.documents.certificate_file_url,
+    detail.documents.business_file_url
+  ])
 
   return (
     <>

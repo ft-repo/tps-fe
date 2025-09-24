@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback } from 'react'
-import { Badge, Table, type TableProps } from 'antd';
+import { Badge, message, Table, type TableProps } from 'antd';
 import type {
   PetitionExtendedData,
   PetitionExtendedFlow,
@@ -10,6 +10,9 @@ import type {
 import { Tag } from '@/components/ui';
 import { CLIENT_PETITION_STATUS } from '@/utils/constant';
 import dayjs from 'dayjs';
+import { getPetitionExtendedMessageAPI } from '@/services/entrepreneur/PetitionService';
+import { setLoading, useAppDispatch } from '@/store';
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
   data: PetitionExtendedData;           // ✅ ใช้ Extended
@@ -36,6 +39,7 @@ const STATUS_TAG_STYLE: React.CSSProperties = {
 
 const TableOther: React.FC<Props> = (props) => {
   const { data, loading, handleTableChange, openMessageModal } = props
+  const dispatch = useAppDispatch()
 
   const renderStatusTag = useCallback((petitionFlow: PetitionExtendedFlow, record: PetitionExtendedTableData) => {
     let text: 'IN_PROGRESS' | 'REJECTED' | 'APPROVE' | 'NOT_APPROVE' = 'IN_PROGRESS'
@@ -87,6 +91,48 @@ const TableOther: React.FC<Props> = (props) => {
       </figure>
     );
   }, [openMessageModal])
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
+
+  const showFile = useCallback(async (fileUrl: string) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await getUploadAPI(fileUrl)
+      if (response.status === 200) {
+        const url = URL.createObjectURL(response.data);
+        window.open(url);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch])
+
+  const fetchStatusMessage = useCallback(async (messageId: number) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await getPetitionExtendedMessageAPI({ message_id: messageId })
+      if (response.status === 200) {
+        showFile(extractUrl(response.data.document_url))
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error('error: ', error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, showFile, extractUrl])
 
   const columns: TableProps<PetitionExtendedTableData>['columns'] = [
     {
@@ -166,6 +212,16 @@ const TableOther: React.FC<Props> = (props) => {
         locale: { items_per_page: '/ หน้า' },
       }}
       scroll={{ x: 1100 }}
+      onRow={(record) => {
+        return {
+          onClick: () => {
+            if (record.petition_extended_flow.length === 3 && record.petition_extended_flow[2].status_id === 6) {
+              fetchStatusMessage(record.petition_extended_flow[2].id)
+            }
+            return
+          }
+        };
+      }}
     />
   )
 }

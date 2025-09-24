@@ -35,10 +35,10 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     zipCode: string
   ) => {
     const addressArr = [
-      houseNumber || null,
-      village || null,
-      lane || null,
-      road || null,
+      houseNumber ? `เลขที่${houseNumber}` : null,
+      village ? `หมู่ที่ ${village}` : null,
+      lane ? `ซอบ ${lane}` : null,
+      road ? `ถนน ${road}` : null,
       province || null,
       district || null,
       subDistrict || null,

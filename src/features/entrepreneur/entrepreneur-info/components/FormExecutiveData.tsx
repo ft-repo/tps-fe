@@ -295,7 +295,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
           rules={{
             required: 'กรุณาระบุเบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ',
             minLength: {
-              value: 8,
+              value: 10,
               message: 'กรุณาระบุเลขที่ถูกต้อง'
             },
           }}
@@ -312,6 +312,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                   style={{
                     fontFamily: 'Noto Sans Thai'
                   }}
+                  maxLength={10}
                 />
                 {!!errors.contact_tel &&
                   <p className='text-red-500'>{errors.contact_tel.message}</p>

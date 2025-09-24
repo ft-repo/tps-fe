@@ -16,14 +16,24 @@ const PetitionDetail: React.FC<Props> = (props) => {
 
   const renderAddress = useCallback((
     houseNumber: string,
-    road: string,
+    village: string,
     lane: string,
+    road: string,
     province: string,
     district: string,
     subDistrict: string,
     zipCode: string
   ) => {
-    const addressArr = [houseNumber, road, lane, province, district, subDistrict, zipCode]
+    const addressArr = [
+      houseNumber ? `เลขที่${houseNumber}` : null,
+      village ? `หมู่ที่ ${village}` : null,
+      lane ? `ซอบ ${lane}` : null,
+      road ? `ถนน ${road}` : null,
+      province || null,
+      district || null,
+      subDistrict || null,
+      zipCode || null
+    ]
     return addressArr.join(' ').trim()
   }, [])
 
@@ -45,8 +55,9 @@ const PetitionDetail: React.FC<Props> = (props) => {
         <p>
           {renderAddress(
             detail?.user_created?.business_address?.house_number,
-            detail?.user_created?.business_address?.road,
+            detail?.user_created?.business_address?.village,
             detail?.user_created?.business_address?.lane,
+            detail?.user_created?.business_address?.road,
             detail?.user_created?.business_address?.province?.name_th,
             detail?.user_created?.business_address?.district?.name_th,
             detail?.user_created?.business_address?.sub_district?.name_th,
@@ -82,8 +93,9 @@ const PetitionDetail: React.FC<Props> = (props) => {
         <p>
           {renderAddress(
             detail?.address?.contact_house_number,
-            detail?.address?.contact_road,
+            detail?.address?.contact_village,
             detail?.address?.contact_lane,
+            detail?.address?.contact_road,
             detail?.address?.contact_province?.name_th,
             detail?.address?.contact_district?.name_th,
             detail?.address?.contact_sub_district?.name_th,
@@ -104,8 +116,9 @@ const PetitionDetail: React.FC<Props> = (props) => {
         <p>
           {renderAddress(
             detail?.address?.poa_house_number,
-            detail?.address?.poa_road,
+            detail?.address?.poa_village,
             detail?.address?.poa_lane,
+            detail?.address?.poa_road,
             detail?.address?.poa_province?.name_th,
             detail?.address?.poa_district?.name_th,
             detail?.address?.poa_sub_district?.name_th,
