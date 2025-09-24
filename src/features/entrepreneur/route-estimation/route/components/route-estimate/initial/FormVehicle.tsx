@@ -165,25 +165,31 @@ const FormVehicle: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (selectTowing?.vehicle_pictures.front_rear_url) {
-      fetchImage('towing', [
-        extractUrl(selectTowing?.vehicle_pictures.front_rear_url),
-        extractUrl(selectTowing?.vehicle_pictures.back_rear_url),
-        extractUrl(selectTowing?.vehicle_pictures.side_rear_url),
-      ])
+      if (extractUrl(selectTowing?.vehicle_pictures.front_rear_url)) {
+        fetchImage('towing', [
+          extractUrl(selectTowing?.vehicle_pictures.front_rear_url),
+          extractUrl(selectTowing?.vehicle_pictures.back_rear_url),
+          extractUrl(selectTowing?.vehicle_pictures.side_rear_url),
+        ])
+      }
     }
     if (selectSemi?.vehicle_pictures.front_rear_url) {
-      fetchImage('semi', [
-        extractUrl(selectSemi?.vehicle_pictures.front_rear_url),
-        extractUrl(selectSemi?.vehicle_pictures.back_rear_url),
-        extractUrl(selectSemi?.vehicle_pictures.side_rear_url),
-      ])
+      if (extractUrl(selectSemi?.vehicle_pictures.front_rear_url)) {
+        fetchImage('semi', [
+          extractUrl(selectSemi?.vehicle_pictures.front_rear_url),
+          extractUrl(selectSemi?.vehicle_pictures.back_rear_url),
+          extractUrl(selectSemi?.vehicle_pictures.side_rear_url),
+        ])
+      }
     }
     if (selectETC?.vehicle_pictures.front_rear_url) {
-      fetchImage('etc', [
-        extractUrl(selectETC?.vehicle_pictures.front_rear_url),
-        extractUrl(selectETC?.vehicle_pictures.back_rear_url),
-        extractUrl(selectETC?.vehicle_pictures.side_rear_url),
-      ])
+      if (extractUrl(selectETC?.vehicle_pictures.front_rear_url)) {
+        fetchImage('etc', [
+          extractUrl(selectETC?.vehicle_pictures.front_rear_url),
+          extractUrl(selectETC?.vehicle_pictures.back_rear_url),
+          extractUrl(selectETC?.vehicle_pictures.side_rear_url),
+        ])
+      }
     }
   }, [
     fetchImage,
