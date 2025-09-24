@@ -92,7 +92,6 @@ const RouteScreen: React.FC<Props> = () => {
                 isRouteEstimate={false}
                 geometry={geometryData}
               /> */}
-              {console.log(detail)}
               {/* <Map
                 coord={[detail.start_point, detail.end_point]}
                 line={detail.vehicle_route}

@@ -203,7 +203,7 @@ const ContentForm: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label className='block'>เอกสารลงนาม (รองรับไฟล์ .pdf เท่านั้น)</label>
+                <label className='block'>เอกสารลงนาม (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}
@@ -270,7 +270,7 @@ const ContentForm: React.FC<Props> = (props) => {
           render={({ field }) => {
             return (
               <fieldset>
-                <label>หมายเหตุ</label>
+                <label>หมายเหตุ <span className='text-red-500'>*</span></label>
                 <Input.TextArea
                   {...field}
                   name={field.name}
