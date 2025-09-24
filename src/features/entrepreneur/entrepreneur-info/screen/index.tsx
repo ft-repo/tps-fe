@@ -1,7 +1,8 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '../components';
 import { useForm } from 'react-hook-form';
 import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
@@ -9,14 +10,14 @@ import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getUserData } from '@/store/slices/entrepreneur';
 import dayjs from 'dayjs';
 import { putUserAPI } from '@/services/entrepreneur/UserService';
-import { Button, Modal } from 'antd';
+import { Button, message, Modal } from 'antd';
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
-  fileList: any[];
 }
 
 const ExecutiveDataScreen: React.FC<Props> = (props) => {
-  const { fileList } = props
+  const { } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const dispatch = useAppDispatch()
   const userData = useAppSelector(state => state.entrepreneur.user)
@@ -66,21 +67,21 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
       citizen_id: userData.important_info.cid,
       contact_tel: userData.important_info.contact_phone_number,
       file_id: {
-        file: fileList.length ? [fileList[0] || { uid: '1', name: userData.profile_url, url: userData.profile_url }] : [],
-        url: userData.profile_url
+        file: [],
+        url: ''
       },
       approved_date: dayjs(userData.important_info.permission_date),
       file_copied_of_citizen_id: {
-        file: fileList.length ? [fileList[1] || { uid: '2', name: userData.business_document.cid_card_file_url, url: userData.business_document.cid_card_file_url }] : [],
-        url: userData.business_document.cid_card_file_url
+        file: [],
+        url: ''
       },
       file_trasfer_ownership_image_id: {
-        file: fileList.length ? [fileList[2] || { uid: '3', name: userData.business_document.certificate_file_url, url: userData.business_document.certificate_file_url }] : [],
-        url: userData.business_document.certificate_file_url
+        file: [],
+        url: ''
       },
       file_legal_entity_id: {
-        file: fileList.length ? [fileList[3] || { uid: '4', name: userData.business_document.business_file_url, url: userData.business_document.business_file_url }] : [],
-        url: userData.business_document.business_file_url
+        file: [],
+        url: ''
       },
     },
   })
@@ -150,6 +151,173 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
       dispatch(setLoading(false))
     }
   }, [dispatch])
+
+  const extractFileName = useCallback((url: string | null) => {
+    const match = url?.match(/\/([^\/]+)$/);
+    return match ? match[1] : '';
+  }, [])
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
+
+  const fetchProfileUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(userData.profile_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_id.url', userData.profile_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, userData.profile_url, setValue])
+
+  const fetchCIDUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_copied_of_citizen_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(userData.business_document.cid_card_file_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_copied_of_citizen_id.url', userData.business_document.cid_card_file_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, userData.business_document.cid_card_file_url, setValue])
+
+  const fetchCertificateUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_trasfer_ownership_image_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(userData.business_document.certificate_file_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_trasfer_ownership_image_id.url', userData.business_document.certificate_file_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, userData.business_document.certificate_file_url, setValue])
+
+  const fetchBusinessUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_legal_entity_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(userData.business_document.business_file_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_legal_entity_id.url', userData.business_document.business_file_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, userData.business_document.business_file_url, setValue])
+
+  useEffect(() => {
+    if (userData.profile_url) {
+      fetchProfileUrl(extractUrl(userData.profile_url))
+    }
+    if (userData.business_document.cid_card_file_url) {
+      fetchCIDUrl(extractUrl(userData.business_document.cid_card_file_url))
+    }
+    if (userData.business_document.certificate_file_url) {
+      fetchCertificateUrl(extractUrl(userData.business_document.certificate_file_url))
+    }
+    if (userData.business_document.business_file_url) {
+      fetchBusinessUrl(extractUrl(userData.business_document.business_file_url))
+    }
+  }, [
+    extractUrl,
+    fetchProfileUrl,
+    fetchCIDUrl,
+    fetchCertificateUrl,
+    fetchBusinessUrl,
+    userData.profile_url,
+    userData.business_document.cid_card_file_url,
+    userData.business_document.certificate_file_url,
+    userData.business_document.business_file_url
+  ])
 
   return (
     <>
