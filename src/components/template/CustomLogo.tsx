@@ -21,9 +21,9 @@ const Logo = (props: LogoProps) => {
 		logoWidth = 'auto',
 	} = props
 
-	console.log(className)
-	console.log(style)
-	console.log(logoWidth)
+	// console.log(className)
+	// console.log(style)
+	// console.log(logoWidth)
 
 	return (
 		<div

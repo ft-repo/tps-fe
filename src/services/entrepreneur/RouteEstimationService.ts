@@ -2,7 +2,7 @@ import { RouteBridgeResponse, RouteCurveResponse, RouteEstimationDetailResponse,
 import ApiService from "../ApiService"
 
 export async function postRouteEstimationStep1API(data: RouteEstimationRequest) {
-  console.log('data ======> ', data)
+  // console.log('data ======> ', data)
   return ApiService.fetchData<RouteEstimationResponse>({
     url: '/client/estimate',
     method: 'post',

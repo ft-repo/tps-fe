@@ -25,7 +25,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const navigate = useNavigate()
   const { dataParser, setStep, setDataParser } = useRouteContext()
 
-  console.log(dataParser.raw_body.route_form)
+  // console.log(dataParser.raw_body.route_form)
 
   const form = useForm<FieldTypeArr>({
     defaultValues: {

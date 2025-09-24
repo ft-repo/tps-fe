@@ -91,8 +91,11 @@ const TableCategory: React.FC<Props> = (props) => {
       key: 'petition_no',
       width: 100,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
           return item
         }
         return '-'
@@ -104,8 +107,11 @@ const TableCategory: React.FC<Props> = (props) => {
       key: 'road_code',
       width: 150,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
           return item
         }
         return '-'
@@ -117,11 +123,12 @@ const TableCategory: React.FC<Props> = (props) => {
       key: 'road_name',
       width: 500,
       align: 'center',
-      render: (item, record) => {
+      render: (item, record, index) => {
         if (item) {
-          return (
-            <p onClick={() => openDataModal(record.petition_id, record)}>{item}</p>
-          )
+          if (data.data.length - 1 === index) {
+            return <p onClick={() => openDataModal(record.petition_id, record)}><strong>{item}</strong></p>
+          }
+          return <p onClick={() => openDataModal(record.petition_id, record)}>{item}</p>
         }
         return '-'
       }
@@ -132,8 +139,11 @@ const TableCategory: React.FC<Props> = (props) => {
       key: 'start_date',
       width: 150,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
+          }
           return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
         }
         return '-'
@@ -145,8 +155,11 @@ const TableCategory: React.FC<Props> = (props) => {
       key: 'end_date',
       width: 150,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
+          }
           return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
         }
         return '-'
@@ -158,8 +171,11 @@ const TableCategory: React.FC<Props> = (props) => {
       key: 'petition_date',
       width: 150,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
+          }
           return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
         }
         return '-'
