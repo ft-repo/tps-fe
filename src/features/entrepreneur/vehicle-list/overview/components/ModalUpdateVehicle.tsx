@@ -2,7 +2,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { APIPostBody, VehicleListByIDResponse } from '@/@types/services/vehicle';
-import { Col, Modal, Row, UploadFile } from 'antd'
+import { Col, message, Modal, Row, UploadFile } from 'antd'
 import React, { Ref, useCallback, useEffect, useRef, useState } from 'react'
 import { INIT_VEHICLE_MODAL } from '../screen';
 import { useForm } from 'react-hook-form';
@@ -28,7 +28,7 @@ interface ContentProps {
 }
 
 const Content = (props: ContentProps) => {
-  const { id, data, submitRef, fileList, setOpen } = props
+  const { id, data, submitRef, setOpen } = props
   const dispatch = useAppDispatch()
   const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
   const { province } = useAppSelector(state => state.master)
@@ -47,35 +47,35 @@ const Content = (props: ContentProps) => {
       tall_unit: data.vehicle_detail.height || 0,
       vehicle_axles: data.vehicle_detail.axis_number || null,
       file_registered_document_id: {
-        file: fileList.length ? [fileList[0] || { uid: '', name: '', url: '' }] : [],
+        file: [],
         url: data.vehicle_detail.registration_document_url || ''
       },
       file_property_document_id: {
-        file: fileList.length ? [fileList[1] || { uid: '', name: '', url: '' }] : [],
+        file: [],
         url: data.vehicle_owner_documents.owner_document_url || ''
       },
       file_hire_contact_document_id: {
-        file: fileList.length ? [fileList[2] || { uid: '', name: '', url: '' }] : [],
+        file: [],
         url: data.vehicle_owner_documents.employment_contact_url || ''
       },
       file_purchase_contact_document_id: {
-        file: fileList.length ? [fileList[3] || { uid: '', name: '', url: '' }] : [],
+        file: [],
         url: data.vehicle_owner_documents.buyer_contact_url || ''
       },
       file_transfer_contact_document_id: {
-        file: fileList.length ? [fileList[4] || { uid: '', name: '', url: '' }] : [],
+        file: [],
         url: data.vehicle_owner_documents.assignment_contact_url || ''
       },
       file_front_image_id: {
-        file: fileList.length ? [fileList[5] || { uid: '', name: '', url: '' }] : [],
+        file: [],
         url: data.vehicle_pictures.front_rear_url || ''
       },
       file_side_image_id: {
-        file: fileList.length ? [fileList[6] || { uid: '', name: '', url: '' }] : [],
+        file: [],
         url: data.vehicle_pictures.side_rear_url || ''
       },
       file_back_image_id: {
-        file: fileList.length ? [fileList[7] || { uid: '', name: '', url: '' }] : [],
+        file: [],
         url: data.vehicle_pictures.back_rear_url || ''
       },
     }
@@ -165,6 +165,326 @@ const Content = (props: ContentProps) => {
       dispatch(setLoading(false))
     }
   }, [dispatch, vehicle.overview.search, id, setOpen, province])
+
+  const extractFileName = useCallback((url: string | null) => {
+    const match = url?.match(/\/([^\/]+)$/);
+    return match ? match[1] : '';
+  }, [])
+
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
+
+  const fetchRegistrationUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_registered_document_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(data.vehicle_detail.registration_document_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_registered_document_id.url', data.vehicle_detail.registration_document_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, data.vehicle_detail.registration_document_url, setValue])
+
+  const fetchPropertyUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_property_document_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(data.vehicle_owner_documents.owner_document_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_property_document_id.url', data.vehicle_owner_documents.owner_document_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, data.vehicle_owner_documents.owner_document_url, setValue])
+
+  const fetchHireUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_hire_contact_document_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(data.vehicle_owner_documents.employment_contact_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_hire_contact_document_id.url', data.vehicle_owner_documents.employment_contact_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, data.vehicle_owner_documents.employment_contact_url, setValue])
+
+  const fetchPurchaseUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_purchase_contact_document_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(data.vehicle_owner_documents.buyer_contact_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_purchase_contact_document_id.url', data.vehicle_owner_documents.buyer_contact_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, data.vehicle_owner_documents.buyer_contact_url, setValue])
+
+  const fetchTransferUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_transfer_contact_document_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(data.vehicle_owner_documents.assignment_contact_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_transfer_contact_document_id.url', data.vehicle_owner_documents.assignment_contact_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, data.vehicle_owner_documents.assignment_contact_url, setValue])
+
+  const fetchFrontUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_front_image_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(data.vehicle_pictures.front_rear_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_front_image_id.url', data.vehicle_pictures.front_rear_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, data.vehicle_pictures.front_rear_url, setValue])
+
+  const fetchSideUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_side_image_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(data.vehicle_pictures.side_rear_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_side_image_id.url', data.vehicle_pictures.side_rear_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, data.vehicle_pictures.side_rear_url, setValue])
+
+  const fetchBackUrl = useCallback(async (imgUrl: string) => {
+    setLoading(true)
+    try {
+      const response = await getUploadAPI(imgUrl)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const url = URL.createObjectURL(blobFile)
+        setValue('file_back_image_id.file', [
+          {
+            // crossOrigin: 'use-credentials',
+            name: extractFileName(String(data.vehicle_pictures.back_rear_url)),
+            // percent: 100,
+            uid: '1',
+            status: 'done',
+            url: url,
+            // thumbUrl: url,
+            type: response.data.type,
+            originFileObj: blobFile as any,
+          }
+        ])
+        setValue('file_back_image_id.url', data.vehicle_pictures.back_rear_url)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [extractFileName, data.vehicle_pictures.back_rear_url, setValue])
+
+  useEffect(() => {
+    if (data.vehicle_detail.registration_document_url) {
+      fetchRegistrationUrl(extractUrl(data.vehicle_detail.registration_document_url))
+    }
+    if (data.vehicle_owner_documents.owner_document_url) {
+      fetchPropertyUrl(extractUrl(data.vehicle_owner_documents.owner_document_url))
+    }
+    if (data.vehicle_owner_documents.employment_contact_url) {
+      fetchHireUrl(extractUrl(data.vehicle_owner_documents.employment_contact_url))
+    }
+    if (data.vehicle_owner_documents.buyer_contact_url) {
+      fetchPurchaseUrl(extractUrl(data.vehicle_owner_documents.buyer_contact_url))
+    }
+    if (data.vehicle_owner_documents.assignment_contact_url) {
+      fetchTransferUrl(extractUrl(data.vehicle_owner_documents.assignment_contact_url))
+    }
+    //
+    if (data.vehicle_pictures.front_rear_url) {
+      fetchFrontUrl(extractUrl(data.vehicle_pictures.front_rear_url))
+    }
+    if (data.vehicle_pictures.side_rear_url) {
+      fetchSideUrl(extractUrl(data.vehicle_pictures.side_rear_url))
+    }
+    if (data.vehicle_pictures.back_rear_url) {
+      fetchBackUrl(extractUrl(data.vehicle_owner_documents.assignment_contact_url))
+    }
+  }, [
+    extractUrl,
+    fetchRegistrationUrl,
+    fetchPropertyUrl,
+    fetchHireUrl,
+    fetchPurchaseUrl,
+    fetchTransferUrl,
+    fetchFrontUrl,
+    fetchSideUrl,
+    fetchBackUrl,
+    data.vehicle_detail.registration_document_url,
+    data.vehicle_owner_documents.owner_document_url,
+    data.vehicle_owner_documents.employment_contact_url,
+    data.vehicle_owner_documents.buyer_contact_url,
+    data.vehicle_owner_documents.assignment_contact_url,
+    data.vehicle_pictures.front_rear_url,
+    data.vehicle_pictures.side_rear_url,
+    data.vehicle_pictures.back_rear_url
+  ])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

@@ -1,12 +1,13 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback } from 'react'
-import { Flex, Input, Modal, Tag } from 'antd'
+import { Flex, Input, message, Modal, Tag } from 'antd'
 import { PetitionExtendedMessageResponse } from '@/@types/services/petition';
 import { Controller, useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
-import { useAppSelector } from '@/store';
+import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { INIT_MODAL } from './ContentSearchOther';
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
   open: boolean;
@@ -25,6 +26,7 @@ interface FieldType {
 const Content = (props: ContentProps) => {
   const { data } = props
   const { name } = useAppSelector(state => state.auth.user)
+  const dispatch = useAppDispatch()
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -40,6 +42,31 @@ const Content = (props: ContentProps) => {
     return nameArr.join(' ').trim()
   }, [])
 
+  const extractUrl = useCallback((url: string) => {
+    const path = url.split('/upload')[1];
+    return path
+  }, []);
+
+  const showFile = useCallback(async (fileUrl: string) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await getUploadAPI(fileUrl)
+      if (response.status === 200) {
+        const url = URL.createObjectURL(response.data);
+        window.open(url);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch])
+
+
   return (
     <form>
       <section>
@@ -49,6 +76,11 @@ const Content = (props: ContentProps) => {
         <p><strong>ตรวจสอบโดย</strong>: {renderName(data.admin_creaded.title, data.admin_creaded.first_name, data.admin_creaded.last_name)}</p>
         <p><strong>วันที่ตรวจสอบ</strong>: {dayjs(data.created_at).format('DD/MM/YYYY HH:mm:ss')}</p>
       </section>
+      {data.document_url ?
+        <section className='mt-3'>
+          <p className='cursor-pointer text-blue-500' onClick={() => showFile(extractUrl(data.document_url))}>ดูเอกสารตอบกลับ</p>
+        </section>
+        : null}
       <section className='mt-3'>
         <Controller
           name='remark'

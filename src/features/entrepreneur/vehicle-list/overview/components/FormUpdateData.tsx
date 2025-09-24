@@ -3,7 +3,7 @@
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { useAppSelector } from '@/store';
 import React, { useCallback } from 'react'
-import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form'
+import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form'
 import { Select, Input, Upload, message, Button, Row, Col } from 'antd';
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService';
@@ -16,8 +16,11 @@ interface Props {
 
 const FormUpdateData: React.FC<Props> = (props) => {
   const { control, setValue } = props
-  const { vehicle_type, province } = useAppSelector(state => state.master)
+  const { province } = useAppSelector(state => state.master)
+  const vehicleType = useAppSelector(state => state.master.vehicle_type)
   const { errors } = useFormState({ control })
+
+  const { vehicle_type } = useWatch({ control })
 
   const uploadFile = useCallback(async (file: any) => {
     try {
@@ -58,7 +61,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
                   <Select
                     {...field}
                     placeholder='กรุณาเลือก'
-                    options={vehicle_type}
+                    options={vehicleType}
                     fieldNames={{
                       label: 'name',
                       value: 'id'
@@ -79,6 +82,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <Controller
+            disabled={vehicle_type === 3}
             name='license_plate'
             control={control}
             rules={{
@@ -87,7 +91,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
+                  <label>เลขทะเบียน / เลขตัวรถ {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                   <Input
                     {...field}
                     name={field.name}
@@ -108,6 +112,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <Controller
+            disabled={vehicle_type === 3}
             name='vehicle_model'
             control={control}
             rules={{
@@ -116,7 +121,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ยี่ห้อ <span className='text-red-500'>*</span></label>
+                  <label>ยี่ห้อ {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                   <Input
                     {...field}
                     name={field.name}
@@ -137,6 +142,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <Controller
+            disabled={vehicle_type === 3}
             name='province'
             control={control}
             rules={{
@@ -145,7 +151,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>จังหวัด <span className='text-red-500'>*</span></label>
+                  <label>จังหวัด {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                   <Select
                     {...field}
                     allowClear
@@ -175,6 +181,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <Controller
+            disabled={vehicle_type === 3}
             name='vehicle_weight'
             control={control}
             rules={{
@@ -183,7 +190,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>น้ำหนักรถเปล่า (กก.) <span className='text-red-500'>*</span></label>
+                  <label>น้ำหนักรถเปล่า (กก.) {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                   <Input
                     {...field}
                     name={field.name}
@@ -207,6 +214,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <Controller
+            disabled={vehicle_type === 3}
             name='vehicle_color'
             control={control}
             rules={{
@@ -215,7 +223,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>สีรถ <span className='text-red-500'>*</span></label>
+                  <label>สีรถ {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                   <Input
                     {...field}
                     name={field.name}
@@ -236,6 +244,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <Controller
+            disabled={vehicle_type === 3}
             name='vehicle_distance'
             control={control}
             rules={{
@@ -244,7 +253,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>ระยะ kingpin (ม.) <span className='text-red-500'>*</span></label>
+                  <label>ระยะ kingpin (ม.) {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                   <Input
                     {...field}
                     name={field.name}
@@ -268,6 +277,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <Controller
+            disabled={vehicle_type === 3}
             name='vehicle_axles'
             control={control}
             rules={{
@@ -276,7 +286,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>จำนวนเพลา <span className='text-red-500'>*</span></label>
+                  <label>จำนวนเพลา {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                   <Select
                     {...field}
                     allowClear
