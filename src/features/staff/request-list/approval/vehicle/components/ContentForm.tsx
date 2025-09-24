@@ -75,7 +75,7 @@ const ContentForm: React.FC<Props> = (props) => {
         file: [],
         url: ''
       },
-      is_signed: typeof petition_status[2]?.is_skipped === 'boolean' ? (petition_status[2]?.is_skipped === true ? '1' : '2') : null,
+      is_signed: typeof petition_status[2]?.is_skipped === 'boolean' ? (petition_status[2]?.is_skipped === false ? '1' : '2') : null,
     },
     disabled: disabled
   })
@@ -114,7 +114,7 @@ const ContentForm: React.FC<Props> = (props) => {
       is_approved: value.is_approved === '1' ? true : false,
       document_url: value.file_id.url,
       remark: value.reply_message,
-      is_skipped: value.is_signed === '1' ? true : false
+      is_skipped: value.is_signed === '1' ? false : true
     }
 
     dispatch(setLoading(true))
