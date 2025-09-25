@@ -96,25 +96,31 @@ const VehicleListDetail: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (item?.towing_vehicle?.vehicle_picture?.front_rear_url) {
-      fetchImage('towing', [
-        extractUrl(item?.towing_vehicle?.vehicle_picture?.front_rear_url),
-        extractUrl(item?.towing_vehicle?.vehicle_picture?.back_rear_url),
-        extractUrl(item?.towing_vehicle?.vehicle_picture?.side_rear_url),
-      ])
+      if (extractUrl(item?.towing_vehicle?.vehicle_picture?.front_rear_url)) {
+        fetchImage('towing', [
+          extractUrl(item?.towing_vehicle?.vehicle_picture?.front_rear_url),
+          extractUrl(item?.towing_vehicle?.vehicle_picture?.back_rear_url),
+          extractUrl(item?.towing_vehicle?.vehicle_picture?.side_rear_url),
+        ])
+      }
     }
     if (item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url) {
-      fetchImage('semi', [
-        extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url),
-        extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.back_rear_url),
-        extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.side_rear_url),
-      ])
+      if (extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url)) {
+        fetchImage('semi', [
+          extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url),
+          extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.back_rear_url),
+          extractUrl(item?.semi_trailer_vehicle?.vehicle_picture?.side_rear_url),
+        ])
+      }
     }
     if (item?.etc_vehicle?.vehicle_picture?.front_rear_url) {
-      fetchImage('etc', [
-        extractUrl(item?.etc_vehicle?.vehicle_picture?.front_rear_url),
-        extractUrl(item?.etc_vehicle?.vehicle_picture?.back_rear_url),
-        extractUrl(item?.etc_vehicle?.vehicle_picture?.side_rear_url),
-      ])
+      if (extractUrl(item?.etc_vehicle?.vehicle_picture?.front_rear_url)) {
+        fetchImage('etc', [
+          extractUrl(item?.etc_vehicle?.vehicle_picture?.front_rear_url),
+          extractUrl(item?.etc_vehicle?.vehicle_picture?.back_rear_url),
+          extractUrl(item?.etc_vehicle?.vehicle_picture?.side_rear_url),
+        ])
+      }
     }
   }, [item, extractUrl, fetchImage])
 
