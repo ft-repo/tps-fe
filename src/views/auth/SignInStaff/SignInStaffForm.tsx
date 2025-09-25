@@ -110,11 +110,11 @@ const SignInStaffForm = (props: SignInStaffFormProps) => {
                                     component={PasswordInput}
                                 />
                             </FormItem>
-                            <div className="flex justify-end mb-6">
+                            {/* <div className="flex justify-end mb-6">
                                 <ActionLink to={forgotPasswordUrl}>
                                     ลืมรหัสผ่าน?
                                 </ActionLink>
-                            </div>
+                            </div> */}
                             <Button
                                 block
                                 loading={isSubmitting}

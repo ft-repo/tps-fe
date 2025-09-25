@@ -115,18 +115,18 @@ const SignInForm = (props: SignInFormProps) => {
                                     component={PasswordInput}
                                 />
                             </FormItem>
-                            <div className="flex justify-end mb-6">
-                                {/* <Field
+                            {/* <div className="flex justify-end mb-6">
+                                <Field
                                     className="mb-0"
                                     name="rememberMe"
                                     component={Checkbox}
                                 >
                                     Remember Me
-                                </Field> */}
+                                </Field>
                                 <ActionLink to={forgotPasswordUrl}>
                                     ลืมรหัสผ่าน?
                                 </ActionLink>
-                            </div>
+                            </div> */}
                             <Button
                                 block
                                 loading={isSubmitting}
