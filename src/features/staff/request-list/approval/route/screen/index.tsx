@@ -10,7 +10,7 @@ import { useRouteContext } from '../context'
 import MapRoute from '@/components/ui/Maps'
 import { GeoJsonObject } from 'geojson'
 import { useReactToPrint } from 'react-to-print'
-import Map from '@/features/entrepreneur/route-estimation/route/components/map/Map'
+// import Map from '@/features/entrepreneur/route-estimation/route/components/map/Map'
 
 interface Props { }
 
@@ -30,6 +30,11 @@ const RouteScreen: React.FC<Props> = () => {
     dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
     dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
   }, [dispatch, petitionId])
+
+  // First index (always 0 for non-empty arrays)
+  // const firstIndex = 0;
+  // Last index
+  // const lastIndex = detail.vehicle_route.length - 1;
 
   const geometryData = useMemo<GeoJsonObject | undefined>(() => {
     if (detail?.vehicle_route) {
@@ -67,7 +72,6 @@ const RouteScreen: React.FC<Props> = () => {
           ย้อนกลับ
         </Button>
       </section>
-
       <section className="no-print">
         <TitleSection onExport={handlePrint} />
       </section>
@@ -78,7 +82,7 @@ const RouteScreen: React.FC<Props> = () => {
               <ContentSection />
             </div>
             <div className="order-first xl:order-last rounded-md border border-gray-200 h-[50vh] xl:h-[75vh] overflow-hidden print-map print-keep-together">
-              {/* <MapRoute
+              <MapRoute
                 coordinates={[
                   [
                     Number(detail?.vehicle_route?.[0]?.[0] || 0),
@@ -91,11 +95,13 @@ const RouteScreen: React.FC<Props> = () => {
                 ]}
                 isRouteEstimate={false}
                 geometry={geometryData}
-              /> */}
-              {/* <Map
-                coord={[detail.start_point, detail.end_point]}
-                line={detail.vehicle_route}
-              /> */}
+              />
+              {/* {!loading ?
+                <Map
+                  coord={[detail.vehicle_route[firstIndex], detail.vehicle_route[lastIndex]]}
+                  line={detail?.vehicle_route}
+                />
+                : null} */}
             </div>
           </div>
         </section>
