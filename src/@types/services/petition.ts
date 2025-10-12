@@ -194,17 +194,17 @@ export interface VehicleRequestArr {
 
 export interface StartPoint {
   type: string;
-  coordinates: number[];
+  coordinates: number[] | any;
 }
 
 export interface EndPoint {
   type: string;
-  coordinates: number[];
+  coordinates: number[] | any;
 }
 
 export interface VehicleRoute {
   type: string;
-  coordinates: number[][];
+  coordinates: number[][] | any;
 }
 
 

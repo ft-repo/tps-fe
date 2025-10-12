@@ -3,36 +3,72 @@
 import { FieldTypeArr } from '@/@types/entrepreneur/route-estimation'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { Button, Col, Input, Modal, Row } from 'antd'
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { ContentTab } from '../../components'
 import { PetitionEstimateRequest } from '@/@types/services/petition'
 import { postPetitionEstimateAPI } from '@/services/entrepreneur/PetitionService'
 import { useRouteContext } from '../../context'
-import MapRoute from '@/components/ui/Maps'
+import Map from '../map/Map'
+import { FaTimes, FaEdit } from 'react-icons/fa';
+import { calculateRoute, geocodeAddress, swapCoordinates, swapCoordinatesDeep } from '@/utils/custom/updateMapAPI'
 
 interface Props {
 
 }
+
+// Types
+interface LatLng {
+  lat: number;
+  lng: number;
+}
+
+interface Route {
+  coordinates: [number, number][];
+  distance: string;
+  duration: string;
+  rawDistance: number;
+  rawDuration: number;
+}
+
+interface RouteResponse {
+  main: Route;
+  alternative: Route | null;
+}
+
+type RouteType = 'main' | 'alternative';
 
 const RouteEstimation: React.FC<Props> = (props) => {
   const { } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
-  const { routeDirection } = useAppSelector(state => state.routeDirection)
   const navigate = useNavigate()
   const { dataParser, setStep, setDataParser } = useRouteContext()
+  // USE STATE
+  const [startPoint, setStartPoint] = useState<LatLng | null>(null);
+  const [endPoint, setEndPoint] = useState<LatLng | null>(null);
+  const [waypoints, setWaypoints] = useState<LatLng[]>([]);
+  const [routes, setRoutes] = useState<RouteResponse | null>(null);
+  const [isSelectingStart, setIsSelectingStart] = useState(false);
+  const [isSelectingEnd, setIsSelectingEnd] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedRoute, setSelectedRoute] = useState<RouteType>('main');
+  const [isCalculating, setIsCalculating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  // const [startInput, setStartInput] = useState('');
+  // const [endInput, setEndInput] = useState('');
+  const [isGeocoding, setIsGeocoding] = useState(false);
+  const startInputTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const endInputTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // console.log(dataParser.raw_body.route_form)
 
   const form = useForm<FieldTypeArr>({
     defaultValues: {
-      start_latitude: dataParser.raw_body.start_latitude || '',
-      start_longitude: dataParser.raw_body.start_longitude || '',
-      end_latitude: dataParser.raw_body.end_latitude || '',
-      end_longitude: dataParser.raw_body.end_longitude || '',
+      start_point: dataParser.raw_body.start_point || '',
+      end_point: dataParser.raw_body.end_point || '',
       route_form: dataParser.raw_body.route_form.length ? dataParser.raw_body.route_form :
         [
           {
@@ -65,15 +101,27 @@ const RouteEstimation: React.FC<Props> = (props) => {
     control,
     setValue,
     formState: { errors },
-    watch
   } = form
 
-  const startLatitude = watch('start_latitude')
-  const startLongitude = watch('start_longitude')
-  const endLatitude = watch('end_latitude')
-  const endLongitude = watch('end_longitude')
-
   const onSubmit = useCallback(async (value: FieldTypeArr) => {
+    // CHECK ROUTE
+    if (!routes) {
+      Modal.error({
+        title: 'ผิดพลาด',
+        content: 'ยังไม่มีการประเมินเส้นทาง',
+        okText: 'ตกลง',
+        onOk: () => Modal.destroyAll(),
+        okButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        },
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        }
+      })
+    }
+    // BUILD BODY
     const body: PetitionEstimateRequest = {
       vehicle: value.route_form.map((item) => {
         return {
@@ -103,18 +151,15 @@ const RouteEstimation: React.FC<Props> = (props) => {
       }),
       start_point: {
         type: "Point",
-        coordinates: [Number(value.start_longitude), Number(value.start_latitude)]
+        coordinates: selectedRoute === 'main' ? swapCoordinates(routes?.main?.coordinates[0]) : swapCoordinates(routes?.alternative?.coordinates[0])
       },
       end_point: {
         type: "Point",
-        coordinates: [Number(value.end_longitude), Number(value.end_latitude)]
+        coordinates: selectedRoute === 'main' ? swapCoordinates(routes?.main?.coordinates[routes?.main.coordinates?.length - 1]) : swapCoordinates(routes?.alternative?.coordinates[routes?.alternative?.coordinates.length - 1])
       },
       vehicle_route: {
         type: "LineString",
-        coordinates: routeDirection?.features[0]?.geometry?.coordinates || [
-          [Number(value.start_longitude), Number(value.start_latitude)],
-          [Number(value.end_longitude), Number(value.end_latitude)]
-        ]
+        coordinates: selectedRoute === 'main' ? swapCoordinatesDeep(routes?.main?.coordinates) : swapCoordinatesDeep(routes?.alternative?.coordinates)
       }
     }
     dispatch(setLoading(true))
@@ -160,12 +205,224 @@ const RouteEstimation: React.FC<Props> = (props) => {
           }
         })
       } else {
+        console.log('====', error)
         console.error(error)
       }
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch, setDataParser, setStep, routeDirection?.features])
+  }, [
+    dispatch,
+    setDataParser,
+    setStep,
+    routes?.alternative?.coordinates,
+    routes?.main.coordinates,
+    selectedRoute
+  ])
+
+  const handleMapClick = useCallback((latlng: LatLng) => {
+    if (isSelectingStart) {
+      setStartPoint(latlng);
+      // setStartInput(`${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}`);
+      setValue('start_point', `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`);
+      setIsSelectingStart(false);
+      setRoutes(null); // Clear routes when start point changes
+      setWaypoints([]); // Clear waypoints when start point changes
+      setIsEditMode(false); // Exit edit mode
+    } else if (isSelectingEnd) {
+      setEndPoint(latlng);
+      // setEndInput(`${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}`);
+      setValue('end_point', `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`);
+      setIsSelectingEnd(false);
+      setRoutes(null); // Clear routes when end point changes
+      setWaypoints([]); // Clear waypoints when end point changes
+      setIsEditMode(false); // Exit edit mode
+    } else if (isEditMode && startPoint && endPoint) {
+      // Add waypoint when in edit mode
+      setWaypoints([...waypoints, latlng]);
+    }
+  }, [
+    endPoint,
+    isEditMode,
+    isSelectingEnd,
+    isSelectingStart,
+    startPoint,
+    waypoints,
+    setValue
+  ]);
+
+  // const handleStartInputSubmit = useCallback(async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!startInput.trim()) return;
+
+  //   setIsGeocoding(true);
+  //   setError(null);
+  //   try {
+  //     const location = await geocodeAddress(startInput);
+  //     setStartPoint(location);
+  //     setValue('start_point', `${location.lat.toFixed(6)},${location.lng.toFixed(6)}`)
+  //   } catch (err) {
+  //     setError('Could not find start location. Please try again.');
+  //   } finally {
+  //     setIsGeocoding(false);
+  //   }
+  // }, [startInput, setValue]);
+
+  // const handleEndInputSubmit = useCallback(async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (!endInput.trim()) return;
+
+  //   setIsGeocoding(true);
+  //   setError(null);
+  //   try {
+  //     const location = await geocodeAddress(endInput);
+  //     setEndPoint(location);
+  //     setValue('end_point', `${location.lat.toFixed(6)},${location.lng.toFixed(6)}`)
+  //   } catch (err) {
+  //     setError('Could not find end location. Please try again.');
+  //   } finally {
+  //     setIsGeocoding(false);
+  //   }
+  // }, [endInput, setValue]);
+
+  const handleStartInputChange = useCallback((value: string) => {
+    // setStartInput(value);
+
+    // Clear existing timeout
+    if (startInputTimeoutRef.current) {
+      clearTimeout(startInputTimeoutRef.current);
+    }
+
+    // Set new timeout to geocode after user stops typing
+    if (value.trim().length > 2) {
+      startInputTimeoutRef.current = setTimeout(async () => {
+        setIsGeocoding(true);
+        setError(null);
+        try {
+          const location = await geocodeAddress(value);
+          setStartPoint(location);
+          setValue('start_point', `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`);
+          setRoutes(null); // Clear routes when start point changes
+          setWaypoints([]); // Clear waypoints when start point changes
+          setIsEditMode(false); // Exit edit mode
+        } catch (err) {
+          setError('Could not find start location. Please try again.');
+        } finally {
+          setIsGeocoding(false);
+        }
+      }, 1000); // Wait 1 second after user stops typing
+    }
+  }, [setValue]);
+
+  const handleEndInputChange = useCallback((value: string) => {
+    // setEndInput(value);
+
+    // Clear existing timeout
+    if (endInputTimeoutRef.current) {
+      clearTimeout(endInputTimeoutRef.current);
+    }
+
+    // Set new timeout to geocode after user stops typing
+    if (value.trim().length > 2) {
+      endInputTimeoutRef.current = setTimeout(async () => {
+        setIsGeocoding(true);
+        setError(null);
+        try {
+          const location = await geocodeAddress(value);
+          setEndPoint(location);
+          setValue('end_point', `${location.lat.toFixed(5)}, ${location.lng.toFixed(5)}`);
+          setRoutes(null); // Clear routes when end point changes
+          setWaypoints([]); // Clear waypoints when end point changes
+          setIsEditMode(false); // Exit edit mode
+        } catch (err) {
+          setError('Could not find end location. Please try again.');
+        } finally {
+          setIsGeocoding(false);
+        }
+      }, 1000); // Wait 1 second after user stops typing
+    }
+  }, [setValue]);
+
+  const calculateRoutes = useCallback(async () => {
+    if (!startPoint || !endPoint) return;
+
+    setIsCalculating(true);
+    setError(null);
+    try {
+      const calculatedRoutes = await calculateRoute(startPoint, endPoint, waypoints);
+      setRoutes(calculatedRoutes);
+      setIsEditMode(false);
+    } catch (err) {
+      setError('Failed to calculate route. Please try again.');
+      console.error(err);
+    } finally {
+      setIsCalculating(false);
+    }
+  }, [endPoint, startPoint, waypoints]);
+
+  const resetMap = useCallback(() => {
+    setStartPoint(null);
+    setEndPoint(null);
+    setWaypoints([]);
+    setRoutes(null);
+    setIsEditMode(false);
+    setSelectedRoute('main');
+    setError(null);
+    // setStartInput('');
+    // setEndInput('');
+    // Clear any pending timeouts
+    if (startInputTimeoutRef.current) {
+      clearTimeout(startInputTimeoutRef.current);
+    }
+    if (endInputTimeoutRef.current) {
+      clearTimeout(endInputTimeoutRef.current);
+    }
+  }, []);
+
+  const removeWaypoint = useCallback((index: number) => {
+    setWaypoints(waypoints.filter((_, i) => i !== index));
+  }, [waypoints]);
+
+  const handleEditRoute = useCallback(() => {
+    setIsEditMode(true);
+    setRoutes(null);
+  }, []);
+
+  useEffect(() => {
+
+  }, [])
+
+  useEffect(() => {
+    if (startPoint && endPoint && waypoints.length > 0 && isEditMode) {
+      // Auto-recalculate when waypoints change in edit mode
+      const timer = setTimeout(() => {
+        calculateRoutes();
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [waypoints]);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (startInputTimeoutRef.current) {
+        clearTimeout(startInputTimeoutRef.current);
+      }
+      if (endInputTimeoutRef.current) {
+        clearTimeout(endInputTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (dataParser.raw_body.start_point && dataParser.raw_body.end_point) {
+      const convertStartPoint = String(dataParser.raw_body.start_point).split(',').map(s => parseFloat(s.trim()));
+      const convertEndPoint = String(dataParser.raw_body.end_point).split(',').map(s => parseFloat(s.trim()));
+
+      setStartPoint({ lat: convertStartPoint[0], lng: convertStartPoint[1] })
+      setEndPoint({ lat: convertEndPoint[0], lng: convertEndPoint[1] })
+    }
+  }, [dataParser.raw_body.start_point, dataParser.raw_body.end_point])
 
   return (
     <main>
@@ -204,9 +461,29 @@ const RouteEstimation: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={10}>
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
-              <MapRoute
-                coordinates={[[Number(startLongitude || 0), Number(startLatitude || 0)], [Number(endLongitude || 0), Number(endLatitude || 0)]]}
-                isRouteEstimate={true}
+              <Map
+                // STATE
+                isSelectingStart={isSelectingStart}
+                isSelectingEnd={isSelectingEnd}
+                isEditMode={isEditMode}
+                startPoint={startPoint}
+                endPoint={endPoint}
+                waypoints={waypoints}
+                routes={routes || null}
+                selectedRoute={selectedRoute}
+                // SET STATE
+                setStartPoint={setStartPoint}
+                setIsSelectingStart={setIsSelectingStart}
+                setEndPoint={setEndPoint}
+                setIsSelectingEnd={setIsSelectingEnd}
+                setWaypoints={setWaypoints}
+                setError={setError}
+                setIsCalculating={setIsCalculating}
+                setRoutes={setRoutes}
+                setIsEditMode={setIsEditMode}
+                setSelectedRoute={setSelectedRoute}
+                // REACT HOOK FORM
+                handleMapClick={handleMapClick}
               />
             </div>
             <section className='mt-5'>
@@ -214,18 +491,19 @@ const RouteEstimation: React.FC<Props> = (props) => {
               <Row gutter={[16, 16]}>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                   <Controller
-                    name='start_latitude'
+                    name='start_point'
                     control={control}
                     rules={{
-                      required: 'กรุณาระบุละติจูด (ต้นทาง)'
+                      required: 'กรุณาระบุต้นทาง'
                     }}
                     render={({ field }) => {
                       return (
                         <fieldset>
-                          <label>ละติจูด (ต้นทาง)</label>
+                          <label>ต้นทาง</label>
                           <Input
                             {...field}
                             name={field.name}
+                            disabled={isGeocoding}
                             placeholder='กรุณาระบุ'
                             className='w-full'
                             size='large'
@@ -233,31 +511,50 @@ const RouteEstimation: React.FC<Props> = (props) => {
                               fontFamily: 'Noto Sans Thai'
                             }}
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              field.onChange(e)
+                              handleStartInputChange(e.target.value)
                             }}
                           />
-                          {!!errors.start_latitude &&
-                            <p className='text-red-500'>{errors.start_latitude.message}</p>
+                          {!!errors.start_point &&
+                            <p className='text-red-500'>{errors.start_point.message}</p>
                           }
                         </fieldset>
                       )
                     }}
                   />
+                  <Button
+                    block
+                    htmlType='button'
+                    color='green'
+                    variant={isSelectingStart ? 'solid' : 'filled'}
+                    onClick={() => {
+                      setIsSelectingStart(true);
+                      setIsSelectingEnd(false);
+                    }}
+                  >
+                    {isSelectingStart ? 'กรุณาเลือกต้นทางบนแผนที่' : startPoint ? 'เปลี่ยนต้นทาง' : 'หรือเลือกบนแผนที่'}
+                  </Button>
+                  {startPoint && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      {startPoint.lat.toFixed(5)}, {startPoint.lng.toFixed(5)}
+                    </p>
+                  )}
                 </Col>
                 <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
                   <Controller
-                    name='start_longitude'
+                    name='end_point'
                     control={control}
                     rules={{
-                      required: 'กรุณาระบุลองจิจูด (ต้นทาง)'
+                      required: 'กรุณาระบุปลายทาง'
                     }}
                     render={({ field }) => {
                       return (
                         <fieldset>
-                          <label>ลองจิจูด (ต้นทาง)</label>
+                          <label>ปลายทาง</label>
                           <Input
                             {...field}
                             name={field.name}
+                            disabled={isGeocoding}
                             placeholder='กรุณาระบุ'
                             className='w-full'
                             size='large'
@@ -265,80 +562,186 @@ const RouteEstimation: React.FC<Props> = (props) => {
                               fontFamily: 'Noto Sans Thai'
                             }}
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              field.onChange(e)
+                              handleEndInputChange(e.target.value)
                             }}
                           />
-                          {!!errors.start_longitude &&
-                            <p className='text-red-500'>{errors.start_longitude.message}</p>
+                          {!!errors.end_point &&
+                            <p className='text-red-500'>{errors.end_point.message}</p>
                           }
                         </fieldset>
                       )
                     }}
                   />
+                  <Button
+                    block
+                    htmlType='button'
+                    color='red'
+                    variant={isSelectingEnd ? 'solid' : 'filled'}
+                    onClick={() => {
+                      setIsSelectingEnd(true);
+                      setIsSelectingStart(false);
+                    }}
+                  >
+                    {isSelectingEnd ? 'กรุณาเลือกปลายทางบนแผนที่' : endPoint ? 'เปลี่ยนปลายทาง' : 'หรือเลือกบนแผนที่'}
+                  </Button>
+                  {endPoint && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      {endPoint.lat.toFixed(5)}, {endPoint.lng.toFixed(5)}
+                    </p>
+                  )}
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                  <Controller
-                    name='end_latitude'
-                    control={control}
-                    rules={{
-                      required: 'กรุณาระบุละติจูด (ปลายทาง)'
-                    }}
-                    render={({ field }) => {
-                      return (
-                        <fieldset>
-                          <label>ละติจูด (ปลายทาง)</label>
-                          <Input
-                            {...field}
-                            name={field.name}
-                            placeholder='กรุณาระบุ'
-                            className='w-full'
-                            size='large'
-                            style={{
-                              fontFamily: 'Noto Sans Thai'
-                            }}
-                            onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                            }}
-                          />
-                          {!!errors.end_latitude &&
-                            <p className='text-red-500'>{errors.end_latitude.message}</p>
-                          }
-                        </fieldset>
-                      )
-                    }}
-                  />
+                {startPoint && endPoint && !routes && (
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                    <Button
+                      block
+                      htmlType='button'
+                      type='primary'
+                      disabled={isCalculating}
+                      onClick={calculateRoutes}
+                    >
+                      {isCalculating ? 'กำลังประเมินเส้นทาง...' : 'ประเมินเส้นทาง'}
+                    </Button>
+                    {error && (
+                      <p className='text-red-500'>{error}</p>
+                    )}
+                  </Col>
+                )}
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                  {/* Route Results */}
+                  {routes && !isEditMode && (
+                    <>
+                      <div className="border-t pt-4">
+                        <h5>รายละเอียดเส้นทาง</h5>
+                        {/* ปุ่มเส้นทางหลัก */}
+                        <section>
+                          <div
+                            className={`p-3 rounded-lg cursor-pointer transition-all mb-2 ${selectedRoute === 'main'
+                              ? 'bg-blue-100 border-2 border-blue-500'
+                              : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                              }`}
+                            onClick={() => setSelectedRoute('main')}
+                          >
+                            <div className="flex justify-between items-start">
+                              <div>
+                                <p className="font-medium text-gray-800">เส้นทางหลัก</p>
+                                <p className="text-sm text-gray-600">{routes.main.distance}</p>
+                              </div>
+                              <p className="text-sm font-medium text-blue-600">{routes.main.duration}</p>
+                            </div>
+                          </div>
+                          {/* ปุ่นเส้นทางรอง */}
+                          {routes.alternative && (
+                            <div
+                              className={`p-3 rounded-lg cursor-pointer transition-all ${selectedRoute === 'alternative'
+                                ? 'bg-blue-100 border-2 border-blue-500'
+                                : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                                }`}
+                              onClick={() => setSelectedRoute('alternative')}
+                            >
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <p className="font-medium text-gray-800">เส้นทางอื่น</p>
+                                  <p className="text-sm text-gray-600">{routes.alternative.distance}</p>
+                                </div>
+                                <p className="text-sm font-medium text-gray-600">{routes.alternative.duration}</p>
+                              </div>
+                            </div>
+                          )}
+                          {!routes.alternative && (
+                            <div className="p-2 bg-gray-100 rounded text-sm text-gray-600">
+                              ไม่พบเส้นทางอื่น
+                            </div>
+                          )}
+                        </section>
+                        <section className='mt-5'>
+                          <Button
+                            block
+                            htmlType='button'
+                            color='orange'
+                            variant='solid'
+                            icon={<FaEdit />}
+                            onClick={handleEditRoute}
+                          >
+                            ปรับแต่งเส้นทาง
+                          </Button>
+                          <Button
+                            block
+                            htmlType='button'
+                            color='default'
+                            variant='outlined'
+                            icon={<FaTimes />}
+                            className='mt-3'
+                            onClick={resetMap}
+                          >
+                            ล้างค่าเส้นทาง
+                          </Button>
+                        </section>
+                      </div>
+                    </>
+                  )}
                 </Col>
-                <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
-                  <Controller
-                    name='end_longitude'
-                    control={control}
-                    rules={{
-                      required: 'กรุณาระบุลองจิจูด (ปลายทาง)'
-                    }}
-                    render={({ field }) => {
-                      return (
-                        <fieldset>
-                          <label>ลองจิจูด (ปลายทาง)</label>
-                          <Input
-                            {...field}
-                            name={field.name}
-                            placeholder='กรุณาระบุ'
-                            className='w-full'
-                            size='large'
-                            style={{
-                              fontFamily: 'Noto Sans Thai'
-                            }}
-                            onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
-                            }}
-                          />
-                          {!!errors.end_longitude &&
-                            <p className='text-red-500'>{errors.end_longitude.message}</p>
-                          }
-                        </fieldset>
-                      )
-                    }}
-                  />
+                <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                  {/* Edit Mode */}
+                  {isEditMode && (
+                    <>
+                      <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+                        <p className="text-sm text-orange-800 font-medium">
+                          แก้ไขเส้นทาง
+                        </p>
+                        <p className="text-xs text-orange-600 mt-1">
+                          กดบนแผนที่เพื่อแก้ไขเส้นทาง
+                        </p>
+                      </div>
+
+                      {waypoints.length > 0 && (
+                        <section>
+                          <h4 className="font-medium text-gray-800 mb-2">
+                            เส้นทาง ({waypoints.length})
+                          </h4>
+                          <div className="space-y-2">
+                            {waypoints.map((wp, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center justify-between bg-yellow-50 p-2 rounded"
+                              >
+                                <span className="text-sm text-gray-700">
+                                  {wp.lat.toFixed(5)}, {wp.lng.toFixed(5)}
+                                </span>
+                                <button
+                                  className="text-red-500 hover:text-red-700"
+                                  onClick={() => removeWaypoint(idx)}
+                                >
+                                  <FaTimes />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </section>
+                      )}
+                      <section className='mt-5'>
+                        <Button
+                          block
+                          htmlType='button'
+                          type='primary'
+                          disabled={isCalculating}
+                          onClick={calculateRoutes}
+                        >
+                          {isCalculating ? 'กำลังประเมินเส้นทางใหม่...' : 'แก้ไขเส้นทาง'}
+                        </Button>
+                        <Button
+                          block
+                          htmlType='button'
+                          color='default'
+                          variant='outlined'
+                          className='mt-3'
+                          onClick={() => setIsEditMode(false)}
+                        >
+                          ยกเลิกการแก้ไข
+                        </Button>
+                      </section>
+                    </>
+                  )}
                 </Col>
               </Row>
             </section>
@@ -346,7 +749,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
         </Row>
         <button ref={submitRef} hidden type='submit' />
       </form>
-    </main>
+    </main >
   )
 }
 

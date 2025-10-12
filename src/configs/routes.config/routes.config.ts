@@ -14,13 +14,15 @@ export const protectedRoutes = [
     // },
     /** ROLE ADMIN */
     {
-        key: 'route_estimation',
+        // key: 'route_estimation',
+        key: 'permit_list',
         path: '/route-estimation/route',
         component: lazy(() => import('@/views/entrepreneur/route-estimation/route')),
         authority: ['USER'],
     },
     {
-        key: 'other_route_estimation',
+        // key: 'other_route_estimation',
+        key: 'permit_list',
         path: '/route-estimation/other',
         component: lazy(() => import('@/views/entrepreneur/route-estimation/other')),
         authority: ['USER'],
@@ -44,7 +46,8 @@ export const protectedRoutes = [
         authority: ['USER'],
     },
     {
-        key: 'create_vehicle_list',
+        // key: 'create_vehicle_list',
+        key: 'vehicle_list',
         path: '/vehicle-list/create',
         component: lazy(() => import('@/views/entrepreneur/vehicle-list/create')),
         authority: ['USER'],

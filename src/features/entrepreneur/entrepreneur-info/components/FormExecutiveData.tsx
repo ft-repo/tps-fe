@@ -281,6 +281,9 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                     fontFamily: 'Noto Sans Thai'
                   }}
                   maxLength={13}
+                  onChange={(e) => {
+                    field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                  }}
                 />
                 {!!errors.citizen_id &&
                   <p className='text-red-500'>{errors.citizen_id.message}</p>
@@ -313,6 +316,9 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                     fontFamily: 'Noto Sans Thai'
                   }}
                   maxLength={10}
+                  onChange={(e) => {
+                    field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                  }}
                 />
                 {!!errors.contact_tel &&
                   <p className='text-red-500'>{errors.contact_tel.message}</p>

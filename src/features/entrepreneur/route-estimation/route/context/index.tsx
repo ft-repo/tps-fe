@@ -48,10 +48,12 @@ export const RouteProvider = (props: any) => {
       set_id: ''
     },
     raw_body: {
-      start_latitude: 0,
-      start_longitude: 0,
-      end_latitude: 0,
-      end_longitude: 0,
+      start_point: 0,
+      end_point: 0,
+      // start_latitude: 0,
+      // start_longitude: 0,
+      // end_latitude: 0,
+      // end_longitude: 0,
       route_form: []
     }
   })

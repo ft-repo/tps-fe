@@ -257,10 +257,12 @@ export type RouteBridgeResponse = {
 
 // NORMAL
 export interface FieldTypeArr {
-  start_latitude: number | string;
-  start_longitude: number | string;
-  end_latitude: number | string;
-  end_longitude: number | string;
+  // start_latitude: number | string;
+  // start_longitude: number | string;
+  // end_latitude: number | string;
+  // end_longitude: number | string;
+  start_point: number | string;
+  end_point: number | string;
   route_form: FieldTypeForRoute[];
 }
 

@@ -889,6 +889,10 @@ const FormPetition: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
+                      maxLength={10}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                      }}
                     />
                     {!!errors.transferer_phone_number &&
                       <p className='text-red-500'>{errors.transferer_phone_number.message}</p>
