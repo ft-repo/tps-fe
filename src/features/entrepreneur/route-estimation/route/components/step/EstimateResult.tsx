@@ -6,7 +6,7 @@ import React from 'react'
 import { useRouteContext } from '../../context'
 import ContentTab from '../route-estimate/result/ContentTab'
 import ContentRouteList from '../route-estimate/result/ContentRouteList'
-import DIsplayMap from '../map/DIsplayMap'
+import DisplayMap from '../map/DisplayMap'
 // import Map from '../map/Map'
 
 interface Props {
@@ -54,7 +54,7 @@ const EstimateResult: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
             <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[77vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
-              <DIsplayMap
+              <DisplayMap
                 coord={[detail?.start_point || 0, detail?.end_point || 0]}
                 line={detail?.vehicle_route}
               />

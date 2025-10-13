@@ -1,15 +1,16 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { useEffect, useMemo, useRef } from 'react'
-import { Button, Col, Row, Spin } from 'antd'
+import React, { useEffect, useRef } from 'react'
+import { Button, Spin } from 'antd'
 import { TitleSection, ContentSection, ContentRouteList } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { getPetitionEstimateRoute, getPetitionStatus } from '@/store/slices/staff'
 import { useRouteContext } from '../context'
-import MapRoute from '@/components/ui/Maps'
-import { GeoJsonObject } from 'geojson'
+// import MapRoute from '@/components/ui/Maps'
+// import { GeoJsonObject } from 'geojson'
 import { useReactToPrint } from 'react-to-print'
+import DisplayMap from '@/features/entrepreneur/route-estimation/route/components/map/DisplayMap'
 // import Map from '@/features/entrepreneur/route-estimation/route/components/map/Map'
 
 interface Props { }
@@ -36,15 +37,15 @@ const RouteScreen: React.FC<Props> = () => {
   // Last index
   // const lastIndex = detail.vehicle_route.length - 1;
 
-  const geometryData = useMemo<GeoJsonObject | undefined>(() => {
-    if (detail?.vehicle_route) {
-      return {
-        type: 'LineString',
-        coordinates: detail.vehicle_route
-      } as unknown as GeoJsonObject
-    }
-    return undefined
-  }, [detail])
+  // const geometryData = useMemo<GeoJsonObject | undefined>(() => {
+  //   if (detail?.vehicle_route) {
+  //     return {
+  //       type: 'LineString',
+  //       coordinates: detail.vehicle_route
+  //     } as unknown as GeoJsonObject
+  //   }
+  //   return undefined
+  // }, [detail])
 
   // ====== PRINT (A4) ======
   const printRef = useRef<HTMLDivElement>(null)
@@ -82,26 +83,10 @@ const RouteScreen: React.FC<Props> = () => {
               <ContentSection />
             </div>
             <div className="order-first xl:order-last rounded-md border border-gray-200 h-[50vh] xl:h-[75vh] overflow-hidden print-map print-keep-together">
-              <MapRoute
-                coordinates={[
-                  [
-                    Number(detail?.vehicle_route?.[0]?.[0] || 0),
-                    Number(detail?.vehicle_route?.[0]?.[1] || 0),
-                  ],
-                  [
-                    Number(detail?.vehicle_route?.[1]?.[0] || 0),
-                    Number(detail?.vehicle_route?.[1]?.[1] || 0),
-                  ],
-                ]}
-                isRouteEstimate={false}
-                geometry={geometryData}
+              <DisplayMap
+                coord={[detail?.vehicle_route[0] || 0, detail?.vehicle_route[detail?.vehicle_route?.length - 1]]}
+                line={detail?.vehicle_route}
               />
-              {/* {!loading ?
-                <Map
-                  coord={[detail.vehicle_route[firstIndex], detail.vehicle_route[lastIndex]]}
-                  line={detail?.vehicle_route}
-                />
-                : null} */}
             </div>
           </div>
         </section>

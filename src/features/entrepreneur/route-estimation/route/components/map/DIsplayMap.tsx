@@ -9,6 +9,7 @@ import L from 'leaflet';
 interface Props {
   coord: number[][];
   line: number[][];
+  altLine?: number[][];
 }
 
 interface MarkerProps {
@@ -136,7 +137,7 @@ const LocationMarker = (props: MarkerProps) => {
 }
 
 const DisplayMap: React.FC<Props> = (props) => {
-  const { coord, line } = props
+  const { coord, line, altLine } = props
   const mapRef = useRef<LeafletMap | null>(null)
 
   const renderLocationMarker = useMemo(() => {
@@ -168,6 +169,20 @@ const DisplayMap: React.FC<Props> = (props) => {
     return null;
   }, [line])
 
+  const renderAltPolyLine = useMemo(() => {
+    if (altLine && Array.isArray(altLine) && altLine.length > 0) {
+      return (
+        <LineStringPolyline
+          line={altLine}
+          color="purple"
+          weight={6}
+          opacity={0.7}
+        />
+      )
+    }
+    return null;
+  }, [altLine])
+
   return (
     <div className='w-full h-full'>
       <MapContainer
@@ -183,6 +198,7 @@ const DisplayMap: React.FC<Props> = (props) => {
         />
         {renderLocationMarker}
         {renderPolyLine}
+        {renderAltPolyLine}
       </MapContainer>
     </div>
   )

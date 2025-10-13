@@ -314,12 +314,12 @@ const FormPermitRoute: React.FC<Props> = (props) => {
               name='end_point'
               control={control}
               rules={{
-                required: 'กรุณาระบุขนส่งจาก'
+                required: 'กรุณาระบุไปยัง'
               }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ขนส่งจาก <span className='text-red-500'>*</span></label>
+                    <label>ไปยัง <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}
