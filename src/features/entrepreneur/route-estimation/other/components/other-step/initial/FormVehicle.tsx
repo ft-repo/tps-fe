@@ -350,7 +350,7 @@ const FormVehicle: React.FC<Props> = (props) => {
       </section>
       {toweringVehicleWheel !== 0 ?
         <section className='mt-3'>
-          <h5>น้ำหนักลงเพลา รถลากจูง (กิโลกรัม)</h5>
+          <h5>น้ำหนักลงเพลา รถลากจูง (กิโลกรัม) <span className='text-red-500'>*</span></h5>
           <Row gutter={[16, 16]}>
             {toweringVehicleWheel >= 2 ?
               <>
@@ -588,7 +588,7 @@ const FormVehicle: React.FC<Props> = (props) => {
         : null}
       {semiVehicleWheel !== 0 ?
         <section className='mt-3'>
-          <h5>น้ำหนักลงเพลา รถกึ่งพ่วง (กิโลกรัม)</h5>
+          <h5>น้ำหนักลงเพลา รถกึ่งพ่วง (กิโลกรัม) <span className='text-red-500'>*</span></h5>
           <Row gutter={[16, 16]}>
             {semiVehicleWheel >= 2 ?
               <>
