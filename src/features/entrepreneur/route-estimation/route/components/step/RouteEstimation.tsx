@@ -368,6 +368,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
     setIsEditMode(false);
     setSelectedRoute('main');
     setError(null);
+    setValue('start_point', '')
+    setValue('end_point', '')
     // setStartInput('');
     // setEndInput('');
     // Clear any pending timeouts
@@ -377,7 +379,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
     if (endInputTimeoutRef.current) {
       clearTimeout(endInputTimeoutRef.current);
     }
-  }, []);
+  }, [setValue]);
 
   const removeWaypoint = useCallback((index: number) => {
     setWaypoints(waypoints.filter((_, i) => i !== index));
