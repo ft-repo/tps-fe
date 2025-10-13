@@ -6,7 +6,7 @@ import NotificationContent, { SidePanelContentProps } from './NotificationConten
 import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import { setPanelExpand, useAppSelector, useAppDispatch } from '@/store'
 import type { CommonProps } from '@/@types/common'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { getPetitionNotification } from '@/store/slices/staff'
 import { Badge } from 'antd'
 
@@ -25,6 +25,8 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	const { notification } = useAppSelector(state => state.staff.petition)
 
+	const [subtract, setSubtract] = useState<number>(0)
+
 	useEffect(() => {
 		if (authority[0] === 'ADMIN') {
 			// INIT API RECALL
@@ -40,6 +42,7 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	const openPanel = () => {
 		dispatch(setPanelExpand(true))
+		setSubtract(notification.data.length)
 	}
 
 	const closePanel = () => {
@@ -53,7 +56,7 @@ const _SidePanel = (props: SidePanelProps) => {
 	return (
 		<>
 			{authority[0] === 'ADMIN' ?
-				<Badge count={notification.data.length} offset={[-5, 5]}>
+				<Badge count={notification.data.length - subtract} offset={[-5, 5]}>
 					<div
 						className={classNames('text-2xl', className)}
 						onClick={openPanel}
