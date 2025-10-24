@@ -14,13 +14,14 @@ const RouteEstimationScreen: React.FC<Props> = (props) => {
   const { } = props
   const { step } = useRouteContext()
   const { vehicle_selection } = useAppSelector(state => state.master)
+  // const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
   const navigate = useNavigate()
   const openRef = useRef<boolean>(false)
 
   useEffect(() => {
     if (openRef.current) return
     // IF NO
-    if (!vehicle_selection.data.length) {
+    if (!vehicle_selection.data) {
       // SET REF
       openRef.current = true
       // MODAL
@@ -39,7 +40,7 @@ const RouteEstimationScreen: React.FC<Props> = (props) => {
         }
       })
     }
-  }, [navigate, vehicle_selection.data.length])
+  }, [navigate, vehicle_selection.data])
 
   const renderFormStep = useMemo(() => {
     switch (step) {

@@ -71,6 +71,10 @@ const FormUpdateData: React.FC<Props> = (props) => {
                     style={{
                       fontFamily: 'Noto Sans Thai'
                     }}
+                    onChange={(e) => {
+                      field.onChange(e)
+                      setValue('license_plate', '')
+                    }}
                   />
                   {!!errors.vehicle_type &&
                     <p className='text-red-500'>{errors.vehicle_type.message}</p>
@@ -82,7 +86,6 @@ const FormUpdateData: React.FC<Props> = (props) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
           <Controller
-            disabled={vehicle_type === 3}
             name='license_plate'
             control={control}
             rules={{
@@ -91,7 +94,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>เลขทะเบียน / เลขตัวรถ {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
+                  <label>{vehicle_type !== 3 ? 'เลขทะเบียน / เลขตัวรถ' : 'รายการสินค้า'} <span className='text-red-500'>*</span></label>
                   <Input
                     {...field}
                     name={field.name}
@@ -100,6 +103,18 @@ const FormUpdateData: React.FC<Props> = (props) => {
                     size='large'
                     style={{
                       fontFamily: 'Noto Sans Thai'
+                    }}
+                    onChange={(e) => {
+                      if (vehicle_type !== 3) {
+                        field.onChange(
+                          e.target.value
+                            .replace(/[^0-9]/g, "") // Remove non-digits
+                            .replace(/(\d{2})(\d{4})/, "$1-$2") // Format as XX-XXXX
+                            .slice(0, 7) // Limit to 7 characters (including dash)
+                        )
+                      } else {
+                        field.onChange(e)
+                      }
                     }}
                   />
                   {!!errors.license_plate &&

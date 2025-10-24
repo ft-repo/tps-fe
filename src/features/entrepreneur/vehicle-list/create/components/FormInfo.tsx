@@ -75,6 +75,10 @@ const FormInfo: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
+                      onChange={(e) => {
+                        field.onChange(e)
+                        setValue('license_plate', '')
+                      }}
                     />
                     {!!errors.vehicle_type &&
                       <p className='text-red-500'>{errors.vehicle_type.message}</p>
@@ -106,12 +110,16 @@ const FormInfo: React.FC<Props> = (props) => {
                         fontFamily: 'Noto Sans Thai'
                       }}
                       onChange={(e) => {
-                        field.onChange(
-                          e.target.value
-                            .replace(/[^0-9]/g, "") // Remove non-digits
-                            .replace(/(\d{2})(\d{4})/, "$1-$2") // Format as XX-XXXX
-                            .slice(0, 7) // Limit to 7 characters (including dash)
-                        )
+                        if (vehicle_type !== 3) {
+                          field.onChange(
+                            e.target.value
+                              .replace(/[^0-9]/g, "") // Remove non-digits
+                              .replace(/(\d{2})(\d{4})/, "$1-$2") // Format as XX-XXXX
+                              .slice(0, 7) // Limit to 7 characters (including dash)
+                          )
+                        } else {
+                          field.onChange(e)
+                        }
                       }}
                     />
                     {!!errors.license_plate &&
