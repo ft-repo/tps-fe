@@ -28,8 +28,11 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       key: 'business_name',
       width: 300,
       align: 'center',
-      render: (item, record) => {
+      render: (item, record, index) => {
         if (record.business_details?.business_name) {
+          if (data.data.length - 1 === index) {
+            return <strong>{record.business_details?.business_name}</strong>
+          }
           return record.business_details?.business_name
         }
         return '-'
@@ -41,8 +44,11 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       key: 'entity_type_name',
       width: 200,
       align: 'center',
-      render: (item, record) => {
+      render: (item, record, index) => {
         if (record.business_details?.entity_type?.name) {
+          if (data.data.length - 1 === index) {
+            return <strong>{record.business_details?.entity_type?.name}</strong>
+          }
           return record.business_details?.entity_type?.name
         }
         return '-'
@@ -54,8 +60,11 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       key: 'registration_no',
       width: 200,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
           return item
         }
         return '-'
@@ -67,8 +76,11 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       key: 'created_at',
       width: 200,
       align: 'center',
-      render: (item) => {
+      render: (item, record, index) => {
         if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{dayjs(item).locale('th').format('DD/MM/YYYY')}</strong>
+          }
           return dayjs(item).locale('th').format('DD/MM/YYYY')
         }
         return '-'
