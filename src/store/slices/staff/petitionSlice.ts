@@ -718,6 +718,18 @@ const petitionSlice = createSlice({
     },
     setPetitionCount: (state, action) => {
       state.petition_count = action.payload
+    },
+    resetAdminPetitionDocument: (state) => {
+      state.petition.detail.document = initialState.petition.detail.document
+    },
+    resetAdminPetitionRouteEstimation: (state) => {
+      state.petition.detail.estimate.route = initialState.petition.detail.estimate.route
+    },
+    resetPetitionStatus: (state) => {
+      state.petition_status = initialState.petition_status
+    },
+    resetPetitionExtendedStatus: (state) => {
+      state.petition_extended_status = initialState.petition_extended_status
     }
   },
   extraReducers: (builder) => {
@@ -905,7 +917,11 @@ export const {
   setAdminPetitionNotification,
   setAdminPetitionStatus,
   setPetitionCount,
-  setAdminPetitionExtendedStatus
+  setAdminPetitionExtendedStatus,
+  resetAdminPetitionDocument,
+  resetAdminPetitionRouteEstimation,
+  resetPetitionStatus,
+  resetPetitionExtendedStatus
 } = petitionSlice.actions
 
 export default petitionSlice.reducer
