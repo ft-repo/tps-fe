@@ -159,10 +159,10 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     }
   }, [dispatch, auth.user])
 
-  const extractFileName = useCallback((url: string | null) => {
-    const match = url?.match(/\/([^\/]+)$/);
-    return match ? match[1] : '';
-  }, [])
+  // const extractFileName = useCallback((url: string | null) => {
+  //   const match = url?.match(/\/([^\/]+)$/);
+  //   return match ? match[1] : '';
+  // }, [])
 
   const extractUrl = useCallback((url: string) => {
     const path = url.split('/upload')[1];
@@ -179,7 +179,8 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         setValue('file_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(userData.profile_url)),
+            // name: extractFileName(String(userData.profile_url)),
+            name: 'รูปโปรไฟล์',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -200,7 +201,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, userData.profile_url, setValue])
+  }, [userData.profile_url, setValue])
 
   const fetchCIDUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -212,7 +213,8 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         setValue('file_copied_of_citizen_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(userData.business_document.cid_card_file_url)),
+            // name: extractFileName(String(userData.business_document.cid_card_file_url)),
+            name: 'สำเนาบัตรประชาชนผู้มีอำนาจ',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -233,7 +235,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, userData.business_document.cid_card_file_url, setValue])
+  }, [userData.business_document.cid_card_file_url, setValue])
 
   const fetchCertificateUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -245,7 +247,8 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         setValue('file_trasfer_ownership_image_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(userData.business_document.certificate_file_url)),
+            // name: extractFileName(String(userData.business_document.certificate_file_url)),
+            name: 'หนังสือรับรองนิติบุคคล',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -266,7 +269,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, userData.business_document.certificate_file_url, setValue])
+  }, [userData.business_document.certificate_file_url, setValue])
 
   const fetchBusinessUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -278,7 +281,8 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         setValue('file_legal_entity_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(userData.business_document.business_file_url)),
+            // name: extractFileName(String(userData.business_document.business_file_url)),
+            name: 'รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -299,7 +303,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, userData.business_document.business_file_url, setValue])
+  }, [userData.business_document.business_file_url, setValue])
 
   useEffect(() => {
     if (userData.profile_url) {

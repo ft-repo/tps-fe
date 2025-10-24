@@ -48,35 +48,35 @@ const Content = (props: ContentProps) => {
       vehicle_axles: data.vehicle_detail.axis_number || null,
       file_registered_document_id: {
         file: [],
-        url: data.vehicle_detail.registration_document_url || ''
+        url: ''
       },
       file_property_document_id: {
         file: [],
-        url: data.vehicle_owner_documents.owner_document_url || ''
+        url: ''
       },
       file_hire_contact_document_id: {
         file: [],
-        url: data.vehicle_owner_documents.employment_contact_url || ''
+        url: ''
       },
       file_purchase_contact_document_id: {
         file: [],
-        url: data.vehicle_owner_documents.buyer_contact_url || ''
+        url: ''
       },
       file_transfer_contact_document_id: {
         file: [],
-        url: data.vehicle_owner_documents.assignment_contact_url || ''
+        url: ''
       },
       file_front_image_id: {
         file: [],
-        url: data.vehicle_pictures.front_rear_url || ''
+        url: ''
       },
       file_side_image_id: {
         file: [],
-        url: data.vehicle_pictures.side_rear_url || ''
+        url: ''
       },
       file_back_image_id: {
         file: [],
-        url: data.vehicle_pictures.back_rear_url || ''
+        url: ''
       },
     }
   })
@@ -166,10 +166,10 @@ const Content = (props: ContentProps) => {
     }
   }, [dispatch, vehicle.overview.search, id, setOpen, province])
 
-  const extractFileName = useCallback((url: string | null) => {
-    const match = url?.match(/\/([^\/]+)$/);
-    return match ? match[1] : '';
-  }, [])
+  // const extractFileName = useCallback((url: string | null) => {
+  //   const match = url?.match(/\/([^\/]+)$/);
+  //   return match ? match[1] : '';
+  // }, [])
 
   const extractUrl = useCallback((url: string) => {
     const path = url.split('/upload')[1];
@@ -186,7 +186,8 @@ const Content = (props: ContentProps) => {
         setValue('file_registered_document_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(data.vehicle_detail.registration_document_url)),
+            // name: extractFileName(String(data.vehicle_detail.registration_document_url)),
+            name: 'เอกสารเล่มทะเบียน',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -207,7 +208,7 @@ const Content = (props: ContentProps) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, data.vehicle_detail.registration_document_url, setValue])
+  }, [data.vehicle_detail.registration_document_url, setValue])
 
   const fetchPropertyUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -219,7 +220,8 @@ const Content = (props: ContentProps) => {
         setValue('file_property_document_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(data.vehicle_owner_documents.owner_document_url)),
+            // name: extractFileName(String(data.vehicle_owner_documents.owner_document_url)),
+            name: 'เอกสารถือครองสิทธิ์',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -240,7 +242,7 @@ const Content = (props: ContentProps) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, data.vehicle_owner_documents.owner_document_url, setValue])
+  }, [data.vehicle_owner_documents.owner_document_url, setValue])
 
   const fetchHireUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -252,7 +254,8 @@ const Content = (props: ContentProps) => {
         setValue('file_hire_contact_document_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(data.vehicle_owner_documents.employment_contact_url)),
+            // name: extractFileName(String(data.vehicle_owner_documents.employment_contact_url)),
+            name: 'สัญญาจ้างหรือเช่า',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -273,7 +276,7 @@ const Content = (props: ContentProps) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, data.vehicle_owner_documents.employment_contact_url, setValue])
+  }, [data.vehicle_owner_documents.employment_contact_url, setValue])
 
   const fetchPurchaseUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -285,7 +288,8 @@ const Content = (props: ContentProps) => {
         setValue('file_purchase_contact_document_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(data.vehicle_owner_documents.buyer_contact_url)),
+            // name: extractFileName(String(data.vehicle_owner_documents.buyer_contact_url)),
+            name: 'สัญญาเช่าซื้อ',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -306,7 +310,7 @@ const Content = (props: ContentProps) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, data.vehicle_owner_documents.buyer_contact_url, setValue])
+  }, [data.vehicle_owner_documents.buyer_contact_url, setValue])
 
   const fetchTransferUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -318,7 +322,8 @@ const Content = (props: ContentProps) => {
         setValue('file_transfer_contact_document_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(data.vehicle_owner_documents.assignment_contact_url)),
+            // name: extractFileName(String(data.vehicle_owner_documents.assignment_contact_url)),
+            name: 'สัญญามอบสิทธิ์',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -339,7 +344,7 @@ const Content = (props: ContentProps) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, data.vehicle_owner_documents.assignment_contact_url, setValue])
+  }, [data.vehicle_owner_documents.assignment_contact_url, setValue])
 
   const fetchFrontUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -351,7 +356,8 @@ const Content = (props: ContentProps) => {
         setValue('file_front_image_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(data.vehicle_pictures.front_rear_url)),
+            // name: extractFileName(String(data.vehicle_pictures.front_rear_url)),
+            name: 'รูปด้านหน้า',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -372,7 +378,7 @@ const Content = (props: ContentProps) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, data.vehicle_pictures.front_rear_url, setValue])
+  }, [data.vehicle_pictures.front_rear_url, setValue])
 
   const fetchSideUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -384,7 +390,8 @@ const Content = (props: ContentProps) => {
         setValue('file_side_image_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(data.vehicle_pictures.side_rear_url)),
+            // name: extractFileName(String(data.vehicle_pictures.side_rear_url)),
+            name: 'รูปด้านข้าง',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -405,7 +412,7 @@ const Content = (props: ContentProps) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, data.vehicle_pictures.side_rear_url, setValue])
+  }, [data.vehicle_pictures.side_rear_url, setValue])
 
   const fetchBackUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -417,7 +424,8 @@ const Content = (props: ContentProps) => {
         setValue('file_back_image_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(data.vehicle_pictures.back_rear_url)),
+            // name: extractFileName(String(data.vehicle_pictures.back_rear_url)),
+            name: 'รูปด้านหลัง',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -438,7 +446,7 @@ const Content = (props: ContentProps) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, data.vehicle_pictures.back_rear_url, setValue])
+  }, [data.vehicle_pictures.back_rear_url, setValue])
 
   useEffect(() => {
     if (data.vehicle_detail.registration_document_url) {
@@ -478,8 +486,8 @@ const Content = (props: ContentProps) => {
       }
     }
     if (data.vehicle_pictures.back_rear_url) {
-      if (extractUrl(data.vehicle_owner_documents.assignment_contact_url)) {
-        fetchBackUrl(extractUrl(data.vehicle_owner_documents.assignment_contact_url))
+      if (extractUrl(data.vehicle_pictures.back_rear_url)) {
+        fetchBackUrl(extractUrl(data.vehicle_pictures.back_rear_url))
       }
     }
   }, [
@@ -502,6 +510,7 @@ const Content = (props: ContentProps) => {
     data.vehicle_pictures.back_rear_url
   ])
 
+  console.log(form.getValues('file_back_image_id'))
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Row gutter={[16, 16]}>

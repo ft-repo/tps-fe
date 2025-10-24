@@ -116,10 +116,10 @@ const ContentImage: React.FC<Props> = (props) => {
     }
   }, [setValue])
 
-  const extractFileName = useCallback((url: string | null) => {
-    const match = url?.match(/\/([^\/]+)$/);
-    return match ? match[1] : '';
-  }, [])
+  // const extractFileName = useCallback((url: string | null) => {
+  //   const match = url?.match(/\/([^\/]+)$/);
+  //   return match ? match[1] : '';
+  // }, [])
 
   const extractUrl = useCallback((url: string) => {
     const path = url.split('/upload')[1];
@@ -152,7 +152,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('towing_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.towing_vehicle?.vehicle_picture?.front_rear_url)),
+              // name: extractFileName(String(item?.towing_vehicle?.vehicle_picture?.front_rear_url)),
+              name: 'รถลากจูง',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -167,7 +168,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('semi_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url)),
+              // name: extractFileName(String(item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url)),
+              name: 'รถกึ่งพ่วง',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -182,7 +184,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('etc_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.etc_vehicle?.vehicle_picture?.front_rear_url)),
+              // name: extractFileName(String(item?.etc_vehicle?.vehicle_picture?.front_rear_url)),
+              name: 'เครื่องจักร / สินค้า',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -197,7 +200,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('truck_dimension_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.truck_dimension_url)),
+              // name: extractFileName(String(item?.truck_dimension_url)),
+              name: 'รูปแบบที่แสดงมิติ รถลากจูง',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -212,7 +216,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('semi_dimension_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.semi_trailer_dimension_url)),
+              // name: extractFileName(String(item?.semi_trailer_dimension_url)),
+              name: 'รูปแบบที่แสดงมิติ รถกึ่งพ่วง',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -227,7 +232,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('cargo_dimension_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.cargo_dimension_url)),
+              // name: extractFileName(String(item?.cargo_dimension_url)),
+              name: 'รูปแบบที่แสดงมิติ สินค้า / เครื่องจักร',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -242,7 +248,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('combined_vehicle_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.combined_vehicle_url)),
+              // name: extractFileName(String(item?.combined_vehicle_url)),
+              name: 'รูปแบบยานพาหนะรวมสิ่งของ',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -257,7 +264,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('turn_radius_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.turn_radius)),
+              // name: extractFileName(String(item?.turn_radius)),
+              name: 'รูปแบบที่แสดงรัศมีวงเลี่ยว',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -272,7 +280,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('highway_permit_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.highway_dept_permit_url)),
+              // name: extractFileName(String(item?.highway_dept_permit_url)),
+              name: 'เอกสารขออนุญาตจาก ทล.',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -287,7 +296,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('highway_number_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.highway_dept_permit_number_url)),
+              // name: extractFileName(String(item?.highway_dept_permit_number_url)),
+              name: 'เลขที่ขออนุญาตเดิมจาก ทล.',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -302,7 +312,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('rural_permit_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.rural_highway_dept_permit_url)),
+              // name: extractFileName(String(item?.rural_highway_dept_permit_url)),
+              name: 'เอกสารขออนุญาตจาก ทช.',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -317,7 +328,8 @@ const ContentImage: React.FC<Props> = (props) => {
           setValue('rural_number_image.file', [
             {
               // crossOrigin: 'use-credentials',
-              name: extractFileName(String(item?.rural_highway_dept_permit_url)),
+              // name: extractFileName(String(item?.rural_highway_dept_permit_url)),
+              name: 'เลขที่ขออนุญาตเดิมจาก ทช.',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -339,7 +351,7 @@ const ContentImage: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch, extractFileName, item, setValue])
+  }, [dispatch, setValue])
 
   useEffect(() => {
     if (item?.towing_vehicle?.vehicle_picture?.front_rear_url) {
@@ -589,12 +601,12 @@ const ContentImage: React.FC<Props> = (props) => {
             name='etc_image.file'
             control={control}
             rules={{
-              required: 'กรุณาอัปโหลดเครื่องจักร'
+              required: 'กรุณาอัปโหลดเครื่องจักร / สินค้า'
             }}
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>เครื่องจักร <span className='text-red-500'>*</span></label>
+                  <label>เครื่องจักร / สินค้า <span className='text-red-500'>*</span></label>
                   <Upload
                     {...field}
                     fileList={field.value || []}

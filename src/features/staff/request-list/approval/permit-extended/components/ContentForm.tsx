@@ -141,10 +141,10 @@ const ContentForm: React.FC<Props> = (props) => {
     }
   }, [petitionId, statusId, dispatch, navigate, petition_extended.overview.search, petition_history_extended.overview.search])
 
-  const extractFileName = useCallback((url: string | null) => {
-    const match = url?.match(/\/([^\/]+)$/);
-    return match ? match[1] : '';
-  }, [])
+  // const extractFileName = useCallback((url: string | null) => {
+  //   const match = url?.match(/\/([^\/]+)$/);
+  //   return match ? match[1] : '';
+  // }, [])
 
   const extractUrl = useCallback((url: string) => {
     const path = url.split('/upload')[1];
@@ -161,7 +161,8 @@ const ContentForm: React.FC<Props> = (props) => {
         setValue('file_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(petition_extended_status[2]?.document_url)),
+            // name: extractFileName(String(petition_extended_status[2]?.document_url)),
+            name: 'เอกสารใบอนุญาต',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -181,7 +182,7 @@ const ContentForm: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, petition_extended_status, setValue])
+  }, [setValue])
 
   useEffect(() => {
     if (petition_extended_status[2]?.document_url) {
@@ -198,12 +199,12 @@ const ContentForm: React.FC<Props> = (props) => {
           name='file_id.file'
           control={control}
           rules={{
-            required: 'กรุณาอัปโหลดเอกสารลงนาม'
+            required: 'กรุณาอัปโหลดเอกสารใบอนุญาต'
           }}
           render={({ field }) => {
             return (
               <fieldset>
-                <label className='block'>เอกสารลงนาม (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
+                <label className='block'>เอกสารใบอนุญาต (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}

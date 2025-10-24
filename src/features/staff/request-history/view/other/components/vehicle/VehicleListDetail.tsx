@@ -35,6 +35,8 @@ const VehicleListDetail: React.FC<Props> = (props) => {
   const [semiUrl, setSemiUrl] = useState<ImageState>(INIT_IMG_STATE)
   const [etcUrl, setEtcUrl] = useState<ImageState>(INIT_IMG_STATE)
 
+  console.log(item)
+
   const extractUrl = useCallback((url: string) => {
     const path = url.split('/upload')[1];
     return path

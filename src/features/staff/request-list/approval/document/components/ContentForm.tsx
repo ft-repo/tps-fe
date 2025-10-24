@@ -153,10 +153,10 @@ const ContentForm: React.FC<Props> = (props) => {
     }
   }, [petitionId, statusId, dispatch, navigate, petition.overview.search])
 
-  const extractFileName = useCallback((url: string | null) => {
-    const match = url?.match(/\/([^\/]+)$/);
-    return match ? match[1] : '';
-  }, [])
+  // const extractFileName = useCallback((url: string | null) => {
+  //   const match = url?.match(/\/([^\/]+)$/);
+  //   return match ? match[1] : '';
+  // }, [])
 
   const extractUrl = useCallback((url: string) => {
     const path = url.split('/upload')[1];
@@ -173,7 +173,8 @@ const ContentForm: React.FC<Props> = (props) => {
         setValue('file_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(petition_status[0]?.document_url)),
+            // name: extractFileName(String(petition_status[0]?.document_url)),
+            name: 'เอกสารตอบกลับ',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -193,7 +194,7 @@ const ContentForm: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, petition_status, setValue])
+  }, [setValue])
 
   useEffect(() => {
     if (petition_status[0]?.document_url) {
