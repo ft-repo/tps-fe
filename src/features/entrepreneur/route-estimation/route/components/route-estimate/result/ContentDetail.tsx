@@ -145,11 +145,11 @@ const ContentDetail: React.FC<Props> = (props) => {
   const mapPlaceholder = useMemo(() => {
     switch (dataParser.raw_body.route_form[index].match_type) {
       case 1:
-        return 'รถลากจูง + รถกึ่งพ่วง + สินค้า / เครื่องจักร'
+        return 'รถลากจูง + รถกึ่งพ่วง + เครื่องจักร / สินค้า'
       case 2:
         return 'รถลากจูง + รถกึ่งพ่วง'
       case 3:
-        return 'สินค้า / เครื่องจักร'
+        return 'เครื่องจักร / สินค้า'
       default:
         return '-'
     }
@@ -415,7 +415,7 @@ const ContentDetail: React.FC<Props> = (props) => {
             <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail?.width || 0), Number(selectSemi?.vehicle_detail?.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail?.length || 0), Number(selectSemi?.vehicle_detail?.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail?.height || 0), Number(selectTowing?.vehicle_detail?.height || 0))}`}</p>
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
-            <p><strong>มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.):</strong></p>
+            <p><strong>มิติรถเปล่ารวม เครื่องจักร / สินค้า(ม.):</strong></p>
             <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail?.width || 0), Number(selectSemi?.vehicle_detail?.width || 0), Number(selectETC?.vehicle_detail?.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail?.length || 0), Number(selectSemi?.vehicle_detail?.length || 0), Number(selectETC?.vehicle_detail?.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail?.height || 0), Number(selectSemi?.vehicle_detail?.height || 0), Number(selectETC?.vehicle_detail?.height || 0))}`}</p>
           </div>
         </div>

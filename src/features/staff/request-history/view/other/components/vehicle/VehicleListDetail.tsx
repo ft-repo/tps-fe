@@ -286,7 +286,7 @@ const VehicleListDetail: React.FC<Props> = (props) => {
                       />
                       <section className='bg-gradient-to-r from-black absolute bottom-0 left-0 right-0'>
                         <div className='block p-3'>
-                          <p className='text-white'>รถลากจูง</p>
+                          <p className='text-white'>รถกึ่งพ่วง</p>
                         </div>
                       </section>
                     </figure>
@@ -303,7 +303,7 @@ const VehicleListDetail: React.FC<Props> = (props) => {
                       />
                       <section className='bg-gradient-to-r from-black absolute bottom-0 left-0 right-0'>
                         <div className='block p-3'>
-                          <p className='text-white'>รถลากจูง</p>
+                          <p className='text-white'>รถกึ่งพ่วง</p>
                         </div>
                       </section>
                     </figure>
@@ -362,7 +362,7 @@ const VehicleListDetail: React.FC<Props> = (props) => {
                       />
                       <section className='bg-gradient-to-r from-black absolute bottom-0 left-0 right-0'>
                         <div className='block p-3'>
-                          <p className='text-white'>รถลากจูง</p>
+                          <p className='text-white'>เครื่องจักร / สินค้า</p>
                         </div>
                       </section>
                     </figure>
@@ -379,7 +379,7 @@ const VehicleListDetail: React.FC<Props> = (props) => {
                       />
                       <section className='bg-gradient-to-r from-black absolute bottom-0 left-0 right-0'>
                         <div className='block p-3'>
-                          <p className='text-white'>รถลากจูง</p>
+                          <p className='text-white'>เครื่องจักร / สินค้า</p>
                         </div>
                       </section>
                     </figure>
@@ -396,7 +396,7 @@ const VehicleListDetail: React.FC<Props> = (props) => {
                       />
                       <section className='bg-gradient-to-r from-black absolute bottom-0 left-0 right-0'>
                         <div className='block p-3'>
-                          <p className='text-white'>เครื่องจักร</p>
+                          <p className='text-white'>เครื่องจักร / สินค้า</p>
                         </div>
                       </section>
                     </figure>
@@ -406,7 +406,7 @@ const VehicleListDetail: React.FC<Props> = (props) => {
             </Col>
             <Col xs={24} sm={24} md={24} lg={14} xl={14} xxl={16}>
               <Descriptions
-                title="ข้อมูลเครื่องจักร"
+                title="ข้อมูลเครื่องจักร / สินค้า"
                 items={etc_vehicle}
                 column={1}
                 layout='vertical'

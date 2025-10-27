@@ -86,7 +86,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
               <Col key={vehicleIndex} xs={24} sm={24} md={24} lg={12} xl={12} xxl={8}>
                 <fieldset>
                   <h5>{vehicleItem.vehicle_type}</h5>
-                  <label>{vehicleItem.vehicle_type === 'เครื่องจักร / สินค้า' ? 'ชื่อสินค้า / เครื่องจักร' : 'เลขทะเบียน / เลขตัวรถ'}</label>
+                  <label>{vehicleItem.vehicle_type === 'เครื่องจักร / สินค้า' ? 'ชื่อเครื่องจักร / สินค้า' : 'เลขทะเบียน / เลขตัวรถ'}</label>
                   <Select
                     disabled
                     allowClear
@@ -262,12 +262,12 @@ const FormPermitDocument: React.FC<Props> = (props) => {
               name={`vehicle.${index}.cargo_dimension_url.file`}
               control={control}
               // rules={{
-              //   required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ สินค้า / เครื่องจักร'
+              //   required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ เครื่องจักร / สินค้า'
               // }}
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>รูปแบบที่แสดงมิติ สินค้า / เครื่องจักร (ถ้ามี)</label>
+                    <label>รูปแบบที่แสดงมิติ เครื่องจักร / สินค้า (ถ้ามี)</label>
                     <Upload
                       {...field}
                       fileList={field.value || []}

@@ -233,7 +233,7 @@ const ContentImage: React.FC<Props> = (props) => {
             {
               // crossOrigin: 'use-credentials',
               // name: extractFileName(String(item?.cargo_dimension_url)),
-              name: 'รูปแบบที่แสดงมิติ สินค้า / เครื่องจักร',
+              name: 'รูปแบบที่แสดงมิติ เครื่องจักร / สินค้า',
               // percent: 100,
               uid: '1',
               status: 'done',
@@ -819,12 +819,12 @@ const ContentImage: React.FC<Props> = (props) => {
             name='cargo_dimension_image.file'
             control={control}
             rules={{
-              required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ สินค้า / เครื่องจักร'
+              required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ เครื่องจักร / สินค้า'
             }}
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>รูปแบบที่แสดงมิติ สินค้า / เครื่องจักร</label>
+                  <label>รูปแบบที่แสดงมิติ เครื่องจักร / สินค้า</label>
                   <Upload
                     {...field}
                     fileList={field.value || []}

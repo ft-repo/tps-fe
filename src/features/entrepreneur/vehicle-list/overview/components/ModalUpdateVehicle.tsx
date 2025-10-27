@@ -8,7 +8,7 @@ import { INIT_VEHICLE_MODAL } from '../screen';
 import { useForm } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { FormUpdateData, FormUpdateDocument } from '../components';
-import { setLoading, useAppDispatch, useAppSelector } from '@/store';
+import { getProductType, setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getUploadAPI, putVehicleAPI } from '@/services/entrepreneur/VehicleListService';
 import { getVehicleData } from '@/store/slices/entrepreneur';
 
@@ -128,6 +128,7 @@ const Content = (props: ContentProps) => {
           okText: 'ตกลง',
           onOk: () => {
             dispatch(getVehicleData(vehicle.overview.search))
+            dispatch(getProductType())
             setOpen(INIT_VEHICLE_MODAL)
           },
           okButtonProps: {

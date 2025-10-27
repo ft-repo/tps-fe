@@ -159,3 +159,11 @@ export const getNewSubDistrictAPI = async (params: RegionParams) => {
     params: { ...params }
   })
 }
+
+// GET PRODUCT TYPE
+export const getProductTypeAPI = async () => {
+  return ApiService.fetchData<APIResponse[]>({
+    url: '/lists/product_type',
+    method: 'get',
+  })
+}

@@ -40,10 +40,13 @@ const TableVehicleList: React.FC<Props> = (props) => {
       width: 300,
       align: 'center',
       render: (item, record, index) => {
-        if (data.data.length - 1 === index) {
-          return <strong>{item}</strong>
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
+          return item
         }
-        return item
+        return '-'
       }
     },
     {
@@ -54,10 +57,13 @@ const TableVehicleList: React.FC<Props> = (props) => {
       width: 300,
       align: 'center',
       render: (item, record, index) => {
-        if (data.data.length - 1 === index) {
-          return <strong>{item}</strong>
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
+          return item
         }
-        return item
+        return '-'
       }
     },
     {
@@ -67,10 +73,13 @@ const TableVehicleList: React.FC<Props> = (props) => {
       width: 300,
       align: 'center',
       render: (item, record, index) => {
-        if (data.data.length - 1 === index) {
-          return <strong>{item}</strong>
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
+          return item
         }
-        return item
+        return '-'
       }
     },
     {
@@ -80,10 +89,13 @@ const TableVehicleList: React.FC<Props> = (props) => {
       width: 300,
       align: 'center',
       render: (item, record, index) => {
-        if (data.data.length - 1 === index) {
-          return <strong>{item}</strong>
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
+          return item
         }
-        return item
+        return '-'
       }
     },
     {
@@ -93,10 +105,13 @@ const TableVehicleList: React.FC<Props> = (props) => {
       width: 300,
       align: 'center',
       render: (item, record, index) => {
-        if (data.data.length - 1 === index) {
-          return <strong>{item}</strong>
+        if (item) {
+          if (data.data.length - 1 === index) {
+            return <strong>{item}</strong>
+          }
+          return item
         }
-        return item
+        return '-'
       }
     },
     {
