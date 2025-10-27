@@ -89,12 +89,12 @@ const FormUpdateData: React.FC<Props> = (props) => {
             name='license_plate'
             control={control}
             rules={{
-              required: 'กรุณาระบุเลขทะเบียน / เลขตัวรถ'
+              required: vehicle_type !== 3 ? 'กรุณาระบุเลขทะเบียน / เลขตัวรถ' : 'กรุณาระบุเครื่องจักร / สินค้า'
             }}
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>{vehicle_type !== 3 ? 'เลขทะเบียน / เลขตัวรถ' : 'รายการสินค้า'} <span className='text-red-500'>*</span></label>
+                  <label>{vehicle_type !== 3 ? 'เลขทะเบียน / เลขตัวรถ' : 'เครื่องจักร / สินค้า'} <span className='text-red-500'>*</span></label>
                   {vehicle_type !== 3 ?
                     <Input
                       {...field}
