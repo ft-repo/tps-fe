@@ -2,10 +2,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useAppSelector } from '@/store';
 import { Badge, Button, Col, Input, Row } from 'antd';
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
+  roadCode: string | null | undefined;
   handleSearch: (value: FieldType) => void;
 }
 
@@ -17,9 +18,10 @@ export interface FieldType {
 let timeout: any;
 
 const FormSearchPetition: React.FC<Props> = (props) => {
-  const { handleSearch } = props
+  const { roadCode, handleSearch } = props
   const { petition_count } = useAppSelector(state => state.staff.petition)
   const submitRef = useRef<HTMLButtonElement>(null)
+  const setRoadCodeRef = useRef<string | null | undefined>(null)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -28,7 +30,24 @@ const FormSearchPetition: React.FC<Props> = (props) => {
     }
   })
 
-  const { handleSubmit, control, setValue } = form
+  const { handleSubmit, control, setValue, watch } = form
+
+  // Only set roadCode once per unique roadCode value
+  useEffect(() => {
+    if (roadCode && roadCode !== setRoadCodeRef.current) {
+      setValue('search', roadCode)
+      setRoadCodeRef.current = roadCode
+    }
+  }, [roadCode, setValue])
+
+  useEffect(() => {
+    if (watch('search') === roadCode) {
+      if (timeout) clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        submitRef.current?.click()
+      }, 700)
+    }
+  }, [roadCode, watch])
 
   const onSubmit = useCallback((value: FieldType) => {
     handleSearch(value)

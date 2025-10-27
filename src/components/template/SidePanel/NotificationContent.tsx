@@ -111,11 +111,11 @@ const Content = (props: ContentProps) => {
                       onClick={() => {
                         if (item.from === 'petition') {
                           // navigate(`/request-list/approval/document?petition_id=${item.petition_id}&status_id=${item.status_id}&is_approved=null`)
-                          navigate(`/request-list/overview?tabKey=1`)
+                          navigate(`/request-list/overview?tabKey=1&petition_id=${item.petition_id}`)
                         }
                         if (item.from === 'extended') {
                           // navigate(`/request-list/approval/other?petition_id=${item.petition_id}&status_id=${item.status_id}&is_approved=null`)
-                          navigate(`/request-list/overview?tabKey=2`)
+                          navigate(`/request-list/overview?tabKey=2&petition_id=${item.petition_id}`)
                         }
                         dispatch(setPanelExpand(false))
                       }}

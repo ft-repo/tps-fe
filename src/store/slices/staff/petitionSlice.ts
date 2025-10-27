@@ -723,7 +723,16 @@ const petitionSlice = createSlice({
       state.petition.detail.document = initialState.petition.detail.document
     },
     resetAdminPetitionRouteEstimation: (state) => {
-      state.petition.detail.estimate.route = initialState.petition.detail.estimate.route
+      state.petition.detail.estimate.route = initialState.petition.detail.estimate.route,
+        state.petition.detail.estimate.summary = initialState.petition.detail.estimate.summary,
+        state.petition.detail.estimate.bridge = initialState.petition.detail.estimate.bridge,
+        state.petition.detail.estimate.turn_radius = initialState.petition.detail.estimate.turn_radius
+    },
+    resetAdminPetitionVehicle: (state) => {
+      state.petition.detail.vehicle = initialState.petition.detail.vehicle
+    },
+    resetAdminPetitionExtendedDetail: (state) => {
+      state.petition_extended.detail = initialState.petition_extended.detail
     },
     resetPetitionStatus: (state) => {
       state.petition_status = initialState.petition_status
@@ -920,6 +929,8 @@ export const {
   setAdminPetitionExtendedStatus,
   resetAdminPetitionDocument,
   resetAdminPetitionRouteEstimation,
+  resetAdminPetitionVehicle,
+  resetAdminPetitionExtendedDetail,
   resetPetitionStatus,
   resetPetitionExtendedStatus
 } = petitionSlice.actions

@@ -133,7 +133,7 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
       align: 'center',
       render: (item, record, index) => {
         if (item) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return (
               <strong>{
                 (record as any).user_created?.business_details?.business_name
@@ -142,7 +142,7 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
               </strong>
             )
           }
-          return item
+          return (record as any).user_created?.business_details?.business_name ?? (record as any).poa_name ?? '-'
         }
         return '-'
       }
@@ -159,7 +159,7 @@ const TablePetitionExtended: React.FC<Props> = ({ data, loading, handleTableChan
       align: 'center',
       render: (item, record, index) => {
         if (item) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <strong>{dayjs(item).format('DD/MM/YYYY')}</strong>
           }
           return dayjs(item).format('DD/MM/YYYY')

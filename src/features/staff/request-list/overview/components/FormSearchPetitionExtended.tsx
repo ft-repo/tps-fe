@@ -2,10 +2,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useAppSelector } from '@/store';
 import { Badge, Button, Col, Input, Row } from 'antd';
-import React, { useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
+  poaName: string | null | undefined;
   handleSearch: (value: FieldType) => void;
 }
 
@@ -18,9 +19,10 @@ interface FieldType {
 let timeout: any;
 
 const FormSearchPetitionExtended: React.FC<Props> = (props) => {
-  const { handleSearch } = props
+  const { poaName, handleSearch } = props
   const { petition_count } = useAppSelector(state => state.staff.petition)
   const submitRef = useRef<HTMLButtonElement>(null)
+  const setPoaNameRef = useRef<string | null | undefined>(null)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -29,7 +31,24 @@ const FormSearchPetitionExtended: React.FC<Props> = (props) => {
     }
   })
 
-  const { handleSubmit, control, setValue } = form
+  const { handleSubmit, control, setValue, watch } = form
+
+  // Only set poaName once per unique poaName value
+  useEffect(() => {
+    if (poaName && poaName !== setPoaNameRef.current) {
+      setValue('search', poaName)
+      setPoaNameRef.current = poaName
+    }
+  }, [poaName, setValue])
+
+  useEffect(() => {
+    if (watch('search') === poaName) {
+      if (timeout) clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        submitRef.current?.click()
+      }, 700)
+    }
+  }, [poaName, watch])
 
   const onSubmit = useCallback((value: FieldType) => {
     handleSearch(value)

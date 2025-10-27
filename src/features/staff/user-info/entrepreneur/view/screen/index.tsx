@@ -155,10 +155,10 @@ const ViewScreen: React.FC<Props> = (props) => {
     }
   }, [dispatch])
 
-  const extractFileName = useCallback((url: string | null) => {
-    const match = url?.match(/\/([^\/]+)$/);
-    return match ? match[1] : '';
-  }, [])
+  // const extractFileName = useCallback((url: string | null) => {
+  //   const match = url?.match(/\/([^\/]+)$/);
+  //   return match ? match[1] : '';
+  // }, [])
 
   const extractUrl = useCallback((url: string) => {
     const path = url.split('/upload')[1];
@@ -175,7 +175,8 @@ const ViewScreen: React.FC<Props> = (props) => {
         setValue('file_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(detail.profile_url)),
+            // name: extractFileName(String(detail.profile_url)),
+            name: 'รูปโปรไฟล์',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -196,7 +197,7 @@ const ViewScreen: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, detail.profile_url, setValue])
+  }, [detail.profile_url, setValue])
 
   const fetchCIDUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -208,7 +209,8 @@ const ViewScreen: React.FC<Props> = (props) => {
         setValue('file_copied_of_citizen_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(detail.documents.cid_card_file_url)),
+            // name: extractFileName(String(detail.documents.cid_card_file_url)),
+            name: 'สำเนาบัตรประชาชนผู้มีอำนาจ',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -229,7 +231,7 @@ const ViewScreen: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, detail.documents.cid_card_file_url, setValue])
+  }, [detail.documents.cid_card_file_url, setValue])
 
   const fetchCertificateUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -241,7 +243,8 @@ const ViewScreen: React.FC<Props> = (props) => {
         setValue('file_trasfer_ownership_image_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(detail.documents.certificate_file_url)),
+            // name: extractFileName(String(detail.documents.certificate_file_url)),
+            name: 'หนังสือรับรองนิติบุคคล',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -262,7 +265,7 @@ const ViewScreen: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, detail.documents.certificate_file_url, setValue])
+  }, [detail.documents.certificate_file_url, setValue])
 
   const fetchBusinessUrl = useCallback(async (imgUrl: string) => {
     setLoading(true)
@@ -274,7 +277,8 @@ const ViewScreen: React.FC<Props> = (props) => {
         setValue('file_legal_entity_id.file', [
           {
             // crossOrigin: 'use-credentials',
-            name: extractFileName(String(detail.documents.business_file_url)),
+            // name: extractFileName(String(detail.documents.business_file_url)),
+            name: 'รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -295,7 +299,7 @@ const ViewScreen: React.FC<Props> = (props) => {
     } finally {
       setLoading(false)
     }
-  }, [extractFileName, detail.documents.business_file_url, setValue])
+  }, [detail.documents.business_file_url, setValue])
 
   useEffect(() => {
     if (detail.profile_url) {

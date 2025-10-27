@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Tabs, type TabsProps } from 'antd'
 import { ContentPetition, ContentPetitionExtended } from '../components'
 import { useSearchParams } from 'react-router-dom'
@@ -15,6 +15,12 @@ const RequestListScreen: React.FC<Props> = (props) => {
   // RETURN TAB
   const [params] = useSearchParams()
   const returnTab = params.get('tabKey')
+
+  useEffect(() => {
+    if (returnTab) {
+      setTabKey(returnTab)
+    }
+  }, [returnTab])
 
   const items: TabsProps['items'] = [
     {
@@ -31,7 +37,7 @@ const RequestListScreen: React.FC<Props> = (props) => {
 
   return (
     <Tabs
-      defaultActiveKey={returnTab ? returnTab : tabKey}
+      activeKey={tabKey}
       items={items}
       onChange={(tabKey) => setTabKey(tabKey)}
     />

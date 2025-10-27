@@ -5,6 +5,7 @@ import { FormSearchPetition, TablePetition } from '../components'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { getAdminPetitionData, setAdminPetitionData } from '@/store/slices/staff'
 import { FieldType } from './FormSearchPetition'
+import { useSearchParams } from 'react-router-dom'
 
 
 interface Props { }
@@ -13,6 +14,10 @@ const ContentPetition: React.FC<Props> = (props) => {
   const { } = props
   const dispatch = useAppDispatch()
   const { petition, loading } = useAppSelector(state => state.staff.petition)
+  const [params] = useSearchParams()
+  const petitionId = params.get('petition_id')
+  const findPetition = petition.overview.data.data.find(item => Number(item.petition_id) === Number(petitionId))
+  const road_code = findPetition?.road_code
 
   useEffect(() => {
     dispatch(getAdminPetitionData(petition.overview.search))
@@ -61,12 +66,13 @@ const ContentPetition: React.FC<Props> = (props) => {
       dispatch(setLoading(false))
     }
   }, [dispatch, petition.overview])
-  
+
   return (
     <div>
       <h3>รายการขออนุญาตรถหมวด 2 (4 - 7 เพลา)</h3>
       <section className="mt-5">
         <FormSearchPetition
+          roadCode={road_code}
           handleSearch={handleSearch}
         />
       </section>

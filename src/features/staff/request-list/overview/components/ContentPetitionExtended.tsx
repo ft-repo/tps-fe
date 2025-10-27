@@ -5,15 +5,19 @@ import { FormSearchPetitionExtended, TablePetitionExtended } from '../components
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { getAdminPetitionExtendedData, setAdminPetitionExtendedData } from '@/store/slices/staff'
 import type { FieldType } from './FormSearchPetition'
+import { useSearchParams } from 'react-router-dom'
 
 interface Props { }
 
 const ContentPetitionExtended: React.FC<Props> = (props) => {
   const { } = props
   const dispatch = useAppDispatch()
-
   // ⬇️ ตาม state structure เดิม: state.staff.petition มีทั้ง petition และ petition_extended
   const { petition_extended, loading } = useAppSelector(state => state.staff.petition)
+  const [params] = useSearchParams()
+  const petitionId = params.get('petition_id')
+  const findPetition = petition_extended.overview.data.data.find(item => Number(item.id) === Number(petitionId))
+  const poaName = findPetition?.poa_name
 
   // ⬇️ โหลดข้อมูลครั้งแรก + เมื่อ search params ของ extended เปลี่ยน
   useEffect(() => {
@@ -59,6 +63,7 @@ const ContentPetitionExtended: React.FC<Props> = (props) => {
       <h3>รายการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)</h3>
       <section className="mt-5">
         <FormSearchPetitionExtended
+          poaName={poaName}
           handleSearch={handleSearch}
         />
       </section>
