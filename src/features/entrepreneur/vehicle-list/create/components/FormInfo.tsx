@@ -77,7 +77,7 @@ const FormInfo: React.FC<Props> = (props) => {
                       }}
                       onChange={(e) => {
                         field.onChange(e)
-                        setValue('license_plate', [] as any)
+                        setValue('license_plate', [])
                       }}
                     />
                     {!!errors.vehicle_type &&
