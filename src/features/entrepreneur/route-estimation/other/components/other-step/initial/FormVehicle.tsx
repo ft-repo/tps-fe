@@ -109,7 +109,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       placeholder='กรุณาเลือก'
                       options={[
                         {
-                          label: 'รถลากจูง + รถกึ่งพ่วง + สินค้า / เครื่องจักร',
+                          label: 'รถลากจูง + รถกึ่งพ่วง + เครื่องจักร / สินค้า',
                           value: 1
                         },
                         {
@@ -117,7 +117,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                           value: 2
                         },
                         {
-                          label: 'สินค้า / เครื่องจักร',
+                          label: 'เครื่องจักร / สินค้า',
                           value: 3
                         },
                       ]}
@@ -309,13 +309,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                 name='etc_vehicle'
                 control={control}
                 rules={{
-                  required: 'กรุณาระบุชื่อสินค้า / เครื่องจักร'
+                  required: 'กรุณาระบุชื่อเครื่องจักร / สินค้า'
                 }}
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <h5>สินค้า / เครื่องจักร</h5>
-                      <label>ชื่อสินค้า / เครื่องจักร <span className='text-red-500'>*</span></label>
+                      <h5>เครื่องจักร / สินค้า</h5>
+                      <label>ชื่อเครื่องจักร / สินค้า <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear

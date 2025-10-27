@@ -364,7 +364,7 @@ const ContentDetail: React.FC<Props> = (props) => {
                 )}
               >
                 <Card.Meta
-                  title="เครื่องจักร"
+                  title="เครื่องจักร / สินค้า"
                   description={(
                     <>
                       <p>{detail?.etc_vehicle?.vehicle_weight || 0} กก.</p>
