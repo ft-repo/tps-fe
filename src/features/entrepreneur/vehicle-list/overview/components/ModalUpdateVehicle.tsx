@@ -33,10 +33,12 @@ const Content = (props: ContentProps) => {
   const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
   const { province } = useAppSelector(state => state.master)
 
+  console.log(data.vehicle_detail.vehicle_type_id)
+
   const form = useForm<FieldType>({
     defaultValues: {
       vehicle_type: data.vehicle_detail.vehicle_type_id || null,
-      license_plate: data.vehicle_detail.plate_no || '',
+      license_plate: data.vehicle_detail.vehicle_type_id === 3 ? data.vehicle_detail.plate_no.split(',').map(item => item.trim()) : data.vehicle_detail.plate_no,
       vehicle_model: data.vehicle_detail.brand || '',
       province: province.find(item => item.name_th === data.vehicle_detail.plate_province)?.id || null,
       vehicle_weight: data.vehicle_detail.weight || 0,
@@ -91,7 +93,7 @@ const Content = (props: ContentProps) => {
     const body: APIPostBody = {
       vehicle_detail: {
         vehicle_type_id: value.vehicle_type || '',
-        plate_no: value.license_plate || '',
+        plate_no: value.vehicle_type === 3 ? [...value.license_plate].join(',') : value.license_plate,
         plate_province: province.find(item => item.id === value.province)?.name_th || '',
         brand: value.vehicle_model || '',
         weight: Number(value.vehicle_weight) || 0,
@@ -511,7 +513,6 @@ const Content = (props: ContentProps) => {
     data.vehicle_pictures.back_rear_url
   ])
 
-  console.log(form.getValues('file_back_image_id'))
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Row gutter={[16, 16]}>

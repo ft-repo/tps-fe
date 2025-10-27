@@ -7,7 +7,7 @@ import React, { useCallback } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi'
 import { useAppSelector } from '@/store'
-import { AutoComplete, Button, Col, Input, message, Row, Select, Upload } from 'antd'
+import { Button, Col, Input, message, Row, Select, Upload } from 'antd'
 import { RcFile } from 'antd/es/upload'
 
 interface Props {
@@ -77,7 +77,7 @@ const FormInfo: React.FC<Props> = (props) => {
                       }}
                       onChange={(e) => {
                         field.onChange(e)
-                        setValue('license_plate', '')
+                        setValue('license_plate', [] as any)
                       }}
                     />
                     {!!errors.vehicle_type &&
@@ -124,14 +124,12 @@ const FormInfo: React.FC<Props> = (props) => {
                         }}
                       />
                       :
-                      <AutoComplete
+                      <Select
                         {...field}
-                        placeholder='กรุณาระบุ'
-                        className='w-full'
-                        size='large'
-                        style={{
-                          fontFamily: 'Noto Sans Thai'
-                        }}
+                        allowClear
+                        showSearch
+                        mode='tags'
+                        placeholder='กรุณาเลือก'
                         options={product_type}
                         fieldNames={{
                           label: 'name',
@@ -139,6 +137,11 @@ const FormInfo: React.FC<Props> = (props) => {
                         }}
                         filterOption={(input, option) => {
                           return option ? option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                        }}
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
                         }}
                       />
                     }

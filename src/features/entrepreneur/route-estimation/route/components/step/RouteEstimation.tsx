@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { FieldTypeArr } from '@/@types/entrepreneur/route-estimation'
+import { FieldTypeArr, RegionState } from '@/@types/entrepreneur/route-estimation'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { Button, Col, Input, Modal, Row } from 'antd'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -13,6 +13,8 @@ import { useRouteContext } from '../../context'
 import Map from '../map/Map'
 import { FaTimes, FaEdit } from 'react-icons/fa';
 import { calculateRoute, geocodeAddress, swapCoordinates, swapCoordinatesDeep } from '@/utils/custom/updateMapAPI'
+import axios from 'axios'
+import { APIResponseRegion } from '@/@types/shared'
 
 interface Props {
 
@@ -39,11 +41,14 @@ interface RouteResponse {
 
 type RouteType = 'main' | 'alternative';
 
+const INIT_REGION_STATE: RegionState = { id: null, name: null }
+
 const RouteEstimation: React.FC<Props> = (props) => {
   const { } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
+  const { province } = useAppSelector(state => state.master)
   const navigate = useNavigate()
   const { dataParser, setStep, setDataParser } = useRouteContext()
   // USE STATE
@@ -62,6 +67,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const [isGeocoding, setIsGeocoding] = useState(false);
   const startInputTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const endInputTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [startDetail, setStartDetail] = useState<RegionState>(INIT_REGION_STATE)
+  const [endDetail, setEndDetail] = useState<RegionState>(INIT_REGION_STATE)
 
   // console.log(dataParser.raw_body.route_form)
 
@@ -174,7 +181,11 @@ const RouteEstimation: React.FC<Props> = (props) => {
             setDataParser({
               req_data: body,
               res_data: response.data,
-              raw_body: value
+              raw_body: value,
+              region_detail: {
+                start: startDetail,
+                end: endDetail
+              }
             })
             setStep(2)
           },
@@ -390,9 +401,61 @@ const RouteEstimation: React.FC<Props> = (props) => {
     setRoutes(null);
   }, []);
 
-  useEffect(() => {
+  const getStartRegion = useCallback(async (lat: number, lng: number) => {
+    try {
+      const response = await axios.get<APIResponseRegion>(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=th`)
+      if (response.status === 200) {
+        const localText = response.data.principalSubdivision.replace(/^จังหวัด/, '')
+        const findProvinceId = province.find(item => item.name_th === localText)?.id
+        setStartDetail({
+          id: Number(findProvinceId),
+          name: localText
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    }
+  }, [province])
 
-  }, [])
+  const getEndRegion = useCallback(async (lat: number, lng: number) => {
+    try {
+      const response = await axios.get<APIResponseRegion>(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=th`)
+      if (response.status === 200) {
+        const localText = response.data.principalSubdivision.replace(/^จังหวัด/, '')
+        const findProvinceId = province.find(item => item.name_th === localText)?.id
+        setEndDetail({
+          id: Number(findProvinceId),
+          name: localText
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      } else {
+        console.error(error)
+      }
+    }
+  }, [province])
+
+  useEffect(() => {
+    if (startPoint) {
+      getStartRegion(startPoint.lat, startPoint.lng)
+    } else {
+      setStartDetail(INIT_REGION_STATE)
+    }
+  }, [getStartRegion, startPoint])
+
+  useEffect(() => {
+    if (endPoint) {
+      getEndRegion(endPoint.lat, endPoint.lng)
+    } else {
+      setEndDetail(INIT_REGION_STATE)
+    }
+  }, [getEndRegion, endPoint])
 
   useEffect(() => {
     if (startPoint && endPoint && waypoints.length > 0 && isEditMode) {

@@ -24,23 +24,26 @@ const RequestPermit: React.FC<Props> = (props) => {
   const submitRef = useRef<HTMLButtonElement>(null)
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
+  const { user } = useAppSelector(state => state.auth)
   const { province } = useAppSelector(state => state.master)
   const { petition } = useAppSelector(state => state.entrepreneur.permitList)
   const navigate = useNavigate()
 
+  console.log(dataParser)
+  console.log(user)
 
   const form = useForm<FieldTypePetition>({
     defaultValues: {
       set_id: dataParser.res_data.set_id,
-      start_date: '',
+      start_date: dayjs(),
       end_date: '',
-      contact_name: '',
-      phone_number: '',
+      contact_name: user.details.contact_info.contact_name,
+      phone_number: user.details.contact_info.phone_number,
       project_name: '',
-      start_point: '',
-      end_point: '',
-      start_province: null,
-      end_Povince: null,
+      start_point: dataParser.raw_body.start_point,
+      end_point: dataParser.raw_body.end_point,
+      start_province: dataParser.region_detail.start.id,
+      end_Povince: dataParser.region_detail.end.id,
       poa_url: {
         file: [],
         url: ''

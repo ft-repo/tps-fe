@@ -58,9 +58,13 @@ export const decodePolyline = (encoded: string): [number, number][] => {
 // Function to format distance
 export const formatDistance = (meters: number): string => {
   if (meters < 1000) {
-    return `${Math.round(meters)} m`;
+    return `${Math.round(meters)} ม.`;
   }
-  return `${(meters / 1000).toFixed(1)} km`;
+  return `${(meters / 1000).toFixed(1)} กม.`;
+  // if (meters < 1000) {
+  //   return `${Math.round(meters)} m`;
+  // }
+  // return `${(meters / 1000).toFixed(1)} km`;
 };
 
 // Function to format duration
@@ -69,9 +73,13 @@ const formatDuration = (seconds: number): string => {
   const minutes = Math.floor((seconds % 3600) / 60);
 
   if (hours > 0) {
-    return `${hours}h ${minutes}min`;
+    return `${hours} ชม. ${minutes} น.`;
   }
-  return `${minutes} min`;
+  return `${minutes} น.`;
+  // if (hours > 0) {
+  //   return `${hours}h ${minutes}min`;
+  // }
+  // return `${minutes} min`;
 };
 
 // Calculate route using OSRM API

@@ -1,6 +1,7 @@
 // @types/entrepreneur/permit-list/index.ts
 
 import { FileType } from "@/@types/shared";
+import { Dayjs } from "dayjs";
 
 /** Root API response with pagination */
 export interface PetitionListResponse {
@@ -70,15 +71,15 @@ export interface FieldType {
 // FIELD TYPE POST PETITION
 export interface FieldTypePetition {
   set_id: string;
-  start_date: string;
-  end_date: string;
+  start_date: Dayjs | null;
+  end_date: Dayjs | null;
   contact_name: string;
   phone_number: string;
   project_name: string;
-  start_point: string;
-  end_point: string;
-  start_province: string | null;
-  end_Povince: string | null;
+  start_point: string | number;
+  end_point: string | number;
+  start_province: string | number | null;
+  end_Povince: string | number | null;
   poa_url: FileType;
   mach_book_url: FileType;
   vehicle: VehicleList[]

@@ -58,7 +58,7 @@ export interface APIPostBody {
 
 export interface VehicleDetail {
   vehicle_type_id: number | string;
-  plate_no: string;
+  plate_no: string | string[];
   plate_province: string;
   brand: string;
   weight: number | string;

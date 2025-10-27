@@ -233,8 +233,8 @@ export interface PetitionConfirmRequest {
   contact_name: string;
   phone_number: string;
   project_name: string;
-  start_point: string;
-  end_point: string;
+  start_point: string | number;
+  end_point: string | number;
   start_province: string;
   end_Povince: string;
   poa_url: string;

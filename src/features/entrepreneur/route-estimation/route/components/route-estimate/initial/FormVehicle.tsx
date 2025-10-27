@@ -283,7 +283,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       placeholder='กรุณาเลือก'
                       options={[
                         {
-                          label: 'รถลากจูง + รถกึ่งพ่วง + เครื่องจักร / สินค้า',
+                          label: 'รถลากจูง + รถกึ่งพ่วง + สินค้า / เครื่องจักร',
                           value: 1
                         },
                         {
@@ -291,7 +291,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                           value: 2
                         },
                         {
-                          label: 'เครื่องจักร / สินค้า',
+                          label: 'สินค้า / เครื่องจักร',
                           value: 3
                         },
                       ]}
@@ -514,13 +514,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                 name={`route_form.${formIndex}.etc_vehicle`}
                 control={control}
                 rules={{
-                  required: 'กรุณาระบุชื่อเครื่องจักร / สินค้า'
+                  required: 'กรุณาระบุชื่อสินค้า / เครื่องจักร'
                 }}
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <h5>เครื่องจักร / สินค้า</h5>
-                      <label>ชื่อเครื่องจักร / สินค้า <span className='text-red-500'>*</span></label>
+                      <h5>สินค้า / เครื่องจักร</h5>
+                      <label>ชื่อสินค้า / เครื่องจักร <span className='text-red-500'>*</span></label>
                       <Select
                         {...field}
                         allowClear
@@ -1085,7 +1085,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail.width || 0), Number(selectSemi?.vehicle_detail.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail.length || 0), Number(selectSemi?.vehicle_detail.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail.height || 0), Number(selectSemi?.vehicle_detail.height || 0))}`}</p>
           </div>
           <div className='flex items-center flex-wrap gap-3 justify-between'>
-            <p><strong>มิติรถเปล่ารวม เครื่องจักร / สินค้า(ม.):</strong></p>
+            <p><strong>มิติรถเปล่ารวม สินค้า / เครื่องจักร(ม.):</strong></p>
             <p>{`กว้าง ${Math.max(Number(selectTowing?.vehicle_detail.width || 0), Number(selectSemi?.vehicle_detail.width || 0), Number(selectETC?.vehicle_detail.width || 0))} X ยาว ${Math.max(Number(selectTowing?.vehicle_detail.length || 0), Number(selectSemi?.vehicle_detail.length || 0), Number(selectETC?.vehicle_detail.length || 0))} X สูง ${Math.max(Number(selectTowing?.vehicle_detail.height || 0), Number(selectSemi?.vehicle_detail.height || 0), Number(selectETC?.vehicle_detail.height || 0))}`}</p>
           </div>
         </div>
@@ -1267,7 +1267,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                 )}
               >
                 <Card.Meta
-                  title="เครื่องจักร / สินค้า"
+                  title="เครื่องจักร"
                   description={(
                     <>
                       <p>{selectETC.vehicle_detail.weight || 0} กก.</p>

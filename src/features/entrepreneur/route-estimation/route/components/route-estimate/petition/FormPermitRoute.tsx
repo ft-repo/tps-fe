@@ -3,7 +3,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { ReactElement, useCallback } from 'react'
 import { Col, DatePicker, Input, Row, Select, message, Upload } from 'antd';
-import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
+import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
 import { FieldTypePetition } from '@/@types/entrepreneur/permit-list';
 import { useAppSelector } from '@/store';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
@@ -13,6 +13,7 @@ import {
   AiOutlineEye as EyeOutlined,
   AiOutlineDelete as DeleteOutlined
 } from "react-icons/ai";
+import dayjs, { Dayjs } from 'dayjs';
 
 interface Props {
   control: Control<FieldTypePetition>;
@@ -25,6 +26,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
   const { province } = useAppSelector(state => state.master)
 
   const { errors } = useFormState({ control })
+  const { start_date } = useWatch({ control })
 
   const uploadFile = useCallback(async (fieldName: string, file: any) => {
     try {
@@ -116,6 +118,10 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
+                      onChange={(e) => {
+                        field.onChange(e)
+                        setValue('end_date', null)
+                      }}
                     />
                     {!!errors.start_date &&
                       <p className='text-red-500'>{errors.start_date.message}</p>
@@ -146,6 +152,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
+                      minDate={dayjs(start_date as Dayjs)}
                     />
                     {!!errors.end_date &&
                       <p className='text-red-500'>{errors.end_date.message}</p>

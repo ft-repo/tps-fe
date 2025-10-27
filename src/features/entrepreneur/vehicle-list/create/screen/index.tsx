@@ -84,7 +84,7 @@ const CreateScreen: React.FC<Props> = (props) => {
     const body: APIPostBody = {
       vehicle_detail: {
         vehicle_type_id: value.vehicle_type || '',
-        plate_no: value.license_plate || '',
+        plate_no: value.vehicle_type === 3 ? [...value.license_plate].join(',') : value.license_plate,
         plate_province: province.find(item => item.id === value.province)?.name_th || '',
         brand: value.vehicle_model || '',
         weight: Number(value.vehicle_weight) || 0,

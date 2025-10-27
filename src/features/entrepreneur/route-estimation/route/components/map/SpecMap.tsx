@@ -118,9 +118,13 @@ const decodePolyline = (encoded: string): [number, number][] => {
 // Function to format distance
 const formatDistance = (meters: number): string => {
   if (meters < 1000) {
-    return `${Math.round(meters)} m`;
+    return `${Math.round(meters)} ม.`;
   }
-  return `${(meters / 1000).toFixed(1)} km`;
+  return `${(meters / 1000).toFixed(1)} กม.`;
+  // if (meters < 1000) {
+  //   return `${Math.round(meters)} m`;
+  // }
+  // return `${(meters / 1000).toFixed(1)} km`;
 };
 
 // Function to format duration
@@ -129,9 +133,13 @@ const formatDuration = (seconds: number): string => {
   const minutes = Math.floor((seconds % 3600) / 60);
 
   if (hours > 0) {
-    return `${hours}h ${minutes}min`;
+    return `${hours}ชม. ${minutes}น.`;
   }
-  return `${minutes} min`;
+  return `${minutes} น.`;
+  // if (hours > 0) {
+  //   return `${hours}h ${minutes}min`;
+  // }
+  // return `${minutes} min`;
 };
 
 // Calculate route using OSRM API
@@ -372,8 +380,8 @@ export default function RouteMap() {
                 setIsSelectingEnd(false);
               }}
               className={`w-full px-4 py-2 rounded-lg transition-colors ${isSelectingStart
-                  ? 'bg-green-600 text-white'
-                  : 'bg-green-100 text-green-700 hover:bg-green-200'
+                ? 'bg-green-600 text-white'
+                : 'bg-green-100 text-green-700 hover:bg-green-200'
                 }`}
             >
               {isSelectingStart ? 'Click on map...' : startPoint ? 'Change Start' : 'Or Click on Map'}
@@ -405,8 +413,8 @@ export default function RouteMap() {
                 setIsSelectingStart(false);
               }}
               className={`w-full px-4 py-2 rounded-lg transition-colors ${isSelectingEnd
-                  ? 'bg-red-600 text-white'
-                  : 'bg-red-100 text-red-700 hover:bg-red-200'
+                ? 'bg-red-600 text-white'
+                : 'bg-red-100 text-red-700 hover:bg-red-200'
                 }`}
             >
               {isSelectingEnd ? 'Click on map...' : endPoint ? 'Change End' : 'Or Click on Map'}
@@ -446,8 +454,8 @@ export default function RouteMap() {
               <div
                 onClick={() => setSelectedRoute('main')}
                 className={`p-3 rounded-lg cursor-pointer transition-all mb-2 ${selectedRoute === 'main'
-                    ? 'bg-blue-100 border-2 border-blue-500'
-                    : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                  ? 'bg-blue-100 border-2 border-blue-500'
+                  : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
                   }`}
               >
                 <div className="flex justify-between items-start">
@@ -463,8 +471,8 @@ export default function RouteMap() {
                 <div
                   onClick={() => setSelectedRoute('alternative')}
                   className={`p-3 rounded-lg cursor-pointer transition-all ${selectedRoute === 'alternative'
-                      ? 'bg-blue-100 border-2 border-blue-500'
-                      : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                    ? 'bg-blue-100 border-2 border-blue-500'
+                    : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
                     }`}
                 >
                   <div className="flex justify-between items-start">

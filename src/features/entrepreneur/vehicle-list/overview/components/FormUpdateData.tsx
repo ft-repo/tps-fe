@@ -4,7 +4,7 @@ import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { useAppSelector } from '@/store';
 import React, { useCallback } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form'
-import { Select, Input, Upload, message, Button, Row, Col, AutoComplete } from 'antd';
+import { Select, Input, Upload, message, Button, Row, Col } from 'antd';
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService';
 import { RcFile } from 'antd/es/upload';
@@ -73,7 +73,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
                     }}
                     onChange={(e) => {
                       field.onChange(e)
-                      setValue('license_plate', '')
+                      setValue('license_plate', [])
                     }}
                   />
                   {!!errors.vehicle_type &&
@@ -119,14 +119,12 @@ const FormUpdateData: React.FC<Props> = (props) => {
                       }}
                     />
                     :
-                    <AutoComplete
+                    <Select
                       {...field}
-                      placeholder='กรุณาระบุ'
-                      className='w-full'
-                      size='large'
-                      style={{
-                        fontFamily: 'Noto Sans Thai'
-                      }}
+                      allowClear
+                      showSearch
+                      mode='tags'
+                      placeholder='กรุณาเลือก'
                       options={product_type}
                       fieldNames={{
                         label: 'name',
@@ -134,6 +132,11 @@ const FormUpdateData: React.FC<Props> = (props) => {
                       }}
                       filterOption={(input, option) => {
                         return option ? option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                      }}
+                      className='w-full'
+                      size='large'
+                      style={{
+                        fontFamily: 'Noto Sans Thai'
                       }}
                     />
                   }

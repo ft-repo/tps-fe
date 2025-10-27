@@ -287,3 +287,8 @@ export interface FieldTypeForRoute {
   semi_weight6: number | string;
   semi_weight7: number | string;
 }
+
+export interface RegionState {
+  id: number | null;
+  name: string | null;
+}

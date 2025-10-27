@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
-import { FieldTypeArr } from '@/@types/entrepreneur/route-estimation';
+import { FieldTypeArr, RegionState } from '@/@types/entrepreneur/route-estimation';
 import { PetitionEstimateRequest, PetitionEstimateResponse, EstimateResponse } from '@/@types/services/petition';
 import { createContext, useContext, useState } from 'react'
 
@@ -20,6 +20,10 @@ export interface DataParser {
   req_data: PetitionEstimateRequest;
   res_data: PetitionEstimateResponse;
   raw_body: FieldTypeArr;
+  region_detail: {
+    start: RegionState,
+    end: RegionState
+  }
 }
 
 export const PageContext = createContext<ContextProps | null>(null)
@@ -55,6 +59,16 @@ export const RouteProvider = (props: any) => {
       // end_latitude: 0,
       // end_longitude: 0,
       route_form: []
+    },
+    region_detail: {
+      start: {
+        id: null,
+        name: null
+      },
+      end: {
+        id: null,
+        name: null
+      },
     }
   })
   const [index, setIndex] = useState<number>(0)
