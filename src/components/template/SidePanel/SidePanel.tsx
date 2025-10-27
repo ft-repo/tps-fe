@@ -25,7 +25,24 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	const { notification } = useAppSelector(state => state.staff.petition)
 
-	const [subtract, setSubtract] = useState<number>(0)
+	//STATE
+	const [cachedTotal, setCachedTotal] = useState<number>(0);
+	const [unreadCount, setUnreadCount] = useState<number>(0);
+
+	// Initialize cache from localStorage on mount
+	useEffect(() => {
+		const stored = localStorage.getItem('notification_cache');
+		if (stored) {
+			setCachedTotal(Number(stored));
+		}
+	}, []);
+
+	// Calculate unread count whenever notification total changes
+	useEffect(() => {
+		const current = notification.pagination.total || 0;
+		const diff = Math.max(0, current - cachedTotal);
+		setUnreadCount(diff);
+	}, [notification.pagination.total, cachedTotal]);
 
 	useEffect(() => {
 		if (authority[0] === 'ADMIN') {
@@ -42,8 +59,21 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	const openPanel = () => {
 		dispatch(setPanelExpand(true))
-		setSubtract(notification.data.length)
 	}
+
+	const handleClick = () => {
+		const currentTotal = notification.pagination.total || 0;
+
+		// Cache current total
+		setCachedTotal(currentTotal);
+		localStorage.setItem('notification_cache', String(currentTotal));
+
+		// Reset unread count since user viewed notifications
+		setUnreadCount(0);
+
+		// Open panel (your existing function)
+		openPanel();
+	};
 
 	const closePanel = () => {
 		dispatch(setPanelExpand(false))
@@ -56,10 +86,10 @@ const _SidePanel = (props: SidePanelProps) => {
 	return (
 		<>
 			{authority[0] === 'ADMIN' ?
-				<Badge count={notification.data.length - subtract} offset={[-5, 5]}>
+				<Badge count={unreadCount} offset={[-5, 5]}>
 					<div
 						className={classNames('text-2xl', className)}
-						onClick={openPanel}
+						onClick={handleClick}
 						{...rest}
 					>
 						<HiOutlineBell />
