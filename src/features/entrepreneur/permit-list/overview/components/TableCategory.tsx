@@ -81,7 +81,7 @@ const TableCategory: React.FC<Props> = (props) => {
             backgroundColor: tagBg
           }}
         >
-          {tagText}
+          <span className={CLIENT_PETITION_STATUS[text]?.text_color}>{tagText}</span>
           {tagSubText}
         </Tag>
       </figure>

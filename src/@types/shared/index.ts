@@ -9,18 +9,22 @@ export interface ClientPetitionColor {
   APPROVE: {
     color: string;
     text: string;
+    text_color: string;
   }
   NOT_APPROVE: {
     color: string;
     text: string;
+    text_color: string;
   }
   REJECTED: {
     color: string;
     text: string;
+    text_color: string;
   }
   IN_PROGRESS: {
     color: string;
     text: string;
+    text_color: string;
   }
 }
 
@@ -62,22 +66,27 @@ export interface StatusColor {
   APPROVE: {
     color: string;
     text: string;
+    text_color: string;
   };
   NOT_APPROVE: {
     color: string;
     text: string;
+    text_color: string;
   };
   IN_PROGRESS: {
     color: string;
     text: string;
+    text_color: string;
   };
   SKIPPED: {
     color: string;
     text: string;
+    text_color: string;
   };
 }
 export interface ApprovalStatusValue {
   className: string;
+  color: string;
   text: string;
 };
 

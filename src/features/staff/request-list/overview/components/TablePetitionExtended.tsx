@@ -125,10 +125,10 @@ const makeStepRenderer =
             }
           }}
         >
-          {cfg.text}
+          <span className={cfg.text_color}>{cfg.text}</span>
           {st.date ? (
             <>
-              <br />
+              {/* <br /> */}
               {dayjs(st.date).isValid() ? dayjs(st.date).format('DD/MM/YYYY') : st.date}
             </>
           ) : null}

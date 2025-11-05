@@ -19,23 +19,27 @@ export type ApprovalStatusKey = keyof typeof APPROVAL_STATUS;
 export const CLIENT_PETITION_STATUS: ClientPetitionColor = {
   "APPROVE": {
     "color": "#32CD32",
-    "text": "ผ่านการตรวจ"
+    "text": "ผ่านการตรวจ",
+    "text_color": "text-white"
   },
   "NOT_APPROVE": {
     "color": "#FF0000",
-    "text": "ไม่ผ่านการตรวจ"
+    "text": "ไม่ผ่านการตรวจ",
+    "text_color": "text-white"
   },
   "REJECTED": {
     "color": "#A9A9A9",
-    "text": "ยุติคำขออนุญาต"
+    "text": "ยุติคำขออนุญาต",
+    "text_color": "text-white"
   },
   "IN_PROGRESS": {
     "color": "#FDDA0D",
-    "text": "รอดำเนินการ"
+    "text": "รอดำเนินการ",
+    "text_color": "text-black"
   }
 }
 
-export const CLIENT_PETITION_EXTENDED_STATUS : ClientPetitionExtendColor = {
+export const CLIENT_PETITION_EXTENDED_STATUS: ClientPetitionExtendColor = {
   "APPROVE": {
     "color": "#32CD32",
     "text": "ผ่านการตรวจ"
@@ -56,15 +60,15 @@ export const CLIENT_PETITION_EXTENDED_STATUS : ClientPetitionExtendColor = {
 
 
 export const ADMIN_PETITION_HISTORY_STATUS: HistoryPetitionColor = {
-  "APPROVE":{
+  "APPROVE": {
     "color": "#32CD32",
     "text": "ผ่านการตรวจ"
   },
-  "NOT_APPROVE":{
+  "NOT_APPROVE": {
     "color": "#FF0000",
     "text": "ไม่ผ่านการตรวจ"
   },
-  "REJECTED":{
+  "REJECTED": {
     "color": "#A9A9A9",
     "text": "ยุติคำขออนุญาต"
   },
@@ -75,39 +79,47 @@ export const ADMIN_PETITION_HISTORY_STATUS: HistoryPetitionColor = {
 }
 
 export const ADMIN_PETITION_STATUS: StatusColor = {
-  "APPROVE":{
+  "APPROVE": {
     "color": "#32CD32",
-    "text": "ผ่านการตรวจ"
+    "text": "ผ่านการตรวจ",
+    "text_color": "text-white"
   },
-  "NOT_APPROVE":{
+  "NOT_APPROVE": {
     "color": "red",
-    "text": "ผ่านการตรวจ"
+    "text": "ผ่านการตรวจ",
+    "text_color": "text-white"
   },
-  "IN_PROGRESS":{
+  "IN_PROGRESS": {
     "color": "#FDDA0D",
-    "text": "รอดำเนินการ"
+    "text": "รอดำเนินการ",
+    "text_color": "text-black"
   },
-  "SKIPPED":{
+  "SKIPPED": {
     "color": "#A9A9A9",
-    "text": "ข้ามขั้นตอน"
+    "text": "ข้ามขั้นตอน",
+    "text_color": "text-white"
   }
 }
 
 export const APPROVAL_STATUS: Record<string, ApprovalStatusValue> = {
   "APPROVED": {
     "className": "bg-green-500 text-white border-0 rounded p-3",
+    "color": "white",
     "text": "ผ่านการตรวจ"
   },
   "IN_PROGRESS": {
     "className": "bg-yellow-500 text-black border-0 rounded p-3",
+    "color": "black",
     "text": "รอดำเนินการ"
   },
   "WAIT_APPROVAL": {
     "className": "bg-red-500 text-white border-0 rounded p-3",
+    "color": "white",
     "text": "รอตรวจสอบ"
   },
   "REJECTED": {
     "className": "bg-gray-500 text-white border-0 rounded p-3",
+    "color": "white",
     "text": "ยุติ"
   },
 }
