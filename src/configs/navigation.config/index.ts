@@ -101,6 +101,16 @@ const navigationConfig: NavigationTree[] = [
             },
         ],
     },
+    {
+        key: 'tracking',
+        path: '/tracking/overview',
+        title: 'Tracking',
+        translateKey: 'nav.tracking',
+        icon: 'tracking',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: ['ADMIN'],
+        subMenu: [],
+    },
 ]
 
 export default navigationConfig

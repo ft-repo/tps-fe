@@ -9,9 +9,10 @@ import RtkQueryService from '@/services/RtkQueryService'
 import entrepreneur, { EntrepreneurState } from './slices/entrepreneur'
 import staff, { AdminState } from './slices/staff'
 import routeDirection, { RouteDirectionState } from './slices/route/routeDirectionSlice'
+import tracking, { TrackingState } from './slices/staff/trackingSlice'
 
 export type RootState = {
-  staffPetition: any
+	staffPetition: any
 	auth: AuthState;
 	base: BaseState;
 	locale: LocaleState;
@@ -21,6 +22,7 @@ export type RootState = {
 	layout: LayoutState;
 	staff: AdminState;
 	routeDirection: RouteDirectionState;
+	tracking: TrackingState;
 	/* eslint-disable @typescript-eslint/no-explicit-any */
 	[RtkQueryService.reducerPath]: any;
 }
@@ -39,6 +41,7 @@ const staticReducers = {
 	layout,
 	staff,
 	routeDirection,
+	tracking,
 	[RtkQueryService.reducerPath]: RtkQueryService.reducer,
 }
 

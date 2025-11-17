@@ -8,7 +8,8 @@ import { setPanelExpand, useAppSelector, useAppDispatch } from '@/store'
 import type { CommonProps } from '@/@types/common'
 import { useEffect, useState } from 'react'
 import { getPetitionNotification } from '@/store/slices/staff'
-import { Badge } from 'antd'
+import { Badge, Tooltip } from 'antd'
+import { FaQuestion } from "react-icons/fa6";
 
 type SidePanelProps = SidePanelContentProps & CommonProps
 
@@ -85,6 +86,15 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	return (
 		<>
+			<Tooltip title='คู่มือการใช้งานระบบ'>
+				<div
+					className={classNames('text-2xl', className)}
+					onClick={handleClick}
+					{...rest}
+				>
+					<FaQuestion />
+				</div>
+			</Tooltip>
 			{authority[0] === 'ADMIN' ?
 				<Badge count={unreadCount} offset={[-5, 5]}>
 					<div

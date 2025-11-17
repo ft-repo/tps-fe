@@ -1,3 +1,5 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 /* VehicleScreen.tsx */
 import React, { useEffect, useRef } from 'react'
 import { Button, Spin } from 'antd'
@@ -10,7 +12,8 @@ import { useReactToPrint } from 'react-to-print'
 
 interface Props { }
 
-const VehicleScreen: React.FC<Props> = () => {
+const VehicleScreen: React.FC<Props> = (props) => {
+	const { } = props;
 	const [params] = useSearchParams()
 	const petitionId = params.get('petition_id')
 	const navigate = useNavigate()
@@ -57,7 +60,7 @@ const VehicleScreen: React.FC<Props> = () => {
 				<TitleSection onExport={handlePrint} />
 			</section>
 
-			
+
 			<div ref={printRef} className="print-a4">
 				<section className="mt-5 print-keep">
 					<ContentTab />

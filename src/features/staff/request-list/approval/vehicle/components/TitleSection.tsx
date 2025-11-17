@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* TitleSection.tsx */
 import { Button, Flex } from 'antd'
 import React from 'react'
@@ -7,11 +8,22 @@ interface Props {
   onExport?: () => void
 }
 
-const TitleSection: React.FC<Props> = ({ onExport }) => {
+const TitleSection: React.FC<Props> = (props) => {
+  const { onExport } = props;
+
   return (
-    <Flex wrap justify="space-between" align="center" gap={5}>
+    <Flex
+      wrap
+      justify="space-between"
+      align="center"
+      gap={5}
+    >
       <h3>ตรวจสอบยานพาหนะ</h3>
-      <Button type="primary" icon={<AiOutlineDownload />} onClick={onExport}>
+      <Button
+        type="primary"
+        icon={<AiOutlineDownload />}
+        onClick={onExport}
+      >
         Export to PDF
       </Button>
     </Flex>

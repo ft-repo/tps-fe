@@ -7,15 +7,22 @@ interface Props {
   onExport?: () => void
 }
 
-const TitleSection: React.FC<Props> = ({ onExport }) => {
+const TitleSection: React.FC<Props> = (props) => {
+  const { onExport } = props;
+
   return (
-    <Flex wrap justify="space-between" align="center" gap={5}>
+    <Flex
+      wrap
+      justify="space-between"
+      align="center"
+      gap={5}
+    >
       <h3>ตรวจสอบเส้นทาง</h3>
       <Button
         type="primary"
         icon={<AiOutlineDownload />}
+        className="no-print"
         onClick={onExport}
-        className="no-print"   
       >
         Export to PDF
       </Button>

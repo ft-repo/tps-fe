@@ -8,6 +8,7 @@
     "request_list": "รายการคำขออนุญาต",
     "request_history": "ประวัติการขออนุญาต",
     "entrepreneur_overview": "ข้อมูลผู้ประกอบการ",
-    "staff_overview": "ข้อมูลเจ้าหน้าที่"
+    "staff_overview": "ข้อมูลเจ้าหน้าที่",
+    "tracking": "ติดตามการเดินรถ"
   }
 }

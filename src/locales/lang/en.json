@@ -24,6 +24,7 @@
         "request_list": "Request List",
         "request_history": "Request History",
         "entrepreneur_overview": "Entrepreneur Info",
-        "staff_overview": "Staff Info"
+        "staff_overview": "Staff Info",
+        "tracking": "Tracking"
     }
 }

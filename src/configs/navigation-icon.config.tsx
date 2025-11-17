@@ -3,7 +3,7 @@ import {
 	HiOutlineDesktopComputer,
 	HiOutlineTemplate,
 	HiOutlineViewGridAdd,
-	HiOutlineHome,
+	// HiOutlineHome,
 } from 'react-icons/hi'
 import {
 	LuMapPin,
@@ -14,8 +14,9 @@ import {
 import {
 	FaRegUser,
 	FaListOl,
-	FaHistory
+	FaHistory,
 } from "react-icons/fa";
+import { FaMapLocationDot } from "react-icons/fa6";
 import type { JSX } from 'react'
 
 export type NavigationIcons = Record<string, JSX.Element>
@@ -34,7 +35,8 @@ const navigationIcon: NavigationIcons = {
 	// CUSTOM MENUBAR - STAFF
 	user_info: <FaRegUser />,
 	request_list: <FaListOl />,
-	request_history: <FaHistory />
+	request_history: <FaHistory />,
+	tracking: <FaMapLocationDot />
 }
 
 export default navigationIcon
