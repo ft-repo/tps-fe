@@ -3,61 +3,75 @@
 import React from 'react'
 import { useNavigate } from "react-router";
 import { Button, Table, TableProps } from 'antd';
+import { TrackingData, TrackingOverviewData } from '@/store/slices/staff/trackingSlice';
 // import { useAppSelector } from '@/store';
 // import { TrackingData } from '@/store/slices/staff/trackingSlice';
 
 interface Props {
+  data: TrackingOverviewData;
   loading: boolean;
   handleTableChange: (page: number, pageSize: number) => void;
 }
 
-interface DataType {
-  business_name: string;
-  entity_type_name: string;
-  contact_name: string;
-  permit_vehicle: number;
-}
+// interface DataType {
+//   business_name: string;
+//   entity_type_name: string;
+//   contact_name: string;
+//   permit_vehicle: number;
+// }
 
 const TableEntrepreneur: React.FC<Props> = (props) => {
-  const { loading, handleTableChange } = props
+  const { data, loading, handleTableChange } = props
   const navigate = useNavigate();
   // const { data } = useAppSelector(state => state.tracking.overview)
 
-  const data: DataType[] = [
-    {
-      business_name: 'บริษัท บีคอน โกลบอล เทรด จำกัด',
-      entity_type_name: 'ห้างหุ้นส่วนสามัญนิติบุคคล',
-      contact_name: 'ชญานิษฐ์ พงศ์เกษมชัย',
-      permit_vehicle: 5
-    },
-    {
-      business_name: 'บริษัท อินฟราสตริค โซลูชัน จำกัด',
-      entity_type_name: 'บริษัทจำกัด',
-      contact_name: 'วรพล จันทร์ทอง',
-      permit_vehicle: 12
-    },
-    {
-      business_name: 'ห้างหุ้นส่วนจำกัด แอคทิฟ เอ็นจิเนียริ่ง',
-      entity_type_name: 'ห้างหุ้นส่วนสามัญนิติบุคคล',
-      contact_name: 'สุนิสา เหลืองสุวรรณ',
-      permit_vehicle: 1
-    },
-  ]
+  // const data: DataType[] = [
+  //   {
+  //     business_name: 'บริษัท บีคอน โกลบอล เทรด จำกัด',
+  //     entity_type_name: 'ห้างหุ้นส่วนสามัญนิติบุคคล',
+  //     contact_name: 'ชญานิษฐ์ พงศ์เกษมชัย',
+  //     permit_vehicle: 5
+  //   },
+  //   {
+  //     business_name: 'บริษัท อินฟราสตริค โซลูชัน จำกัด',
+  //     entity_type_name: 'บริษัทจำกัด',
+  //     contact_name: 'วรพล จันทร์ทอง',
+  //     permit_vehicle: 12
+  //   },
+  //   {
+  //     business_name: 'ห้างหุ้นส่วนจำกัด แอคทิฟ เอ็นจิเนียริ่ง',
+  //     entity_type_name: 'ห้างหุ้นส่วนสามัญนิติบุคคล',
+  //     contact_name: 'สุนิสา เหลืองสุวรรณ',
+  //     permit_vehicle: 1
+  //   },
+  // ]
 
-  const columns: TableProps<DataType>['columns'] = [
+  const columns: TableProps<TrackingData>['columns'] = [
     {
       title: 'ชื่อบริษัท / ห้าง / ร้าน',
       dataIndex: 'business_name',
       key: 'business_name',
       width: 200,
       align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'ประเภทนิติบุคคล',
-      dataIndex: 'entity_type_name',
-      key: 'entity_type_name',
+      dataIndex: 'entity_type',
+      key: 'entity_type',
       width: 200,
       align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'ผู้ติดต่อ / ผู้มอบอำนาจ',
@@ -65,13 +79,25 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       key: 'contact_name',
       width: 200,
       align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'จำนวนรถที่ได้รับใบอนุญาต',
-      dataIndex: 'permit_vehicle',
-      key: 'permit_vehicle',
+      dataIndex: 'petition_count',
+      key: 'petition_count',
       width: 200,
       align: 'center',
+      render: (item) => {
+        if (item) {
+          return item
+        }
+        return '-'
+      }
     },
     {
       title: 'เส้นทางการเดินรถ',
@@ -80,11 +106,11 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
       fixed: 'right',
       width: 200,
       align: 'center',
-      render: () => {
+      render: (item, record) => {
         return (
           <Button
             type="primary"
-            onClick={() => navigate('/tracking/view')}
+            onClick={() => navigate(`/tracking/view?id=${record.business_id}`)}
           >
             เพิ่มเติม
           </Button>
@@ -97,17 +123,14 @@ const TableEntrepreneur: React.FC<Props> = (props) => {
     <Table
       rowKey={'id'}
       columns={columns}
-      dataSource={data}
+      dataSource={data.data}
       loading={loading}
       pagination={{
         defaultCurrent: 1,
         defaultPageSize: 10,
-        current: 1,
-        pageSize: 10,
-        total: Number(3) || 0,
-        // current: data.page,
-        // pageSize: data.limit,
-        // total: Number(data.total) || 0,
+        current: data.page,
+        pageSize: data.limit,
+        total: Number(data.total) || 0,
         onChange: (page: number, pageSize: number) => handleTableChange(page, pageSize),
         showSizeChanger: true,
         position: ['bottomRight'],

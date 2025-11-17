@@ -2,6 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Descriptions, DescriptionsProps } from 'antd'
 import React from 'react'
+import { useAppSelector } from '@/store'
 
 interface Props {
 
@@ -9,22 +10,23 @@ interface Props {
 
 const UserInfoDetail: React.FC<Props> = (props) => {
   const { } = props
+  const { detail } = useAppSelector(state => state.tracking)
 
   const items: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'ชื่อบริษัท / ห้าง / ร้าน',
-      children: 'ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด',
+      children: detail.business.business_name || '-',
     },
     {
       key: '2',
       label: 'ประเภทนิติบุคคล',
-      children: 'ห้างหุ้นส่วนสามัญนิติบุคคล',
+      children: detail.business.entity_type || '-',
     },
     {
       key: '3',
       label: 'ผู้ติดต่อ / ผู้มอบอำนาจ',
-      children: 'ชญานิษฐ์ พงศ์เกษมชัย',
+      children: detail.business.contact_name || '-',
     },
   ];
 

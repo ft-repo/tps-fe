@@ -1,30 +1,32 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
+import { useAppSelector } from '@/store';
 import React, { useMemo } from 'react'
 import { FaCircleExclamation } from "react-icons/fa6";
 
 interface Props {
-  setDetailClick: (value: boolean) => void;
+  setProjectId: (value: number | null) => void;
 }
 
 const ProjectList: React.FC<Props> = (props) => {
-  const { setDetailClick } = props
+  const { setProjectId } = props
+  const { detail } = useAppSelector(state => state.tracking)
 
-  const arrText = useMemo(() => {
-    return [
-      'โครงการระบบโลจิสติกส์เพื่อการเคลื่อนย้ายเครื่องจักรกลหนัก',
-      'โครงการพัฒนาระบบขนส่งอัจฉริยะเพื่อความปลอดภัยและประสิทธิภาพการเดินทาง',
-      'โครงการเชื่อมโยงข้อมูลการขนส่งสินค้าระหว่างหน่วยงาน',
-      'โครงการขนส่งสินค้าพลังงานสะอาด',
-      'โครงการเพิ่มประสิทธิภาพเส้นทางขนส่งสินค้าโดยใช้ AI',
-    ]
-  }, [])
+  // const arrText = useMemo(() => {
+  //   return [
+  //     'โครงการระบบโลจิสติกส์เพื่อการเคลื่อนย้ายเครื่องจักรกลหนัก',
+  //     'โครงการพัฒนาระบบขนส่งอัจฉริยะเพื่อความปลอดภัยและประสิทธิภาพการเดินทาง',
+  //     'โครงการเชื่อมโยงข้อมูลการขนส่งสินค้าระหว่างหน่วยงาน',
+  //     'โครงการขนส่งสินค้าพลังงานสะอาด',
+  //     'โครงการเพิ่มประสิทธิภาพเส้นทางขนส่งสินค้าโดยใช้ AI',
+  //   ]
+  // }, [])
 
   const renderText = useMemo(() => {
-    return arrText.map((item, index) => {
-      return <p key={index} className='underline cursor-pointer mb-4' onClick={() => setDetailClick(true)}>{item}</p>
+    return detail.business.project.map((item, index) => {
+      return <p key={index} className='underline cursor-pointer mb-4' onClick={() => setProjectId(item.project_id)}>{item.project_name}</p>
     })
-  }, [arrText, setDetailClick])
+  }, [detail.business.project, setProjectId])
 
   return (
     <div>

@@ -1,26 +1,22 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
+import { useAppSelector } from '@/store';
 import { Badge, Button, Col, Row, Select } from 'antd';
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
-  setDetailClick: (value: boolean) => void;
+  setProjectId: (value: number | null) => void;
 }
 
 interface FieldType {
   search: string | null;
 }
 
-const TEST = [
-  {
-    label: 'ทดสอบ',
-    value: 1
-  }
-]
-
 const FormSearchMap: React.FC<Props> = (props) => {
-  const { setDetailClick } = props
+  const { setProjectId } = props
+  const { detail } = useAppSelector(state => state.tracking)
+  const submitRef = useRef<HTMLButtonElement>(null)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -28,11 +24,11 @@ const FormSearchMap: React.FC<Props> = (props) => {
     }
   })
 
-  const { handleSubmit, control } = form
+  const { handleSubmit, control, setValue } = form
 
   const onSubmit = useCallback((value: FieldType) => {
-    console.log(value)
-  }, [])
+    setProjectId(Number(value.search))
+  }, [setProjectId])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -49,18 +45,29 @@ const FormSearchMap: React.FC<Props> = (props) => {
                     allowClear
                     showSearch
                     placeholder='โครงการทั้งหมด...'
-                    options={TEST}
+                    options={detail.business.project}
                     fieldNames={{
-                      label: 'label',
-                      value: 'value'
+                      label: 'project_name',
+                      value: 'project_id'
                     }}
                     filterOption={(input, option) => {
-                      return option ? option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                      return option ? option.project_name.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
                     }}
                     className='w-full'
                     size='large'
                     style={{
                       fontFamily: 'Noto Sans Thai'
+                    }}
+                    onChange={(e) => {
+                      if (!e) {
+                        field.onChange(e)
+                        setValue('search', null)
+                        submitRef.current?.click()
+                      } else {
+                        field.onChange(e)
+                        setValue('search', e)
+                        submitRef.current?.click()
+                      }
                     }}
                   />
                 </fieldset>
@@ -72,12 +79,13 @@ const FormSearchMap: React.FC<Props> = (props) => {
           <Button
             type='primary'
             size='large'
-            onClick={() => setDetailClick(false)}
+            onClick={() => { setProjectId(null); setValue('search', null) }}
           >
-            โครงการ <Badge count={5} />
+            โครงการ <Badge count={detail.business.project.length} />
           </Button>
         </Col>
       </Row>
+      <button ref={submitRef} hidden type='submit' />
     </form>
   )
 }

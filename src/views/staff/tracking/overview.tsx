@@ -1,3 +1,5 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 import React from 'react'
 import { ConfigProvider } from 'antd'
 import OverviewScreen from '@/features/staff/tracking/overview/screen'

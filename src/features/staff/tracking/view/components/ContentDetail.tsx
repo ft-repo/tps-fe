@@ -4,6 +4,7 @@
 import React, { useState } from 'react'
 import { Card } from 'antd'
 import { VehicleDetail } from '../components'
+import { useAppSelector } from '@/store'
 
 interface Props {
 }
@@ -11,35 +12,20 @@ interface Props {
 const ContentDetail: React.FC<Props> = (props) => {
   const { } = props
   const [tabKey, setTabKey] = useState<string>('1')
+  const { detail } = useAppSelector(state => state.tracking)
 
-  const items = [
-    {
-      key: '1',
-      tab: 'รถคู่ที่ 1',
-    },
-    {
-      key: '2',
-      tab: 'รถคู่ที่ 2',
-    },
-  ];
+  const items = detail.business_detail.estimate.map((item, index) => {
+    return {
+      key: String(index + 1),
+      tab: `รถคู่ที่ ${index + 1}`
+    }
+  })
 
-  // const items: TabsProps['items'] = [
-  //   {
-  //     key: '1',
-  //     label: 'รถคู่ที่ 1',
-  //     children: <VehicleDetail />,
-  //   },
-  //   {
-  //     key: '2',
-  //     label: 'รถคู่ที่ 2',
-  //     children: <VehicleDetail />,
-  //   },
-  // ];
-
-  const contentList: Record<string, React.ReactNode> = {
-    '1': <VehicleDetail />,
-    '2': <VehicleDetail />,
-  };
+  // Dynamic contentList based on estimate array
+  const contentList: Record<string, React.ReactNode> = detail.business_detail.estimate.reduce((acc, item, index) => {
+    acc[String(index + 1)] = <VehicleDetail item={item} index={index} />
+    return acc
+  }, {} as Record<string, React.ReactNode>)
 
   return (
     <>
@@ -50,11 +36,6 @@ const ContentDetail: React.FC<Props> = (props) => {
       >
         {contentList[tabKey]}
       </Card>
-      {/* <Tabs
-        defaultActiveKey={tabKey}
-        items={items}
-        onChange={(tabKey) => setTabKey(tabKey)}
-      /> */}
     </>
   )
 }

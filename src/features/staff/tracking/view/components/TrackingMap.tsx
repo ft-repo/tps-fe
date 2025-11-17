@@ -10,13 +10,11 @@ interface Props {
   coord: number[][];
   line: number[][];
   altLine?: number[][];
-  setDetailClick: (value: boolean) => void;
 }
 
 interface MarkerProps {
   item: number[];
   index: number;
-  setDetailClick: (value: boolean) => void;
 }
 
 interface PolyLineProps {
@@ -123,19 +121,18 @@ const LineStringPolyline = (props: PolyLineProps) => {
 }
 
 const LocationMarker = (props: MarkerProps) => {
-  const { item, index, setDetailClick } = props
+  const { item, index } = props
 
   // Validate item exists and has required coordinates
   if (!item || item.length < 2) {
     return null;
   }
-
+  console.log(item)
   return (
     <Marker
       position={[item[1] || 0, item[0] || 0]}
       icon={index === 0 ? startIcon : endIcon}
       eventHandlers={{
-        click: () => setDetailClick(true)
       }}
     >
       <Popup>
@@ -146,9 +143,9 @@ const LocationMarker = (props: MarkerProps) => {
 }
 
 const TrackingMap: React.FC<Props> = (props) => {
-  const { coord, line, altLine, setDetailClick } = props
+  const { coord, line, altLine } = props
   const mapRef = useRef<LeafletMap | null>(null)
-
+  console.log('cc', coord)
   const renderLocationMarker = useMemo(() => {
     if (coord && Array.isArray(coord) && coord.length > 0) {
       return coord.map((item, index) => {
@@ -157,13 +154,12 @@ const TrackingMap: React.FC<Props> = (props) => {
             key={index}
             item={item}
             index={index}
-            setDetailClick={setDetailClick}
           />
         )
       })
     }
     return null;
-  }, [coord, setDetailClick])
+  }, [coord])
 
   const renderPolyLine = useMemo(() => {
     if (line && Array.isArray(line) && line.length > 0) {

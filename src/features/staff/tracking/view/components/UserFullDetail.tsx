@@ -1,7 +1,9 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
+import { useAppSelector } from '@/store'
 import { Descriptions, DescriptionsProps } from 'antd'
-import React from 'react'
+import dayjs from 'dayjs'
+import React, { useCallback } from 'react'
 
 interface Props {
 
@@ -9,22 +11,39 @@ interface Props {
 
 const UserFullDetail: React.FC<Props> = (props) => {
   const { } = props
+  const { detail } = useAppSelector(state => state.tracking)
+
+  const renderStartEndDate = useCallback((startDate: string, endDate: string) => {
+    const arr = [
+      dayjs(startDate, 'YYYY-MM-DD').format('DD/MM/YYYY'),
+      dayjs(endDate, 'YYYY-MM-DD').format('DD/MM/YYYY'),
+    ]
+    return arr.join(' - ')
+  }, [])
+
+  const renderLatLng = useCallback((postition: string, province: string) => {
+    const arr = [
+      postition,
+      province
+    ]
+    return arr.join(' ')
+  }, [])
 
   const items: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'ชื่อบริษัท / ห้าง / ร้าน',
-      children: 'ห้างหุ้นส่วนจำกัด ยูนิเวอร์แทรนซ์ (ประเทศไทย) จำกัด',
+      children: detail.business_detail.business_name.business_name || '-',
     },
     {
       key: '2',
       label: 'ประเภทนิติบุคคล',
-      children: 'ห้างหุ้นส่วนสามัญนิติบุคคล',
+      children: detail.business_detail.business_name.entity_type || '-',
     },
     {
       key: '3',
       label: 'ผู้ติดต่อ / ผู้มอบอำนาจ',
-      children: 'ชญานิษฐ์ พงศ์เกษมชัย',
+      children: detail.business_detail.business_name.contact_name || '-',
     },
   ];
 
@@ -32,27 +51,27 @@ const UserFullDetail: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'ชื่อโครงการ',
-      children: 'โครงการระบบโลจิสติกส์เพื่อการเคลื่อนย้ายเครื่องจักรกลหนัก',
+      children: detail.business_detail.road_details.project_name || '-',
     },
     {
       key: '2',
       label: 'ประเภทการขออนุญาต',
-      children: 'รถหมวด 2 ( 4 - 7 เพลา ) ',
+      children: detail.business_detail.road_details.request_type || '-',
     },
     {
       key: '3',
       label: 'วันที่เริ่มต้น - สิ้นสุดสัญญา',
-      children: '01 มี.ค. 64 - 01 มี.ค. 65',
+      children: renderStartEndDate(detail.business_detail.road_details.start_date, detail.business_detail.road_details.end_date) || '-',
     },
     {
       key: '4',
       label: 'ขนส่งจาก',
-      children: '18.7883, 98.9853 จังหวัดพระนครศรีอยุธยา',
+      children: renderLatLng(detail.business_detail.road_details.start_point, detail.business_detail.road_details.start_province) || '-',
     },
     {
       key: '5',
       label: 'ไปยัง',
-      children: '12.6814, 101.2775 จังหวัดระยอง',
+      children: renderLatLng(detail.business_detail.road_details.end_point, detail.business_detail.road_details.end_province) || '-',
     },
   ];
 

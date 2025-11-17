@@ -1,9 +1,9 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { FormSearchTracking, TableTracking } from '../components'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
-import { setTrackingData } from '@/store/slices/staff/trackingSlice'
+import { getTrackingData, setTrackingData } from '@/store/slices/staff/trackingSlice'
 
 interface Props {
 
@@ -13,6 +13,12 @@ const OverviewScreen: React.FC<Props> = (props) => {
   const { } = props
   const dispatch = useAppDispatch()
   const { overview, loading } = useAppSelector(state => state.tracking)
+
+  useEffect(() => {
+    dispatch(getTrackingData(overview.search))
+  }, [dispatch, overview.search])
+
+  console.log(overview)
 
   const handleTableChange = useCallback((page: number, limit: number) => {
     dispatch(setLoading(true))
@@ -67,6 +73,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
       </section>
       <section className="mt-5">
         <TableTracking
+          data={overview.data}
           loading={loading}
           handleTableChange={handleTableChange}
         />
