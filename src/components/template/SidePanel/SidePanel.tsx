@@ -84,12 +84,20 @@ const _SidePanel = (props: SidePanelProps) => {
 		}
 	}
 
+	const onClickManual = () => {
+		if (authority[0] === 'ADMIN') {
+			window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่.pdf', '_blank')
+		} else {
+			window.open('/pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ.pdf', '_blank')
+		}
+	}
+
 	return (
 		<>
 			<Tooltip title='คู่มือการใช้งานระบบ'>
 				<div
 					className={classNames('text-2xl', className)}
-					onClick={handleClick}
+					onClick={onClickManual}
 					{...rest}
 				>
 					<FaQuestion />
