@@ -1,3 +1,5 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable react-refresh/only-export-components */
 // EvaluationScreen.tsx
 import React, { useEffect, useRef } from 'react'
 import { TitleSection, ContentSection } from '../components'
@@ -8,7 +10,10 @@ import { useAppDispatch, useAppSelector } from '@/store'
 import { getPetitionExtendedDetail } from '@/store/slices/staff'
 import { useReactToPrint } from 'react-to-print'
 
-const EvaluationScreen: React.FC = () => {
+interface Props { }
+
+const EvaluationScreen: React.FC<Props> = (props) => {
+	const { } = props;
 	const [params] = useSearchParams()
 	const petitionId = params.get('petition_id')
 	const navigate = useNavigate()
@@ -38,14 +43,20 @@ const EvaluationScreen: React.FC = () => {
 	return (
 		<Spin spinning={loading || defaultLoading}>
 			<section className="no-print">
-				<Button type="text" icon={<AiOutlineLeft />} onClick={() => navigate('/request-list/overview?tabKey=2')}>
+				<Button
+					type="text"
+					icon={<AiOutlineLeft />}
+					onClick={() => navigate('/request-list/overview?tabKey=2')}
+				>
 					ย้อนกลับ
 				</Button>
 			</section>
 
 			{/* ส่งปุ่ม export ลงไป */}
 			<section className="no-print">
-				<TitleSection onExport={handleExport} />
+				<TitleSection
+					onExport={handleExport}
+				/>
 			</section>
 
 			{/* โซนที่ต้องการพิมพ์/Export */}
