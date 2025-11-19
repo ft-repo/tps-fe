@@ -2,25 +2,26 @@
 /* eslint-disable react-refresh/only-export-components */
 import { useAppSelector } from '@/store';
 import { Badge, Button, Col, Row, Select } from 'antd';
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 interface Props {
+  projectId: number | null;
   setProjectId: (value: number | null) => void;
 }
 
 interface FieldType {
-  search: string | null;
+  search: string | number | null;
 }
 
 const FormSearchMap: React.FC<Props> = (props) => {
-  const { setProjectId } = props
+  const { projectId, setProjectId } = props
   const { detail } = useAppSelector(state => state.tracking)
   const submitRef = useRef<HTMLButtonElement>(null)
 
   const form = useForm<FieldType>({
     defaultValues: {
-      search: null
+      search: projectId || null
     }
   })
 
@@ -29,6 +30,12 @@ const FormSearchMap: React.FC<Props> = (props) => {
   const onSubmit = useCallback((value: FieldType) => {
     setProjectId(Number(value.search))
   }, [setProjectId])
+
+  useEffect(() => {
+    if (projectId) {
+      setValue("search", projectId)
+    }
+  }, [projectId, setValue])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

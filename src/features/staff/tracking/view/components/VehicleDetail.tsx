@@ -13,7 +13,7 @@ interface Props {
 const VehicleDetail: React.FC<Props> = (props) => {
   const { item, index } = props
   const { setItem, setIndex } = useViewContext()
-  console.log("theitem", item)
+
   useEffect(() => {
     setItem(item)
     setIndex(index)

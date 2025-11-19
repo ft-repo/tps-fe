@@ -97,6 +97,7 @@ const ContentTracking: React.FC<Props> = (props) => {
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={14}>
             <FormSearchMap
+              projectId={projectId}
               setProjectId={setProjectId}
             />
           </Col>

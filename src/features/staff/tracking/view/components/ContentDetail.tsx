@@ -15,6 +15,7 @@ const ContentDetail: React.FC<Props> = (props) => {
   const { detail } = useAppSelector(state => state.tracking)
 
   const items = detail.business_detail.estimate.map((item, index) => {
+    console.log("===", item)
     return {
       key: String(index + 1),
       tab: `รถคู่ที่ ${index + 1}`
