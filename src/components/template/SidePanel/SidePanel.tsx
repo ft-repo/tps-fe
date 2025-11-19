@@ -6,9 +6,9 @@ import NotificationContent, { SidePanelContentProps } from './NotificationConten
 import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import { setPanelExpand, useAppSelector, useAppDispatch } from '@/store'
 import type { CommonProps } from '@/@types/common'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getPetitionNotification } from '@/store/slices/staff'
-import { Badge, Tooltip } from 'antd'
+import { Badge, Dropdown, MenuProps, Tooltip } from 'antd'
 import { FaQuestion } from "react-icons/fa6";
 
 type SidePanelProps = SidePanelContentProps & CommonProps
@@ -84,24 +84,53 @@ const _SidePanel = (props: SidePanelProps) => {
 		}
 	}
 
-	const onClickManual = () => {
-		if (authority[0] === 'ADMIN') {
-			window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่.pdf', '_blank')
-		} else {
-			window.open('/pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ.pdf', '_blank')
+	// const onClickManual = () => {
+	// 	if (authority[0] === 'ADMIN') {
+	// 		window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่.pdf', '_blank')
+	// 	} else {
+	// 		window.open('/pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ.pdf', '_blank')
+	// 	}
+	// }
+
+	const items: MenuProps['items'] = useMemo(() => {
+		return [
+			{
+				key: '1',
+				label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
+				onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่.pdf', '_blank')
+			},
+			{
+				key: '2',
+				label: 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
+				onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ.pdf', '_blank')
+			},
+		]
+	}, [])
+
+	const checkRole = useMemo(() => {
+		if (authority[0] !== 'ADMIN') {
+			return items.filter(item => item?.key !== '1')
 		}
-	}
+
+		return items
+	}, [items, authority])
 
 	return (
 		<>
 			<Tooltip title='คู่มือการใช้งานระบบ'>
-				<div
-					className={classNames('text-2xl', className)}
-					onClick={onClickManual}
-					{...rest}
+				<Dropdown
+					menu={{
+						items: checkRole
+					}}
+					trigger={['click']}
 				>
-					<FaQuestion />
-				</div>
+					<div
+						className={classNames('text-2xl', className)}
+						{...rest}
+					>
+						<FaQuestion />
+					</div>
+				</Dropdown>
 			</Tooltip>
 			{authority[0] === 'ADMIN' ?
 				<Badge count={unreadCount} offset={[-5, 5]}>

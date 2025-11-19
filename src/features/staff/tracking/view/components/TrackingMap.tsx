@@ -1,20 +1,35 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMapEvents } from 'react-leaflet'
+import React, { JSX, useCallback, useEffect, useMemo, useRef } from 'react'
+import { MapContainer, Marker, Polyline, TileLayer, useMapEvents } from 'react-leaflet'
 import type { LatLngBoundsExpression, LatLngExpression, Map as LeafletMap } from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { TrackingDetail } from '@/store/slices/staff/trackingSlice';
+import { useViewContext } from '../context';
 
 interface Props {
-  coord: number[][];
-  line: number[][];
+  coord?: number[][]; // Make optional since we'll use API data
+  line?: number[][];
   altLine?: number[][];
+  apiData?: TrackingDetail; // Add API data prop
+  projectId: number | null;
+  setProjectId: (value: number | null) => void;
+  isFirstClick: boolean;
 }
 
 interface MarkerProps {
   item: number[];
   index: number;
+  vehicleInfo?: {
+    plate: string;
+    speed: number;
+    timestamp: string;
+    projectName: string;
+    projectId: number;
+  };
+  setProjectId: (value: number | null) => void;
+  isFirstClick: boolean;
 }
 
 interface PolyLineProps {
@@ -26,26 +41,14 @@ interface PolyLineProps {
 }
 
 // Custom icons for start and end markers
-const startIcon = new L.Icon({
+const activeIcon = new L.Icon({
   iconUrl: `/public/icon/green-truck.svg`,
   iconSize: [40, 33]
-  // iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-  // shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  // iconSize: [25, 41],
-  // iconAnchor: [12, 41],
-  // popupAnchor: [1, -34],
-  // shadowSize: [41, 41]
 });
 
-const endIcon = new L.Icon({
-  iconUrl: `/public/icon/green-truck.svg`,
+const inactiveIcon = new L.Icon({
+  iconUrl: `/public/icon/yellow-truck.svg`,
   iconSize: [40, 33]
-  // iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-  // shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  // iconSize: [25, 41],
-  // iconAnchor: [12, 41],
-  // popupAnchor: [1, -34],
-  // shadowSize: [41, 41]
 });
 
 const LineStringPolyline = (props: PolyLineProps) => {
@@ -70,7 +73,15 @@ const LineStringPolyline = (props: PolyLineProps) => {
 
   // Calculate bounds and fit map to polyline
   useEffect(() => {
-    if (!autoFit || !line || !line.length || !map) return;
+    if (!map) return;
+
+    // Reset to default view if no line
+    if (!line || line[0].length === 0) {
+      map.setView([13.736717, 100.523186], 5);
+      return;
+    }
+
+    if (!autoFit) return;
 
     try {
       const reorderedLine = reorderCoordItem(line);
@@ -121,31 +132,37 @@ const LineStringPolyline = (props: PolyLineProps) => {
 }
 
 const LocationMarker = (props: MarkerProps) => {
-  const { item, index } = props
+  const { item, vehicleInfo, setProjectId, isFirstClick } = props
+  const map = useMapEvents({});
+  const { } = useViewContext()
 
   // Validate item exists and has required coordinates
   if (!item || item.length < 2) {
     return null;
   }
-  console.log(item)
+
   return (
     <Marker
       position={[item[1] || 0, item[0] || 0]}
-      icon={index === 0 ? startIcon : endIcon}
+      icon={vehicleInfo?.speed !== 0 ? activeIcon : inactiveIcon}
       eventHandlers={{
+        click: () => {
+          if (isFirstClick) {
+            map.setView([item[1] || 0, item[0]], 8);
+          }
+
+          setProjectId(Number(vehicleInfo?.projectId))
+        }
       }}
     >
-      <Popup>
-        {index === 0 ? `ต้นทาง: ${item}` : `ปลายทาง: ${item}`}
-      </Popup>
     </Marker>
   )
 }
 
 const TrackingMap: React.FC<Props> = (props) => {
-  const { coord, line, altLine } = props
+  const { coord, line, altLine, apiData, projectId, setProjectId, isFirstClick } = props
   const mapRef = useRef<LeafletMap | null>(null)
-  console.log('cc', coord)
+
   const renderLocationMarker = useMemo(() => {
     if (coord && Array.isArray(coord) && coord.length > 0) {
       return coord.map((item, index) => {
@@ -154,12 +171,14 @@ const TrackingMap: React.FC<Props> = (props) => {
             key={index}
             item={item}
             index={index}
+            setProjectId={setProjectId}
+            isFirstClick={isFirstClick}
           />
         )
       })
     }
     return null;
-  }, [coord])
+  }, [coord, setProjectId, isFirstClick])
 
   const renderPolyLine = useMemo(() => {
     if (line && Array.isArray(line) && line.length > 0) {
@@ -189,6 +208,76 @@ const TrackingMap: React.FC<Props> = (props) => {
     return null;
   }, [altLine])
 
+  // Render markers from API data (all vehicles from all projects)
+  const renderVehicleMarkers = useMemo(() => {
+    if (!apiData || !apiData.business || !apiData.business_detail) {
+      return null;
+    }
+
+    const markers: JSX.Element[] = [];
+    let markerIndex = 0;
+
+    if (!projectId) {
+      apiData.business.project.forEach((project) => {
+        if (!project.vehicles || !Array.isArray(project.vehicles)) {
+          return;
+        }
+        project.vehicles.forEach((vehicle) => {
+          // Only show vehicles where is_show is true
+          // if (!vehicle.is_show || !vehicle.geom || vehicle.geom.length < 2) {
+          //   return;
+          // }
+
+          markers.push(
+            <LocationMarker
+              key={`vehicle-${project.project_id}-${vehicle.plate}-${markerIndex}`}
+              item={vehicle.geom} // geom is [lng, lat]
+              index={markerIndex}
+              vehicleInfo={{
+                plate: vehicle.plate,
+                speed: vehicle.speed,
+                timestamp: vehicle.timestamp,
+                projectName: project.project_name,
+                projectId: project.project_id
+              }}
+              setProjectId={setProjectId}
+              isFirstClick={isFirstClick}
+            />
+          );
+          markerIndex++;
+        });
+      });
+    } else {
+      apiData.business_detail.estimate.forEach((project) => {
+        if (!project.gps.geom || !Array.isArray(project.gps.geom)) {
+          return;
+        }
+
+        markers.push(
+          <LocationMarker
+            key={`vehicle-${project.id}-${project.gps.plate}-${markerIndex}`}
+            item={project.gps.geom} // geom is [lng, lat]
+            index={markerIndex}
+            vehicleInfo={{
+              plate: project.gps.plate,
+              speed: project.gps.speed,
+              timestamp: project.gps.timestamp,
+              projectName: apiData.business_detail.road_details.project_name,
+              projectId: projectId
+            }}
+            setProjectId={setProjectId}
+            isFirstClick={isFirstClick}
+          />
+        );
+        markerIndex++;
+      });
+    }
+
+
+
+    return markers.length > 0 ? markers : null;
+  }, [apiData, projectId, setProjectId, isFirstClick])
+
   return (
     <div className='w-full h-full'>
       <MapContainer
@@ -205,6 +294,7 @@ const TrackingMap: React.FC<Props> = (props) => {
         {renderLocationMarker}
         {renderPolyLine}
         {renderAltPolyLine}
+        {renderVehicleMarkers}
       </MapContainer>
     </div>
   )

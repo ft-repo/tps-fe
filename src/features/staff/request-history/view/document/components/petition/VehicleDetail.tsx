@@ -14,61 +14,96 @@ const VehicleDetail: React.FC<Props> = (props) => {
   const detail = petition_extended.detail
 
   const renderAxisWeight = useCallback((arr: number[]) => {
-    if (!arr.length) return '-'
+    if (!arr?.length) return '-'
     return arr.join(' : ')
   }, [])
 
-  const items: DescriptionsProps['items'] = [
+  const renderLicensePlate = useCallback((plateNo: string, plateProvince: string) => {
+    const licenseArr = [plateNo, plateProvince]
+    if (!licenseArr?.length) return '-'
+    return licenseArr.join(' ').trim()
+  }, [])
+
+  const towering_vehicle: DescriptionsProps['items'] = [
     {
       key: '1',
-      label: 'ลักษณะ / มาตราฐาน',
-      children: <p>{detail?.vehicle?.characteristic || '-'}</p>,
+      label: 'เลขทะเบียน / เลขตัวรถ',
+      children: <p>{renderLicensePlate(detail?.vehicle?.towing_vehicle?.plate_no, detail?.vehicle?.towing_vehicle?.plate_province)}</p>,
     },
     {
       key: '2',
-      label: 'ประเภท',
-      children: <p>{detail?.vehicle?.type || '-'}</p>,
+      label: 'น้ำหนัก (กิโลกรัม)',
+      children: <p>{detail?.vehicle?.towing_vehicle?.weight || '-'}</p>,
     },
     {
       key: '3',
-      label: 'เลขทะเบียน',
-      children: <p>{detail?.vehicle?.plate_no || '-'}</p>,
-    },
-    {
-      key: '4',
-      label: 'จังหวัด',
-      children: <p>{detail?.vehicle?.plate_province || '-'}</p>,
-    },
-    {
-      key: '5',
-      label: 'สี',
-      children: <p>{detail?.vehicle?.color || '-'}</p>,
-    },
-    {
-      key: '6',
-      label: 'จำนวนเพลา',
-      children: <p>{detail?.vehicle?.axis_number || '-'}</p>,
-    },
-    {
-      key: '7',
-      label: 'น้ำหนักรวม (กิโลกรัม)',
-      children: <p>{detail?.vehicle?.weight || '-'}</p>,
-    },
-    {
-      key: '8',
       label: 'น้ำหนักลงเพลา (กิโลกรัม)',
-      children: <p>{renderAxisWeight(detail?.vehicle?.axis_weight || [])}</p>,
+      children: <p>{renderAxisWeight(detail?.vehicle?.axis_weight_towing)}</p>,
     },
-  ]
+  ];
+
+  const semi_trailer_vehicle: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'เลขทะเบียน / เลขตัวรถ',
+      children: <p>{renderLicensePlate(detail?.vehicle?.semi_trailer_vehicle?.plate_no, detail?.vehicle?.semi_trailer_vehicle?.plate_province)}</p>,
+    },
+    {
+      key: '2',
+      label: 'น้ำหนัก (กิโลกรัม)',
+      children: <p>{detail?.vehicle?.semi_trailer_vehicle?.weight || '-'}</p>,
+    },
+    {
+      key: '3',
+      label: 'น้ำหนักลงเพลา (กิโลกรัม)',
+      children: <p>{renderAxisWeight(detail?.vehicle?.axis_weight_semi_trailer)}</p>,
+    },
+  ];
+
+  const etc_vehicle: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'เลขทะเบียน / เลขตัวรถ',
+      children: <p>{renderLicensePlate(detail?.vehicle?.etc_vehicle?.plate_no, detail?.vehicle?.etc_vehicle?.plate_province)}</p>,
+    },
+    {
+      key: '2',
+      label: 'น้ำหนัก (กิโลกรัม)',
+      children: <p>{detail?.vehicle?.etc_vehicle?.weight || '-'}</p>,
+    },
+  ];
 
   return (
-    <Descriptions
-      title="ข้อมูลยานพาหนะ"
-      items={items}
-      column={1}
-      layout='vertical'
-      size='small'
-    />
+    <>
+      <section>
+        <Descriptions
+          title="ข้อมูลรถลากจูง"
+          items={towering_vehicle}
+          column={1}
+          layout='vertical'
+          size='small'
+        />
+
+      </section>
+      <section className='mt-5'>
+        <Descriptions
+          title="ข้อมูลรถกึ่งพ่วง 4 เพลา 8"
+          items={semi_trailer_vehicle}
+          column={1}
+          layout='vertical'
+          size='small'
+        />
+      </section>
+      <section className='mt-5'>
+        <Descriptions
+          title="ข้อมูลเครื่องจักร / สินค้า"
+          items={etc_vehicle}
+          column={1}
+          layout='vertical'
+          size='small'
+        />
+      </section>
+    </>
   )
 }
 

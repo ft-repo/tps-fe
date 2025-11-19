@@ -6,6 +6,8 @@ import { Button, Dropdown, Flex, MenuProps, message } from 'antd'
 import React, { useCallback } from 'react'
 import { AiOutlineDownload } from 'react-icons/ai'
 import JSZip from 'jszip'
+import { RenderDoc } from '@/features/staff/request-history/view/other/components/pdf/PermitForm'
+import { pdf } from '@react-pdf/renderer'
 
 interface Props {
   onExport?: () => void
@@ -44,10 +46,14 @@ const TitleSection: React.FC<Props> = (props) => {
     }
   }, [dispatch])
 
-  const downloadAllAsZip = useCallback(async () => {
+  const downloadAllFile = useCallback(async () => {
     dispatch(setLoading(true))
+    let pdfUrl: string | null = null
+
     try {
       const zip = new JSZip()
+      const blob = await pdf(<RenderDoc data={petition_extended.detail} />).toBlob();
+      pdfUrl = URL.createObjectURL(blob);
 
       // Define all files with their URLs and names
       const files = [
@@ -110,13 +116,13 @@ const TitleSection: React.FC<Props> = (props) => {
         {
           url: extractUrl(petition_extended?.detail?.audit_document?.operation_plan_url),
           name: '15_แผนและระยะเวลาการดำเนินงาน.pdf'
-        }
+        },
       ]
 
       // Filter out files with no URL
       const validFiles = files.filter(file => file.url)
 
-      if (validFiles.length === 0) {
+      if (validFiles.length === 0 && !blob) {
         message.warning('ไม่พบไฟล์ที่จะดาวน์โหลด')
         return
       }
@@ -135,6 +141,9 @@ const TitleSection: React.FC<Props> = (props) => {
 
       await Promise.all(fetchPromises)
 
+      // Add the generated PDF directly to the zip
+      zip.file('16_แบบขออนุญาต.pdf', blob)
+
       // Generate zip file
       const zipBlob = await zip.generateAsync({ type: 'blob' })
 
@@ -149,14 +158,35 @@ const TitleSection: React.FC<Props> = (props) => {
       document.body.removeChild(a)
       URL.revokeObjectURL(url)
 
-      message.success(`ดาวน์โหลดไฟล์สำเร็จ ${validFiles.length} ไฟล์`)
+      message.success(`ดาวน์โหลดไฟล์สำเร็จ ${(validFiles.length + 1 + 1)} ไฟล์`)
     } catch (e) {
       if (e instanceof Error) message.error(e.message)
       else console.error(e)
     } finally {
+      // Clean up the PDF blob URL
+      if (pdfUrl) {
+        URL.revokeObjectURL(pdfUrl)
+      }
       dispatch(setLoading(false))
     }
   }, [dispatch, petition_extended, extractUrl])
+
+  const onShowPDF = useCallback(async () => {
+    const blob = await pdf(<RenderDoc data={petition_extended.detail} />).toBlob();
+    const url = URL.createObjectURL(blob);
+    // window.open(url, '_blank');
+    // setTimeout(() => URL.revokeObjectURL(url), 100);
+
+    const fileName: string = 'แบบขออนุญาต';
+    const a: HTMLAnchorElement = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.style.display = 'none';
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }, [petition_extended.detail])
 
   const items: MenuProps['items'] = [
     {
@@ -247,8 +277,14 @@ const TitleSection: React.FC<Props> = (props) => {
     },
     {
       key: '16',
+      label: 'แบบขออนุญาต',
+      onClick: () => onShowPDF()
+
+    },
+    {
+      key: '17',
       label: 'ดาวน์โหลดทั้งหมด (.zip)',
-      onClick: downloadAllAsZip
+      onClick: downloadAllFile
     },
   ];
 

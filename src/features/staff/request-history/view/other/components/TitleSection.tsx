@@ -76,7 +76,6 @@ const TitleSection: React.FC<Props> = (props) => {
           name: '5_เอกสารใบอนุญาต.pdf'
         },
       ]
-      console.log(" === ", files)
       // Filter out files with no URL
       const validFiles = files.filter(file => file.url)
 

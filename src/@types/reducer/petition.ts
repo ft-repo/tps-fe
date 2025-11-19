@@ -595,16 +595,44 @@ export interface ContactSubDistrict {
 }
 
 export interface PetitionExtendedVehicle {
+  // id: number;
+  // petition_exid: number;
+  // characteristic: string;
+  // type: string;
+  // plate_no: string;
+  // plate_province: string;
+  // color: string;
+  // axis_number: number;
+  // weight: number;
+  // axis_weight: number[];
+
+  id: number
+  petition_exid: number
+  towing_vehicle_id: number
+  semi_trailer_vehicle_id: number
+  etc_vehicle_id: number
+  axis_weight_towing: number[]
+  axis_weight_semi_trailer: number[]
+  towing_vehicle: ExtendedVehicleDetail;
+  semi_trailer_vehicle: ExtendedVehicleDetail;
+  etc_vehicle: ExtendedVehicleDetail;
+}
+
+export interface ExtendedVehicleDetail {
   id: number;
-  petition_exid: number;
-  characteristic: string;
-  type: string;
+  user_id: string;
+  vehicle_type_id: number;
   plate_no: string;
   plate_province: string;
-  color: string;
-  axis_number: number;
+  brand: string;
   weight: number;
-  axis_weight: number[];
+  color: string;
+  kingpin_distance: number;
+  width: number;
+  length: number;
+  height: number;
+  axis_number: number;
+  registration_document_url: string;
 }
 
 export interface UserDocument {
