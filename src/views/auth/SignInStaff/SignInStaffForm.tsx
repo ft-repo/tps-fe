@@ -12,128 +12,131 @@ import * as Yup from 'yup'
 import type { CommonProps } from '@/@types/common'
 
 interface SignInStaffFormProps extends CommonProps {
-    disableSubmit?: boolean
-    forgotPasswordUrl?: string
-    signUpUrl?: string
+	disableSubmit?: boolean
+	forgotPasswordUrl?: string
+	signUpUrl?: string
 }
 
 type SignInStaffFormSchema = {
-    userName: string
-    password: string
+	userName: string
+	password: string
 }
 
 const validationSchema = Yup.object().shape({
-    userName: Yup.string().required('กรุณากรอกชื่อผู้ใช้งาน'),
-    password: Yup.string().required('กรุณากรอกรหัสผ่าน'),
+	userName: Yup.string().required('กรุณากรอกชื่อผู้ใช้งาน'),
+	password: Yup.string().required('กรุณากรอกรหัสผ่าน'),
 })
 
 const SignInStaffForm = (props: SignInStaffFormProps) => {
-    const {
-        disableSubmit = false,
-        className,
-        forgotPasswordUrl = '/forgot-password',
-        signUpUrl = '/sign-up',
-    } = props
+	const {
+		disableSubmit = false,
+		className,
+		forgotPasswordUrl = '/forgot-password',
+		signUpUrl = '/sign-up',
+	} = props
 
-    const [message, setMessage] = useTimeOutMessage()
+	const [message, setMessage] = useTimeOutMessage()
 
-    const { signInStaff } = useAuth()
+	const { signInStaff } = useAuth()
 
-    const onSignIn = async (
-        values: SignInStaffFormSchema,
-        setSubmitting: (isSubmitting: boolean) => void,
-    ) => {
-        const { userName, password } = values
-        setSubmitting(true)
+	const onSignIn = async (
+		values: SignInStaffFormSchema,
+		setSubmitting: (isSubmitting: boolean) => void,
+	) => {
+		const { userName, password } = values
+		setSubmitting(true)
 
-        const result = await signInStaff({ userName, password })
+		const result = await signInStaff({ userName, password })
 
-        if (result?.status === 'failed') {
-            setMessage(result.message)
-        }
+		if (result?.status === 'failed') {
+			setMessage(result.message)
+		}
 
-        setSubmitting(false)
-    }
+		setSubmitting(false)
+	}
 
-    return (
-        <div className={className}>
-            {message && (
-                <Alert showIcon className="mb-4" type="danger">
-                    <>{message}</>
-                </Alert>
-            )}
-            <Formik
-                initialValues={{
-                    userName: 'admin',
-                    password: 'DRR@dm1n',
-                }}
-                validationSchema={validationSchema}
-                onSubmit={(values, { setSubmitting }) => {
-                    if (!disableSubmit) {
-                        onSignIn(values, setSubmitting)
-                    } else {
-                        setSubmitting(false)
-                    }
-                }}
-            >
-                {({ touched, errors, isSubmitting }) => (
-                    <Form>
-                        <FormContainer>
-                            <FormItem
-                                label="ชื่อผู้ใช้งาน"
-                                invalid={
-                                    (errors.userName &&
-                                        touched.userName) as boolean
-                                }
-                                errorMessage={errors.userName}
-                            >
-                                <Field
-                                    type="text"
-                                    autoComplete="off"
-                                    name="userName"
-                                    placeholder="ชื่อผู้ใช้งาน"
-                                    component={Input}
-                                />
-                            </FormItem>
-                            <FormItem
-                                label="รหัสผ่าน"
-                                invalid={
-                                    (errors.password &&
-                                        touched.password) as boolean
-                                }
-                                errorMessage={errors.password}
-                            >
-                                <Field
-                                    autoComplete="off"
-                                    name="password"
-                                    placeholder="รหัสผ่าน"
-                                    component={PasswordInput}
-                                />
-                            </FormItem>
-                            {/* <div className="flex justify-end mb-6">
+	return (
+		<div className={className}>
+			{message && (
+				<Alert showIcon className="mb-4" type="danger">
+					<>{message}</>
+				</Alert>
+			)}
+			<Formik
+				initialValues={{
+					userName: 'admin',
+					password: 'DRR@dm1n',
+				}}
+				validationSchema={validationSchema}
+				onSubmit={(values, { setSubmitting }) => {
+					if (!disableSubmit) {
+						onSignIn(values, setSubmitting)
+					} else {
+						setSubmitting(false)
+					}
+				}}
+			>
+				{({ touched, errors, isSubmitting }) => (
+					<Form>
+						<FormContainer>
+							<FormItem
+								label="ชื่อผู้ใช้งาน"
+								invalid={
+									(errors.userName &&
+										touched.userName) as boolean
+								}
+								errorMessage={errors.userName}
+							>
+								<Field
+									type="text"
+									autoComplete="off"
+									name="userName"
+									placeholder="ชื่อผู้ใช้งาน"
+									component={Input}
+								/>
+							</FormItem>
+							<FormItem
+								label="รหัสผ่าน"
+								invalid={
+									(errors.password &&
+										touched.password) as boolean
+								}
+								errorMessage={errors.password}
+							>
+								<Field
+									autoComplete="off"
+									name="password"
+									placeholder="รหัสผ่าน"
+									component={PasswordInput}
+								/>
+							</FormItem>
+							{/* <div className="flex justify-end mb-6">
                                 <ActionLink to={forgotPasswordUrl}>
                                     ลืมรหัสผ่าน?
                                 </ActionLink>
                             </div> */}
-                            <Button
-                                block
-                                loading={isSubmitting}
-                                variant="solid"
-                                // color='primary'
-                                type="submit"
-                            >
-                                {isSubmitting ? 'กำลังลงชื่อเข้าใช้...' : 'ลงชื่อเข้าใช้'}
-                            </Button>
-                            {/* <div className="mt-4 text-center">
+							<Button
+								block
+								loading={isSubmitting}
+								variant="solid"
+								// color='primary'
+								type="submit"
+							>
+								{isSubmitting ? 'กำลังลงชื่อเข้าใช้...' : 'ลงชื่อเข้าใช้'}
+							</Button>
+							{/* <div className="mt-4 text-center">
                                 <span>{`ยังไม่มีบัญชี?`} </span>
                                 <ActionLink to={signUpUrl}>สมัครสมาชิก</ActionLink>
                             </div> */}
-                        </FormContainer>
-                    </Form>
-                )}
-            </Formik>
-        </div>
-    )
+							<div className='mt-4 text-center'>
+								<ActionLink to={'/sign-in'}>สำหรับผู้ประกอบการ</ActionLink>
+							</div>
+						</FormContainer>
+					</Form>
+				)}
+			</Formik>
+		</div>
+	)
 }
 
 export default SignInStaffForm

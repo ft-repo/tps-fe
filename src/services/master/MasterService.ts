@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DepartmentState, RoleState } from "@/@types/shared";
+import { AxisType, DepartmentState, RoleState } from "@/@types/shared";
 import ApiService from "../ApiService"
 import { NotificationPagination } from "@/@types/reducer/petition";
 import { VehiclePictures } from "@/@types/reducer/vehicle";
@@ -165,5 +165,12 @@ export const getProductTypeAPI = async () => {
   return ApiService.fetchData<APIResponse[]>({
     url: '/lists/product_type',
     method: 'get',
+  })
+}
+
+export const getAxisTypeAPI = async () => {
+  return ApiService.fetchData<AxisType[]>({
+    url: '/client/vehicle/axis_type',
+    method: 'GET',
   })
 }

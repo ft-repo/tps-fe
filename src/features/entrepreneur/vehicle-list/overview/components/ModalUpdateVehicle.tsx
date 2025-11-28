@@ -33,7 +33,7 @@ const Content = (props: ContentProps) => {
   const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
   const { province } = useAppSelector(state => state.master)
 
-  console.log(data.vehicle_detail.vehicle_type_id)
+  // console.log(data.vehicle_detail)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -47,7 +47,7 @@ const Content = (props: ContentProps) => {
       wide_unit: data.vehicle_detail.width || 0,
       long_unit: data.vehicle_detail.length || 0,
       tall_unit: data.vehicle_detail.height || 0,
-      vehicle_axles: data.vehicle_detail.axis_number || null,
+      vehicle_axles: data.vehicle_detail.axis_type_id || null,
       file_registered_document_id: {
         file: [],
         url: ''
@@ -88,7 +88,7 @@ const Content = (props: ContentProps) => {
     control,
     setValue,
   } = form;
-
+  console.log(data.vehicle_detail)
   const onSubmit = useCallback(async (value: FieldType) => {
     const body: APIPostBody = {
       vehicle_detail: {
@@ -102,7 +102,7 @@ const Content = (props: ContentProps) => {
         width: Number(value.wide_unit) || 0,
         length: Number(value.long_unit) || 0,
         height: Number(value.tall_unit) || 0,
-        axis_number: Number(value.vehicle_axles) || 0,
+        axis_type_id: Number(value.vehicle_axles) || null,
         registration_document_url: value.file_registered_document_id.url
       },
       vehicle_owner_document: {

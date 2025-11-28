@@ -452,7 +452,9 @@ const FormPetition: React.FC<Props> = (props) => {
                         fetchDistrictAPI('contact', company_province, company_district, value)
                         // fetchSubDistrictAPI('contact', value, company_district, company_sub_district)
                         const zip_code = contactSubDistrict.find(item => item.id === value)?.zip_code
-                        setValue('company_postcode', String(zip_code))
+                        if (zip_code) {
+                          setValue('company_postcode', String(zip_code))
+                        }
                       }}
                     />
                     {!!errors.company_sub_district &&

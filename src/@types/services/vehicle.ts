@@ -33,7 +33,17 @@ export interface GetVehicleDetail {
   length: number | string | null | any;
   height: number | string | null | any;
   registration_document_url: string;
-  axis_number: number;
+  // axis_number: number;
+  axis_type_id: number | string | null | any;
+  axis_type: AxisType;
+}
+
+export interface AxisType {
+  id: number | string | null | any;
+  name: string;
+  max_weight: number | string | null | any;
+  max_carry_weight: number | string | null | any;
+  axis_number: number | string | null | any;
 }
 
 export interface GetVehicleOwnerDocuments {
@@ -68,7 +78,8 @@ export interface VehicleDetail {
   length: number | string;
   height: number | string;
   registration_document_url: string;
-  axis_number: number;
+  // axis_number: number;
+  axis_type_id: number | null;
 }
 
 export interface VehicleOwnerDocument {

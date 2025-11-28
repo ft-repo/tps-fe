@@ -45,7 +45,14 @@ export const INIT_VEHICLE_MODAL: OpenDialogProps = {
       length: '',
       weight: '',
       width: '',
-      axis_number: 0,
+      axis_type_id: null,
+      axis_type: {
+        id: null,
+        name: '',
+        max_weight: 0,
+        max_carry_weight: 0,
+        axis_number: 0
+      },
       registration_document_url: ''
     },
     vehicle_owner_documents: {

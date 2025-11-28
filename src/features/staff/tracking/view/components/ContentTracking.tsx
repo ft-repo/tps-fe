@@ -18,7 +18,7 @@ const ContentTracking: React.FC<Props> = (props) => {
   const [projectId, setProjectId] = useState<number | null>(null)
   const { detail, loading } = useAppSelector(state => state.tracking)
   const dispatch = useAppDispatch()
-  const { item } = useViewContext()
+  const { item, setSort } = useViewContext()
   const [currentProvince, setCurrentProvince] = useState<string>('')
   const [isFirstClick, setIsFirstClick] = useState<boolean>(false)
 
@@ -29,8 +29,9 @@ const ContentTracking: React.FC<Props> = (props) => {
     } else {
       dispatch(resetTrackingBusinessDetail())
       setIsFirstClick(false)
+      setSort(0 + 1)
     }
-  }, [dispatch, id, projectId])
+  }, [dispatch, id, projectId, setSort])
 
   const renderDetail = useMemo(() => {
     if (projectId) {

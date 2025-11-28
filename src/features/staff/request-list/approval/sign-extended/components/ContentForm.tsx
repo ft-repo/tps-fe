@@ -163,7 +163,7 @@ const ContentForm: React.FC<Props> = (props) => {
           {
             // crossOrigin: 'use-credentials',
             // name: extractFileName(String(petition_extended_status[1]?.document_url)),
-            name: 'เอกสารลงนาม',
+            name: 'หนังสืออนุญาต',
             // percent: 100,
             uid: '1',
             status: 'done',
@@ -200,12 +200,12 @@ const ContentForm: React.FC<Props> = (props) => {
           name='file_id.file'
           control={control}
           rules={{
-            required: 'กรุณาอัปโหลดเอกสารลงนาม'
+            required: 'กรุณาอัปโหลดหนังสืออนุญาต'
           }}
           render={({ field }) => {
             return (
               <fieldset>
-                <label className='block'>เอกสารลงนาม (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
+                <label className='block'>หนังสืออนุญาต (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}

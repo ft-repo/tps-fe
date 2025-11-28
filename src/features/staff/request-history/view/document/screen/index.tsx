@@ -1,10 +1,10 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useEffect } from 'react'
-import { Button, Spin } from 'antd';
-import { ContentSection } from '../components';
-import { AiOutlineLeft } from 'react-icons/ai';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Spin } from 'antd';
+import { ContentSection, TitleSection } from '../components';
+// import { AiOutlineLeft } from 'react-icons/ai';
+import { useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { getPetitionExtendedDetail, getPetitionExtendedStatus } from '@/store/slices/staff';
 
@@ -16,7 +16,7 @@ const DocumentScreen: React.FC<Props> = (props) => {
   const { } = props
   const [params] = useSearchParams()
   const petitionId = params.get('petition_id')
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const defaultLoading = useAppSelector(state => state.layout.loading)
   const { loading } = useAppSelector(state => state.staff.petition)
@@ -29,13 +29,7 @@ const DocumentScreen: React.FC<Props> = (props) => {
   return (
     <Spin spinning={loading || defaultLoading}>
       <section>
-        <Button
-          type='text'
-          icon={<AiOutlineLeft />}
-          onClick={() => navigate('/request-history/overview?tabKey=2')}
-        >
-          ย้อนกลับ
-        </Button>
+        <TitleSection />
       </section>
       <section className='mt-5'>
         <ContentSection />

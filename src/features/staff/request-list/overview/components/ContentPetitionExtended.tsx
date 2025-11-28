@@ -6,6 +6,8 @@ import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { getAdminPetitionExtendedData, setAdminPetitionExtendedData } from '@/store/slices/staff'
 import type { FieldType } from './FormSearchPetition'
 import { useSearchParams } from 'react-router-dom'
+import { Tooltip } from 'antd'
+import { InfoCircleFilled } from '@ant-design/icons'
 
 interface Props { }
 
@@ -60,7 +62,7 @@ const ContentPetitionExtended: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <h3>รายการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)</h3>
+      <h3 className='flex items-center gap-3 flex-wrap'>รายการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)<Tooltip title='เอกสารคู่มือที่-4-การขออนุญาตใช้ยานพาหนะบางชนิด-'><InfoCircleFilled style={{ color: '#69b1ff' }} onClick={() => window.open('/pdf/คู่มือที่-4-การขออนุญาตใช้ยานพาหนะบางชนิด-.pdf', '_blank')} /></Tooltip></h3>
       <section className="mt-5">
         <FormSearchPetitionExtended
           poaName={poaName}

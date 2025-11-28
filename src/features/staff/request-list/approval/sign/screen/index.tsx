@@ -1,12 +1,12 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Col, message, Row, Spin } from 'antd';
-import { ContentForm, ContentPreviewPDF } from '../components'
+import { ContentForm, ContentPreviewPDF, FormDownloadTemplate } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
-import { getPetitionStatus } from '@/store/slices/staff';
+import { getPetitionDocument, getPetitionEstimateRoute, getPetitionStatus, getPetitionVehicle } from '@/store/slices/staff';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 
 interface Props {
@@ -20,10 +20,14 @@ const SignScreen: React.FC<Props> = (props) => {
 	const navigate = useNavigate()
 	const dispatch = useAppDispatch()
 	const { petition_status, loading } = useAppSelector(state => state.staff.petition)
+	const [step, setStep] = useState<number>(1)
 	// STATE
 	const [url, setUrl] = useState<string>('')
 
 	useEffect(() => {
+		dispatch(getPetitionDocument({ petition_id: String(petitionId) }))
+		dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
+		dispatch(getPetitionVehicle({ petition_id: String(petitionId) }))
 		dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
 	}, [dispatch, petitionId])
 
@@ -60,38 +64,60 @@ const SignScreen: React.FC<Props> = (props) => {
 		}
 	}, [fetchImage, extractUrl, petition_status])
 
+	const renderFormComponent = useMemo(() => {
+		switch (step) {
+			case 1:
+				return <FormDownloadTemplate setStep={setStep} />
+			case 2:
+				return (
+					<Row gutter={[16, 16]}>
+						<Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
+							<section>
+								{!loading ?
+									<ContentForm
+										setUrl={setUrl}
+									/>
+									: null}
+							</section>
+						</Col>
+						<Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
+							{!loading ?
+								<ContentPreviewPDF
+									url={url}
+								/>
+								: null}
+						</Col>
+					</Row>
+				)
+			default:
+				return <FormDownloadTemplate setStep={setStep} />
+		}
+
+	}, [loading, step, url])
+
 	return (
 		<Spin spinning={loading}>
-			<Row gutter={[16, 16]}>
-				<Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
-					<section>
-						<Button
-							type='text'
-							icon={<AiOutlineLeft />}
-							onClick={() => navigate('/request-list/overview')}
-						>
-							ย้อนกลับ
-						</Button>
-					</section>
-					<section>
-						<h3>นำเข้าเอกสารลงนาม</h3>
-					</section>
-					<section className='mt-5'>
-						{!loading ?
-							<ContentForm
-								setUrl={setUrl}
-							/>
-							: null}
-					</section>
-				</Col>
-				<Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
-					{!loading ?
-						<ContentPreviewPDF
-							url={url}
-						/>
-						: null}
-				</Col>
-			</Row>
+			<section>
+				<Button
+					type='text'
+					icon={<AiOutlineLeft />}
+					onClick={() => {
+						if (step === 1) {
+							navigate('/request-list/overview')
+						} else {
+							setStep((prev: number) => prev - 1)
+						}
+					}}
+				>
+					ย้อนกลับ
+				</Button>
+			</section>
+			<section>
+				<h3>นำเข้าหนังสืออนุญาต</h3>
+			</section>
+			<section className='mt-5'>
+				{renderFormComponent}
+			</section>
 		</Spin>
 	)
 }

@@ -4,6 +4,7 @@ import { useAppSelector } from '@/store';
 import { Badge, Button, Col, Row, Select } from 'antd';
 import React, { useCallback, useEffect, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useViewContext } from '../context';
 
 interface Props {
   projectId: number | null;
@@ -18,6 +19,7 @@ const FormSearchMap: React.FC<Props> = (props) => {
   const { projectId, setProjectId } = props
   const { detail } = useAppSelector(state => state.tracking)
   const submitRef = useRef<HTMLButtonElement>(null)
+  const { setSort } = useViewContext()
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -29,7 +31,8 @@ const FormSearchMap: React.FC<Props> = (props) => {
 
   const onSubmit = useCallback((value: FieldType) => {
     setProjectId(Number(value.search))
-  }, [setProjectId])
+    setSort(0 + 1)
+  }, [setProjectId, setSort])
 
   useEffect(() => {
     if (projectId) {
@@ -86,7 +89,11 @@ const FormSearchMap: React.FC<Props> = (props) => {
           <Button
             type='primary'
             size='large'
-            onClick={() => { setProjectId(null); setValue('search', null) }}
+            onClick={() => {
+              setProjectId(null);
+              setValue('search', null);
+              setSort(0 + 1)
+            }}
           >
             โครงการ <Badge count={detail.business.project.length} />
           </Button>

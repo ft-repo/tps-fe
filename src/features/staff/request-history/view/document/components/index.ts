@@ -13,3 +13,4 @@ export { default as ResultDocumentDetail } from './petition/ResultDocumentDetail
 export { default as ResultEvaluationDetail } from './evaluation/ResultEvaluationDetail'
 export { default as ResultPermitDetail } from './permit/ResultPermitDetail'
 export { default as ResultExtendedPermitDetail } from './permit/ResultExtendedPermitDetail'
+export { default as TitleSection } from './TitleSection'

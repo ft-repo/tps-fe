@@ -1,12 +1,13 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { useAppSelector } from '@/store'
-import { Button, Col, Row } from 'antd'
-import React from 'react'
+import { Button, Col, Row, Tooltip } from 'antd'
+import React, { useState } from 'react'
 import { useRouteContext } from '../../context'
 import ContentTab from '../route-estimate/result/ContentTab'
 import ContentRouteList from '../route-estimate/result/ContentRouteList'
 import DisplayMap from '../map/DisplayMap'
+import { InfoCircleFilled } from '@ant-design/icons'
 // import Map from '../map/Map'
 
 interface Props {
@@ -19,6 +20,8 @@ const EstimateResult: React.FC<Props> = (props) => {
   const { estimate } = useAppSelector(state => state.entrepreneur.permitList)
   const { setStep, index, item } = useRouteContext()
   const detail = estimate.detail
+  // STATE
+  const [remark, setRemark] = useState<'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว'>('ตารางสรุป')
 
   return (
     <main>
@@ -64,11 +67,12 @@ const EstimateResult: React.FC<Props> = (props) => {
       </section>
       <hr className='my-5' />
       <section>
-        <h3>รายการประเมินเส้นทาง</h3>
+        <h3 className='flex items-center gap-3 flex-wrap'>รายการประเมินเส้นทาง ({remark}){remark !== 'รัศมีเลี้ยว' ? null : <Tooltip title="เอกสารสูตรคำนวณรัศมีวงเลี้ยว"><InfoCircleFilled style={{ color: '#69b1ff' }} onClick={() => window.open('/pdf/สูตรคำนวณรัศมีวงเลี้ยว.pdf', '_blank')} /></Tooltip>}</h3>
         <section className='mt-3'>
           <ContentRouteList
             item={item}
             index={index}
+            setRemark={setRemark}
           />
         </section>
       </section>

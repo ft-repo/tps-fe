@@ -16,7 +16,7 @@ interface Props {
 
 const FormUpdateData: React.FC<Props> = (props) => {
   const { control, setValue } = props
-  const { province, product_type } = useAppSelector(state => state.master)
+  const { province, product_type, axis_type } = useAppSelector(state => state.master)
   const vehicleType = useAppSelector(state => state.master.vehicle_type)
   const { errors } = useFormState({ control })
 
@@ -318,43 +318,25 @@ const FormUpdateData: React.FC<Props> = (props) => {
             name='vehicle_axles'
             control={control}
             rules={{
-              required: 'กรุณาเลือกจำนวนเพลา'
+              required: 'กรุณาเลือกชนิดของรถ'
             }}
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>จำนวนเพลา {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
+                  <label>ชนิดของรถ {vehicle_type !== 3 ? <span className='text-red-500'>*</span> : null}</label>
                   <Select
                     {...field}
                     allowClear
                     showSearch
                     placeholder='กรุณาเลือก'
-                    options={[
-                      {
-                        label: '2 เพลา',
-                        value: 2
-                      },
-                      {
-                        label: '3 เพลา',
-                        value: 3
-                      },
-                      {
-                        label: '4 เพลา',
-                        value: 4
-                      },
-                      {
-                        label: '5 เพลา',
-                        value: 5
-                      },
-                      {
-                        label: '6 เพลา',
-                        value: 6
-                      },
-                      {
-                        label: '7 เพลา',
-                        value: 7
-                      },
-                    ]}
+                    options={axis_type}
+                    fieldNames={{
+                      label: 'name',
+                      value: 'id'
+                    }}
+                    filterOption={(input, option) => {
+                      return option ? option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                    }}
                     className='w-full'
                     size='large'
                     style={{

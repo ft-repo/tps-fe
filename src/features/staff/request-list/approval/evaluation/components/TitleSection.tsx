@@ -6,7 +6,7 @@ import { Button, Dropdown, Flex, MenuProps, message } from 'antd'
 import React, { useCallback } from 'react'
 import { AiOutlineDownload } from 'react-icons/ai'
 import JSZip from 'jszip'
-import { RenderDoc } from '@/features/staff/request-history/view/other/components/pdf/PermitForm'
+import RenderDoc from '@/features/staff/request-history/view/other/components/pdf/PermitForm'
 import { pdf } from '@react-pdf/renderer'
 
 interface Props {
@@ -20,7 +20,7 @@ const TitleSection: React.FC<Props> = (props) => {
 
   const extractUrl = useCallback((url: string) => url.split('/upload')[1], [])
 
-  const showFile = useCallback(async (fileUrl: string) => {
+  const showFile = useCallback(async (fileUrl: string, fileName?: string) => {
     if (!fileUrl) return
     dispatch(setLoading(true))
     try {
@@ -28,15 +28,16 @@ const TitleSection: React.FC<Props> = (props) => {
       if (res.status === 200) {
         const url = URL.createObjectURL(res.data)
         // DOWNLOAD
-        const fileName: string = url.substring(url.lastIndexOf('/') + 1);
+        const downloadFileName: string = fileName || url.substring(url.lastIndexOf('/') + 1);
         const a: HTMLAnchorElement = document.createElement('a');
         a.href = url;
-        a.download = fileName;
+        a.download = downloadFileName;
         a.style.display = 'none';
 
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       }
     } catch (e) {
       if (e instanceof Error) message.error(e.message)
@@ -192,94 +193,82 @@ const TitleSection: React.FC<Props> = (props) => {
     {
       key: '1',
       label: 'สำเนาบัตรประชาชน',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.user_document?.cid_url))
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.user_document?.cid_url), 'สำเนาบัตรประชาชน')
     },
     {
       key: '2',
       label: 'สำเนาหนังสือรับรองนิติบุคคล',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.user_document?.company_certificate_url))
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.user_document?.company_certificate_url), 'สำเนาหนังสือรับรองนิติบุคคล')
     },
     {
       key: '3',
       label: 'แบบคำขออนุญาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.user_document?.vehicle_permit_url))
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.user_document?.vehicle_permit_url), 'แบบคำขออนุญาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท')
     },
     {
       key: '4',
       label: 'หนังสือมอบอำนาจฯ',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.user_document?.power_of_attorney_url))
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.user_document?.power_of_attorney_url), 'หนังสือมอบอำนาจฯ')
     },
     {
       key: '5',
       label: 'สำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.prefab_parts_details_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.prefab_parts_details_url), 'สำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง')
     },
     {
       key: '6',
       label: 'รูปถ่ายสียานพาหนะ',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.vehicle_photos_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.vehicle_photos_url), 'รูปถ่ายสียานพาหนะ')
     },
     {
       key: '7',
       label: 'รูปแบบยานพาหนะโดยแสดงถึงขนาดระยะและน้ำหนักลงเพลาของยานพาหนะเปล่า',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.vehicle_dimensions_empty_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.vehicle_dimensions_empty_url), 'รูปแบบยานพาหนะโดยแสดงถึงขนาดระยะและน้ำหนักลงเพลาของยานพาหนะเปล่า')
     },
     {
       key: '8',
       label: 'รูปแบบยานพาหนะโดยแสดงถึงมิติของรถรวมสิ่งของที่บรรทุก น้ำหนักลงเพลา',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.vehicle_dimensions_loaded_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.vehicle_dimensions_loaded_url), 'รูปแบบยานพาหนะโดยแสดงถึงมิติของรถรวมสิ่งของที่บรรทุก น้ำหนักลงเพลา')
     },
     {
       key: '9',
       label: 'รูปแบบยานพาหนะโดยแสดงถึงรัศมีวงเลี้ยว',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.vehicle_turning_radius_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.vehicle_turning_radius_url), 'รูปแบบยานพาหนะโดยแสดงถึงรัศมีวงเลี้ยว')
     },
     {
       key: '10',
       label: 'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างสะพานรายสะพานที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.bridge_structure_calculation_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.bridge_structure_calculation_url), 'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างสะพานรายสะพานที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก')
     },
     {
       key: '11',
       label: 'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างทางตลอดเส้นทางที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.road_structure_calculation_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.road_structure_calculation_url), 'รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างทางตลอดเส้นทางที่อยู่ในเส้นทางขออนุญาต เมื่อบรรทุกน้ำหนัก')
     },
     {
       key: '12',
       label: 'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างสะพานพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.bridge_engineer_certificate_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.bridge_engineer_certificate_url), 'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างสะพานพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)')
     },
     {
       key: '13',
       label: 'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างทางพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.road_engineer_certificate_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.road_engineer_certificate_url), 'หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างทางพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)')
     },
     {
       key: '14',
       label: 'หนังสือรับรองของวิศวกรเครื่องกลผู้คำนวณรัศมีวงเลี้ยว (ระดับไม่ต่ำกว่าสามัญวิศวกร)',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.mechanical_engineer_certificate_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.mechanical_engineer_certificate_url), 'หนังสือรับรองของวิศวกรเครื่องกลผู้คำนวณรัศมีวงเลี้ยว (ระดับไม่ต่ำกว่าสามัญวิศวกร)')
     },
     {
       key: '15',
       label: 'แผนและระยะเวลาการดำเนินงาน',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.operation_plan_url))
-
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.audit_document?.operation_plan_url), 'แผนและระยะเวลาการดำเนินงาน')
     },
     {
       key: '16',
       label: 'แบบขออนุญาต',
       onClick: () => onShowPDF()
-
     },
     {
       key: '17',

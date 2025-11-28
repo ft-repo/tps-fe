@@ -28,6 +28,7 @@ interface MarkerProps {
     projectName: string;
     projectId: number;
   };
+  sort?: number;
   setProjectId: (value: number | null) => void;
   isFirstClick: boolean;
 }
@@ -132,9 +133,9 @@ const LineStringPolyline = (props: PolyLineProps) => {
 }
 
 const LocationMarker = (props: MarkerProps) => {
-  const { item, vehicleInfo, setProjectId, isFirstClick } = props
+  const { item, vehicleInfo, setProjectId, isFirstClick, sort = 0 } = props
   const map = useMapEvents({});
-  const { } = useViewContext()
+  const { setSort } = useViewContext()
 
   // Validate item exists and has required coordinates
   if (!item || item.length < 2) {
@@ -149,6 +150,7 @@ const LocationMarker = (props: MarkerProps) => {
         click: () => {
           if (isFirstClick) {
             map.setView([item[1] || 0, item[0]], 8);
+            setSort(sort + 1)
           }
 
           setProjectId(Number(vehicleInfo?.projectId))
@@ -252,7 +254,7 @@ const TrackingMap: React.FC<Props> = (props) => {
         if (!project.gps.geom || !Array.isArray(project.gps.geom)) {
           return;
         }
-
+        console.log(project)
         markers.push(
           <LocationMarker
             key={`vehicle-${project.id}-${project.gps.plate}-${markerIndex}`}
@@ -265,6 +267,7 @@ const TrackingMap: React.FC<Props> = (props) => {
               projectName: apiData.business_detail.road_details.project_name,
               projectId: projectId
             }}
+            sort={project.sort}
             setProjectId={setProjectId}
             isFirstClick={isFirstClick}
           />

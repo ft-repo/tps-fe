@@ -3,7 +3,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useEffect } from 'react'
 import OverviewScreen from '@/features/entrepreneur/vehicle-list/overview/screen'
-import { getProductType, getProvince, getVehicleType, useAppDispatch } from '@/store'
+import { getAxisType, getProductType, getProvince, getVehicleType, useAppDispatch } from '@/store'
 import { ConfigProvider } from 'antd'
 
 interface Props {
@@ -17,6 +17,7 @@ const VehicleListIndex: React.FC<Props> = (props) => {
     dispatch(getVehicleType())
     dispatch(getProvince())
     dispatch(getProductType())
+    dispatch(getAxisType())
   }, [dispatch])
 
   return (

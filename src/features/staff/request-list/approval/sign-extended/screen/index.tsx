@@ -74,7 +74,7 @@ const SignScreen: React.FC<Props> = (props) => {
 						</Button>
 					</section>
 					<section>
-						<h3>นำเข้าเอกสารลงนาม</h3>
+						<h3>นำเข้าหนังสืออนุญาต</h3>
 					</section>
 					<section className='mt-5'>
 						{!loading ?

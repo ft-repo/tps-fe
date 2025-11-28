@@ -1,7 +1,7 @@
-import { DepartmentState, EntityState, RoleState, SubDistrictState, ThailandState } from '@/@types/shared';
+import { AxisType, DepartmentState, EntityState, RoleState, SubDistrictState, ThailandState } from '@/@types/shared';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants';
-import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI, getEntityTypeAPI, getDepartmentAPI, getRoleAPI, VehicleSelectionRequest, getVehicleSelectionAPI, VehicleSelectionResponse, getProductTypeAPI } from '@/services/master/MasterService';
+import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI, getEntityTypeAPI, getDepartmentAPI, getRoleAPI, VehicleSelectionRequest, getVehicleSelectionAPI, VehicleSelectionResponse, getProductTypeAPI, getAxisTypeAPI } from '@/services/master/MasterService';
 
 export type MasterState = {
   entity: EntityState[];
@@ -15,6 +15,7 @@ export type MasterState = {
   role: RoleState[];
   vehicle_selection: VehicleSelectionResponse;
   product_type: EntityState[];
+  axis_type: AxisType[];
   loading: boolean;
 }
 
@@ -39,6 +40,7 @@ const initialState: MasterState = {
     }
   },
   product_type: [],
+  axis_type: [],
   loading: false
 }
 
@@ -102,6 +104,12 @@ export const getProductType = createAsyncThunk(SLICE_BASE_NAME + '/apiGetProduct
   return response.data
 })
 
+export const getAxisType = createAsyncThunk(SLICE_BASE_NAME + '/apiGetAxisType', async () => {
+  const response = await getAxisTypeAPI()
+  return response.data
+})
+
+
 const masterSlice = createSlice({
   name: SLICE_BASE_NAME,
   initialState,
@@ -139,8 +147,14 @@ const masterSlice = createSlice({
     getProductType: (state, action) => {
       state.product_type = action.payload
     },
+    getAxisType: (state, action) => {
+      state.axis_type = action.payload
+    },
     resetProductType: (state) => {
       state.product_type = initialState.product_type
+    },
+    resetAxisType: (state) => {
+      state.axis_type = initialState.axis_type
     }
   },
   extraReducers: (builder) => {
@@ -263,6 +277,18 @@ const masterSlice = createSlice({
         state.loading = true
       })
       .addCase(getProductType.rejected, (state) => {
+        state.loading = false
+      })
+    // GET PRODUCT TYPE
+    builder
+      .addCase(getAxisType.fulfilled, (state, action) => {
+        state.axis_type = action.payload
+        state.loading = false
+      })
+      .addCase(getAxisType.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getAxisType.rejected, (state) => {
         state.loading = false
       })
   },

@@ -93,7 +93,8 @@ const CreateScreen: React.FC<Props> = (props) => {
         width: Number(value.wide_unit) || 0,
         length: Number(value.long_unit) || 0,
         height: Number(value.tall_unit) || 0,
-        axis_number: Number(value.vehicle_axles) || 0,
+        // axis_number: Number(value.vehicle_axles) || 0,
+        axis_type_id: Number(value.vehicle_axles) || null,
         registration_document_url: value.file_registered_document_id.url
       },
       vehicle_owner_document: {

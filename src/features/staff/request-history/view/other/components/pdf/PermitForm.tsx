@@ -217,15 +217,12 @@ const permit_styles = StyleSheet.create({
 });
 
 interface Props {
-  // NO PROPS
-}
-
-interface DocProps {
   data: AdminPetitionExtendedDetail;
 }
 
-export const RenderDoc: React.FC<DocProps> = (props) => {
+const PermitForm: React.FC<Props> = (props) => {
   const { data } = props;
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -247,11 +244,11 @@ export const RenderDoc: React.FC<DocProps> = (props) => {
         {/* วันที่ */}
         <View style={styles.date_section}>
           <Text>วันที่</Text>
-          <Text style={styles.underline_short}>{dayjs(data?.created_at).format('DD')}</Text>
+          <Text style={styles.underline_short}>{dayjs(data?.created_at).format('DD') || '-'}</Text>
           <Text>เดือน</Text>
-          <Text style={styles.underline_short}>{dayjs(data?.created_at).format('MMMM')}</Text>
+          <Text style={styles.underline_short}>{dayjs(data?.created_at).format('MMMM') || '-'}</Text>
           <Text>พ.ศ.</Text>
-          <Text style={styles.underline_short}>{dayjs(data?.created_at).format('BBBB')}</Text>
+          <Text style={styles.underline_short}>{dayjs(data?.created_at).format('BBBB') || '-'}</Text>
         </View>
         {/* เรียน เรื่อง */}
         <View style={styles.purpose_section}>
@@ -316,9 +313,9 @@ export const RenderDoc: React.FC<DocProps> = (props) => {
         </View>
         <View style={[styles.row, styles.indent]}>
           <Text>ข้าพเจ้า (นาย/นาง/นางสาว)</Text>
-          <Text style={styles.underline_long}>&nbsp;</Text>
+          <Text style={styles.underline_long}>{'-'}</Text>
           <Text>นามสกุล</Text>
-          <Text style={styles.underline_full}>&nbsp;</Text>
+          <Text style={styles.underline_full}>{'-'}</Text>
         </View>
         <View style={styles.row}>
           <Text>เจ้าของยานพาหนะหรือตัวแทน เจ้าของยานพาหนะ อยู่บ้านเลขที่</Text>
@@ -377,9 +374,9 @@ export const RenderDoc: React.FC<DocProps> = (props) => {
         </View>
         <View style={styles.row}>
           <Text>ข้อ</Text>
-          <Text style={styles.underline_long}>{data?.ref_form_no || '-'}</Text>
+          <Text style={styles.underline_long}>{data?.ref_form_no || <>&nbsp;</>}</Text>
           <Text>ต่ออธิการบดีกรมทางหลวงชนบท เพื่อ (เหตุผลที่ขอ)</Text>
-          <Text style={styles.underline_full}>{data?.remark || '-'}</Text>
+          <Text style={styles.underline_full}>{data?.remark || <>&nbsp;</>}</Text>
         </View>
         <View style={styles.row}>
           <Text style={[styles.underline_custom, { minWidth: 270 }]}>&nbsp;</Text>
@@ -392,15 +389,15 @@ export const RenderDoc: React.FC<DocProps> = (props) => {
           <Text>ประเภท</Text>
           <Text style={[styles.underline_custom, { minWidth: 100 }]}>รถลากจูง</Text>
           <Text>เลขที่ทะเบียน</Text>
-          <Text style={styles.underline_full}>{data?.vehicle?.towing_vehicle?.plate_no || '-'}</Text>
+          <Text style={styles.underline_full}>{data?.vehicle?.towing_vehicle?.plate_no || <>&nbsp;</>}</Text>
         </View>
         <View style={styles.row}>
           <Text>จังหวัด</Text>
-          <Text style={[styles.underline_custom, { minWidth: 60 }]}>{data?.vehicle?.towing_vehicle?.plate_province || '-'}</Text>
+          <Text style={[styles.underline_custom, { minWidth: 60 }]}>{data?.vehicle?.towing_vehicle?.plate_province || <>&nbsp;</>}</Text>
           <Text>สี</Text>
-          <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.towing_vehicle?.color || '-'}</Text>
+          <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.towing_vehicle?.color || <>&nbsp;</>}</Text>
           <Text>โดยมีจำนวนเพลา</Text>
-          <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.towing_vehicle?.axis_number || '-'}</Text>
+          <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.towing_vehicle?.axis_number || <>&nbsp;</>}</Text>
           <Text>เพลา</Text>
           <Text> น้ำหนักลงเพลา</Text>
           <Text style={styles.underline_full}>{data?.vehicle?.axis_weight_towing[0] || 0} {data?.vehicle?.axis_weight_towing[1] || 0}</Text>
@@ -417,7 +414,7 @@ export const RenderDoc: React.FC<DocProps> = (props) => {
           <Text style={[styles.underline_custom, { minWidth: 40 }]}>{data?.vehicle?.axis_weight_towing[6] || 0}</Text>
           <Text>กิโลกรัม</Text>
           <Text> น้ำหนักรวม</Text>
-          <Text style={[styles.underline_custom, { minWidth: 60 }]}>{data?.vehicle?.towing_vehicle?.weight || '-'}</Text>
+          <Text style={[styles.underline_custom, { minWidth: 60 }]}>{data?.vehicle?.towing_vehicle?.weight || <>&nbsp;</>}</Text>
           <Text>กิโลกรัม</Text>
         </View>
         {/* ลักษณะ 2 */}
@@ -427,15 +424,15 @@ export const RenderDoc: React.FC<DocProps> = (props) => {
           <Text>ประเภท</Text>
           <Text style={[styles.underline_custom, { minWidth: 100 }]}>รถกึ่งพ่วง</Text>
           <Text>เลขที่ทะเบียน</Text>
-          <Text style={styles.underline_full}>{data?.vehicle?.semi_trailer_vehicle?.plate_province || '-'}</Text>
+          <Text style={styles.underline_full}>{data?.vehicle?.semi_trailer_vehicle?.plate_province || <>&nbsp;</>}</Text>
         </View>
         <View style={styles.row}>
           <Text>จังหวัด</Text>
-          <Text style={[styles.underline_custom, { minWidth: 60 }]}>{data?.vehicle?.semi_trailer_vehicle?.plate_province || '-'}</Text>
+          <Text style={[styles.underline_custom, { minWidth: 60 }]}>{data?.vehicle?.semi_trailer_vehicle?.plate_province || <>&nbsp;</>}</Text>
           <Text>สี</Text>
-          <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.semi_trailer_vehicle?.color || '-'}</Text>
+          <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.semi_trailer_vehicle?.color || <>&nbsp;</>}</Text>
           <Text>โดยมีจำนวนเพลา</Text>
-          <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.semi_trailer_vehicle?.axis_number || '-'}</Text>
+          <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.semi_trailer_vehicle?.axis_number || <>&nbsp;</>}</Text>
           <Text>เพลา</Text>
           <Text> น้ำหนักลงเพลา</Text>
           <Text style={styles.underline_full}>{data?.vehicle?.axis_weight_semi_trailer[0] || 0} {data?.vehicle?.axis_weight_semi_trailer[1] || 0}</Text>
@@ -452,7 +449,7 @@ export const RenderDoc: React.FC<DocProps> = (props) => {
           <Text style={[styles.underline_custom, { minWidth: 40 }]}>{data?.vehicle?.axis_weight_semi_trailer[6] || 0}</Text>
           <Text>กิโลกรัม</Text>
           <Text> น้ำหนักรวม</Text>
-          <Text style={[styles.underline_custom, { minWidth: 60 }]}>{data?.vehicle?.semi_trailer_vehicle?.weight || '-'}</Text>
+          <Text style={[styles.underline_custom, { minWidth: 60 }]}>{data?.vehicle?.semi_trailer_vehicle?.weight || <>&nbsp;</>}</Text>
           <Text>กิโลกรัม</Text>
         </View>
         <View style={[styles.section, { flexDirection: "row", gap: 3, marginTop: 15 }]}>
@@ -692,21 +689,6 @@ export const RenderDoc: React.FC<DocProps> = (props) => {
         </View>
       </Page>
     </Document>
-  )
-}
-
-const PermitForm: React.FC<Props> = (props) => {
-  const { } = props
-
-  return (
-    <div style={{ width: '100%', height: '100vh' }}>
-      {/* <PDFViewer
-        width={"100%"}
-        height={"100%"}
-      >
-        <RenderDoc />
-      </PDFViewer> */}
-    </div>
   )
 }
 

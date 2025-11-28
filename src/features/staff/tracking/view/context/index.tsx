@@ -7,8 +7,10 @@ import { createContext, useContext, useState } from 'react'
 export interface ContextProps {
   index: number;
   item: Estimate;
+  sort: number;
   setIndex: (value: number) => void;
   setItem: (value: Estimate) => void;
+  setSort: (value: number) => void;
 }
 
 export interface DataParser {
@@ -86,14 +88,17 @@ export const ViewProvider = (props: any) => {
       registration_document_url: '',
     }
   })
+  const [sort, setSort] = useState<number>(0)
 
   return (
     <PageContext.Provider
       value={{
         index,
         item,
+        sort,
         setIndex,
-        setItem
+        setItem,
+        setSort
       }}
     >
       {children}

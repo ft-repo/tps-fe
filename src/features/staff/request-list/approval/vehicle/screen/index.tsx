@@ -7,7 +7,7 @@ import { TitleSection, ContentTab } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
-import { getPetitionStatus, getPetitionVehicle } from '@/store/slices/staff'
+import { getPetitionDocument, getPetitionEstimateRoute, getPetitionStatus, getPetitionVehicle } from '@/store/slices/staff'
 import { useReactToPrint } from 'react-to-print'
 
 interface Props { }
@@ -22,6 +22,8 @@ const VehicleScreen: React.FC<Props> = (props) => {
 	const { loading } = useAppSelector(s => s.staff.petition)
 
 	useEffect(() => {
+		dispatch(getPetitionDocument({ petition_id: String(petitionId) }))
+		dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
 		dispatch(getPetitionVehicle({ petition_id: String(petitionId) }))
 		dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
 	}, [dispatch, petitionId])

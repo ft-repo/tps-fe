@@ -252,3 +252,11 @@ export interface Informative {
   wikidataId?: string
   geonameId?: number
 }
+
+export interface AxisType {
+  id: number;
+  name: string
+  max_weight: number;
+  max_carry_weight: number;
+  axis_number: number;
+}

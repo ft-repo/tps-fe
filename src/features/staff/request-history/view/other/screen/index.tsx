@@ -6,7 +6,7 @@ import { ContentSection, TitleSection } from '../components';
 import { useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { getPetitionDocument, getPetitionEstimateRoute, getPetitionStatus, getPetitionVehicle } from '@/store/slices/staff';
-import PermitForm from '../components/pdf/PermitForm';
+// import PermitForm from '../components/pdf/PermitForm';
 
 interface Props {
 

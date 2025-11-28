@@ -7,6 +7,7 @@ import { useAppSelector } from '@/store';
 
 interface Props {
   setShowTable: (value: 'summary' | 'bridge' | 'turn_radius') => void;
+  setRemark: (value: 'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว') => void;
 }
 
 export interface FieldType {
@@ -14,12 +15,12 @@ export interface FieldType {
 }
 
 const FormSearchRoute: React.FC<Props> = (props) => {
-  const { setShowTable } = props
+  const { setShowTable, setRemark } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const { estimate } = useAppSelector(state => state.entrepreneur.permitList)
   const detail = estimate.detail
 
-  console.log(estimate)
+  // console.log(estimate)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -54,7 +55,10 @@ const FormSearchRoute: React.FC<Props> = (props) => {
             htmlType='submit'
             type='primary'
             size='large'
-            onClick={() => setValue('status_id', 'summary')}
+            onClick={() => {
+              setValue('status_id', 'summary')
+              setRemark('ตารางสรุป')
+            }}
           >
             ตารางสรุป
           </Button>
@@ -73,7 +77,10 @@ const FormSearchRoute: React.FC<Props> = (props) => {
               htmlType='submit'
               type='primary'
               size='large'
-              onClick={() => setValue('status_id', 'bridge')}
+              onClick={() => {
+                setValue('status_id', 'bridge')
+                setRemark('สะพาน')
+              }}
             >
               สะพาน
             </Button>
@@ -93,7 +100,10 @@ const FormSearchRoute: React.FC<Props> = (props) => {
               htmlType='submit'
               type='primary'
               size='large'
-              onClick={() => setValue('status_id', 'turn_radius')}
+              onClick={() => {
+                setValue('status_id', 'turn_radius')
+                setRemark('รัศมีเลี้ยว')
+              }}
             >
               รัศมีเลี้ยว
             </Button>

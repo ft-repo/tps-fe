@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldTypeArr, FieldTypeForRoute } from '@/@types/entrepreneur/route-estimation';
 import { useAppSelector } from '@/store';
-import { Card, Col, Image, Input, message, Modal, Row, Select, Spin } from 'antd';
+import { Card, Col, Image, Input, message, Modal, Row, Select, Spin, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
 // import { VehicleDetail } from '@/services/master/MasterService';
@@ -12,6 +12,7 @@ import { Pagination } from 'swiper/modules'
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { InfoCircleFilled } from '@ant-design/icons';
 
 interface Props {
   formItem: FieldTypeForRoute;
@@ -204,7 +205,7 @@ const FormVehicle: React.FC<Props> = (props) => {
     selectETC?.vehicle_pictures.back_rear_url,
     selectETC?.vehicle_pictures.side_rear_url
   ])
-
+  console.log(selectTowing)
   useEffect(() => {
     if (towering_vehicle) {
       setToweringVehicleWheel(Number(selectTowing?.vehicle_detail.axis_number))
@@ -351,7 +352,19 @@ const FormVehicle: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>รัศมีวงเลี้ยว (เมตร) <span className='text-red-500'>*</span></label>
+                    <label className='flex items-center justify-between flex-wrap'>
+                      <span>รัศมีวงเลี้ยว (เมตร) <span className='text-red-500'>*</span></span>
+                      <Tooltip
+                        title='เอกสารสูตรคำนวณรัศมีวงเลี้ยว'
+                      >
+                        <InfoCircleFilled
+                          style={{
+                            color: '#69b1ff'
+                          }}
+                          onClick={() => window.open('/pdf/สูตรคำนวณรัศมีวงเลี้ยว.pdf', '_blank')}
+                        />
+                      </Tooltip>
+                    </label>
                     <Input
                       {...field}
                       name={field.name}

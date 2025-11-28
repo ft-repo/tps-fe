@@ -429,6 +429,15 @@ export interface TowingVehicle {
   length: number;
   height: number;
   vehicle_picture: VehiclePicture;
+  axis_type: AxisType;
+}
+
+export interface AxisType {
+  id: number;
+  name: string;
+  max_weight: number;
+  max_carry_weight: number;
+  axis_number: number;
 }
 
 export interface SemiTrailerVehicle {
@@ -440,6 +449,7 @@ export interface SemiTrailerVehicle {
   length: number;
   height: number;
   vehicle_picture: VehiclePicture;
+  axis_type: AxisType;
 }
 
 export interface ETCVehicle {
@@ -451,6 +461,7 @@ export interface ETCVehicle {
   length: number;
   height: number;
   vehicle_picture: VehiclePicture;
+  axis_type: AxisType;
 }
 
 export interface VehiclePicture {

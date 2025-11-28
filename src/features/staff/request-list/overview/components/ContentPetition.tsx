@@ -17,7 +17,7 @@ const ContentPetition: React.FC<Props> = (props) => {
   const [params] = useSearchParams()
   const petitionId = params.get('petition_id')
   const findPetition = petition.overview.data.data.find(item => Number(item.petition_id) === Number(petitionId))
-  const road_code = findPetition?.road_code
+  const roadCode = findPetition?.road_code
 
   useEffect(() => {
     dispatch(getAdminPetitionData(petition.overview.search))
@@ -72,7 +72,7 @@ const ContentPetition: React.FC<Props> = (props) => {
       <h3>รายการขออนุญาตรถหมวด 2 (4 - 7 เพลา)</h3>
       <section className="mt-5">
         <FormSearchPetition
-          roadCode={road_code}
+          roadCode={roadCode}
           handleSearch={handleSearch}
         />
       </section>
