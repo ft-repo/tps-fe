@@ -70,6 +70,16 @@ const navigationConfig: NavigationTree[] = [
         subMenu: [],
     },
     {
+        key: 'tracking',
+        path: '/tracking/overview',
+        title: 'Tracking',
+        translateKey: 'nav.tracking',
+        icon: 'tracking',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: ['ADMIN'],
+        subMenu: [],
+    },
+    {
         key: 'user_info',
         path: '',
         title: 'User Info',
@@ -100,16 +110,6 @@ const navigationConfig: NavigationTree[] = [
                 subMenu: []
             },
         ],
-    },
-    {
-        key: 'tracking',
-        path: '/tracking/overview',
-        title: 'Tracking',
-        translateKey: 'nav.tracking',
-        icon: 'tracking',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: ['ADMIN'],
-        subMenu: [],
     },
 ]
 
