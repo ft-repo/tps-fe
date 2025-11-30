@@ -1,6 +1,3 @@
-import { SignUpFieldType } from '@/@types/auth'
-import { Input } from '@/components/ui/Input'
-import { Select } from '@/components/ui/Select'
 import { Upload } from '@/components/ui/NewUpload'
 import { useAppSelector } from '@/store'
 import { useCallback } from 'react'
@@ -10,40 +7,760 @@ import {
   FieldErrors,
   UseFormSetError,
   UseFormSetValue,
+  useFormState,
   useWatch,
 } from 'react-hook-form'
-import { Notification, toast } from '@/components/ui'
+import { Col, Row, Select as AntdSelect, Input as AntdInput, message } from 'antd'
+import { FieldType } from './SignUp'
 
 interface Props {
-  control: Control<SignUpFieldType>
-  setValue: UseFormSetValue<SignUpFieldType>
-  errors: FieldErrors<SignUpFieldType>
-  setError: UseFormSetError<SignUpFieldType>
-  setProvinceId: (provinceId: string) => void
-  setDistrictId: (districtId: string) => void
+  control: Control<FieldType>
+  setValue: UseFormSetValue<FieldType>
+  errors: FieldErrors<FieldType>
+  setError: UseFormSetError<FieldType>
 }
 
 function SignUpForm(props: Props) {
-  const { control, setValue, setProvinceId, setDistrictId, errors, setError } =
-    props
-  const { province, district, sub_district, entity_type, contact_type } =
-    useAppSelector((state) => state.master)
+  const { control, setValue } = props
+  const { province, district, sub_district, entity_type, contact_type } = useAppSelector((state) => state.master)
+  const [messageApi, contextHolder] = message.useMessage()
 
-  const password = useWatch({ control, name: 'password' })
+  const {
+    password,
+    province_id,
+    district_id,
+    sub_district_id
+  } = useWatch({ control })
+
+  const { errors } = useFormState({ control })
 
   const handleUploadError = useCallback((error: string) => {
-    toast.push(
-      <Notification type="danger" title="ผิดพลาด">
-        {error}
-      </Notification>,
-      { placement: 'top-center' }
-    )
-  }, [])
+    messageApi.error(error)
+  }, [messageApi])
 
   return (
-    <section className="mt-5">
-      <div className="block lg:grid grid-cols-2 gap-3">
-        <Controller
+    <>
+      <section className="mt-5">
+        <section>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='entity_type_id'
+                control={control}
+                rules={{
+                  required: 'กรุณาเลือกประเภทนิติบุคคล'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>ประเภทนิติบุคคล <span className='text-red-500'>*</span></label>
+                      <AntdSelect
+                        {...field}
+                        allowClear
+                        showSearch
+                        placeholder='กรุณาเลือกประเภทนิติบุคคล'
+                        options={entity_type}
+                        fieldNames={{
+                          label: 'name',
+                          value: 'id'
+                        }}
+                        filterOption={(input, option) => {
+                          return option ? option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                        }}
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.entity_type_id &&
+                        <p className='text-red-500'>{errors.entity_type_id.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='registration_no'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุเลขทะเบียนนิติบุคคล',
+                  pattern: {
+                    value: /^\d+$/,
+                    message: 'กรุณากรอกเฉพาะตัวเลข',
+                  },
+                  minLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                  maxLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>เลขทะเบียนนิติบุคคล <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุเลขทะเบียนนิติบุคคล'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                        maxLength={13}
+                        onChange={(e) => {
+                          field.onChange(e.target.value.replace(/[^0-9]/g, ""))
+                        }}
+                      />
+                      {!!errors.registration_no &&
+                        <p className='text-red-500'>{errors.registration_no.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Controller
+                name='business_name'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุชื่อบริษัท/ห้าง/ร้าน'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>ชื่อบริษัท/ห้าง/ร้าน <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุชื่อบริษัท/ห้าง/ร้าน'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.business_name &&
+                        <p className='text-red-500'>{errors.business_name.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Controller
+                name='business_phone_number'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุเบอร์โทรสำนักงาน',
+                  pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
+                  minLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                  maxLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>เบอร์โทรสำนักงาน <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุเบอร์โทรสำนักงาน'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                        maxLength={9}
+                        onChange={(e) => {
+                          field.onChange(e.target.value.replace(/[^0-9]/g, ""))
+                        }}
+                      />
+                      {!!errors.business_phone_number &&
+                        <p className='text-red-500'>{errors.business_phone_number.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+          </Row>
+        </section>
+        <section className='mt-5'>
+          <h5 className='mb-3'>ที่อยู่</h5>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='house_number'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุเลขที่'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>เลขที่ <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุเลขที่'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.house_number &&
+                        <p className='text-red-500'>{errors.house_number.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='village'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุหมู่ที่'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>หมู่ที่ <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุหมู่ที่'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.village &&
+                        <p className='text-red-500'>{errors.village.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='lane'
+                control={control}
+                rules={{
+                  required: "กรุณาระบุซอย"
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>ซอย <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุซอย'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.lane &&
+                        <p className='text-red-500'>{errors.lane.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='road'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุถนน'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>ถนน <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุถนน'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.road &&
+                        <p className='text-red-500'>{errors.road.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='province_id'
+                control={control}
+                rules={{
+                  required: 'กรุณาเลือกจังหวัด'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>จังหวัด <span className='text-red-500'>*</span></label>
+                      <AntdSelect
+                        {...field}
+                        allowClear
+                        showSearch
+                        placeholder='กรุณาเลือกจังหวัด'
+                        options={province}
+                        fieldNames={{
+                          label: 'name_th',
+                          value: 'id'
+                        }}
+                        filterOption={(input, option) => {
+                          return option ? option.name_th.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                        }}
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                        onChange={(value) => {
+                          field.onChange(value)
+                          // SET VALUE
+                          setValue('district_id', null)
+                          setValue('sub_district_id', null)
+                          setValue('zip_code', '')
+                        }}
+                      />
+                      {!!errors.province_id &&
+                        <p className='text-red-500'>{errors.province_id.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='district_id'
+                control={control}
+                rules={{
+                  required: 'กรุณาเลือกเขต / อำเภอ'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>เขต / อำเภอ <span className='text-red-500'>*</span></label>
+                      <AntdSelect
+                        {...field}
+                        allowClear
+                        showSearch
+                        disabled={!province_id}
+                        placeholder='กรุณาเลือกเขต / อำเภอ'
+                        options={district}
+                        fieldNames={{
+                          label: 'name_th',
+                          value: 'id'
+                        }}
+                        filterOption={(input, option) => {
+                          return option ? option.name_th.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                        }}
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                        onChange={(value) => {
+                          field.onChange(value)
+                          // SET VALUE
+                          setValue('sub_district_id', null)
+                          setValue('zip_code', '')
+                        }}
+                      />
+                      {!!errors.district_id &&
+                        <p className='text-red-500'>{errors.district_id.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='sub_district_id'
+                control={control}
+                rules={{
+                  required: 'กรุณาเลือกแขวง / ตำบล'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>แขวง / ตำบล <span className='text-red-500'>*</span></label>
+                      <AntdSelect
+                        {...field}
+                        allowClear
+                        showSearch
+                        disabled={!district_id}
+                        placeholder='กรุณาเลือกแขวง / ตำบล'
+                        options={sub_district}
+                        fieldNames={{
+                          label: 'name_th',
+                          value: 'id'
+                        }}
+                        filterOption={(input, option) => {
+                          return option ? option.name_th.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                        }}
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                        onChange={(value) => {
+                          field.onChange(value)
+                          const zip_code = sub_district.find(item => item.id === value)?.zip_code
+                          if (zip_code) {
+                            setValue('zip_code', String(zip_code))
+                          }
+                        }}
+                      />
+                      {!!errors.sub_district_id &&
+                        <p className='text-red-500'>{errors.sub_district_id.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='zip_code'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุรหัสไปรษณีย์'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>รหัสไปรษณีย์ <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        disabled={!sub_district_id}
+                        placeholder='กรุณาระบุรหัสไปรษณีย์'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                        onChange={(e) => {
+                          field.onChange(e.target.value.replace(/[^0-9]/g, ""))
+                        }}
+                      />
+                      {!!errors.zip_code &&
+                        <p className='text-red-500'>{errors.zip_code.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+          </Row>
+        </section>
+        <section className='mt-5'>
+          <h5 className='mb-3'>ผู้ติดต่อ/รับมอบอำนาจ</h5>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='contact_name'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุชื่อผู้ติดต่อ / มอบอำนาจ',
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>ชื่อผู้ติดต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุชื่อผู้ติดต่อ / มอบอำนาจ'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.contact_name &&
+                        <p className='text-red-500'>{errors.contact_name.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='contact_type_id'
+                control={control}
+                rules={{
+                  required: 'กรุณาเลือกประเภทผู้ติดต่อ / มอบอำนาจ'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>ประเภทผู้ติดต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
+                      <AntdSelect
+                        {...field}
+                        allowClear
+                        showSearch
+                        // disabled={!company_district}
+                        placeholder='กรุณาเลือกประเภทผู้ติดต่อ / มอบอำนาจ'
+                        options={contact_type}
+                        fieldNames={{
+                          label: 'name',
+                          value: 'id'
+                        }}
+                        filterOption={(input, option) => {
+                          return option ? option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                        }}
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.contact_type_id &&
+                        <p className='text-red-500'>{errors.contact_type_id.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='contact_phone_number'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุเบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ',
+                  pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
+                  minLength: { value: 10, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                  maxLength: { value: 10, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>เบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุเบอร์โทรศัพท์ผู้ติดต่อ / มอบอำนาจ'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                        maxLength={10}
+                        onChange={(e) => {
+                          field.onChange(e.target.value.replace(/[^0-9]/g, ""))
+                        }}
+                      />
+                      {!!errors.contact_phone_number &&
+                        <p className='text-red-500'>{errors.contact_phone_number.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='cid'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุหมายเลขบัตรประชาชน',
+                  pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
+                  minLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                  maxLength: { value: 13, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>หมายเลขบัตรประชาชน <span className='text-red-500'>*</span></label>
+                      <AntdInput
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุหมายเลขบัตรประชาชน'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                        maxLength={13}
+                        onChange={(e) => {
+                          field.onChange(e.target.value.replace(/[^0-9]/g, ""))
+                        }}
+                      />
+                      {!!errors.cid &&
+                        <p className='text-red-500'>{errors.cid.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Controller
+                name="certificate_file_url"
+                control={control}
+                rules={{
+                  required: 'กรุณาอัปโหลดหนังสือรับรองนิติบุคคล'
+                }}
+                render={({ field, fieldState }) => (
+                  <Upload
+                    isRequired
+                    name="certificate_file_url"
+                    label="หนังสือรับรองนิติบุคคล"
+                    accept=".pdf"
+                    maxSize={10}
+                    value={field.value}
+                    error={fieldState.error?.message}
+                    control={control}
+                    fieldName="certificate_file_url"
+                    onUploadError={(error) => {
+                      handleUploadError(error)
+                    }}
+                  />
+                )}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Controller
+                name="cid_card_file_url"
+                control={control}
+                rules={{
+                  required: 'กรุณาอัปโหลดรูปบัตรประชาชน'
+                }}
+                render={({ field, fieldState }) => (
+                  <Upload
+                    isRequired
+                    name="cid_card_file_url"
+                    label="รูปบัตรประชาชน"
+                    accept=".png,.jpeg,.jpg"
+                    isImage={true}
+                    value={field.value}
+                    maxSize={10}
+                    error={fieldState.error?.message}
+                    control={control}
+                    fieldName="cid_card_file_url"
+                    onUploadError={(error) => {
+                      handleUploadError(error)
+                    }}
+                  />
+                )}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Controller
+                name="business_file_url"
+                control={control}
+                rules={{
+                  required: 'กรุณาอัปโหลดรูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ'
+                }}
+                render={({ field, fieldState }) => (
+                  <Upload
+                    // isRequired
+                    name="business_file_url"
+                    label="รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ"
+                    accept=".pdf,.png,.jpeg,.jpg"
+                    isImage={true}
+                    value={field.value}
+                    maxSize={10}
+                    error={fieldState.error?.message}
+                    control={control}
+                    fieldName="business_file_url"
+                    onUploadError={(error) => {
+                      handleUploadError(error)
+                    }}
+                  />
+                )}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='password'
+                control={control}
+                rules={{
+                  required: 'กรุณาระบุรหัสผ่าน',
+                  validate: (value) => value.length >= 6 || 'กรุณาระบุรหัสผ่านขั้นต่ำ 6 ตัวอักษร'
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>รหัสผ่าน <span className='text-red-500'>*</span></label>
+                      <AntdInput.Password
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาระบุรหัสผ่าน'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.password &&
+                        <p className='text-red-500'>{errors.password.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+              <Controller
+                name='confirm_password'
+                control={control}
+                rules={{
+                  required: "กรุณาระบุรหัสผ่าน",
+                  validate: (value) => value === password || 'รหัสผ่านไม่ถูกต้อง',
+                }}
+                render={({ field }) => {
+                  return (
+                    <fieldset>
+                      <label>ยืนยันรหัสผ่าน <span className='text-red-500'>*</span></label>
+                      <AntdInput.Password
+                        {...field}
+                        name={field.name}
+                        placeholder='กรุณาตรวจสอบรหัสผ่านอีกครั้ง'
+                        className='w-full'
+                        size='large'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      {!!errors.confirm_password &&
+                        <p className='text-red-500'>{errors.confirm_password.message}</p>
+                      }
+                    </fieldset>
+                  )
+                }}
+              />
+            </Col>
+          </Row>
+        </section>
+        {/* <div className="block lg:grid grid-cols-2 gap-3"> */}
+        {/* <Controller
           name="business_detail.entity_type_id"
           control={control}
           rules={{ required: 'กรุณาเลือกประเภทนิติบุคคล' }}
@@ -72,10 +789,10 @@ function SignUpForm(props: Props) {
               </fieldset>
             )
           }}
-        />
+        /> */}
 
         {/* เลขทะเบียนนิติบุคคล: ตัวเลขล้วน + 13 หลัก */}
-        <Controller
+        {/* <Controller
           name="business_detail.registration_no"
           control={control}
           rules={{
@@ -110,9 +827,9 @@ function SignUpForm(props: Props) {
               </fieldset>
             )
           }}
-        />
+        /> */}
 
-        <Controller
+        {/* <Controller
           name="business_detail.business_name"
           control={control}
           rules={{ required: 'กรุณาระบุชื่อบริษัท/ห้าง/ร้าน' }}
@@ -137,10 +854,10 @@ function SignUpForm(props: Props) {
               </fieldset>
             )
           }}
-        />
+        /> */}
 
         {/* เบอร์โทร: ตัวเลขล้วน */}
-        <Controller
+        {/* <Controller
           name="business_address.phone_number"
           control={control}
           rules={{
@@ -174,10 +891,10 @@ function SignUpForm(props: Props) {
               </fieldset>
             )
           }}
-        />
+        /> */}
 
         {/* ข้อมูลที่อยู่ */}
-        <div className="mb-4 col-span-2">
+        {/* <div className="mb-4 col-span-2">
           <div className="font-semibold mb-2">ที่อยู่</div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Controller
@@ -412,11 +1129,11 @@ function SignUpForm(props: Props) {
               }}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* ผู้รับมอบอำนาจ / ผู้ติดต่อ */}
-        <div className="mb-4 col-span-2">
-          <div className="font-semibold mb-2">ผู้ติดต่อ/รับมอบอำนาจ</div>
+        {/* <div className="mb-4 col-span-2"> */}
+        {/* <div className="font-semibold mb-2">ผู้ติดต่อ/รับมอบอำนาจ</div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Controller
               name="contact_info.contact_name"
@@ -473,9 +1190,9 @@ function SignUpForm(props: Props) {
                   </fieldset>
                 )
               }}
-            />
-            {/* เบอร์โทรผู้ติดต่อ: ตัวเลขล้วน */}
-            <Controller
+            /> */}
+        {/* เบอร์โทรผู้ติดต่อ: ตัวเลขล้วน */}
+        {/* <Controller
               name="contact_info.phone_number"
               control={control}
               rules={{
@@ -509,9 +1226,9 @@ function SignUpForm(props: Props) {
                   </fieldset>
                 )
               }}
-            />
-            {/* เลขบัตร: ตัวเลขล้วน + 13 หลัก */}
-            <Controller
+            /> */}
+        {/* เลขบัตร: ตัวเลขล้วน + 13 หลัก */}
+        {/* <Controller
               name="contact_info.cid"
               control={control}
               rules={{
@@ -547,10 +1264,10 @@ function SignUpForm(props: Props) {
               }}
             />
           </div>
-        </div>
+        </div> */}
 
         {/* เอกสารที่ต้องมี */}
-        <div className="mb-4 col-span-2">
+        {/* <div className="mb-4 col-span-2">
           <Controller
             name="business_document.certificate_file_url"
             control={control}
@@ -685,9 +1402,11 @@ function SignUpForm(props: Props) {
               </fieldset>
             )
           }}
-        />
-      </div>
-    </section>
+        /> */}
+        {/* </div> */}
+      </section>
+      {contextHolder}
+    </>
   )
 }
 

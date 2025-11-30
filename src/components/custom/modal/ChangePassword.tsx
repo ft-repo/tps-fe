@@ -85,7 +85,7 @@ const Content = (props: ContentProps) => {
           return (
             <fieldset>
               <label>รหัสผ่าน <span className='text-red-500'>*</span></label>
-              <Input
+              <Input.Password
                 {...field}
                 name={field.name}
                 placeholder='กรุณาระบุรหัสผ่าน'
@@ -112,7 +112,7 @@ const Content = (props: ContentProps) => {
           return (
             <fieldset className='mt-3'>
               <label>ยืนยันรหัสผ่าน <span className='text-red-500'>*</span></label>
-              <Input
+              <Input.Password
                 {...field}
                 name={field.name}
                 placeholder='กรุณาตรวจสอบรหัสผ่านอีกครั้ง'

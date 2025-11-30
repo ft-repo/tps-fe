@@ -51,12 +51,12 @@ function useAuth() {
 						),
 					)
 				}
-				const redirectUrl = query.get(REDIRECT_URL_KEY)
-				navigate(
-					redirectUrl
-						? redirectUrl
-						: appConfig.authenticatedEntryPath,
-				)
+				// const redirectUrl = query.get(REDIRECT_URL_KEY)
+				// navigate(
+				// 	redirectUrl
+				// 		? redirectUrl
+				// 		: appConfig.authenticatedEntryPath,
+				// )
 				return {
 					status: 'success',
 					message: '',
