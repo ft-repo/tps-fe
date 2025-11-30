@@ -163,6 +163,21 @@ const SignUp = () => {
             fontFamily: 'Noto Sans Thai'
           }
         })
+      } else {
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: response?.message || 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
       }
     } catch (error) {
       if (error instanceof Error) {
