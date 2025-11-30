@@ -146,11 +146,13 @@ const SignUp = () => {
           okText: 'เข้าสู่ระบบ',
           onOk: () => {
             const redirectUrl = query.get(REDIRECT_URL_KEY)
-            navigate(
-              redirectUrl
-                ? redirectUrl
-                : appConfig.authenticatedEntryPath,
-            )
+            setTimeout(() => {
+              navigate(
+                redirectUrl
+                  ? redirectUrl
+                  : appConfig.authenticatedEntryPath,
+              )
+            }, 3000)
           },
           okButtonProps: {
             style: {

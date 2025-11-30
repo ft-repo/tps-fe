@@ -51,12 +51,12 @@ function useAuth() {
 						),
 					)
 				}
-				// const redirectUrl = query.get(REDIRECT_URL_KEY)
-				// navigate(
-				// 	redirectUrl
-				// 		? redirectUrl
-				// 		: appConfig.authenticatedEntryPath,
-				// )
+				const redirectUrl = query.get(REDIRECT_URL_KEY)
+				navigate(
+					redirectUrl
+						? redirectUrl
+						: appConfig.authenticatedEntryPath,
+				)
 				return {
 					status: 'success',
 					message: '',
@@ -91,15 +91,15 @@ function useAuth() {
 						),
 					)
 				}
-				const redirectUrl = query.get(REDIRECT_URL_KEY)
+				// const redirectUrl = query.get(REDIRECT_URL_KEY)
 
-				setTimeout(() => {
-					navigate(
-						redirectUrl
-							? redirectUrl
-							: appConfig.authenticatedEntryPath,
-					)
-				}, 3000)
+				// setTimeout(() => {
+				// 	navigate(
+				// 		redirectUrl
+				// 			? redirectUrl
+				// 			: appConfig.authenticatedEntryPath,
+				// 	)
+				// }, 3000)
 				return {
 					status: 'success',
 					message: '',
