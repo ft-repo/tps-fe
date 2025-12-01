@@ -21,7 +21,7 @@ const RouteEstimationScreen: React.FC<Props> = (props) => {
   useEffect(() => {
     if (openRef.current) return
     // IF NO
-    if (!vehicle_selection.data) {
+    if (!vehicle_selection.data.length) {
       // SET REF
       openRef.current = true
       // MODAL

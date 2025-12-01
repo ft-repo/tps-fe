@@ -15,14 +15,14 @@ const OtherScreen: React.FC<Props> = (props) => {
   const { } = props
   const { step } = useOtherContext()
   const { vehicle_selection } = useAppSelector(state => state.master)
-    // const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
+  // const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
   const navigate = useNavigate()
   const openRef = useRef<boolean>(false)
 
   useEffect(() => {
     if (openRef.current) return
     // IF NO
-    if (!vehicle_selection.data) {
+    if (!vehicle_selection.data.length) {
       // SET REF
       openRef.current = true
       // MODAL
