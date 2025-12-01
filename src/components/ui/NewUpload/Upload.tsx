@@ -1,5 +1,5 @@
 import { postUploadFileAPI, postUploadImageAPI, getUploadAPI } from '@/services/entrepreneur/VehicleListService'
-import { FaUpload as UploadIcon, FaExpand as MaximizeIcon  } from 'react-icons/fa6'
+import { FaUpload as UploadIcon, FaExpand as MaximizeIcon } from 'react-icons/fa6'
 import { useCallback, useState, useEffect } from 'react'
 import { useFormContext, Controller, Control, FieldPath, FieldValues } from 'react-hook-form'
 import { Modal } from 'antd'
@@ -21,15 +21,16 @@ export interface UploadProps<T extends FieldValues = FieldValues> {
   control?: Control<T>
   fieldName?: FieldPath<T>
   isRequired?: boolean;
+  fixedFileName?: string;
 }
 
 function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
-  const { 
-    name, 
-    label, 
-    accept = ".pdf", 
-    maxSize = 10, 
-    isImage = false, 
+  const {
+    name,
+    label,
+    accept = ".pdf",
+    maxSize = 10,
+    isImage = false,
     disabled = false,
     className = "",
     error,
@@ -39,9 +40,10 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
     onUploadError,
     control,
     fieldName,
-    isRequired
+    isRequired,
+    fixedFileName
   } = props
-  
+
   // Use Controller if control is provided, otherwise use useFormContext
   const formContext = useFormContext()
   const isControllerMode = !!control && !!fieldName
@@ -52,9 +54,9 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
   const [urlPreview, setUrlPreview] = useState<string | null>(null)
   // Image preview state
   const [imagePreview, setImagePreview] = useState<string | null>(null)
-  
+
   const { setValue, watch } = isControllerMode ? {} : formContext
-  
+
   // Get the field value - either from Controller or direct context
   const getFieldValue = () => {
     if (isControllerMode && control) {
@@ -76,7 +78,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
         // Extract the file path from the URL
         const urlParts = url.split('/')
         const fileName = urlParts[urlParts.length - 2] + '/' + urlParts[urlParts.length - 1]
-        
+
         if (fileName) {
           const response = await getUploadAPI(fileName)
           if (response.status === 200 && response.data) {
@@ -127,7 +129,9 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
       }
     }
   }, [imagePreview])
-  
+
+  console.log(fileName)
+
   const uploadFile = useCallback(
     async (fileName: string, file: File, setFieldValue?: (value: any) => void) => {
       let uploadAPI
@@ -136,7 +140,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
       } else {
         uploadAPI = postUploadFileAPI
       }
-      
+
       try {
         // Check file size
         if (file.size > maxSize * 1024 * 1024) {
@@ -144,7 +148,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
           onUploadError?.(errorMsg)
           return
         }
-        
+
         // POST
         const response = await uploadAPI({ upload: file as any })
         if (response.status === 200) {
@@ -253,7 +257,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
         render={({ field, fieldState }) => {
           const fieldValue = field.value || value
           const fieldError = fieldState.error?.message
-          
+
           return (
             <div className={className}>
               {label && (
@@ -261,13 +265,12 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
                   {label} {isRequired && <span className='text-red-500'>*</span>}
                 </label>
               )}
-              
+
               {!fieldValue ? (
                 <label
                   htmlFor={`upload_${fieldName}`}
-                  className={`flex flex-col items-center justify-center w-full p-4 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors ${
-                    disabled ? 'opacity-50 cursor-not-allowed' : ''
-                  } ${fieldError || error ? 'border-red-500' : ''}`}
+                  className={`flex flex-col items-center justify-center w-full p-4 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : ''
+                    } ${fieldError || error ? 'border-red-500' : ''}`}
                 >
                   <div className="flex gap-5 items-center justify-center">
                     <UploadIcon className="w-5 h-5 mr-2 text-gray-400" />
@@ -301,8 +304,8 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
                       {!isImage && (
                         <UploadIcon className="w-5 h-5 mr-2 text-gray-400 flex-shrink-0" />
                       )}
-                      <span className="text-sm text-gray-600 truncate" title={fileName}>
-                        {fileName}
+                      <span className="text-sm text-gray-600 truncate" title={fixedFileName ? fixedFileName : fileName}>
+                        {fixedFileName ? fixedFileName : fileName}
                       </span>
                     </div>
                     <button
@@ -314,7 +317,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
                       ลบ
                     </button>
                   </div>
-                  
+
                   {/* Image preview */}
                   {/* {isImage && imagePreview && (
                     <div className="border rounded-lg overflow-hidden cursor-pointer hover:opacity-50">
@@ -328,7 +331,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
                   )} */}
                 </div>
               )}
-              
+
               {(fieldError || error) && (
                 <p className="mt-1 text-sm text-red-600">
                   {fieldError || error}
@@ -343,7 +346,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
 
   // Default mode with useFormContext
   const fieldValue = getFieldValue() || value
-  
+
   return (
     <div className={className}>
       {label && (
@@ -351,13 +354,12 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
           {label} {isRequired && <span className='text-red-500'>*</span>}
         </label>
       )}
-      
+
       {!fieldValue ? (
         <label
           htmlFor={`upload_${name}`}
-          className={`flex flex-col items-center justify-center w-full p-4 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors ${
-            disabled ? 'opacity-50 cursor-not-allowed' : ''
-          } ${error ? 'border-red-500' : ''}`}
+          className={`flex flex-col items-center justify-center w-full p-4 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors ${disabled ? 'opacity-50 cursor-not-allowed' : ''
+            } ${error ? 'border-red-500' : ''}`}
         >
           <div className="flex gap-5 items-center justify-center">
             <UploadIcon className="w-5 h-5 mr-2 text-gray-400" />
@@ -399,13 +401,13 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
               ลบ
             </button>
           </div>
-          
+
           {/* Image preview */}
           {isImage && imagePreview && (
             <div className="border rounded-lg overflow-hidden">
-              <img 
-                src={imagePreview} 
-                alt="Preview" 
+              <img
+                src={imagePreview}
+                alt="Preview"
                 className="w-full h-48 object-cover"
                 onError={() => setImagePreview(null)}
               />
@@ -413,7 +415,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
           )}
         </div>
       )}
-      
+
       {error && (
         <p className="mt-1 text-sm text-red-600">
           {error}

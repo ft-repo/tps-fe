@@ -631,6 +631,7 @@ function SignUpForm(props: Props) {
                   <Upload
                     isRequired
                     name="certificate_file_url"
+                    fixedFileName="หนังสือรับรองนิติบุคคล"
                     label="หนังสือรับรองนิติบุคคล"
                     accept=".pdf"
                     maxSize={10}
@@ -656,6 +657,7 @@ function SignUpForm(props: Props) {
                   <Upload
                     isRequired
                     name="cid_card_file_url"
+                    fixedFileName="รูปบัตรประชาชน"
                     label="รูปบัตรประชาชน"
                     accept=".png,.jpeg,.jpg"
                     isImage={true}
@@ -682,6 +684,7 @@ function SignUpForm(props: Props) {
                   <Upload
                     // isRequired
                     name="business_file_url"
+                    fixedFileName="รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ"
                     label="รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ"
                     accept=".pdf,.png,.jpeg,.jpg"
                     isImage={true}
