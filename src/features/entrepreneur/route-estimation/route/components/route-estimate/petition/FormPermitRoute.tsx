@@ -118,7 +118,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
-                      minDate={dayjs(start_date as Dayjs)}
+                      // minDate={dayjs(start_date as Dayjs)}
                       onChange={(e) => {
                         field.onChange(e)
                         if (e) {
