@@ -744,7 +744,681 @@ const ContentImage: React.FC<Props> = (props) => {
       </section>
       <section className='mt-5'>
         <h5 className='mb-3'>เอกสารรายละเอียดยานพาหนะ</h5>
-        {(item?.truck_dimension_url &&
+        {
+          [
+            item?.truck_dimension_url,
+            item?.semi_trailer_dimension_url,
+            item?.cargo_dimension_url,
+            item?.combined_vehicle_url,
+            item?.rural_highway_dept_permit_number_url,
+            item?.rural_highway_dept_permit_url,
+            item?.highway_dept_permit_number_url,
+            item?.highway_dept_permit_url,
+            item?.turning_radius_url
+          ].filter(item => item !== "").length ?
+            <Row gutter={[16, 16]}>
+              {item?.truck_dimension_url ?
+                <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+                  <Controller
+                    disabled
+                    name='truck_dimension_image.file'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ รถลากจูง'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>รูปแบบที่แสดงมิติ รถลากจูง</label>
+                          <Upload
+                            {...field}
+                            fileList={field.value || []}
+                            maxCount={1}
+                            listType='picture-card'
+                            accept='application/pdf'
+                            beforeUpload={(file) => {
+                              // DEFAULT VALUES
+                              const allowList = ['application/pdf']
+                              const maxFileSize = 10000000
+                              // CHECK
+                              const isListAvailable = allowList.some(item => item === file.type)
+                              const isLt10 = file.size < maxFileSize
+                              if (!isListAvailable) {
+                                message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                                return Upload.LIST_IGNORE
+                              }
+                              if (!isLt10) {
+                                message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                                return Upload.LIST_IGNORE
+                              }
+                              return false
+                            }}
+                            // itemRender={_itemRender}
+                            onChange={(e) => {
+                              field.onChange(e.fileList);
+                              if (e.fileList.length) {
+                                uploadFile(`truck_dimension_image.url`, e.fileList)
+                              } else {
+                                setValue(`truck_dimension_image.url`, '')
+                              }
+                            }}
+                            onPreview={(e) => {
+                              const url = URL.createObjectURL(e.originFileObj as RcFile);
+                              window.open(url);
+                            }}
+                          >
+                            {field.value.length ? null :
+                              <div className="my-8 text-center">
+                                <div className="text-6xl mb-4 flex justify-center">
+                                  <UploadIcon />
+                                </div>
+                                <p className="font-semibold text-gray-800 dark:text-white">
+                                  เพิ่มไฟล์
+                                </p>
+                                <p className="mt-1 opacity-60 dark:text-white">
+                                  กรุณาอัปโหลดไฟล์ประเภท PDF
+                                </p>
+                              </div>
+                            }
+                          </Upload>
+                          {!!errors.truck_dimension_image?.file &&
+                            <p className='text-red-500'>{errors.truck_dimension_image?.file.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                : null}
+              {item?.semi_trailer_dimension_url ?
+                <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+                  <Controller
+                    disabled
+                    name='semi_dimension_image.file'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ รถกึ่งพ่วง'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>รูปแบบที่แสดงมิติ รถกึ่งพ่วง</label>
+                          <Upload
+                            {...field}
+                            fileList={field.value || []}
+                            maxCount={1}
+                            listType='picture-card'
+                            accept='application/pdf'
+                            beforeUpload={(file) => {
+                              // DEFAULT VALUES
+                              const allowList = ['application/pdf']
+                              const maxFileSize = 10000000
+                              // CHECK
+                              const isListAvailable = allowList.some(item => item === file.type)
+                              const isLt10 = file.size < maxFileSize
+                              if (!isListAvailable) {
+                                message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                                return Upload.LIST_IGNORE
+                              }
+                              if (!isLt10) {
+                                message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                                return Upload.LIST_IGNORE
+                              }
+                              return false
+                            }}
+                            // itemRender={_itemRender}
+                            onChange={(e) => {
+                              field.onChange(e.fileList);
+                              if (e.fileList.length) {
+                                uploadFile(`semi_dimension_image.url`, e.fileList)
+                              } else {
+                                setValue(`semi_dimension_image.url`, '')
+                              }
+                            }}
+                            onPreview={(e) => {
+                              const url = URL.createObjectURL(e.originFileObj as RcFile);
+                              window.open(url);
+                            }}
+                          >
+                            {field.value.length ? null :
+                              <div className="my-8 text-center">
+                                <div className="text-6xl mb-4 flex justify-center">
+                                  <UploadIcon />
+                                </div>
+                                <p className="font-semibold text-gray-800 dark:text-white">
+                                  เพิ่มไฟล์
+                                </p>
+                                <p className="mt-1 opacity-60 dark:text-white">
+                                  กรุณาอัปโหลดไฟล์ประเภท PDF
+                                </p>
+                              </div>
+                            }
+                          </Upload>
+                          {!!errors.semi_dimension_image?.file &&
+                            <p className='text-red-500'>{errors.semi_dimension_image?.file.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                : null}
+              {item?.cargo_dimension_url ?
+                <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+                  <Controller
+                    disabled
+                    name='cargo_dimension_image.file'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ เครื่องจักร / สินค้า'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>รูปแบบที่แสดงมิติ เครื่องจักร / สินค้า</label>
+                          <Upload
+                            {...field}
+                            fileList={field.value || []}
+                            maxCount={1}
+                            listType='picture-card'
+                            accept='application/pdf'
+                            beforeUpload={(file) => {
+                              // DEFAULT VALUES
+                              const allowList = ['application/pdf']
+                              const maxFileSize = 10000000
+                              // CHECK
+                              const isListAvailable = allowList.some(item => item === file.type)
+                              const isLt10 = file.size < maxFileSize
+                              if (!isListAvailable) {
+                                message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                                return Upload.LIST_IGNORE
+                              }
+                              if (!isLt10) {
+                                message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                                return Upload.LIST_IGNORE
+                              }
+                              return false
+                            }}
+                            // itemRender={_itemRender}
+                            onChange={(e) => {
+                              field.onChange(e.fileList);
+                              if (e.fileList.length) {
+                                uploadFile(`cargo_dimension_image.url`, e.fileList)
+                              } else {
+                                setValue(`cargo_dimension_image.url`, '')
+                              }
+                            }}
+                            onPreview={(e) => {
+                              const url = URL.createObjectURL(e.originFileObj as RcFile);
+                              window.open(url);
+                            }}
+                          >
+                            {field.value.length ? null :
+                              <div className="my-8 text-center">
+                                <div className="text-6xl mb-4 flex justify-center">
+                                  <UploadIcon />
+                                </div>
+                                <p className="font-semibold text-gray-800 dark:text-white">
+                                  เพิ่มไฟล์
+                                </p>
+                                <p className="mt-1 opacity-60 dark:text-white">
+                                  กรุณาอัปโหลดไฟล์ประเภท PDF
+                                </p>
+                              </div>
+                            }
+                          </Upload>
+                          {!!errors.cargo_dimension_image?.file &&
+                            <p className='text-red-500'>{errors.cargo_dimension_image?.file.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                : null}
+              {item?.combined_vehicle_url ?
+                <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+                  <Controller
+                    disabled
+                    name='combined_vehicle_image.file'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาอัปโหลดรูปแบบยานพาหนะรวมสิ่งของ'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>รูปแบบยานพาหนะรวมสิ่งของ</label>
+                          <Upload
+                            {...field}
+                            fileList={field.value || []}
+                            maxCount={1}
+                            listType='picture-card'
+                            accept='application/pdf'
+                            beforeUpload={(file) => {
+                              // DEFAULT VALUES
+                              const allowList = ['application/pdf']
+                              const maxFileSize = 10000000
+                              // CHECK
+                              const isListAvailable = allowList.some(item => item === file.type)
+                              const isLt10 = file.size < maxFileSize
+                              if (!isListAvailable) {
+                                message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                                return Upload.LIST_IGNORE
+                              }
+                              if (!isLt10) {
+                                message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                                return Upload.LIST_IGNORE
+                              }
+                              return false
+                            }}
+                            // itemRender={_itemRender}
+                            onChange={(e) => {
+                              field.onChange(e.fileList);
+                              if (e.fileList.length) {
+                                uploadFile(`combined_vehicle_image.url`, e.fileList)
+                              } else {
+                                setValue(`combined_vehicle_image.url`, '')
+                              }
+                            }}
+                            onPreview={(e) => {
+                              const url = URL.createObjectURL(e.originFileObj as RcFile);
+                              window.open(url);
+                            }}
+                          >
+                            {field.value.length ? null :
+                              <div className="my-8 text-center">
+                                <div className="text-6xl mb-4 flex justify-center">
+                                  <UploadIcon />
+                                </div>
+                                <p className="font-semibold text-gray-800 dark:text-white">
+                                  เพิ่มไฟล์
+                                </p>
+                                <p className="mt-1 opacity-60 dark:text-white">
+                                  กรุณาอัปโหลดไฟล์ประเภท PDF
+                                </p>
+                              </div>
+                            }
+                          </Upload>
+                          {!!errors.combined_vehicle_image?.file &&
+                            <p className='text-red-500'>{errors.combined_vehicle_image?.file.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                : null}
+              {item?.turning_radius_url ?
+                <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+                  <Controller
+                    disabled
+                    name='turn_radius_image.file'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาอัปโหลดรูปแบบที่แสดงรัศมีวงเลี่ยว'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>รูปแบบที่แสดงรัศมีวงเลี่ยว</label>
+                          <Upload
+                            {...field}
+                            fileList={field.value || []}
+                            maxCount={1}
+                            listType='picture-card'
+                            accept='application/pdf'
+                            beforeUpload={(file) => {
+                              // DEFAULT VALUES
+                              const allowList = ['application/pdf']
+                              const maxFileSize = 10000000
+                              // CHECK
+                              const isListAvailable = allowList.some(item => item === file.type)
+                              const isLt10 = file.size < maxFileSize
+                              if (!isListAvailable) {
+                                message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                                return Upload.LIST_IGNORE
+                              }
+                              if (!isLt10) {
+                                message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                                return Upload.LIST_IGNORE
+                              }
+                              return false
+                            }}
+                            // itemRender={_itemRender}
+                            onChange={(e) => {
+                              field.onChange(e.fileList);
+                              if (e.fileList.length) {
+                                uploadFile(`turn_radius_image.url`, e.fileList)
+                              } else {
+                                setValue(`turn_radius_image.url`, '')
+                              }
+                            }}
+                            onPreview={(e) => {
+                              const url = URL.createObjectURL(e.originFileObj as RcFile);
+                              window.open(url);
+                            }}
+                          >
+                            {field.value.length ? null :
+                              <div className="my-8 text-center">
+                                <div className="text-6xl mb-4 flex justify-center">
+                                  <UploadIcon />
+                                </div>
+                                <p className="font-semibold text-gray-800 dark:text-white">
+                                  เพิ่มไฟล์
+                                </p>
+                                <p className="mt-1 opacity-60 dark:text-white">
+                                  กรุณาอัปโหลดไฟล์ประเภท PDF
+                                </p>
+                              </div>
+                            }
+                          </Upload>
+                          {!!errors.turn_radius_image?.file &&
+                            <p className='text-red-500'>{errors.turn_radius_image?.file.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                : null}
+              {item?.highway_dept_permit_url ?
+                <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+                  <Controller
+                    disabled
+                    name='highway_permit_image.file'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาอัปโหลดเอกสารขออนุญาตจาก ทล.'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>เอกสารขออนุญาตจาก ทล.</label>
+                          <Upload
+                            {...field}
+                            fileList={field.value || []}
+                            maxCount={1}
+                            listType='picture-card'
+                            accept='application/pdf'
+                            beforeUpload={(file) => {
+                              // DEFAULT VALUES
+                              const allowList = ['application/pdf']
+                              const maxFileSize = 10000000
+                              // CHECK
+                              const isListAvailable = allowList.some(item => item === file.type)
+                              const isLt10 = file.size < maxFileSize
+                              if (!isListAvailable) {
+                                message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                                return Upload.LIST_IGNORE
+                              }
+                              if (!isLt10) {
+                                message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                                return Upload.LIST_IGNORE
+                              }
+                              return false
+                            }}
+                            // itemRender={_itemRender}
+                            onChange={(e) => {
+                              field.onChange(e.fileList);
+                              if (e.fileList.length) {
+                                uploadFile(`highway_permit_image.url`, e.fileList)
+                              } else {
+                                setValue(`highway_permit_image.url`, '')
+                              }
+                            }}
+                            onPreview={(e) => {
+                              const url = URL.createObjectURL(e.originFileObj as RcFile);
+                              window.open(url);
+                            }}
+                          >
+                            {field.value.length ? null :
+                              <div className="my-8 text-center">
+                                <div className="text-6xl mb-4 flex justify-center">
+                                  <UploadIcon />
+                                </div>
+                                <p className="font-semibold text-gray-800 dark:text-white">
+                                  เพิ่มไฟล์
+                                </p>
+                                <p className="mt-1 opacity-60 dark:text-white">
+                                  กรุณาอัปโหลดไฟล์ประเภท PDF
+                                </p>
+                              </div>
+                            }
+                          </Upload>
+                          {!!errors.highway_permit_image?.file &&
+                            <p className='text-red-500'>{errors.highway_permit_image?.file.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                : null}
+              {item?.highway_dept_permit_number_url ?
+                <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+                  <Controller
+                    disabled
+                    name='highway_number_image.file'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาอัปโหลดเลขที่ขออนุญาตเดิมจาก ทล.'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>เลขที่ขออนุญาตเดิมจาก ทล.</label>
+                          <Upload
+                            {...field}
+                            fileList={field.value || []}
+                            maxCount={1}
+                            listType='picture-card'
+                            accept='application/pdf'
+                            beforeUpload={(file) => {
+                              // DEFAULT VALUES
+                              const allowList = ['application/pdf']
+                              const maxFileSize = 10000000
+                              // CHECK
+                              const isListAvailable = allowList.some(item => item === file.type)
+                              const isLt10 = file.size < maxFileSize
+                              if (!isListAvailable) {
+                                message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                                return Upload.LIST_IGNORE
+                              }
+                              if (!isLt10) {
+                                message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                                return Upload.LIST_IGNORE
+                              }
+                              return false
+                            }}
+                            // itemRender={_itemRender}
+                            onChange={(e) => {
+                              field.onChange(e.fileList);
+                              if (e.fileList.length) {
+                                uploadFile(`highway_number_image.url`, e.fileList)
+                              } else {
+                                setValue(`highway_number_image.url`, '')
+                              }
+                            }}
+                            onPreview={(e) => {
+                              const url = URL.createObjectURL(e.originFileObj as RcFile);
+                              window.open(url);
+                            }}
+                          >
+                            {field.value.length ? null :
+                              <div className="my-8 text-center">
+                                <div className="text-6xl mb-4 flex justify-center">
+                                  <UploadIcon />
+                                </div>
+                                <p className="font-semibold text-gray-800 dark:text-white">
+                                  เพิ่มไฟล์
+                                </p>
+                                <p className="mt-1 opacity-60 dark:text-white">
+                                  กรุณาอัปโหลดไฟล์ประเภท PDF
+                                </p>
+                              </div>
+                            }
+                          </Upload>
+                          {!!errors.highway_number_image?.file &&
+                            <p className='text-red-500'>{errors.highway_number_image?.file.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                : null}
+              {item?.rural_highway_dept_permit_url ?
+                <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+                  <Controller
+                    disabled
+                    name='rural_permit_image.file'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาอัปโหลดเอกสารขออนุญาตจาก ทช.'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>เอกสารขออนุญาตจาก ทช.</label>
+                          <Upload
+                            {...field}
+                            fileList={field.value || []}
+                            maxCount={1}
+                            listType='picture-card'
+                            accept='application/pdf'
+                            beforeUpload={(file) => {
+                              // DEFAULT VALUES
+                              const allowList = ['application/pdf']
+                              const maxFileSize = 10000000
+                              // CHECK
+                              const isListAvailable = allowList.some(item => item === file.type)
+                              const isLt10 = file.size < maxFileSize
+                              if (!isListAvailable) {
+                                message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                                return Upload.LIST_IGNORE
+                              }
+                              if (!isLt10) {
+                                message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                                return Upload.LIST_IGNORE
+                              }
+                              return false
+                            }}
+                            // itemRender={_itemRender}
+                            onChange={(e) => {
+                              field.onChange(e.fileList);
+                              if (e.fileList.length) {
+                                uploadFile(`rural_permit_image.url`, e.fileList)
+                              } else {
+                                setValue(`rural_permit_image.url`, '')
+                              }
+                            }}
+                            onPreview={(e) => {
+                              const url = URL.createObjectURL(e.originFileObj as RcFile);
+                              window.open(url);
+                            }}
+                          >
+                            {field.value.length ? null :
+                              <div className="my-8 text-center">
+                                <div className="text-6xl mb-4 flex justify-center">
+                                  <UploadIcon />
+                                </div>
+                                <p className="font-semibold text-gray-800 dark:text-white">
+                                  เพิ่มไฟล์
+                                </p>
+                                <p className="mt-1 opacity-60 dark:text-white">
+                                  กรุณาอัปโหลดไฟล์ประเภท PDF
+                                </p>
+                              </div>
+                            }
+                          </Upload>
+                          {!!errors.rural_permit_image?.file &&
+                            <p className='text-red-500'>{errors.rural_permit_image?.file.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                : null}
+              {item?.rural_highway_dept_permit_number_url ?
+                <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
+                  <Controller
+                    disabled
+                    name='rural_number_image.file'
+                    control={control}
+                    rules={{
+                      required: 'กรุณาอัปโหลดเลขที่ขออนุญาตเดิมจาก ทช.'
+                    }}
+                    render={({ field }) => {
+                      return (
+                        <fieldset>
+                          <label>เลขที่ขออนุญาตเดิมจาก ทช.</label>
+                          <Upload
+                            {...field}
+                            fileList={field.value || []}
+                            maxCount={1}
+                            listType='picture-card'
+                            accept='application/pdf'
+                            beforeUpload={(file) => {
+                              // DEFAULT VALUES
+                              const allowList = ['application/pdf']
+                              const maxFileSize = 10000000
+                              // CHECK
+                              const isListAvailable = allowList.some(item => item === file.type)
+                              const isLt10 = file.size < maxFileSize
+                              if (!isListAvailable) {
+                                message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                                return Upload.LIST_IGNORE
+                              }
+                              if (!isLt10) {
+                                message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                                return Upload.LIST_IGNORE
+                              }
+                              return false
+                            }}
+                            // itemRender={_itemRender}
+                            onChange={(e) => {
+                              field.onChange(e.fileList);
+                              if (e.fileList.length) {
+                                uploadFile(`rural_number_image.url`, e.fileList)
+                              } else {
+                                setValue(`rural_number_image.url`, '')
+                              }
+                            }}
+                            onPreview={(e) => {
+                              const url = URL.createObjectURL(e.originFileObj as RcFile);
+                              window.open(url);
+                            }}
+                          >
+                            {field.value.length ? null :
+                              <div className="my-8 text-center">
+                                <div className="text-6xl mb-4 flex justify-center">
+                                  <UploadIcon />
+                                </div>
+                                <p className="font-semibold text-gray-800 dark:text-white">
+                                  เพิ่มไฟล์
+                                </p>
+                                <p className="mt-1 opacity-60 dark:text-white">
+                                  กรุณาอัปโหลดไฟล์ประเภท PDF
+                                </p>
+                              </div>
+                            }
+                          </Upload>
+                          {!!errors.rural_number_image?.file &&
+                            <p className='text-red-500'>{errors.rural_number_image?.file.message}</p>
+                          }
+                        </fieldset>
+                      )
+                    }}
+                  />
+                </Col>
+                : null}
+            </Row>
+            :
+            <Empty description='ไม่พบข้อมูลเอกสารรายละเอียดยานพาหนะ' />
+        }
+        {/* {(item?.truck_dimension_url &&
           item?.semi_trailer_dimension_url &&
           item?.cargo_dimension_url &&
           item?.combined_vehicle_url &&
@@ -753,666 +1427,8 @@ const ContentImage: React.FC<Props> = (props) => {
           item?.highway_dept_permit_number_url &&
           item?.highway_dept_permit_url &&
           item?.turning_radius_url) ?
-          <Row gutter={[16, 16]}>
-            {item?.truck_dimension_url ?
-              <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
-                <Controller
-                  disabled
-                  name='truck_dimension_image.file'
-                  control={control}
-                  rules={{
-                    required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ รถลากจูง'
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <fieldset>
-                        <label>รูปแบบที่แสดงมิติ รถลากจูง</label>
-                        <Upload
-                          {...field}
-                          fileList={field.value || []}
-                          maxCount={1}
-                          listType='picture-card'
-                          accept='application/pdf'
-                          beforeUpload={(file) => {
-                            // DEFAULT VALUES
-                            const allowList = ['application/pdf']
-                            const maxFileSize = 10000000
-                            // CHECK
-                            const isListAvailable = allowList.some(item => item === file.type)
-                            const isLt10 = file.size < maxFileSize
-                            if (!isListAvailable) {
-                              message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                              return Upload.LIST_IGNORE
-                            }
-                            if (!isLt10) {
-                              message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                              return Upload.LIST_IGNORE
-                            }
-                            return false
-                          }}
-                          // itemRender={_itemRender}
-                          onChange={(e) => {
-                            field.onChange(e.fileList);
-                            if (e.fileList.length) {
-                              uploadFile(`truck_dimension_image.url`, e.fileList)
-                            } else {
-                              setValue(`truck_dimension_image.url`, '')
-                            }
-                          }}
-                          onPreview={(e) => {
-                            const url = URL.createObjectURL(e.originFileObj as RcFile);
-                            window.open(url);
-                          }}
-                        >
-                          {field.value.length ? null :
-                            <div className="my-8 text-center">
-                              <div className="text-6xl mb-4 flex justify-center">
-                                <UploadIcon />
-                              </div>
-                              <p className="font-semibold text-gray-800 dark:text-white">
-                                เพิ่มไฟล์
-                              </p>
-                              <p className="mt-1 opacity-60 dark:text-white">
-                                กรุณาอัปโหลดไฟล์ประเภท PDF
-                              </p>
-                            </div>
-                          }
-                        </Upload>
-                        {!!errors.truck_dimension_image?.file &&
-                          <p className='text-red-500'>{errors.truck_dimension_image?.file.message}</p>
-                        }
-                      </fieldset>
-                    )
-                  }}
-                />
-              </Col>
-              : null}
-            {item?.semi_trailer_dimension_url ?
-              <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
-                <Controller
-                  disabled
-                  name='semi_dimension_image.file'
-                  control={control}
-                  rules={{
-                    required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ รถกึ่งพ่วง'
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <fieldset>
-                        <label>รูปแบบที่แสดงมิติ รถกึ่งพ่วง</label>
-                        <Upload
-                          {...field}
-                          fileList={field.value || []}
-                          maxCount={1}
-                          listType='picture-card'
-                          accept='application/pdf'
-                          beforeUpload={(file) => {
-                            // DEFAULT VALUES
-                            const allowList = ['application/pdf']
-                            const maxFileSize = 10000000
-                            // CHECK
-                            const isListAvailable = allowList.some(item => item === file.type)
-                            const isLt10 = file.size < maxFileSize
-                            if (!isListAvailable) {
-                              message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                              return Upload.LIST_IGNORE
-                            }
-                            if (!isLt10) {
-                              message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                              return Upload.LIST_IGNORE
-                            }
-                            return false
-                          }}
-                          // itemRender={_itemRender}
-                          onChange={(e) => {
-                            field.onChange(e.fileList);
-                            if (e.fileList.length) {
-                              uploadFile(`semi_dimension_image.url`, e.fileList)
-                            } else {
-                              setValue(`semi_dimension_image.url`, '')
-                            }
-                          }}
-                          onPreview={(e) => {
-                            const url = URL.createObjectURL(e.originFileObj as RcFile);
-                            window.open(url);
-                          }}
-                        >
-                          {field.value.length ? null :
-                            <div className="my-8 text-center">
-                              <div className="text-6xl mb-4 flex justify-center">
-                                <UploadIcon />
-                              </div>
-                              <p className="font-semibold text-gray-800 dark:text-white">
-                                เพิ่มไฟล์
-                              </p>
-                              <p className="mt-1 opacity-60 dark:text-white">
-                                กรุณาอัปโหลดไฟล์ประเภท PDF
-                              </p>
-                            </div>
-                          }
-                        </Upload>
-                        {!!errors.semi_dimension_image?.file &&
-                          <p className='text-red-500'>{errors.semi_dimension_image?.file.message}</p>
-                        }
-                      </fieldset>
-                    )
-                  }}
-                />
-              </Col>
-              : null}
-            {item?.cargo_dimension_url ?
-              <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
-                <Controller
-                  disabled
-                  name='cargo_dimension_image.file'
-                  control={control}
-                  rules={{
-                    required: 'กรุณาอัปโหลดรูปแบบที่แสดงมิติ เครื่องจักร / สินค้า'
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <fieldset>
-                        <label>รูปแบบที่แสดงมิติ เครื่องจักร / สินค้า</label>
-                        <Upload
-                          {...field}
-                          fileList={field.value || []}
-                          maxCount={1}
-                          listType='picture-card'
-                          accept='application/pdf'
-                          beforeUpload={(file) => {
-                            // DEFAULT VALUES
-                            const allowList = ['application/pdf']
-                            const maxFileSize = 10000000
-                            // CHECK
-                            const isListAvailable = allowList.some(item => item === file.type)
-                            const isLt10 = file.size < maxFileSize
-                            if (!isListAvailable) {
-                              message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                              return Upload.LIST_IGNORE
-                            }
-                            if (!isLt10) {
-                              message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                              return Upload.LIST_IGNORE
-                            }
-                            return false
-                          }}
-                          // itemRender={_itemRender}
-                          onChange={(e) => {
-                            field.onChange(e.fileList);
-                            if (e.fileList.length) {
-                              uploadFile(`cargo_dimension_image.url`, e.fileList)
-                            } else {
-                              setValue(`cargo_dimension_image.url`, '')
-                            }
-                          }}
-                          onPreview={(e) => {
-                            const url = URL.createObjectURL(e.originFileObj as RcFile);
-                            window.open(url);
-                          }}
-                        >
-                          {field.value.length ? null :
-                            <div className="my-8 text-center">
-                              <div className="text-6xl mb-4 flex justify-center">
-                                <UploadIcon />
-                              </div>
-                              <p className="font-semibold text-gray-800 dark:text-white">
-                                เพิ่มไฟล์
-                              </p>
-                              <p className="mt-1 opacity-60 dark:text-white">
-                                กรุณาอัปโหลดไฟล์ประเภท PDF
-                              </p>
-                            </div>
-                          }
-                        </Upload>
-                        {!!errors.cargo_dimension_image?.file &&
-                          <p className='text-red-500'>{errors.cargo_dimension_image?.file.message}</p>
-                        }
-                      </fieldset>
-                    )
-                  }}
-                />
-              </Col>
-              : null}
-            {item?.combined_vehicle_url ?
-              <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
-                <Controller
-                  disabled
-                  name='combined_vehicle_image.file'
-                  control={control}
-                  rules={{
-                    required: 'กรุณาอัปโหลดรูปแบบยานพาหนะรวมสิ่งของ'
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <fieldset>
-                        <label>รูปแบบยานพาหนะรวมสิ่งของ</label>
-                        <Upload
-                          {...field}
-                          fileList={field.value || []}
-                          maxCount={1}
-                          listType='picture-card'
-                          accept='application/pdf'
-                          beforeUpload={(file) => {
-                            // DEFAULT VALUES
-                            const allowList = ['application/pdf']
-                            const maxFileSize = 10000000
-                            // CHECK
-                            const isListAvailable = allowList.some(item => item === file.type)
-                            const isLt10 = file.size < maxFileSize
-                            if (!isListAvailable) {
-                              message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                              return Upload.LIST_IGNORE
-                            }
-                            if (!isLt10) {
-                              message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                              return Upload.LIST_IGNORE
-                            }
-                            return false
-                          }}
-                          // itemRender={_itemRender}
-                          onChange={(e) => {
-                            field.onChange(e.fileList);
-                            if (e.fileList.length) {
-                              uploadFile(`combined_vehicle_image.url`, e.fileList)
-                            } else {
-                              setValue(`combined_vehicle_image.url`, '')
-                            }
-                          }}
-                          onPreview={(e) => {
-                            const url = URL.createObjectURL(e.originFileObj as RcFile);
-                            window.open(url);
-                          }}
-                        >
-                          {field.value.length ? null :
-                            <div className="my-8 text-center">
-                              <div className="text-6xl mb-4 flex justify-center">
-                                <UploadIcon />
-                              </div>
-                              <p className="font-semibold text-gray-800 dark:text-white">
-                                เพิ่มไฟล์
-                              </p>
-                              <p className="mt-1 opacity-60 dark:text-white">
-                                กรุณาอัปโหลดไฟล์ประเภท PDF
-                              </p>
-                            </div>
-                          }
-                        </Upload>
-                        {!!errors.combined_vehicle_image?.file &&
-                          <p className='text-red-500'>{errors.combined_vehicle_image?.file.message}</p>
-                        }
-                      </fieldset>
-                    )
-                  }}
-                />
-              </Col>
-              : null}
-            {item?.turning_radius_url ?
-              <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
-                <Controller
-                  disabled
-                  name='turn_radius_image.file'
-                  control={control}
-                  rules={{
-                    required: 'กรุณาอัปโหลดรูปแบบที่แสดงรัศมีวงเลี่ยว'
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <fieldset>
-                        <label>รูปแบบที่แสดงรัศมีวงเลี่ยว</label>
-                        <Upload
-                          {...field}
-                          fileList={field.value || []}
-                          maxCount={1}
-                          listType='picture-card'
-                          accept='application/pdf'
-                          beforeUpload={(file) => {
-                            // DEFAULT VALUES
-                            const allowList = ['application/pdf']
-                            const maxFileSize = 10000000
-                            // CHECK
-                            const isListAvailable = allowList.some(item => item === file.type)
-                            const isLt10 = file.size < maxFileSize
-                            if (!isListAvailable) {
-                              message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                              return Upload.LIST_IGNORE
-                            }
-                            if (!isLt10) {
-                              message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                              return Upload.LIST_IGNORE
-                            }
-                            return false
-                          }}
-                          // itemRender={_itemRender}
-                          onChange={(e) => {
-                            field.onChange(e.fileList);
-                            if (e.fileList.length) {
-                              uploadFile(`turn_radius_image.url`, e.fileList)
-                            } else {
-                              setValue(`turn_radius_image.url`, '')
-                            }
-                          }}
-                          onPreview={(e) => {
-                            const url = URL.createObjectURL(e.originFileObj as RcFile);
-                            window.open(url);
-                          }}
-                        >
-                          {field.value.length ? null :
-                            <div className="my-8 text-center">
-                              <div className="text-6xl mb-4 flex justify-center">
-                                <UploadIcon />
-                              </div>
-                              <p className="font-semibold text-gray-800 dark:text-white">
-                                เพิ่มไฟล์
-                              </p>
-                              <p className="mt-1 opacity-60 dark:text-white">
-                                กรุณาอัปโหลดไฟล์ประเภท PDF
-                              </p>
-                            </div>
-                          }
-                        </Upload>
-                        {!!errors.turn_radius_image?.file &&
-                          <p className='text-red-500'>{errors.turn_radius_image?.file.message}</p>
-                        }
-                      </fieldset>
-                    )
-                  }}
-                />
-              </Col>
-              : null}
-            {item?.highway_dept_permit_url ?
-              <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
-                <Controller
-                  disabled
-                  name='highway_permit_image.file'
-                  control={control}
-                  rules={{
-                    required: 'กรุณาอัปโหลดเอกสารขออนุญาตจาก ทล.'
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <fieldset>
-                        <label>เอกสารขออนุญาตจาก ทล.</label>
-                        <Upload
-                          {...field}
-                          fileList={field.value || []}
-                          maxCount={1}
-                          listType='picture-card'
-                          accept='application/pdf'
-                          beforeUpload={(file) => {
-                            // DEFAULT VALUES
-                            const allowList = ['application/pdf']
-                            const maxFileSize = 10000000
-                            // CHECK
-                            const isListAvailable = allowList.some(item => item === file.type)
-                            const isLt10 = file.size < maxFileSize
-                            if (!isListAvailable) {
-                              message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                              return Upload.LIST_IGNORE
-                            }
-                            if (!isLt10) {
-                              message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                              return Upload.LIST_IGNORE
-                            }
-                            return false
-                          }}
-                          // itemRender={_itemRender}
-                          onChange={(e) => {
-                            field.onChange(e.fileList);
-                            if (e.fileList.length) {
-                              uploadFile(`highway_permit_image.url`, e.fileList)
-                            } else {
-                              setValue(`highway_permit_image.url`, '')
-                            }
-                          }}
-                          onPreview={(e) => {
-                            const url = URL.createObjectURL(e.originFileObj as RcFile);
-                            window.open(url);
-                          }}
-                        >
-                          {field.value.length ? null :
-                            <div className="my-8 text-center">
-                              <div className="text-6xl mb-4 flex justify-center">
-                                <UploadIcon />
-                              </div>
-                              <p className="font-semibold text-gray-800 dark:text-white">
-                                เพิ่มไฟล์
-                              </p>
-                              <p className="mt-1 opacity-60 dark:text-white">
-                                กรุณาอัปโหลดไฟล์ประเภท PDF
-                              </p>
-                            </div>
-                          }
-                        </Upload>
-                        {!!errors.highway_permit_image?.file &&
-                          <p className='text-red-500'>{errors.highway_permit_image?.file.message}</p>
-                        }
-                      </fieldset>
-                    )
-                  }}
-                />
-              </Col>
-              : null}
-            {item?.highway_dept_permit_number_url ?
-              <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
-                <Controller
-                  disabled
-                  name='highway_number_image.file'
-                  control={control}
-                  rules={{
-                    required: 'กรุณาอัปโหลดเลขที่ขออนุญาตเดิมจาก ทล.'
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <fieldset>
-                        <label>เลขที่ขออนุญาตเดิมจาก ทล.</label>
-                        <Upload
-                          {...field}
-                          fileList={field.value || []}
-                          maxCount={1}
-                          listType='picture-card'
-                          accept='application/pdf'
-                          beforeUpload={(file) => {
-                            // DEFAULT VALUES
-                            const allowList = ['application/pdf']
-                            const maxFileSize = 10000000
-                            // CHECK
-                            const isListAvailable = allowList.some(item => item === file.type)
-                            const isLt10 = file.size < maxFileSize
-                            if (!isListAvailable) {
-                              message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                              return Upload.LIST_IGNORE
-                            }
-                            if (!isLt10) {
-                              message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                              return Upload.LIST_IGNORE
-                            }
-                            return false
-                          }}
-                          // itemRender={_itemRender}
-                          onChange={(e) => {
-                            field.onChange(e.fileList);
-                            if (e.fileList.length) {
-                              uploadFile(`highway_number_image.url`, e.fileList)
-                            } else {
-                              setValue(`highway_number_image.url`, '')
-                            }
-                          }}
-                          onPreview={(e) => {
-                            const url = URL.createObjectURL(e.originFileObj as RcFile);
-                            window.open(url);
-                          }}
-                        >
-                          {field.value.length ? null :
-                            <div className="my-8 text-center">
-                              <div className="text-6xl mb-4 flex justify-center">
-                                <UploadIcon />
-                              </div>
-                              <p className="font-semibold text-gray-800 dark:text-white">
-                                เพิ่มไฟล์
-                              </p>
-                              <p className="mt-1 opacity-60 dark:text-white">
-                                กรุณาอัปโหลดไฟล์ประเภท PDF
-                              </p>
-                            </div>
-                          }
-                        </Upload>
-                        {!!errors.highway_number_image?.file &&
-                          <p className='text-red-500'>{errors.highway_number_image?.file.message}</p>
-                        }
-                      </fieldset>
-                    )
-                  }}
-                />
-              </Col>
-              : null}
-            {item?.rural_highway_dept_permit_url ?
-              <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
-                <Controller
-                  disabled
-                  name='rural_permit_image.file'
-                  control={control}
-                  rules={{
-                    required: 'กรุณาอัปโหลดเอกสารขออนุญาตจาก ทช.'
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <fieldset>
-                        <label>เอกสารขออนุญาตจาก ทช.</label>
-                        <Upload
-                          {...field}
-                          fileList={field.value || []}
-                          maxCount={1}
-                          listType='picture-card'
-                          accept='application/pdf'
-                          beforeUpload={(file) => {
-                            // DEFAULT VALUES
-                            const allowList = ['application/pdf']
-                            const maxFileSize = 10000000
-                            // CHECK
-                            const isListAvailable = allowList.some(item => item === file.type)
-                            const isLt10 = file.size < maxFileSize
-                            if (!isListAvailable) {
-                              message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                              return Upload.LIST_IGNORE
-                            }
-                            if (!isLt10) {
-                              message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                              return Upload.LIST_IGNORE
-                            }
-                            return false
-                          }}
-                          // itemRender={_itemRender}
-                          onChange={(e) => {
-                            field.onChange(e.fileList);
-                            if (e.fileList.length) {
-                              uploadFile(`rural_permit_image.url`, e.fileList)
-                            } else {
-                              setValue(`rural_permit_image.url`, '')
-                            }
-                          }}
-                          onPreview={(e) => {
-                            const url = URL.createObjectURL(e.originFileObj as RcFile);
-                            window.open(url);
-                          }}
-                        >
-                          {field.value.length ? null :
-                            <div className="my-8 text-center">
-                              <div className="text-6xl mb-4 flex justify-center">
-                                <UploadIcon />
-                              </div>
-                              <p className="font-semibold text-gray-800 dark:text-white">
-                                เพิ่มไฟล์
-                              </p>
-                              <p className="mt-1 opacity-60 dark:text-white">
-                                กรุณาอัปโหลดไฟล์ประเภท PDF
-                              </p>
-                            </div>
-                          }
-                        </Upload>
-                        {!!errors.rural_permit_image?.file &&
-                          <p className='text-red-500'>{errors.rural_permit_image?.file.message}</p>
-                        }
-                      </fieldset>
-                    )
-                  }}
-                />
-              </Col>
-              : null}
-            {item?.rural_highway_dept_permit_number_url ?
-              <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
-                <Controller
-                  disabled
-                  name='rural_number_image.file'
-                  control={control}
-                  rules={{
-                    required: 'กรุณาอัปโหลดเลขที่ขออนุญาตเดิมจาก ทช.'
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <fieldset>
-                        <label>เลขที่ขออนุญาตเดิมจาก ทช.</label>
-                        <Upload
-                          {...field}
-                          fileList={field.value || []}
-                          maxCount={1}
-                          listType='picture-card'
-                          accept='application/pdf'
-                          beforeUpload={(file) => {
-                            // DEFAULT VALUES
-                            const allowList = ['application/pdf']
-                            const maxFileSize = 10000000
-                            // CHECK
-                            const isListAvailable = allowList.some(item => item === file.type)
-                            const isLt10 = file.size < maxFileSize
-                            if (!isListAvailable) {
-                              message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                              return Upload.LIST_IGNORE
-                            }
-                            if (!isLt10) {
-                              message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                              return Upload.LIST_IGNORE
-                            }
-                            return false
-                          }}
-                          // itemRender={_itemRender}
-                          onChange={(e) => {
-                            field.onChange(e.fileList);
-                            if (e.fileList.length) {
-                              uploadFile(`rural_number_image.url`, e.fileList)
-                            } else {
-                              setValue(`rural_number_image.url`, '')
-                            }
-                          }}
-                          onPreview={(e) => {
-                            const url = URL.createObjectURL(e.originFileObj as RcFile);
-                            window.open(url);
-                          }}
-                        >
-                          {field.value.length ? null :
-                            <div className="my-8 text-center">
-                              <div className="text-6xl mb-4 flex justify-center">
-                                <UploadIcon />
-                              </div>
-                              <p className="font-semibold text-gray-800 dark:text-white">
-                                เพิ่มไฟล์
-                              </p>
-                              <p className="mt-1 opacity-60 dark:text-white">
-                                กรุณาอัปโหลดไฟล์ประเภท PDF
-                              </p>
-                            </div>
-                          }
-                        </Upload>
-                        {!!errors.rural_number_image?.file &&
-                          <p className='text-red-500'>{errors.rural_number_image?.file.message}</p>
-                        }
-                      </fieldset>
-                    )
-                  }}
-                />
-              </Col>
-              : null}
-          </Row>
-          : <Empty description='ไม่พบข้อมูลเอกสารรายละเอียดยานพาหนะ' />}
+          <></>
+          : <Empty description='ไม่พบข้อมูลเอกสารรายละเอียดยานพาหนะ' />} */}
       </section>
     </>
   )

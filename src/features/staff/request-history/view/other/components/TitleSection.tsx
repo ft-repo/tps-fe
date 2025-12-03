@@ -7,11 +7,11 @@ import React, { useCallback, useMemo } from 'react'
 import { AiOutlineDownload, AiOutlineLeft } from 'react-icons/ai'
 import JSZip from 'jszip'
 import { useNavigate } from 'react-router-dom'
-import { pdf } from '@react-pdf/renderer'
 // import { pdf } from '@react-pdf/renderer'
-import RenderDoc from './pdf/PetitionForm'
+// import { pdf } from '@react-pdf/renderer'
+// import RenderDoc from './pdf/PetitionForm'
 // import vehicle from '@/views/staff/request-list/approval/vehicle'
-import { VehicleList } from '@/@types/reducer/petition'
+// import { VehicleList } from '@/@types/reducer/petition'
 
 interface Props {
   onExport?: () => void
@@ -121,17 +121,17 @@ const TitleSection: React.FC<Props> = (props) => {
       await Promise.all(fetchPromises)
 
       // Add vehicle PDFs (แบบขออนุญาต)
-      const vehicleStartIndex = nextIndex + 2
-      const vehiclePdfPromises = petition.detail.vehicle.vehicle_list.map(async (item, index) => {
-        try {
-          const vehicleBlob = await pdf(<RenderDoc data={petition.detail} item={item} index={index} />).toBlob();
-          zip.file(`${vehicleStartIndex + index}_แบบขออนุญาต_${item.sort}.pdf`, vehicleBlob)
-        } catch (error) {
-          console.error(`Error generating vehicle PDF ${item.sort}:`, error)
-        }
-      })
+      // const vehicleStartIndex = nextIndex + 2
+      // const vehiclePdfPromises = petition.detail.vehicle.vehicle_list.map(async (item, index) => {
+      //   try {
+      //     const vehicleBlob = await pdf(<RenderDoc data={petition.detail} item={item} index={index} />).toBlob();
+      //     zip.file(`${vehicleStartIndex + index}_แบบขออนุญาต_${item.sort}.pdf`, vehicleBlob)
+      //   } catch (error) {
+      //     console.error(`Error generating vehicle PDF ${item.sort}:`, error)
+      //   }
+      // })
 
-      await Promise.all(vehiclePdfPromises)
+      // await Promise.all(vehiclePdfPromises)
 
       // Generate zip file
       const zipBlob = await zip.generateAsync({ type: 'blob' })
@@ -157,32 +157,32 @@ const TitleSection: React.FC<Props> = (props) => {
     }
   }, [dispatch, petition, extractUrl, pdfDocument?.poa_url, pdfDocument?.mach_book_url, petition_status])
 
-  const onShowPDF = useCallback(async (item: VehicleList, index: number) => {
-    const blob = await pdf(<RenderDoc data={petition.detail} item={item} index={index} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    // window.open(url, '_blank');
-    // setTimeout(() => URL.revokeObjectURL(url), 100);
+  // const onShowPDF = useCallback(async (item: VehicleList, index: number) => {
+  //   const blob = await pdf(<RenderDoc data={petition.detail} item={item} index={index} />).toBlob();
+  //   const url = URL.createObjectURL(blob);
+  //   // window.open(url, '_blank');
+  //   // setTimeout(() => URL.revokeObjectURL(url), 100);
 
-    const fileName: string = 'แบบขออนุญาต';
-    const a: HTMLAnchorElement = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    a.style.display = 'none';
+  //   const fileName: string = 'แบบขออนุญาต';
+  //   const a: HTMLAnchorElement = document.createElement('a');
+  //   a.href = url;
+  //   a.download = fileName;
+  //   a.style.display = 'none';
 
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }, [petition.detail])
+  //   document.body.appendChild(a);
+  //   a.click();
+  //   document.body.removeChild(a);
+  // }, [petition.detail])
 
-  const vehicleDoc = useMemo(() => {
-    return petition.detail.vehicle.vehicle_list.map((item, index) => {
-      return {
-        key: String(5 + (index + 1)),
-        label: `แบบขออนุญาต ${item.sort}`,
-        onClick: () => onShowPDF(item, index)
-      }
-    })
-  }, [onShowPDF, petition.detail.vehicle.vehicle_list])
+  // const vehicleDoc = useMemo(() => {
+  //   return petition.detail.vehicle.vehicle_list.map((item, index) => {
+  //     return {
+  //       key: String(5 + (index + 1)),
+  //       label: `แบบขออนุญาต ${item.sort}`,
+  //       onClick: () => onShowPDF(item, index)
+  //     }
+  //   })
+  // }, [onShowPDF, petition.detail.vehicle.vehicle_list])
 
   const ruralDoc = useMemo(() => {
     return petition.detail.vehicle.vehicle_list.map((item, index) => {
@@ -216,7 +216,7 @@ const TitleSection: React.FC<Props> = (props) => {
       label: 'เอกสารใบอนุญาต',
       onClick: () => showFile(extractUrl(petition_status[4]?.document_url), 'เอกสารใบอนุญาต.pdf')
     },
-    ...vehicleDoc,
+    // ...vehicleDoc,
     {
       key: '10',
       label: 'ดาวน์โหลดทั้งหมด (.zip)',

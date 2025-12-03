@@ -143,7 +143,7 @@ const TableOther: React.FC<Props> = (props) => {
       align: 'center',
       render: (item, record, index) => {
         if (record.user_created?.business_details?.business_name) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <strong>{record.user_created?.business_details?.business_name}</strong>
           }
           return record.user_created?.business_details?.business_name
@@ -159,7 +159,7 @@ const TableOther: React.FC<Props> = (props) => {
       align: 'center',
       render: (item, record, index) => {
         if (record.created_at) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <strong>{dayjs(record.created_at).format('DD/MM/YYYY')}</strong>
           }
           return dayjs(record.created_at).format('DD/MM/YYYY')

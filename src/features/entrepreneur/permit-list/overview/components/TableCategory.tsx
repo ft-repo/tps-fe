@@ -139,7 +139,7 @@ const TableCategory: React.FC<Props> = (props) => {
       align: 'center',
       render: (item, record, index) => {
         if (item) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <strong>{item}</strong>
           }
           return item
@@ -155,7 +155,7 @@ const TableCategory: React.FC<Props> = (props) => {
       align: 'center',
       render: (item, record, index) => {
         if (item) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <strong>{item}</strong>
           }
           return item
@@ -171,7 +171,7 @@ const TableCategory: React.FC<Props> = (props) => {
       align: 'center',
       render: (item, record, index) => {
         if (item) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <p onClick={() => openDataModal(record.petition_id, record)}><strong>{item}</strong></p>
           }
           return <p onClick={() => openDataModal(record.petition_id, record)}>{item}</p>
@@ -187,7 +187,7 @@ const TableCategory: React.FC<Props> = (props) => {
       align: 'center',
       render: (item, record, index) => {
         if (item) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
           }
           return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
@@ -203,7 +203,7 @@ const TableCategory: React.FC<Props> = (props) => {
       align: 'center',
       render: (item, record, index) => {
         if (item) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
           }
           return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
@@ -219,7 +219,7 @@ const TableCategory: React.FC<Props> = (props) => {
       align: 'center',
       render: (item, record, index) => {
         if (item) {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
           }
           return dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')
