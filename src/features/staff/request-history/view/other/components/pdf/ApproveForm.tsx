@@ -223,9 +223,9 @@ const ApproveForm: React.FC<Props> = (props) => {
         <View style={{ marginBottom: 10 }}>
           <Text style={styles.main_paragraph}>
             ตามที่ {data.document.business_name || 'บริษัท มามมุท (ประเทศไทย) จำกัด'} มีความจำเป็นต้องขนส่งเครื่องจักรและอุปกรณ์
-            ขนาดใหญ่ จาก {data.estimate.route.start_point || 'ท่าเรือแหลมฉบัง จังหวัดชลบุรี'} ไปยัง {data.estimate.route.end_point || 'บริษัท ไทยออยส์ จำกัด (มหาชน)'} ผ่านทางหลวงชนบท
-            สายทาง {data.estimate.route.start_road_code || 'ชบ.๓๐๐๙'} {data.estimate.route.start_road || 'แยกทางหลวงหมายเลข ๓๓๑ - ท่าเรือแหลมฉบัง อำเภอศรีราชา จังหวัดชลบุรี'} ช่วง กม.ที่
-            {' '}{convertToThaiAlp(value.start_km) || '๑๘๗๐๐'} ถึง กม.ที่ {convertToThaiAlp(value.end_km) || '๑๙+๐๐'} ระยะทาง {convertToThaiNumber(value.distance) || '๐.๓๐๐'} กิโลเมตร นั้น
+            ขนาดใหญ่ จาก {convertToThaiAlp(data.estimate.route.start_point) || 'ท่าเรือแหลมฉบัง จังหวัดชลบุรี'} ไปยัง {convertToThaiAlp(data.estimate.route.end_point) || 'บริษัท ไทยออยส์ จำกัด (มหาชน)'} ผ่านทางหลวงชนบท
+            สายทาง {convertToThaiAlp(data.estimate.route.start_road_code) || 'ชบ.๓๐๐๙'} {convertToThaiAlp(data.estimate.route.start_road) || 'แยกทางหลวงหมายเลข ๓๓๑ - ท่าเรือแหลมฉบัง อำเภอศรีราชา จังหวัดชลบุรี'} ช่วง กม.ที่
+            {' '}{convertToThaiAlp(value.start_km as string) || '๑๘๗๐๐'} ถึง กม.ที่ {convertToThaiAlp(value.end_km as string) || '๑๙+๐๐'} ระยะทาง {convertToThaiNumber(value.distance as number) || '๐.๓๐๐'} กิโลเมตร นั้น
           </Text>
           <Text style={styles.main_paragraph}>กรมทางหลวงชนบทพิจารณาแล้ว อนุญาตให้<Text>{data.document.business_name || 'บริษัท มามมุท (ประเทศไทย) จำกัด'}</Text> ใช้ยานพาหนะตามข้อกำหนด ดังต่อไปนี้</Text>
         </View>
@@ -345,9 +345,9 @@ const ApproveForm: React.FC<Props> = (props) => {
         </View>
         <View>
           <Text style={styles.main_paragraph}>
-            ๔.  ผ่านเส้นทางของกรมทางหลวงชนบทจำนวน ๑ สาย สายทาง {data.estimate.route.start_road_code || 'ชบ.๓๐๐๙'} {data.estimate.route.start_road || 'แยกทางหลวงหมายเลข ๓๓๑ - ท่าเรือแหลมฉบัง อำเภอศรีราชา จังหวัดชลบุรี'}
-            ช่วง กม.ที่ {convertToThaiAlp(value.start_km) || '๑๘๗๐๐'} ถึง กม.ที่ {convertToThaiAlp(value.end_km) || '๑๙+๐๐'} ระยะทาง
-            {' '}{convertToThaiNumber(value.distance) || '๐.๓๐๐'} กิโลเมตร รวมระยะทางที่ผ่านทั้งสิ้น {convertToThaiNumber(value.distance) || '๐.๓๐๐'} กิโลเมตร ตามที่ขออนุญาตได้ ภายในระยะเวลา ๑ ปี
+            ๔.  ผ่านเส้นทางของกรมทางหลวงชนบทจำนวน ๑ สาย สายทาง {convertToThaiAlp(data.estimate.route.start_road_code) || 'ชบ.๓๐๐๙'} {convertToThaiAlp(data.estimate.route.start_road) || 'แยกทางหลวงหมายเลข ๓๓๑ - ท่าเรือแหลมฉบัง อำเภอศรีราชา จังหวัดชลบุรี'}
+            ช่วง กม.ที่ {convertToThaiAlp(value.start_km as string) || '๑๘๗๐๐'} ถึง กม.ที่ {convertToThaiAlp(value.end_km as string) || '๑๙+๐๐'} ระยะทาง
+            {' '}{convertToThaiNumber(value.distance as number) || '๐.๓๐๐'} กิโลเมตร รวมระยะทางที่ผ่านทั้งสิ้น {convertToThaiNumber(value.distance as number) || '๐.๓๐๐'} กิโลเมตร ตามที่ขออนุญาตได้ ภายในระยะเวลา ๑ ปี
             นับจากวันที่ได้รับอนุญาต โดยผู้ได้รับอนุญาตฯ จะต้องปฏิบัติตามเงื่อนไขการขออนุญาตใช้ยานพาหนะบางชนิด
             บางประเภทเดินบนทางหลวงชนบท จำนวน ๒๖ ข้อ ที่แนบมาพร้อมนี้
           </Text>

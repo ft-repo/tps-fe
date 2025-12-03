@@ -123,13 +123,13 @@ const masterSlice = createSlice({
     getVehicleType: (state, action) => {
       state.vehicle_type = action.payload
     },
-    getProvince: (state, action) => {
+    setProvince: (state, action) => {
       state.province = action.payload
     },
-    getDistrict: (state, action) => {
+    setDistrict: (state, action) => {
       state.district = action.payload
     },
-    getSubDistrict: (state, action) => {
+    setSubDistrict: (state, action) => {
       state.sub_district = action.payload
     },
     getEntityType: (state, action) => {
@@ -293,5 +293,7 @@ const masterSlice = createSlice({
       })
   },
 })
+
+export const { setProvince, setDistrict, setSubDistrict } = masterSlice.actions
 
 export default masterSlice.reducer

@@ -118,10 +118,16 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
+                      minDate={dayjs(start_date as Dayjs)}
                       onChange={(e) => {
                         field.onChange(e)
-                        setValue('end_date', null)
+                        if (e) {
+                          setValue('end_date', dayjs(e).add(62, 'day').add(1, 'year'))
+                        } else {
+                          setValue('end_date', null)
+                        }
                       }}
+
                     />
                     {!!errors.start_date &&
                       <p className='text-red-500'>{errors.start_date.message}</p>

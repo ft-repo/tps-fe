@@ -194,12 +194,12 @@ const FormDocumentProposal: React.FC<Props> = (props) => {
           name='petition_extended_user_document.vehicle_permit_url.file'
           control={control}
           rules={{
-            required: 'กรุณาอัปโหลดแบบคำขออนุยาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท'
+            required: 'กรุณาอัปโหลดแบบคำขออนุญาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท'
           }}
           render={({ field }) => {
             return (
               <fieldset>
-                <label>แบบคำขออนุยาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
+                <label>แบบคำขออนุญาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}

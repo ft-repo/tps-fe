@@ -1,6 +1,6 @@
 import { Upload } from '@/components/ui/NewUpload'
-import { useAppSelector } from '@/store'
-import { useCallback } from 'react'
+import { setLoading, useAppDispatch, useAppSelector } from '@/store'
+import { useCallback, useEffect, useState } from 'react'
 import {
   Control,
   Controller,
@@ -12,6 +12,8 @@ import {
 } from 'react-hook-form'
 import { Col, Row, Select as AntdSelect, Input as AntdInput, message } from 'antd'
 import { FieldType } from './SignUp'
+import { getNewDistrictAPI, getNewProvinceAPI, getNewSubDistrictAPI } from '@/services/master/MasterService'
+import { SubDistrictState, ThailandState } from '@/@types/shared'
 
 interface Props {
   control: Control<FieldType>
@@ -22,8 +24,13 @@ interface Props {
 
 function SignUpForm(props: Props) {
   const { control, setValue } = props
-  const { province, district, sub_district, entity_type, contact_type } = useAppSelector((state) => state.master)
+  const { entity_type, contact_type } = useAppSelector((state) => state.master)
+  const { loading } = useAppSelector((state) => state.layout)
+  const dispatch = useAppDispatch()
   const [messageApi, contextHolder] = message.useMessage()
+  const [province, setProvince] = useState<ThailandState[]>([])
+  const [district, setDistrict] = useState<ThailandState[]>([])
+  const [subDistrict, setSubDistrict] = useState<SubDistrictState[]>([])
 
   const {
     password,
@@ -37,6 +44,88 @@ function SignUpForm(props: Props) {
   const handleUploadError = useCallback((error: string) => {
     messageApi.error(error)
   }, [messageApi])
+
+  const fetchProvinceAPI = useCallback(async (provinceId?: string | number | null, districtId?: string | number | null, subDistrictId?: string | number | null) => {
+    dispatch(setLoading(true))
+    try {
+      const response = await getNewProvinceAPI({
+        province_id: provinceId ? provinceId : null,
+        district_id: districtId ? districtId : null,
+        sub_district_id: subDistrictId ? subDistrictId : null
+      })
+      if (response.status === 200) {
+        setProvince(response.data)
+      } else {
+        console.log(response)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch])
+
+  const fetchDistrictAPI = useCallback(async (provinceId?: string | number | null, districtId?: string | number | null, subDistrictId?: string | number | null) => {
+    try {
+      const response = await getNewDistrictAPI({
+        province_id: provinceId ? provinceId : null,
+        district_id: districtId ? districtId : null,
+        sub_district_id: subDistrictId ? subDistrictId : null
+      })
+      if (response.status === 200) {
+        setDistrict(response.data)
+      } else {
+        console.log(response)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch])
+
+  const fetchSubDistrictAPI = useCallback(async (provinceId?: string | number | null, districtId?: string | number | null, subDistrictId?: string | number | null) => {
+    try {
+      const response = await getNewSubDistrictAPI({
+        province_id: provinceId ? provinceId : null,
+        district_id: districtId ? districtId : null,
+        sub_district_id: subDistrictId ? subDistrictId : null
+      })
+      if (response.status === 200) {
+        setSubDistrict(response.data)
+      } else {
+        console.log(response)
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    fetchProvinceAPI()
+  }, [])
+
+  useEffect(() => {
+    fetchDistrictAPI()
+  }, [])
+
+  useEffect(() => {
+    fetchSubDistrictAPI()
+  }, [])
 
   return (
     <>
@@ -323,6 +412,7 @@ function SignUpForm(props: Props) {
                         showSearch
                         placeholder='กรุณาเลือกจังหวัด'
                         options={province}
+                        loading={loading}
                         fieldNames={{
                           label: 'name_th',
                           value: 'id'
@@ -337,10 +427,17 @@ function SignUpForm(props: Props) {
                         }}
                         onChange={(value) => {
                           field.onChange(value)
+                          // API
+                          fetchDistrictAPI(value, district_id, sub_district_id)
+                          fetchSubDistrictAPI(value, district_id, sub_district_id)
                           // SET VALUE
                           setValue('district_id', null)
                           setValue('sub_district_id', null)
                           setValue('zip_code', '')
+                          // NO VALUE
+                          if (!value) {
+                            fetchProvinceAPI()
+                          }
                         }}
                       />
                       {!!errors.province_id &&
@@ -369,6 +466,7 @@ function SignUpForm(props: Props) {
                         disabled={!province_id}
                         placeholder='กรุณาเลือกเขต / อำเภอ'
                         options={district}
+                        loading={loading}
                         fieldNames={{
                           label: 'name_th',
                           value: 'id'
@@ -383,6 +481,9 @@ function SignUpForm(props: Props) {
                         }}
                         onChange={(value) => {
                           field.onChange(value)
+                          // APIS
+                          fetchProvinceAPI(province_id, value, sub_district_id)
+                          fetchSubDistrictAPI(province_id, value, sub_district_id)
                           // SET VALUE
                           setValue('sub_district_id', null)
                           setValue('zip_code', '')
@@ -413,7 +514,8 @@ function SignUpForm(props: Props) {
                         showSearch
                         disabled={!district_id}
                         placeholder='กรุณาเลือกแขวง / ตำบล'
-                        options={sub_district}
+                        options={subDistrict}
+                        loading={loading}
                         fieldNames={{
                           label: 'name_th',
                           value: 'id'
@@ -428,7 +530,11 @@ function SignUpForm(props: Props) {
                         }}
                         onChange={(value) => {
                           field.onChange(value)
-                          const zip_code = sub_district.find(item => item.id === value)?.zip_code
+                          // API
+                          fetchProvinceAPI(province_id, district_id, value)
+                          fetchDistrictAPI(province_id, district_id, value)
+                          // ZIP_CODE
+                          const zip_code = subDistrict.find(item => item.id === value)?.zip_code
                           if (zip_code) {
                             setValue('zip_code', String(zip_code))
                           }

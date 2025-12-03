@@ -35,8 +35,8 @@ const RequestPermit: React.FC<Props> = (props) => {
   const form = useForm<FieldTypePetition>({
     defaultValues: {
       set_id: dataParser.res_data.set_id,
-      start_date: dayjs(),
-      end_date: '',
+      start_date: dayjs().add(62, 'day'),
+      end_date: dayjs().add(62, 'day').add(1, 'year'),
       contact_name: user.details.contact_info.contact_name,
       phone_number: user.details.contact_info.phone_number,
       project_name: '',

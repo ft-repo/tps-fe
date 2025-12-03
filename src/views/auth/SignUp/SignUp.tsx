@@ -4,10 +4,10 @@ import SignUpForm from './SignUpForm'
 import { SignUpCredential } from '@/@types/auth'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import {
-  getDistrict,
+  // getDistrict,
+  // getProvince,
+  // getSubDistrict,
   getEntityType,
-  getProvince,
-  getSubDistrict,
   getContactType,
 } from '@/store/slices/master/masterSlice'
 import { Button } from '@/components/ui'
@@ -92,9 +92,9 @@ const SignUp = () => {
 
   useEffect(() => {
     // LOCATION
-    dispatch(getProvince())
-    dispatch(getDistrict(''))
-    dispatch(getSubDistrict(''))
+    // dispatch(getProvince())
+    // dispatch(getDistrict(''))
+    // dispatch(getSubDistrict(''))
     // ENTITY
     dispatch(getEntityType())
     dispatch(getContactType())

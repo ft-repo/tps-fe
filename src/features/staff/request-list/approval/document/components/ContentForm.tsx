@@ -238,7 +238,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
-          disabled={watch('is_approved') === '1' ? true : false}
+          disabled={watch('is_approved') === '2' ? false : true}
           name='reply_message'
           control={control}
           rules={{
@@ -265,7 +265,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
-          disabled={watch('is_approved') === '1' ? true : false}
+          disabled={watch('is_approved') === '2' ? false : true}
           name='file_id.file'
           control={control}
           rules={{
@@ -313,7 +313,7 @@ const ContentForm: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      disabled={(watch('is_approved') === '1' ? true : false) || disabled}
+                      disabled={(watch('is_approved') === '2' ? false : true) || disabled}
                       icon={<HiOutlineCloudUpload />}
                       htmlType='button'
                       type='primary'

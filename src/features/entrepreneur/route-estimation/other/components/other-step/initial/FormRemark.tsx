@@ -74,6 +74,7 @@ const FormRemark: React.FC<Props> = (props) => {
                   <label>เหตุผลที่ขอ <span className='text-red-500'>*</span></label>
                   <Input.TextArea
                     {...field}
+                    showCount
                     name={field.name}
                     placeholder='กรุณาระบุ'
                     className='w-full'
@@ -82,6 +83,7 @@ const FormRemark: React.FC<Props> = (props) => {
                     style={{
                       fontFamily: 'Noto Sans Thai'
                     }}
+                    maxLength={100}
                   />
                   {!!errors.remark &&
                     <p className='text-red-500'>{errors.remark.message}</p>

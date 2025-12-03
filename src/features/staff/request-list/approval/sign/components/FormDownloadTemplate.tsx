@@ -14,9 +14,9 @@ interface Props {
 }
 
 export interface FieldType {
-  start_km: string;
-  end_km: string;
-  distance: number;
+  start_km: number | string;
+  end_km: number | string;
+  distance: number | string;
 }
 
 const FormDownloadTemplate: React.FC<Props> = (props) => {
@@ -25,9 +25,9 @@ const FormDownloadTemplate: React.FC<Props> = (props) => {
   const [type, setType] = useState<'DOC' | 'ATTACHED' | null>(null)
   const form = useForm<FieldType>({
     defaultValues: {
-      start_km: '25+1588',
-      end_km: '25+4930',
-      distance: 5000
+      start_km: '',
+      end_km: '',
+      distance: ''
     }
   })
 

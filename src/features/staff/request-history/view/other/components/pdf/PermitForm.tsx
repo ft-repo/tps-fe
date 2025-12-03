@@ -490,7 +490,7 @@ const PermitForm: React.FC<Props> = (props) => {
         <View style={permit_styles.section}>
           <View style={permit_styles.label_text}>
             <Text>[  ]</Text>
-            <Text>แบบคำขออนุญาตให้ยานพาหนะบางชนิด บางประเภอ เดินบนทางหลวงชนบท</Text>
+            <Text>แบบคำขออนุญาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท</Text>
           </View>
           <View style={permit_styles.row}>
             <Text>จำนวน</Text>

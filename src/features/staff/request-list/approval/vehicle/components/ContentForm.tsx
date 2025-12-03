@@ -22,7 +22,7 @@ interface FieldType {
   is_approved: string | null;
   reply_message: string;
   file_id: FileType;
-  is_signed: string | null;
+  // is_signed: string | null;
 }
 
 interface FileType {
@@ -41,16 +41,16 @@ const OPTIONS = [
   },
 ]
 
-const OPTIONS_IS_SKIPPED = [
-  {
-    label: 'มีเอกสารลงนาม',
-    value: '1',
-  },
-  {
-    label: 'ไม่มีเอกสารลงนาม',
-    value: '2',
-  },
-]
+// const OPTIONS_IS_SKIPPED = [
+//   {
+//     label: 'มีเอกสารลงนาม',
+//     value: '1',
+//   },
+//   {
+//     label: 'ไม่มีเอกสารลงนาม',
+//     value: '2',
+//   },
+// ]
 
 const ContentForm: React.FC<Props> = (props) => {
   const { } = props
@@ -75,7 +75,7 @@ const ContentForm: React.FC<Props> = (props) => {
         file: [],
         url: ''
       },
-      is_signed: typeof petition_status[2]?.is_skipped === 'boolean' ? (petition_status[2]?.is_skipped === false ? '1' : '2') : null,
+      // is_signed: typeof petition_status[2]?.is_skipped === 'boolean' ? (petition_status[2]?.is_skipped === false ? '1' : '2') : null,
     },
     disabled: disabled
   })
@@ -114,7 +114,8 @@ const ContentForm: React.FC<Props> = (props) => {
       is_approved: value.is_approved === '1' ? true : false,
       document_url: value.file_id.url,
       remark: value.reply_message,
-      is_skipped: value.is_signed === '1' ? false : true
+      is_skipped: false
+      // is_skipped: value.is_signed === '1' ? false : true
     }
 
     dispatch(setLoading(true))
@@ -251,7 +252,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
-          disabled={watch('is_approved') === '1' ? true : false}
+          disabled={watch('is_approved') === '2' ? false : true}
           name='reply_message'
           control={control}
           rules={{
@@ -278,7 +279,7 @@ const ContentForm: React.FC<Props> = (props) => {
       </section>
       <section className='mt-3'>
         <Controller
-          disabled={watch('is_approved') === '1' ? true : false}
+          disabled={watch('is_approved') === '2' ? false : true}
           name='file_id.file'
           control={control}
           rules={{
@@ -326,7 +327,7 @@ const ContentForm: React.FC<Props> = (props) => {
                 >
                   {field.value.length ? null :
                     <Button
-                      disabled={(watch('is_approved') === '1' ? true : false) || disabled}
+                      disabled={(watch('is_approved') === '2' ? false : true) || disabled}
                       icon={<HiOutlineCloudUpload />}
                       htmlType='button'
                       type='primary'
@@ -343,7 +344,7 @@ const ContentForm: React.FC<Props> = (props) => {
           }}
         />
       </section>
-      <section className='mt-3'>
+      {/* <section className='mt-3'>
         <h5 className='mb-3'>เอกสารลงนาม</h5>
         <Controller
           disabled={watch('is_approved') === '2' ? true : false}
@@ -373,7 +374,7 @@ const ContentForm: React.FC<Props> = (props) => {
             )
           }}
         />
-      </section>
+      </section> */}
       <section className='mt-5'>
         <Flex
           wrap

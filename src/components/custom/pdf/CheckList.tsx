@@ -43,7 +43,7 @@ const CheckList: React.FC<Props> = (props) => {
           <div className='flex items-center justify-between'>
             <div className='flex items-start gap-1 w-152'>
               <span>[&nbsp;]</span>
-              <p>แบบคำขออนุญาตให้ยานพาหนะบางชนิด บางประเภอ เดินบนทางหลวงชนบท</p>
+              <p>แบบคำขออนุญาตให้ยานพาหนะบางชนิด บางประเภท เดินบนทางหลวงชนบท</p>
             </div>
             <div>
               <span>จำนวน</span>

@@ -9,10 +9,11 @@ import { getPetitionEstimateBridge, getPetitionEstimateSummary, getPetitionEstim
 interface Props {
   index: number;
   item: EstimateRouteSubDetail;
+  setRemark: (value: 'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว') => void;
 }
 
 const ContentRouteList: React.FC<Props> = (props) => {
-  const { item } = props
+  const { item, setRemark } = props
   const dispatch = useAppDispatch()
   const [showTable, setShowTable] = useState<'summary' | 'bridge' | 'turn_radius'>('summary')
   const { petition, loading } = useAppSelector(state => state.staff.petition)
@@ -126,6 +127,7 @@ const ContentRouteList: React.FC<Props> = (props) => {
       <section>
         <FormSearchRoute
           setShowTable={setShowTable}
+          setRemark={setRemark}
         />
       </section>
       <section className='mt-5'>

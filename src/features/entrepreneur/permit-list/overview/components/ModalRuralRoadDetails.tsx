@@ -29,7 +29,7 @@ export interface RoadInfo {
 
 const Content = (props: ContentProps) => {
   const { data } = props
-  const loading = useAppSelector(state => state.layout.loading)
+  const { loading } = useAppSelector(state => state.layout)
 
   // console.log(data)
 
@@ -41,7 +41,7 @@ const Content = (props: ContentProps) => {
       width: 50,
       align: 'center',
       render: (value, record, index) => {
-        return <p>{index}</p>
+        return index + 1
       },
     },
     {
@@ -49,7 +49,13 @@ const Content = (props: ContentProps) => {
       dataIndex: 'road_code',
       key: 'road_code',
       width: 50,
-      align: 'center'
+      align: 'center',
+      render: (value) => {
+        if (value) {
+          return value
+        }
+        return '-'
+      }
     },
     {
       title: 'ชื่อสายทาง',
@@ -57,6 +63,12 @@ const Content = (props: ContentProps) => {
       key: 'route_name',
       width: 200,
       // align: 'center'
+      render: (value) => {
+        if (value) {
+          return value
+        }
+        return '-'
+      }
     },
   ]
 

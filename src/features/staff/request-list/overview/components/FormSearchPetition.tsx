@@ -32,6 +32,8 @@ const FormSearchPetition: React.FC<Props> = (props) => {
 
   const { handleSubmit, control, setValue, watch } = form
 
+  const selectedStatusId = watch('status_id')
+
   // Only set roadCode once per unique roadCode value
   useEffect(() => {
     if (roadCode && roadCode !== setRoadCodeRef.current) {
@@ -59,6 +61,8 @@ const FormSearchPetition: React.FC<Props> = (props) => {
     const filterArr = petition_count.filter(item => item.status_id !== 4).filter(item => item.status_id !== 7).filter(item => item.status_id !== 8)
 
     return filterArr.map((item, index) => {
+      const isActive = selectedStatusId === String(item.status_id)
+
       return (
         <Col key={index} xs={24} sm={12} md={12} lg={8} xl={4} xxl={2}>
           <Badge
@@ -72,8 +76,9 @@ const FormSearchPetition: React.FC<Props> = (props) => {
             <Button
               block
               htmlType='submit'
-              type='primary'
+              type={isActive ? 'primary' : 'default'}
               size='large'
+              style={isActive ? { backgroundColor: '#1890ff', borderColor: '#1890ff' } : undefined}
               onClick={() => setValue('status_id', String(item.status_id))}
             >
               {item.status_name}
@@ -82,7 +87,7 @@ const FormSearchPetition: React.FC<Props> = (props) => {
         </Col>
       )
     })
-  }, [petition_count, setValue])
+  }, [petition_count, setValue, selectedStatusId])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -119,8 +124,9 @@ const FormSearchPetition: React.FC<Props> = (props) => {
           <Button
             block
             htmlType='submit'
-            type='primary'
+            type={selectedStatusId === '' ? 'primary' : 'default'}
             size='large'
+            style={selectedStatusId === '' ? { backgroundColor: '#1890ff', borderColor: '#1890ff' } : undefined}
             onClick={() => setValue('status_id', '')}
           >
             ทั้งหมด

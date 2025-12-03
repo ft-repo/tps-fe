@@ -14,7 +14,7 @@ const ContentTab: React.FC<Props> = (props) => {
   const [tabKey, setTabKey] = useState<string>('1')
   const { petition } = useAppSelector(state => state.staff.petition)
   const vehicle = petition.detail.vehicle
-  console.log(vehicle)
+  // console.log(vehicle)
 
   const items: TabsProps['items'] = vehicle.vehicle_list?.map((item, index) => {
     return {
