@@ -76,9 +76,10 @@ const FormSearchPetition: React.FC<Props> = (props) => {
             <Button
               block
               htmlType='submit'
-              type={isActive ? 'primary' : 'default'}
+              // type={isActive ? 'primary' : 'default'}
+              type='primary'
               size='large'
-              style={isActive ? { backgroundColor: '#1890ff', borderColor: '#1890ff' } : undefined}
+              style={isActive ? { backgroundColor: '#0958d9', borderColor: '#0958d9' } : { backgroundColor: '#4096ff', borderColor: '#4096ff' }}
               onClick={() => setValue('status_id', String(item.status_id))}
             >
               {item.status_name}
@@ -124,9 +125,10 @@ const FormSearchPetition: React.FC<Props> = (props) => {
           <Button
             block
             htmlType='submit'
-            type={selectedStatusId === '' ? 'primary' : 'default'}
+            // type={selectedStatusId === '' ? 'primary' : 'default'}
+            type='primary'
             size='large'
-            style={selectedStatusId === '' ? { backgroundColor: '#1890ff', borderColor: '#1890ff' } : undefined}
+            style={selectedStatusId === '' ? { backgroundColor: '#0958d9', borderColor: '#0958d9' } : { backgroundColor: '#4096ff', borderColor: '#4096ff' }}
             onClick={() => setValue('status_id', '')}
           >
             ทั้งหมด
