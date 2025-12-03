@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useEffect, useState } from 'react'
 import { Button, Spin, Tooltip } from 'antd'
-import { TitleSection, ContentSection, ContentRouteList } from '../components'
+import { ContentSection, ContentRouteList } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
@@ -76,9 +76,10 @@ const RouteScreen: React.FC<Props> = () => {
         </Button>
       </section>
       <section className="no-print">
-        <TitleSection
-        // onExport={handlePrint}
-        />
+        <h3>ตรวจสอบเส้นทาง</h3>
+        {/* <TitleSection
+          onExport={handlePrint}
+        /> */}
       </section>
       {/* <div ref={printRef} className="print-a4"> */}
       <section className="mt-5">
