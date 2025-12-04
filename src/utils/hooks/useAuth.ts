@@ -52,11 +52,7 @@ function useAuth() {
 					)
 				}
 				const redirectUrl = query.get(REDIRECT_URL_KEY)
-				navigate(
-					redirectUrl
-						? redirectUrl
-						: appConfig.authenticatedEntryPath,
-				)
+				navigate(redirectUrl === '/access-denied' ? appConfig.authenticatedEntryPath : (redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath))
 				return {
 					status: 'success',
 					message: '',
