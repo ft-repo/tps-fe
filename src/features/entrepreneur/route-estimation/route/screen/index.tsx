@@ -13,7 +13,7 @@ interface Props {
 const RouteEstimationScreen: React.FC<Props> = (props) => {
   const { } = props
   const { step } = useRouteContext()
-  const { vehicle_selection } = useAppSelector(state => state.master)
+  const { vehicle_selection, loading_string } = useAppSelector(state => state.master)
   // const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
   const navigate = useNavigate()
   const openRef = useRef<boolean>(false)
@@ -21,7 +21,7 @@ const RouteEstimationScreen: React.FC<Props> = (props) => {
   useEffect(() => {
     if (openRef.current) return
     // IF NO
-    if (!vehicle_selection.data.length) {
+    if (!vehicle_selection.data.length && loading_string === 'DONE') {
       // SET REF
       openRef.current = true
       // MODAL
@@ -40,7 +40,7 @@ const RouteEstimationScreen: React.FC<Props> = (props) => {
         }
       })
     }
-  }, [navigate, vehicle_selection.data])
+  }, [navigate, vehicle_selection.data, loading_string])
 
   const renderFormStep = useMemo(() => {
     switch (step) {

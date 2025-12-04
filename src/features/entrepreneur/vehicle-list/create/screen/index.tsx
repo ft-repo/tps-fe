@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { APIPostBody } from '@/@types/services/vehicle';
 import { postVehicleAPI } from '@/services/entrepreneur/VehicleListService';
-import { getProductType, setLoading, useAppDispatch, useAppSelector } from '@/store';
+import { getProductType, getVehicleSelection, setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { Button, Modal } from 'antd';
 import { getVehicleData } from '@/store/slices/entrepreneur';
 
@@ -124,6 +124,12 @@ const CreateScreen: React.FC<Props> = (props) => {
             navigate('/vehicle-list/overview')
             dispatch(getVehicleData(vehicle.overview.search))
             dispatch(getProductType())
+            dispatch(getVehicleSelection({
+              page: 1,
+              limit: 100,
+              search: '',
+              vehicle_type_id: ''
+            }))
           },
           okButtonProps: {
             style: {

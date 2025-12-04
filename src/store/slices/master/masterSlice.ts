@@ -17,6 +17,7 @@ export type MasterState = {
   product_type: EntityState[];
   axis_type: AxisType[];
   loading: boolean;
+  loading_string: 'NONE' | 'LOADING' | 'DONE' | 'FAILED'
 }
 
 const initialState: MasterState = {
@@ -41,7 +42,8 @@ const initialState: MasterState = {
   },
   product_type: [],
   axis_type: [],
-  loading: false
+  loading: false,
+  loading_string: 'NONE'
 }
 
 // export const SLICE_NAME = 'masterSlice';
@@ -260,13 +262,16 @@ const masterSlice = createSlice({
     // GET ROLE
     builder.addCase(getVehicleSelection.fulfilled, (state, action) => {
       state.vehicle_selection = action.payload
-      state.loading = false
+      state.loading = false,
+        state.loading_string = 'DONE'
     })
       .addCase(getVehicleSelection.pending, (state) => {
-        state.loading = true
+        state.loading = true,
+          state.loading_string = 'LOADING'
       })
       .addCase(getVehicleSelection.rejected, (state) => {
-        state.loading = false
+        state.loading = false,
+          state.loading_string = 'FAILED'
       })
     // GET PRODUCT TYPE
     builder.addCase(getProductType.fulfilled, (state, action) => {
