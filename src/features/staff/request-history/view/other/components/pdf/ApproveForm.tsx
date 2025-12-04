@@ -9,6 +9,7 @@ import buddhistEra from "dayjs/plugin/buddhistEra";
 // import { APIResponseRegion } from '@/@types/shared';
 // import axios from 'axios';
 import { FieldType } from '@/features/staff/request-list/approval/sign/components/FormDownloadTemplate';
+import GovLogo from '@/assets/img/GovLogo.jpg'
 
 dayjs.extend(buddhistEra); // ใช้งาน buddhistEra plugin เพื่อแปลงเป็น พ.ศ.
 dayjs.locale("th");
@@ -199,7 +200,7 @@ const ApproveForm: React.FC<Props> = (props) => {
             ที่ คค ๐๗๒๔.๕/
           </Text>
           <Image
-            src={'/icon/GovLogo.jpg'}
+            src={GovLogo}
             style={{
               width: 80,
               height: 80,

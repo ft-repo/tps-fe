@@ -7,6 +7,8 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { TrackingDetail } from '@/store/slices/staff/trackingSlice';
 import { useViewContext } from '../context';
+import GreenTruckSVG from '@/assets/img/green-truck.svg'
+import YellowTruckSVG from '@/assets/img/yellow-truck.svg'
 
 interface Props {
   coord?: number[][]; // Make optional since we'll use API data
@@ -43,12 +45,14 @@ interface PolyLineProps {
 
 // Custom icons for start and end markers
 const activeIcon = new L.Icon({
-  iconUrl: `/public/icon/green-truck.svg`,
+  // iconUrl: `/public/icon/green-truck.svg`,
+  iconUrl: GreenTruckSVG,
   iconSize: [40, 33]
 });
 
 const inactiveIcon = new L.Icon({
-  iconUrl: `/public/icon/yellow-truck.svg`,
+  // iconUrl: `/public/icon/yellow-truck.svg`,
+  iconUrl: YellowTruckSVG,
   iconSize: [40, 33]
 });
 

@@ -72,6 +72,7 @@ const EstimateResult: React.FC<Props> = (props) => {
           <ContentRouteList
             item={item}
             index={index}
+            remark={remark}
             setRemark={setRemark}
           />
         </section>

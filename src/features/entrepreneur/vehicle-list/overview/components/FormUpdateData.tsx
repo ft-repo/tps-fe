@@ -16,7 +16,7 @@ interface Props {
 
 const FormUpdateData: React.FC<Props> = (props) => {
   const { control, setValue } = props
-  const { province, product_type, axis_type } = useAppSelector(state => state.master)
+  const { province, axis_type } = useAppSelector(state => state.master)
   const vehicleType = useAppSelector(state => state.master.vehicle_type)
   const { errors } = useFormState({ control })
 
@@ -73,7 +73,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
                     }}
                     onChange={(e) => {
                       field.onChange(e)
-                      setValue('license_plate', [])
+                      setValue('license_plate', '')
                     }}
                   />
                   {!!errors.vehicle_type &&
@@ -89,13 +89,35 @@ const FormUpdateData: React.FC<Props> = (props) => {
             name='license_plate'
             control={control}
             rules={{
-              required: vehicle_type !== 3 ? 'กรุณาระบุเลขทะเบียน / เลขตัวรถ' : 'กรุณาระบุเครื่องจักร / สินค้า'
+              required: vehicle_type !== 3 ? 'กรุณาระบุเลขทะเบียน / เลขตัวรถ' : 'กรุณาระบุชื่อเครื่องจักร / สินค้า'
             }}
             render={({ field }) => {
               return (
                 <fieldset>
-                  <label>{vehicle_type !== 3 ? 'เลขทะเบียน / เลขตัวรถ' : 'เครื่องจักร / สินค้า'} <span className='text-red-500'>*</span></label>
-                  {vehicle_type !== 3 ?
+                  <label>{vehicle_type !== 3 ? 'เลขทะเบียน / เลขตัวรถ' : 'ชื่อเครื่องจักร / สินค้า'} <span className='text-red-500'>*</span></label>
+                  <Input
+                    {...field}
+                    name={field.name}
+                    placeholder='กรุณาระบุ'
+                    className='w-full'
+                    size='large'
+                    style={{
+                      fontFamily: 'Noto Sans Thai'
+                    }}
+                    onChange={(e) => {
+                      if (vehicle_type !== 3) {
+                        field.onChange(
+                          e.target.value
+                            .replace(/[^0-9]/g, "") // Remove non-digits
+                            .replace(/(\d{2})(\d{4})/, "$1-$2") // Format as XX-XXXX
+                            .slice(0, 7) // Limit to 7 characters (including dash)
+                        )
+                      } else {
+                        field.onChange(e)
+                      }
+                    }}
+                  />
+                  {/* {vehicle_type !== 3 ?
                     <Input
                       {...field}
                       name={field.name}
@@ -139,7 +161,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
                         fontFamily: 'Noto Sans Thai'
                       }}
                     />
-                  }
+                  } */}
                   {!!errors.license_plate &&
                     <p className='text-red-500'>{errors.license_plate.message}</p>
                   }

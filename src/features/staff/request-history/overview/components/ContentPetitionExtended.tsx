@@ -4,6 +4,8 @@ import React, { useCallback, useEffect } from 'react'
 import { FormSearchPetitionExtended, TablePetitionExtended } from '../components'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { getAdminPetitionHistoryExtendedData, setAdminPetitionHistoryExtendedData } from '@/store/slices/staff'
+import { Button, Dropdown, Flex, MenuProps } from 'antd'
+import { AiOutlineDownload } from 'react-icons/ai'
 
 interface Props { }
 
@@ -60,9 +62,44 @@ const ContentPetitionExtended: React.FC<Props> = (props) => {
     }
   }, [dispatch, petition_history_extended.overview])
 
+  const items: MenuProps['items'] = [
+    {
+      key: '1',
+      label: 'รายการสรุป xlsx',
+      onClick: () => console.log((''))
+    },
+    {
+      key: '2',
+      label: 'รายการสรุป csv',
+      onClick: () => console.log((''))
+    },
+    {
+      key: '3',
+      label: 'รายการสรุป pdf',
+      onClick: () => console.log((''))
+    },
+  ]
+
   return (
     <div>
-      <h3>ประวัติการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)</h3>
+      <Flex
+        wrap
+        align='center'
+        justify='space-between'
+        gap={5}
+      >
+        <h3>ประวัติการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)</h3>
+        <Dropdown
+          menu={{ items }}
+        >
+          <Button
+            type="primary"
+            icon={<AiOutlineDownload />}
+          >
+            Export File
+          </Button>
+        </Dropdown>
+      </Flex>
       <section className="mt-5">
         <FormSearchPetitionExtended
           handleSearch={handleSearch}

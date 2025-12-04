@@ -9,11 +9,12 @@ import { EstimateResponse } from '@/@types/services/petition';
 interface Props {
   item: EstimateResponse;
   index: number;
+  remark: 'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว';
   setRemark: (value: 'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว') => void;
 }
 
 const ContentRouteList: React.FC<Props> = (props) => {
-  const { item, setRemark } = props
+  const { item, remark, setRemark } = props
   const dispatch = useAppDispatch()
   const [showTable, setShowTable] = useState<'summary' | 'bridge' | 'turn_radius'>('summary')
   const { estimate, loading } = useAppSelector(state => state.entrepreneur.permitList)
@@ -126,6 +127,7 @@ const ContentRouteList: React.FC<Props> = (props) => {
       <section>
         <FormSearchRoute
           setShowTable={setShowTable}
+          remark={remark}
           setRemark={setRemark}
         />
       </section>

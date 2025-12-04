@@ -83,7 +83,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
             turn_radius: '',
             towering_vehicle: null,
             semi_trailer_vehicle: null,
-            etc_vehicle: null,
+            etc_vehicle: [],
             towering_weight1: 0,
             towering_weight2: 0,
             towering_weight3: 0,
@@ -135,7 +135,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
           turn_radius: Number(item.turn_radius),
           towing_vehicle_id: item.match_type === 3 ? null : Number(item.towering_vehicle),
           semi_trailer_vehicle_id: item.match_type === 3 ? null : Number(item.semi_trailer_vehicle),
-          etc_vehicle_id: item.match_type === 2 ? null : Number(item.etc_vehicle),
+          // etc_vehicle_id: item.match_type === 2 ? null : Number(item.etc_vehicle),
+          etc_vehicle_id: item.match_type === 2 ? null : item.etc_vehicle,
           towing_axis_weight: [
             Number(item.towering_weight1),
             Number(item.towering_weight2),

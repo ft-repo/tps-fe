@@ -187,7 +187,7 @@ export interface VehicleRequestArr {
   turn_radius: number;
   towing_vehicle_id: number | null;
   semi_trailer_vehicle_id: number | null;
-  etc_vehicle_id: number | null;
+  etc_vehicle_id: number[] | null;
   towing_axis_weight: number[];
   semi_trailer_axis_weight: number[];
 }

@@ -7,6 +7,7 @@ import { useAppSelector } from '@/store';
 
 interface Props {
   setShowTable: (value: 'summary' | 'bridge' | 'turn_radius') => void;
+  remark: 'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว';
   setRemark: (value: 'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว') => void;
 }
 
@@ -15,7 +16,7 @@ export interface FieldType {
 }
 
 const FormSearchRoute: React.FC<Props> = (props) => {
-  const { setShowTable, setRemark } = props
+  const { setShowTable, remark, setRemark } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const { estimate } = useAppSelector(state => state.entrepreneur.permitList)
   const detail = estimate.detail
@@ -55,6 +56,7 @@ const FormSearchRoute: React.FC<Props> = (props) => {
             htmlType='submit'
             type='primary'
             size='large'
+            style={remark === 'ตารางสรุป' ? { backgroundColor: '#0958d9', borderColor: '#0958d9' } : { backgroundColor: '#4096ff', borderColor: '#4096ff' }}
             onClick={() => {
               setValue('status_id', 'summary')
               setRemark('ตารางสรุป')
@@ -77,6 +79,7 @@ const FormSearchRoute: React.FC<Props> = (props) => {
               htmlType='submit'
               type='primary'
               size='large'
+              style={remark === 'สะพาน' ? { backgroundColor: '#0958d9', borderColor: '#0958d9' } : { backgroundColor: '#4096ff', borderColor: '#4096ff' }}
               onClick={() => {
                 setValue('status_id', 'bridge')
                 setRemark('สะพาน')
@@ -100,6 +103,7 @@ const FormSearchRoute: React.FC<Props> = (props) => {
               htmlType='submit'
               type='primary'
               size='large'
+              style={remark === 'รัศมีเลี้ยว' ? { backgroundColor: '#0958d9', borderColor: '#0958d9' } : { backgroundColor: '#4096ff', borderColor: '#4096ff' }}
               onClick={() => {
                 setValue('status_id', 'turn_radius')
                 setRemark('รัศมีเลี้ยว')

@@ -271,7 +271,7 @@ export interface FieldTypeForRoute {
   turn_radius: number | string;
   towering_vehicle: number | null;
   semi_trailer_vehicle: number | null;
-  etc_vehicle: number | null;
+  etc_vehicle: number[] | null;
   towering_weight1: number | string;
   towering_weight2: number | string;
   towering_weight3: number | string;
