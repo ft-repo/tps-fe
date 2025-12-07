@@ -97,7 +97,7 @@ export interface Estimate {
   gps: GPS;
   towing_vehicle: TowingVehicle;
   semi_trailer_vehicle: SemiTrailerVehicle;
-  etc_vehicle: ETCVehicle;
+  etc_vehicle: ETCVehicle[];
 }
 
 export interface GPS {

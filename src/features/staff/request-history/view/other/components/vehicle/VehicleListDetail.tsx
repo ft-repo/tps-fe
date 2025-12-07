@@ -294,7 +294,7 @@ const VehicleListDetail: React.FC<Props> = (props) => {
         )
       })
     }
-  }, [etcUrl, renderLicensePlate, loading])
+  }, [etcUrl, loading])
 
   return (
     <>

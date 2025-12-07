@@ -107,7 +107,8 @@ const ContentTracking: React.FC<Props> = (props) => {
       <section className='mt-5'>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={14}>
-            <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
+            {/* <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'> */}
+            <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:top-4 xl:overflow-hidden border border-gray-200'>
               <TrackingMap
                 line={detail.business_detail.road_details.route ? detail.business_detail.road_details.route : [[]]}
                 apiData={detail}
