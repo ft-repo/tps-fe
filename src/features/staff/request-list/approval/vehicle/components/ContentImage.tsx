@@ -610,7 +610,7 @@ const ContentImage: React.FC<Props> = (props) => {
                   />
                   <section className='bg-gradient-to-r from-black absolute bottom-0 left-0 right-0'>
                     <div className='block p-3'>
-                      <p className='text-white'>เครื่องจักร / สินค้า</p>
+                      <p className='text-white'>{item?.plate_no}</p>
                     </div>
                   </section>
                 </figure>
@@ -627,7 +627,7 @@ const ContentImage: React.FC<Props> = (props) => {
                   />
                   <section className='bg-gradient-to-r from-black absolute bottom-0 left-0 right-0'>
                     <div className='block p-3'>
-                      <p className='text-white'>เครื่องจักร / สินค้า</p>
+                      <p className='text-white'>{item?.plate_no}</p>
                     </div>
                   </section>
                 </figure>
@@ -644,7 +644,7 @@ const ContentImage: React.FC<Props> = (props) => {
                   />
                   <section className='bg-gradient-to-r from-black absolute bottom-0 left-0 right-0'>
                     <div className='block p-3'>
-                      <p className='text-white'>เครื่องจักร / สินค้า</p>
+                      <p className='text-white'>{item?.plate_no}</p>
                     </div>
                   </section>
                 </figure>
