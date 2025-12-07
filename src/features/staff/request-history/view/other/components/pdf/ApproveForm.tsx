@@ -305,7 +305,49 @@ const ApproveForm: React.FC<Props> = (props) => {
           })}
           {/* <Text style={styles.sub_paragraph}>๒.๑ รถลากจูง ตามข้อ ๑.๑ มีน้ำหนักยานพาหนะรวมน้ำหนักบรรทุกไม่เกิน ๒๕,๐๐๐ กิโลกรัม</Text> */}
         </View>
+
         <View style={{ marginBottom: 10 }}>
+          <Text style={styles.main_paragraph}>๓. ประเภทสินค้าที่ขนส่ง</Text>
+          {data.vehicle.vehicle_list.flatMap((vehicle, vehicleIndex) => {
+            // Only show items that have etc_vehicle array with items
+            if (!vehicle.etc_vehicle || vehicle.etc_vehicle.length === 0) return [];
+
+            // Build reference numbers based on what vehicles are present
+            const references: string[] = [];
+
+            // Find which towing group this vehicle belongs to
+            if (vehicle.towing_vehicle?.axis_type?.name) {
+              const towingGroups = Object.keys(towing);
+              const towingIndex = towingGroups.findIndex(name => name === vehicle.towing_vehicle?.axis_type?.name);
+              if (towingIndex !== -1) {
+                references.push(`๑.${new Intl.NumberFormat('th-TH-u-nu-thai').format(towingIndex + 1)}`);
+              }
+            }
+
+            // Find which semi group this vehicle belongs to
+            if (vehicle.semi_trailer_vehicle?.axis_type?.name) {
+              const semiGroups = Object.keys(semi);
+              const semiIndex = semiGroups.findIndex(name => name === vehicle.semi_trailer_vehicle?.axis_type?.name);
+              if (semiIndex !== -1) {
+                const towingCount = Object.keys(towing).length;
+                references.push(`๑.${new Intl.NumberFormat('th-TH-u-nu-thai').format(towingCount + semiIndex + 1)}`);
+              }
+            }
+
+            const referenceText = references.length > 0 ? ` ใช้กับยานพาหนะ ตามข้อ ${references.join(', ')}` : '';
+
+            // Map through each etc_vehicle in the array
+            return vehicle.etc_vehicle.map((etc, etcIndex) => {
+              const itemNumber = vehicleIndex * (vehicle.etc_vehicle?.length || 1) + etcIndex + 1;
+              return (
+                <Text key={`${vehicleIndex}-${etcIndex}`} style={styles.sub_paragraph}>
+                  ๓.{convertToThaiNumber(itemNumber)} {etc.plate_no} ขนาด กว้าง {etc.width ? convertToThaiNumber(etc.width) : '...............'} เมตร ยาว {etc.length ? convertToThaiNumber(etc.length) : '...............'} เมตร สูง {etc.height ? convertToThaiNumber(etc.height) : '...............'} เมตร มีน้ำหนัก {convertToThaiNumber(etc.weight)} ตัน{referenceText}
+                </Text>
+              );
+            });
+          })}
+        </View>
+        {/* <View style={{ marginBottom: 10 }}>
           <Text style={styles.main_paragraph}>๓. ประเภทสินค้าที่ขนส่ง</Text>
           {data.vehicle.vehicle_list.map((vehicle, vehicleIndex) => {
             // Only show items that have etc_vehicle (cargo/machinery)
@@ -337,13 +379,13 @@ const ApproveForm: React.FC<Props> = (props) => {
 
             return (
               <Text key={vehicleIndex} style={styles.sub_paragraph}>
-                {/* ๓.{new Intl.NumberFormat('th-TH-u-nu-thai').format(vehicleIndex + 1)} {vehicle.etc_vehicle.plate_no} ขนาด กว้าง {convertToThaiAlp(vehicle.etc_vehicle.width?.toString() || '0')} เมตร ยาว {convertToThaiAlp(vehicle.etc_vehicle.length?.toString() || '0')} เมตร สูง {convertToThaiAlp(vehicle.etc_vehicle.height?.toString() || '0')} เมตร มีน้ำหนัก {convertToThaiAlp((vehicle.etc_vehicle.weight / 1000).toFixed(2))} ตัน{referenceText} */}
+                ๓.{new Intl.NumberFormat('th-TH-u-nu-thai').format(vehicleIndex + 1)} {vehicle.etc_vehicle.plate_no} ขนาด กว้าง {convertToThaiAlp(vehicle.etc_vehicle.width?.toString() || '0')} เมตร ยาว {convertToThaiAlp(vehicle.etc_vehicle.length?.toString() || '0')} เมตร สูง {convertToThaiAlp(vehicle.etc_vehicle.height?.toString() || '0')} เมตร มีน้ำหนัก {convertToThaiAlp((vehicle.etc_vehicle.weight / 1000).toFixed(2))} ตัน{referenceText}
                 ๓.{convertToThaiNumber(vehicleIndex + 1)} {vehicle.etc_vehicle.plate_no} ขนาด กว้าง {vehicle.etc_vehicle.width ? convertToThaiNumber(vehicle.etc_vehicle.width || 0) : '...............'} เมตร ยาว {vehicle.etc_vehicle.length ? convertToThaiNumber(vehicle.etc_vehicle.length || 0) : '...............'} เมตร สูง {vehicle.etc_vehicle.height ? convertToThaiNumber(vehicle.etc_vehicle.height || 0) : '...............'} เมตร มีน้ำหนัก {convertToThaiNumber(vehicle.etc_vehicle.weight || 0)} ตัน{referenceText}
               </Text>
             );
           })}
-          {/* <Text style={styles.sub_paragraph}>๓.๑ AFC/2nd Stage HP/MT Flash Gas ขนาด กว้าง ๕.๔๐ เมตร ยาว ๑๓.๓๙ เมตร สูง ๔.๕๐ เมตร มีน้ำหนัก ๔๔.๐๓ ตัน ใช้กับยานพาหนะ ตามข้อ ๑.๑, ๑.</Text> */}
-        </View>
+          <Text style={styles.sub_paragraph}>๓.๑ AFC/2nd Stage HP/MT Flash Gas ขนาด กว้าง ๕.๔๐ เมตร ยาว ๑๓.๓๙ เมตร สูง ๔.๕๐ เมตร มีน้ำหนัก ๔๔.๐๓ ตัน ใช้กับยานพาหนะ ตามข้อ ๑.๑, ๑.</Text>
+        </View> */}
         <View>
           <Text style={styles.main_paragraph}>
             ๔.  ผ่านเส้นทางของกรมทางหลวงชนบทจำนวน ๑ สาย สายทาง {convertToThaiAlp(data.estimate.route.start_road_code) || 'ชบ.๓๐๐๙'} {convertToThaiAlp(data.estimate.route.start_road) || 'แยกทางหลวงหมายเลข ๓๓๑ - ท่าเรือแหลมฉบัง อำเภอศรีราชา จังหวัดชลบุรี'}
