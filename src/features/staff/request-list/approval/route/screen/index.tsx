@@ -102,6 +102,7 @@ const RouteScreen: React.FC<Props> = () => {
           <ContentRouteList
             index={index}
             item={item}
+            remark={remark}
             setRemark={setRemark}
           />
         </section>

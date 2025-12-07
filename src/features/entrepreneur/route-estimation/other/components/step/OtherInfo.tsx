@@ -64,7 +64,7 @@ const OtherInfo: React.FC<Props> = (props) => {
       match_type: dataParser.match_type || null,
       towering_vehicle: dataParser.data.petition_extended_vehicle.towing_vehicle_id || null,
       semi_trailer_vehicle: dataParser.data.petition_extended_vehicle.semi_trailer_vehicle_id || null,
-      etc_vehicle: dataParser.data.petition_extended_vehicle.etc_vehicle_id || null,
+      etc_vehicle: dataParser.data.petition_extended_vehicle.etc_vehicle_id || [],
       towering_weight1: dataParser.data.petition_extended_vehicle.axis_weight_towing[0] || 0,
       towering_weight2: dataParser.data.petition_extended_vehicle.axis_weight_towing[1] || 0,
       towering_weight3: dataParser.data.petition_extended_vehicle.axis_weight_towing[2] || 0,
@@ -127,7 +127,7 @@ const OtherInfo: React.FC<Props> = (props) => {
       petition_extended_vehicle: {
         towing_vehicle_id: value.match_type === 3 ? null : Number(value.towering_vehicle),
         semi_trailer_vehicle_id: value.match_type === 3 ? null : Number(value.semi_trailer_vehicle),
-        etc_vehicle_id: value.match_type === 2 ? null : Number(value.etc_vehicle),
+        etc_vehicle_id: value.match_type === 2 ? null : value.etc_vehicle,
         axis_weight_towing: [
           Number(value.towering_weight1),
           Number(value.towering_weight2),

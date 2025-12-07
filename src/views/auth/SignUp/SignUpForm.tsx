@@ -299,6 +299,9 @@ function SignUpForm(props: Props) {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
+                        onChange={(e) => {
+                          field.onChange(e.target.value.replace(/[^0-9]/g, ''))
+                        }}
                       />
                       {!!errors.house_number &&
                         <p className='text-red-500'>{errors.house_number.message}</p>
@@ -327,6 +330,9 @@ function SignUpForm(props: Props) {
                         size='large'
                         style={{
                           fontFamily: 'Noto Sans Thai'
+                        }}
+                        onChange={(e) => {
+                          field.onChange(e.target.value.replace(/[^0-9]/g, ''))
                         }}
                       />
                       {!!errors.village &&
@@ -483,7 +489,7 @@ function SignUpForm(props: Props) {
                           field.onChange(value)
                           // APIS
                           fetchProvinceAPI(province_id, value, sub_district_id)
-                          fetchSubDistrictAPI(province_id, value, sub_district_id)
+                          fetchSubDistrictAPI(null, value, sub_district_id)
                           // SET VALUE
                           setValue('sub_district_id', null)
                           setValue('zip_code', '')

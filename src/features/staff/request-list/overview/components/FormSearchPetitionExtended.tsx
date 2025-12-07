@@ -20,7 +20,7 @@ let timeout: any;
 
 const FormSearchPetitionExtended: React.FC<Props> = (props) => {
   const { poaName, handleSearch } = props
-  const { petition_count } = useAppSelector(state => state.staff.petition)
+  const { petition_extended_count } = useAppSelector(state => state.staff.petition)
   const submitRef = useRef<HTMLButtonElement>(null)
   const setPoaNameRef = useRef<string | null | undefined>(null)
 
@@ -57,11 +57,11 @@ const FormSearchPetitionExtended: React.FC<Props> = (props) => {
   }, [handleSearch])
 
   const renderButton = useMemo(() => {
-    if (!petition_count.length) return
+    if (!petition_extended_count.length) return
 
-    const filterArr = petition_count.filter(item => item.status_id !== 1).filter(item => item.status_id !== 2).filter(item => item.status_id !== 3).filter(item => item.status_id !== 7).filter(item => item.status_id !== 8)
+    // const filterArr = petition_count.filter(item => item.status_id !== 1).filter(item => item.status_id !== 2).filter(item => item.status_id !== 3).filter(item => item.status_id !== 7).filter(item => item.status_id !== 8)
 
-    return filterArr.map((item, index) => {
+    return petition_extended_count.map((item, index) => {
       const isActive = selectedStatusId === String(item.status_id)
 
       return (
@@ -89,7 +89,7 @@ const FormSearchPetitionExtended: React.FC<Props> = (props) => {
         </Col>
       )
     })
-  }, [petition_count, setValue, selectedStatusId])
+  }, [petition_extended_count, setValue, selectedStatusId])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

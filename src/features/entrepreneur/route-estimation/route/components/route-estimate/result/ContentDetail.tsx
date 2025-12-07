@@ -325,7 +325,7 @@ const ContentDetail: React.FC<Props> = (props) => {
       <h5>{`รายละเอียด รถคู่ที่ ${index + 1} : ${mapPlaceholder}`}</h5>
       {dataParser.raw_body.route_form[index]?.towering_vehicle || dataParser.raw_body.route_form[index]?.semi_trailer_vehicle ?
         <section className='mt-5'>
-          <h5>รูปยานพาหนะ</h5>
+          <h5>รูปภาพยานพาหนะ</h5>
           <Row gutter={[16, 16]}>
             {detail?.towing_vehicle ?
               <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
@@ -456,7 +456,7 @@ const ContentDetail: React.FC<Props> = (props) => {
         : null}
       {dataParser.raw_body.route_form[index]?.etc_vehicle?.length ?
         <section className='mt-5'>
-          <h5>รูปเครื่องจักร / สินค้า</h5>
+          <h5>รูปภาพเครื่องจักร / สินค้า</h5>
           <Row gutter={[16, 16]}>
             {renderETC(dataParser.raw_body.route_form[index]?.etc_vehicle as number[])}
           </Row>

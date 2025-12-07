@@ -478,7 +478,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             />
           </Col>
           {(match_type === 1 || match_type === 2) ?
-            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
               <Controller
                 name={`route_form.${formIndex}.towering_vehicle`}
                 control={control}
@@ -545,7 +545,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             </Col>
             : null}
           {(match_type === 1 || match_type === 2) ?
-            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
               <Controller
                 name={`route_form.${formIndex}.semi_trailer_vehicle`}
                 control={control}
@@ -612,7 +612,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             </Col>
             : null}
           {(match_type === 1 || match_type === 3) ?
-            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Controller
                 name={`route_form.${formIndex}.etc_vehicle`}
                 control={control}
@@ -1221,7 +1221,7 @@ const FormVehicle: React.FC<Props> = (props) => {
       </section>
       {towering_vehicle || semi_trailer_vehicle ?
         <section className='mt-5'>
-          <h5>รูปยานพาหนะ</h5>
+          <h5>รูปภาพยานพาหนะ</h5>
           <Row gutter={[16, 16]}>
             {selectTowing?.vehicle_detail.id ?
               <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
@@ -1352,7 +1352,7 @@ const FormVehicle: React.FC<Props> = (props) => {
         : null}
       {etc_vehicle?.length ?
         <section className='mt-5'>
-          <h5>รูปเครื่องจักร / สินค้า</h5>
+          <h5>รูปภาพเครื่องจักร / สินค้า</h5>
           <Row gutter={[16, 16]}>
             {renderETC(etc_vehicle as number[])}
           </Row>

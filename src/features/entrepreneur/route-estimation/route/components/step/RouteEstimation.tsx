@@ -526,7 +526,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
             />
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={10}>
-            <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'>
+            {/* <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:sticky xl:top-4 xl:overflow-hidden border border-gray-200'> */}
+            <div className='order-first z-0 h-[50vh] block rounded-md xl:order-last xl:h-[50vh] xl:max-h-auto xl:top-4 xl:overflow-hidden border border-gray-200'>
               <Map
                 // STATE
                 isSelectingStart={isSelectingStart}

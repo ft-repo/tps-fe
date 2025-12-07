@@ -29,8 +29,8 @@ const RequestPermit: React.FC<Props> = (props) => {
   const { petition } = useAppSelector(state => state.entrepreneur.permitList)
   const navigate = useNavigate()
 
-  console.log(dataParser)
-  console.log(user)
+  // console.log(dataParser)
+  // console.log(user)
 
   const form = useForm<FieldTypePetition>({
     defaultValues: {

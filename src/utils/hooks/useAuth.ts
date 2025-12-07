@@ -125,6 +125,7 @@ function useAuth() {
 				authority: [],
 			}),
 		)
+		localStorage.removeItem("notification_cache")
 		navigate(appConfig.unAuthenticatedEntryPath)
 	}
 

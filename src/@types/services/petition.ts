@@ -130,7 +130,7 @@ export interface PoaAddress {
 export interface PetitionExtendedVehicle {
   towing_vehicle_id: number | null;
   semi_trailer_vehicle_id: number | null;
-  etc_vehicle_id: number | null;
+  etc_vehicle_id: number[] | null;
   axis_weight_towing: number[];
   axis_weight_semi_trailer: number[];
 }

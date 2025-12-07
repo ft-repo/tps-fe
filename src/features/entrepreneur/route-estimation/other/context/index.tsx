@@ -63,7 +63,7 @@ export const OtherProvider = (props: any) => {
       petition_extended_vehicle: {
         towing_vehicle_id: 0,
         semi_trailer_vehicle_id: 0,
-        etc_vehicle_id: 0,
+        etc_vehicle_id: [],
         axis_weight_towing: [
           0,
           0,

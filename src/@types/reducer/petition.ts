@@ -156,6 +156,7 @@ export interface PetitionAdminState {
   petition_status: AdminPetitionStatus[];
   petition_extended_status: AdminPetitionExtendedStatus[];
   petition_count: AdminPetitionCount[];
+  petition_extended_count: AdminPetitionCount[];
   loading: boolean;
 }
 
@@ -408,7 +409,7 @@ export interface VehicleList {
   turn_radius: number;
   towing_vehicle: TowingVehicle;
   semi_trailer_vehicle: SemiTrailerVehicle;
-  etc_vehicle: ETCVehicle;
+  etc_vehicle: ETCVehicle[];
   truck_dimension_url: string;
   semi_trailer_dimension_url: string;
   combined_vehicle_url: string;

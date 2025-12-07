@@ -162,7 +162,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             />
           </Col>
           {(match_type === 1 || match_type === 2) ?
-            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
               <Controller
                 name='towering_vehicle'
                 control={control}
@@ -233,7 +233,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             </Col>
             : null}
           {(match_type === 1 || match_type === 2) ?
-            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
               <Controller
                 name='semi_trailer_vehicle'
                 control={control}
@@ -304,7 +304,7 @@ const FormVehicle: React.FC<Props> = (props) => {
             </Col>
             : null}
           {(match_type === 1 || match_type === 3) ?
-            <Col xs={24} sm={24} md={24} lg={8} xl={8} xxl={8}>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Controller
                 name='etc_vehicle'
                 control={control}
@@ -320,6 +320,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                         {...field}
                         allowClear
                         showSearch
+                        mode='multiple'
                         placeholder='กรุณาเลือก'
                         options={vehicle_selection.data.filter(item => item.vehicle_detail.vehicle_type_name === 'เครื่องจักร / สินค้า').map(item => {
                           return item.vehicle_detail

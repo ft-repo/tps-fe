@@ -122,3 +122,9 @@ export const getPetitionCountAPI = async () => {
     method: 'get',
   })
 }
+export const getPetitionExtendedCountAPI = async () => {
+  return ApiService.fetchData<AdminPetitionCount[]>({
+    url: `/admin/petition_extended/count`,
+    method: 'get',
+  })
+}

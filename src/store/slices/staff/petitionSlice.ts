@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants'
 import { PetitionAdminState } from '@/@types/reducer/petition'
-import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionCountAPI, getPetitionDocumentAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateRouteAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedDetailAPI, getPetitionExtendedStatusAPI, getPetitionNotificationAPI, getPetitionStatusAPI, getPetitionVehicleAPI } from '@/services/staff/PetitionService'
+import { getAdminPetitionAPI, getAdminPetitionExtendedAPI, getPetitionCountAPI, getPetitionDocumentAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateRouteAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedCountAPI, getPetitionExtendedDetailAPI, getPetitionExtendedStatusAPI, getPetitionNotificationAPI, getPetitionStatusAPI, getPetitionVehicleAPI } from '@/services/staff/PetitionService'
 import { GetEstimateDetailParams, GetPetitionDetailParams, GetPetitionExtendedDetailParams, GetPetitionParams } from '@/@types/services/petition'
 import { GetPaginateParams } from '@/@types/shared'
 
@@ -657,6 +657,7 @@ const initialState: PetitionAdminState = {
     }
   },
   petition_count: [],
+  petition_extended_count: [],
   loading: false
 }
 
@@ -752,6 +753,12 @@ export const getPetitionCount = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetit
   return response.data
 })
 
+export const getPetitionExtendedCount = createAsyncThunk(SLICE_BASE_NAME + '/apiGetPetitionExtendedCount', async () => {
+  // assume someService required reesponse & require type as generic
+  const response = await getPetitionExtendedCountAPI()
+  return response.data
+})
+
 const petitionSlice = createSlice({
   name: `${SLICE_BASE_NAME}/petition`,
   initialState,
@@ -808,6 +815,9 @@ const petitionSlice = createSlice({
     },
     setPetitionCount: (state, action) => {
       state.petition_count = action.payload
+    },
+    setPetitionExtendedCount: (state, action) => {
+      state.petition_extended_count = action.payload
     },
     resetAdminPetitionDocument: (state) => {
       state.petition.detail.document = initialState.petition.detail.document
@@ -996,6 +1006,17 @@ const petitionSlice = createSlice({
         state.loading = true
       })
       .addCase(getPetitionCount.rejected, (state) => {
+        state.loading = false
+      })
+    // GET PETITION_EXTENDED COUNT
+    builder.addCase(getPetitionExtendedCount.fulfilled, (state, action) => {
+      state.petition_extended_count = action.payload,
+        state.loading = false
+    })
+      .addCase(getPetitionExtendedCount.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(getPetitionExtendedCount.rejected, (state) => {
         state.loading = false
       })
   }

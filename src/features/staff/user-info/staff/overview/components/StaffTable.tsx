@@ -38,7 +38,7 @@ const SeachTable: React.FC<Props> = (props) => {
         align: 'center',
         render: (item, record, index) => {
           if (item) {
-            if (data.data.length - 1 === index) {
+            if (index === 0) {
               return <strong>{item}</strong>
             }
             return item
@@ -53,7 +53,7 @@ const SeachTable: React.FC<Props> = (props) => {
         width: 200,
         align: 'center',
         render: (item, record, index) => {
-          if (data.data.length - 1 === index) {
+          if (index === 0) {
             return <strong>{renderName(record.title, record.first_name, record.last_name)}</strong>
           }
           return renderName(record.title, record.first_name, record.last_name)
@@ -67,7 +67,7 @@ const SeachTable: React.FC<Props> = (props) => {
         align: 'center',
         render: (item, record, index) => {
           if (record.department?.dept_name) {
-            if (data.data.length - 1 === index) {
+            if (index === 0) {
               return <strong>{record.department?.dept_name}</strong>
             }
             return record.department?.dept_name
@@ -83,7 +83,7 @@ const SeachTable: React.FC<Props> = (props) => {
         align: 'center',
         render: (item, record, index) => {
           if (record.role?.name) {
-            if (data.data.length - 1 === index) {
+            if (index === 0) {
               return <strong>{record.role?.name}</strong>
             }
             return record.role?.name
@@ -121,7 +121,7 @@ const SeachTable: React.FC<Props> = (props) => {
         },
       },
     ]
-  }, [confirmDelete, renderName, setOpen])
+  }, [confirmDelete, renderName, setOpen, data.data.length])
 
   const modCol = useMemo(() => {
     if (details?.role?.name === "ผู้ดูแลระบบ") {

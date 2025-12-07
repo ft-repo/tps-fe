@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '../components';
 import { useForm } from 'react-hook-form';
 import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
-import { setLoading, setUser, useAppDispatch, useAppSelector } from '@/store';
+import { setLoading, setUser, signInSuccess, useAppDispatch, useAppSelector } from '@/store';
 import { getUserData } from '@/store/slices/entrepreneur';
 import dayjs from 'dayjs';
 import { putUserAPI } from '@/services/entrepreneur/UserService';
@@ -119,6 +119,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
           content: 'บันทึกข้อมูลสำเร็จ',
           okText: 'ตกลง',
           onOk: () => {
+            dispatch(signInSuccess(String(auth.session.token)))
             dispatch(getUserData())
             dispatch(setUser({
               ...auth.user,

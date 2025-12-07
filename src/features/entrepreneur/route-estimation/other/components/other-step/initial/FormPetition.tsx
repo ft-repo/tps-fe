@@ -220,6 +220,9 @@ const FormPetition: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ''))
+                      }}
                     />
                     {!!errors.company_address &&
                       <p className='text-red-500'>{errors.company_address.message}</p>
@@ -248,6 +251,9 @@ const FormPetition: React.FC<Props> = (props) => {
                       size='large'
                       style={{
                         fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ''))
                       }}
                     />
                     {!!errors.company_village_number &&
@@ -402,7 +408,7 @@ const FormPetition: React.FC<Props> = (props) => {
                         field.onChange(value)
                         fetchProvinceAPI('contact', company_province, value, company_sub_district)
                         // fetchDistrictAPI('contact', value, company_district, company_sub_district)
-                        fetchSubDistrictAPI('contact', company_province, value, company_sub_district)
+                        fetchSubDistrictAPI('contact', null, value, company_sub_district)
                         // SET VALUE
                         setValue('company_sub_district', null)
                         setValue('company_postcode', '')
@@ -924,6 +930,9 @@ const FormPetition: React.FC<Props> = (props) => {
                       style={{
                         fontFamily: 'Noto Sans Thai'
                       }}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ''))
+                      }}
                     />
                     {!!errors.transferer_company_address &&
                       <p className='text-red-500'>{errors.transferer_company_address.message}</p>
@@ -952,6 +961,9 @@ const FormPetition: React.FC<Props> = (props) => {
                       size='large'
                       style={{
                         fontFamily: 'Noto Sans Thai'
+                      }}
+                      onChange={(e) => {
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ''))
                       }}
                     />
                     {!!errors.transferer_company_village_no &&
@@ -1105,7 +1117,7 @@ const FormPetition: React.FC<Props> = (props) => {
                         field.onChange(value)
                         fetchProvinceAPI('poa', transferer_company_province, value, transferer_company_sub_district)
                         // fetchDistrictAPI('poa', transferer_company_province, value, transferer_company_sub_district)
-                        fetchSubDistrictAPI('poa', transferer_company_province, value, transferer_company_sub_district)
+                        fetchSubDistrictAPI('poa', null, value, transferer_company_sub_district)
                         // SET VALUE
                         setValue('transferer_company_sub_district', null)
                         setValue('transferer_company_postcode', '')

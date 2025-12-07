@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { ConfigProvider } from 'antd'
 import OverviewScreen from '@/features/staff/request-list/overview/screen'
 import { useAppDispatch } from '@/store'
-import { getPetitionCount } from '@/store/slices/staff'
+import { getPetitionCount, getPetitionExtendedCount } from '@/store/slices/staff'
 
 interface Props {
 
@@ -16,6 +16,7 @@ const OverviewIndex: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(getPetitionCount())
+    dispatch(getPetitionExtendedCount())
   }, [dispatch])
 
   return (
