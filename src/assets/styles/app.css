@@ -5,4 +5,5 @@
 @import './template/index.css';
 @import './vendors/index.css';
 @import './docs/index.css';
-@import './antd/index.css'
+@import './antd/index.css';
+@import './leaflet/index.css'
