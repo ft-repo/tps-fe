@@ -121,13 +121,11 @@ const VehicleDetail: React.FC<Props> = (props) => {
     const arr = []
     if (value.length) {
       for (const etc_id of value) {
-        console.log("===", etc_id)
         arr.push(etc_id)
       }
     }
     if (arr.length) {
       return arr.map((item, index) => {
-        console.log("===", item)
         // DESCRIPTION
         const product: DescriptionsProps['items'] = [
           {
@@ -145,7 +143,7 @@ const VehicleDetail: React.FC<Props> = (props) => {
         return (
           <section key={index} className='mt-3'>
             <Descriptions
-              title="ข้อมูลเครื่องจักร"
+              title="ข้อมูลเครื่องจักร / สินค้า"
               items={product}
               column={1}
             />

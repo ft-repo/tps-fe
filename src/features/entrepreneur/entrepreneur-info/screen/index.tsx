@@ -115,8 +115,8 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
       const response = await putUserAPI(body)
       if (response.status === 200) {
         Modal.success({
-          title: 'สำเร็จ',
-          content: 'บันทึกข้อมูลสำเร็จ',
+          title: 'บันทึกข้อมูลสำเร็จ',
+          content: 'กรุณาลงชื่อเข้าใช้งานใหม่อีกครั้ง ระบบจะทำการอัพเดรตรูปโปรไฟล์ล่าสุด',
           okText: 'ตกลง',
           onOk: () => {
             dispatch(signInSuccess(String(auth.session.token)))
@@ -158,7 +158,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch, auth.user])
+  }, [dispatch, auth.user, auth.session.token])
 
   // const extractFileName = useCallback((url: string | null) => {
   //   const match = url?.match(/\/([^\/]+)$/);

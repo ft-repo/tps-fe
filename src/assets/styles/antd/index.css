@@ -40,19 +40,28 @@
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  gap: 10px !important; /* Add spacing between icons */
-  background: rgba(0, 0, 0, 0.5) !important; /* Dark overlay for better contrast */
+  gap: 10px !important;
+  /* Add spacing between icons */
+  background: rgba(0, 0, 0, 0.5) !important;
+  /* Dark overlay for better contrast */
   opacity: 0 !important;
   transition: opacity 0.3s !important;
   z-index: 10 !important;
 }
 
-.preview-icon, .delete-icon {
+.preview-icon,
+.delete-icon {
   color: white !important;
-  font-size: 18px !important; /* Adjust size as needed */
+  font-size: 18px !important;
+  /* Adjust size as needed */
   cursor: pointer !important;
 }
 
 .custom-upload-item:hover .preview-overlay {
-  opacity: 1 !important; /* Show overlay on hover */
+  opacity: 1 !important;
+  /* Show overlay on hover */
+}
+
+.ant-select-selection-item {
+  width: 150px !important;
 }

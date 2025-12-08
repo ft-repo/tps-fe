@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Descriptions, DescriptionsProps, message } from 'antd'
 import { VehicleList } from '@/@types/reducer/petition';
 import { AiOutlineFilePdf } from 'react-icons/ai';
@@ -39,6 +39,24 @@ const ContentDetail: React.FC<Props> = (props) => {
     }
   }, [dispatch])
 
+  // Add this helper function
+  const getMaxEtcDimensions = useCallback(() => {
+    if (!item?.etc_vehicle || item.etc_vehicle.length === 0) {
+      return { width: 0, length: 0, height: 0 };
+    }
+
+    return item.etc_vehicle.reduce((max, etc) => {
+      return {
+        width: Math.max(max.width, Number(etc?.width || 0)),
+        length: Math.max(max.length, Number(etc?.length || 0)),
+        height: Math.max(max.height, Number(etc?.height || 0))
+      };
+    }, { width: 0, length: 0, height: 0 });
+  }, [item?.etc_vehicle]);
+
+  // Calculate dimensions once
+  const etcDimensions = useMemo(() => getMaxEtcDimensions(), [getMaxEtcDimensions]);
+
   const vehicle_detail: DescriptionsProps['items'] = [
     {
       key: '1',
@@ -68,7 +86,7 @@ const ContentDetail: React.FC<Props> = (props) => {
     {
       key: '6',
       label: 'มิติรถเปล่ารวมสินค้า เครื่องจักร (เมตร)',
-      children: <p>{`กว้าง ${Math.max(Number(item?.towing_vehicle?.width || 0), Number(item?.semi_trailer_vehicle?.width || 0), Number(item?.etc_vehicle?.width || 0))} X ยาว ${Math.max(Number(item?.towing_vehicle?.length || 0), Number(item?.semi_trailer_vehicle?.length || 0), Number(item?.etc_vehicle?.length || 0))} X สูง ${Math.max(Number(item?.towing_vehicle?.height || 0), Number(item?.semi_trailer_vehicle?.height || 0), Number(item?.etc_vehicle?.height || 0))}`}</p>,
+      children: <p>{`กว้าง ${Math.max(Number(item?.towing_vehicle?.width || 0), Number(item?.semi_trailer_vehicle?.width || 0), Number(etcDimensions?.width || 0))} X ยาว ${Math.max(Number(item?.towing_vehicle?.length || 0), Number(item?.semi_trailer_vehicle?.length || 0), Number(etcDimensions?.length || 0))} X สูง ${Math.max(Number(item?.towing_vehicle?.height || 0), Number(item?.semi_trailer_vehicle?.height || 0), Number(etcDimensions?.height || 0))}`}</p>,
     },
     {
       key: '7',
