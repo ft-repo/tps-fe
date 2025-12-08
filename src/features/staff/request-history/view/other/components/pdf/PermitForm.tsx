@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Page, Text, View, Document, StyleSheet, Font, Rect, Svg, Path } from '@react-pdf/renderer';
 import { AdminPetitionExtendedDetail } from '@/@types/reducer/petition';
 import dayjs from "dayjs";
@@ -223,6 +223,20 @@ interface Props {
 const PermitForm: React.FC<Props> = (props) => {
   const { data } = props;
 
+  const renderPoaName = useMemo(() => {
+    return data?.poa_name?.split(" ")
+  }, [data?.poa_name])
+
+  const textArray = useMemo(() => {
+    if (data?.remark.length >= 20) {
+      return [
+        `${data?.remark.slice(0, 20)}-`,
+        data?.remark.slice(20)
+      ]
+    }
+    return data?.remark
+  }, [data?.remark])
+
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -313,9 +327,9 @@ const PermitForm: React.FC<Props> = (props) => {
         </View>
         <View style={[styles.row, styles.indent]}>
           <Text>ข้าพเจ้า (นาย/นาง/นางสาว)</Text>
-          <Text style={styles.underline_long}>{'-'}</Text>
+          <Text style={styles.underline_long}>{renderPoaName[0] || '-'}</Text>
           <Text>นามสกุล</Text>
-          <Text style={styles.underline_full}>{'-'}</Text>
+          <Text style={styles.underline_full}>{renderPoaName[1] || '-'}</Text>
         </View>
         <View style={styles.row}>
           <Text>เจ้าของยานพาหนะหรือตัวแทน เจ้าของยานพาหนะ อยู่บ้านเลขที่</Text>
@@ -376,18 +390,18 @@ const PermitForm: React.FC<Props> = (props) => {
           <Text>ข้อ</Text>
           <Text style={styles.underline_long}>{data?.ref_form_no || <>&nbsp;</>}</Text>
           <Text>ต่ออธิการบดีกรมทางหลวงชนบท เพื่อ (เหตุผลที่ขอ)</Text>
-          <Text style={styles.underline_full}>{data?.remark || <>&nbsp;</>}</Text>
+          <Text style={styles.underline_full}>{textArray[0] || <>&nbsp;</>}</Text>
         </View>
         <View style={styles.row}>
-          <Text style={[styles.underline_custom, { minWidth: 270 }]}>&nbsp;</Text>
+          <Text style={[styles.underline_custom, { minWidth: 270 }]}>{textArray[1] || <>&nbsp;</>}</Text>
           <Text>โดยยานพาหนะมีลักษณะดังต่อไปนี้</Text>
         </View>
         {/* ลักษณะ 1 */}
         <View style={[styles.row, styles.indent]}>
           <Text>1. ลักษณะ/มาตรฐาน</Text>
-          <Text style={[styles.underline_custom, { minWidth: 100 }]}>&nbsp;</Text>
+          <Text style={[styles.underline_custom, { minWidth: 90 }]}>&nbsp;</Text>
           <Text>ประเภท</Text>
-          <Text style={[styles.underline_custom, { minWidth: 100 }]}>รถลากจูง</Text>
+          <Text style={[styles.underline_custom, { minWidth: 90 }]}>รถลากจูง</Text>
           <Text>เลขที่ทะเบียน</Text>
           <Text style={styles.underline_full}>{data?.vehicle?.towing_vehicle?.plate_no || <>&nbsp;</>}</Text>
         </View>
@@ -400,7 +414,9 @@ const PermitForm: React.FC<Props> = (props) => {
           <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.towing_vehicle?.axis_number || <>&nbsp;</>}</Text>
           <Text>เพลา</Text>
           <Text> น้ำหนักลงเพลา</Text>
-          <Text style={styles.underline_full}>{data?.vehicle?.axis_weight_towing[0] || 0} {data?.vehicle?.axis_weight_towing[1] || 0}</Text>
+          <Text style={styles.underline_full}>{data?.vehicle?.axis_weight_towing[0] || 0}</Text>
+          <Text>-</Text>
+          <Text style={styles.underline_full}>{data?.vehicle?.axis_weight_towing[1] || 0}</Text>
         </View>
         <View style={styles.row}>
           <Text style={[styles.underline_custom, { minWidth: 40 }]}>{data?.vehicle?.axis_weight_towing[2] || 0}</Text>
@@ -420,11 +436,11 @@ const PermitForm: React.FC<Props> = (props) => {
         {/* ลักษณะ 2 */}
         <View style={[styles.row, styles.indent]}>
           <Text>2. ลักษณะ/มาตรฐาน</Text>
-          <Text style={[styles.underline_custom, { minWidth: 100 }]}>&nbsp;</Text>
+          <Text style={[styles.underline_custom, { minWidth: 90 }]}>&nbsp;</Text>
           <Text>ประเภท</Text>
-          <Text style={[styles.underline_custom, { minWidth: 100 }]}>รถกึ่งพ่วง</Text>
+          <Text style={[styles.underline_custom, { minWidth: 90 }]}>รถกึ่งพ่วง</Text>
           <Text>เลขที่ทะเบียน</Text>
-          <Text style={styles.underline_full}>{data?.vehicle?.semi_trailer_vehicle?.plate_province || <>&nbsp;</>}</Text>
+          <Text style={styles.underline_full}>{data?.vehicle?.semi_trailer_vehicle?.plate_no || <>&nbsp;</>}</Text>
         </View>
         <View style={styles.row}>
           <Text>จังหวัด</Text>
@@ -435,7 +451,9 @@ const PermitForm: React.FC<Props> = (props) => {
           <Text style={[styles.underline_custom, { minWidth: 50 }]}>{data?.vehicle?.semi_trailer_vehicle?.axis_number || <>&nbsp;</>}</Text>
           <Text>เพลา</Text>
           <Text> น้ำหนักลงเพลา</Text>
-          <Text style={styles.underline_full}>{data?.vehicle?.axis_weight_semi_trailer[0] || 0} {data?.vehicle?.axis_weight_semi_trailer[1] || 0}</Text>
+          <Text style={styles.underline_full}>{data?.vehicle?.axis_weight_semi_trailer[0] || 0}</Text>
+          <Text>-</Text>
+          <Text style={styles.underline_full}>{data?.vehicle?.axis_weight_semi_trailer[1] || 0}</Text>
         </View>
         <View style={styles.row}>
           <Text style={[styles.underline_custom, { minWidth: 40 }]}>{data?.vehicle?.axis_weight_semi_trailer[2] || 0}</Text>
