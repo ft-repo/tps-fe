@@ -67,6 +67,11 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
       label: 'นำเข้าโดย',
       children: <p>{renderName(petition_status[3]?.admin_creaded?.title, petition_status[3]?.admin_creaded?.first_name, petition_status[3]?.admin_creaded?.last_name)}</p>,
     },
+    {
+      key: '4',
+      label: 'หมายเหตุ',
+      children: <p>{petition_status[3]?.remark || '-'}</p>,
+    },
   ]
 
   const permit_document: DescriptionsProps['items'] = [
@@ -89,6 +94,11 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
       key: '3',
       label: 'นำเข้าโดย',
       children: <p>{renderName(petition_status[4]?.admin_creaded?.title, petition_status[4]?.admin_creaded?.first_name, petition_status[4]?.admin_creaded?.last_name)}</p>,
+    },
+    {
+      key: '4',
+      label: 'หมายเหตุ',
+      children: <p>{petition_status[4]?.remark || '-'}</p>,
     },
   ]
 
