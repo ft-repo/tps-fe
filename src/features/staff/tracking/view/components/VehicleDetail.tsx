@@ -47,9 +47,9 @@ const VehicleDetail: React.FC<Props> = (props) => {
 
     return item.etc_vehicle.reduce((max, etc) => {
       return {
-        width: Math.max(max.width, Number(etc?.width || 0)),
-        length: Math.max(max.length, Number(etc?.length || 0)),
-        height: Math.max(max.height, Number(etc?.height || 0))
+        width: Math.max(max.width, Number(etc?.vehicle?.width || 0)),
+        length: Math.max(max.length, Number(etc?.vehicle?.length || 0)),
+        height: Math.max(max.height, Number(etc?.vehicle?.height || 0))
       };
     }, { width: 0, length: 0, height: 0 });
   }, [item?.etc_vehicle]);
@@ -131,12 +131,12 @@ const VehicleDetail: React.FC<Props> = (props) => {
           {
             key: '1',
             label: 'ชื่อเครื่องจักร / สินค้า',
-            children: item?.plate_no || '-',
+            children: item?.vehicle?.plate_no || '-',
           },
           {
             key: '2',
             label: 'น้ำหนัก (กิโลกรัม)',
-            children: item?.weight || 0,
+            children: item?.vehicle?.weight || 0,
           },
         ];
         // COMPONENTS

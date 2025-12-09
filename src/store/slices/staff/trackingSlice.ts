@@ -143,6 +143,28 @@ export interface SemiTrailerVehicle {
 }
 
 export interface ETCVehicle {
+  // id: number;
+  // user_id: string;
+  // vehicle_type_id: number;
+  // plate_no: string;
+  // plate_province: string;
+  // brand: string;
+  // weight: number;
+  // color: string;
+  // kingpin_distance: number;
+  // width: number;
+  // length: number;
+  // height: number;
+  // axis_number: number;
+  // registration_document_url: string;
+
+  estimate_id: string;
+  vehicle: ETCVehicleDetail;
+  vehicle_id: number;
+
+}
+
+export interface ETCVehicleDetail {
   id: number;
   user_id: string;
   vehicle_type_id: number;
@@ -155,7 +177,7 @@ export interface ETCVehicle {
   width: number;
   length: number;
   height: number;
-  axis_number: number;
+  axis_type_id: any;
   registration_document_url: string;
 }
 
