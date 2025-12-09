@@ -1,5 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
+import { ExtendedETCVehicleDetail } from '@/@types/reducer/petition'
 import { useAppSelector } from '@/store'
 import { Descriptions, DescriptionsProps } from 'antd'
 import React, { useCallback } from 'react'
@@ -60,18 +61,57 @@ const VehicleDetail: React.FC<Props> = (props) => {
     },
   ];
 
-  const etc_vehicle: DescriptionsProps['items'] = [
-    {
-      key: '1',
-      label: 'เลขทะเบียน / เลขตัวรถ',
-      children: <p>{renderLicensePlate(detail?.vehicle?.etc_vehicle?.plate_no, detail?.vehicle?.etc_vehicle?.plate_province)}</p>,
-    },
-    {
-      key: '2',
-      label: 'น้ำหนัก (กิโลกรัม)',
-      children: <p>{detail?.vehicle?.etc_vehicle?.weight || '-'}</p>,
-    },
-  ];
+  const renderETC = useCallback((value: ExtendedETCVehicleDetail[]) => {
+    const arr = []
+    if (value.length) {
+      for (const etc_id of value) {
+        arr.push(etc_id)
+      }
+    }
+    if (arr.length) {
+      return arr.map((item, index) => {
+        // DESCRIPTION
+        const product: DescriptionsProps['items'] = [
+          {
+            key: '1',
+            label: 'ชื่อเครื่องจักร / สินค้า',
+            children: item?.etc_vehicle?.plate_no || '-',
+          },
+          {
+            key: '2',
+            label: 'น้ำหนัก (กิโลกรัม)',
+            children: item?.etc_vehicle?.weight || 0,
+          },
+        ];
+        // COMPONENTS
+        return (
+          <section key={index} className='mt-3'>
+            <Descriptions
+              title="ข้อมูลเครื่องจักร / สินค้า"
+              items={product}
+              column={1}
+              layout='vertical'
+              size='small'
+            />
+          </section>
+        )
+      })
+    }
+  }, [])
+
+
+  // const etc_vehicle: DescriptionsProps['items'] = [
+  //   {
+  //     key: '1',
+  //     label: 'เลขทะเบียน / เลขตัวรถ',
+  //     children: <p>{renderLicensePlate(detail?.vehicle?.etc_vehicle?.plate_no, detail?.vehicle?.etc_vehicle?.plate_province)}</p>,
+  //   },
+  //   {
+  //     key: '2',
+  //     label: 'น้ำหนัก (กิโลกรัม)',
+  //     children: <p>{detail?.vehicle?.etc_vehicle?.weight || '-'}</p>,
+  //   },
+  // ];
 
   return (
     <>
@@ -94,7 +134,8 @@ const VehicleDetail: React.FC<Props> = (props) => {
           size='small'
         />
       </section>
-      <section className='mt-5'>
+      {renderETC(detail?.vehicle?.etc_vehicle)}
+      {/* <section className='mt-5'>
         <Descriptions
           title="ข้อมูลเครื่องจักร / สินค้า"
           items={etc_vehicle}
@@ -102,7 +143,7 @@ const VehicleDetail: React.FC<Props> = (props) => {
           layout='vertical'
           size='small'
         />
-      </section>
+      </section> */}
     </>
   )
 }

@@ -399,9 +399,9 @@ const PermitForm: React.FC<Props> = (props) => {
         {/* ลักษณะ 1 */}
         <View style={[styles.row, styles.indent]}>
           <Text>1. ลักษณะ/มาตรฐาน</Text>
-          <Text style={[styles.underline_custom, { minWidth: 90 }]}>&nbsp;</Text>
+          <Text style={[styles.underline_custom, { minWidth: 100 }]}>&nbsp;</Text>
           <Text>ประเภท</Text>
-          <Text style={[styles.underline_custom, { minWidth: 90 }]}>รถลากจูง</Text>
+          <Text style={[styles.underline_custom, { minWidth: 100 }]}>รถลากจูง</Text>
           <Text>เลขที่ทะเบียน</Text>
           <Text style={styles.underline_full}>{data?.vehicle?.towing_vehicle?.plate_no || <>&nbsp;</>}</Text>
         </View>
@@ -436,9 +436,9 @@ const PermitForm: React.FC<Props> = (props) => {
         {/* ลักษณะ 2 */}
         <View style={[styles.row, styles.indent]}>
           <Text>2. ลักษณะ/มาตรฐาน</Text>
-          <Text style={[styles.underline_custom, { minWidth: 90 }]}>&nbsp;</Text>
+          <Text style={[styles.underline_custom, { minWidth: 100 }]}>&nbsp;</Text>
           <Text>ประเภท</Text>
-          <Text style={[styles.underline_custom, { minWidth: 90 }]}>รถกึ่งพ่วง</Text>
+          <Text style={[styles.underline_custom, { minWidth: 100 }]}>รถกึ่งพ่วง</Text>
           <Text>เลขที่ทะเบียน</Text>
           <Text style={styles.underline_full}>{data?.vehicle?.semi_trailer_vehicle?.plate_no || <>&nbsp;</>}</Text>
         </View>

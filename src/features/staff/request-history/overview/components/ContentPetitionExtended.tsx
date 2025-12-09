@@ -1,11 +1,10 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useEffect } from 'react'
-import { FormSearchPetitionExtended, TablePetitionExtended } from '../components'
+import { ExportFileExtended, FormSearchPetitionExtended, TablePetitionExtended } from '../components'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { getAdminPetitionHistoryExtendedData, setAdminPetitionHistoryExtendedData } from '@/store/slices/staff'
-import { Button, Dropdown, Flex, MenuProps } from 'antd'
-import { AiOutlineDownload } from 'react-icons/ai'
+import { Flex } from 'antd'
 
 interface Props { }
 
@@ -62,24 +61,6 @@ const ContentPetitionExtended: React.FC<Props> = (props) => {
     }
   }, [dispatch, petition_history_extended.overview])
 
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: 'รายการสรุป xlsx',
-      onClick: () => console.log((''))
-    },
-    {
-      key: '2',
-      label: 'รายการสรุป csv',
-      onClick: () => console.log((''))
-    },
-    {
-      key: '3',
-      label: 'รายการสรุป pdf',
-      onClick: () => console.log((''))
-    },
-  ]
-
   return (
     <div>
       <Flex
@@ -89,16 +70,9 @@ const ContentPetitionExtended: React.FC<Props> = (props) => {
         gap={5}
       >
         <h3>ประวัติการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)</h3>
-        <Dropdown
-          menu={{ items }}
-        >
-          <Button
-            type="primary"
-            icon={<AiOutlineDownload />}
-          >
-            Export File
-          </Button>
-        </Dropdown>
+        <ExportFileExtended
+          data={petition_history_extended.overview.data}
+        />
       </Flex>
       <section className="mt-5">
         <FormSearchPetitionExtended

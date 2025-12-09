@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/display-name */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
 import { Table, type TableProps } from 'antd'

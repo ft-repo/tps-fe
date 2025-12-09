@@ -627,7 +627,14 @@ export interface PetitionExtendedVehicle {
   axis_weight_semi_trailer: number[]
   towing_vehicle: ExtendedVehicleDetail;
   semi_trailer_vehicle: ExtendedVehicleDetail;
+  etc_vehicle: ExtendedETCVehicleDetail[];
+}
+
+export interface ExtendedETCVehicleDetail {
   etc_vehicle: ExtendedVehicleDetail;
+  id: number;
+  petition_ex_vehicle_id: number;
+  vehicle_id: number;
 }
 
 export interface ExtendedVehicleDetail {
