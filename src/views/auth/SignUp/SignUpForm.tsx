@@ -300,7 +300,7 @@ function SignUpForm(props: Props) {
                           fontFamily: 'Noto Sans Thai'
                         }}
                         onChange={(e) => {
-                          field.onChange(e.target.value.replace(/[^0-9]/g, ''))
+                          field.onChange(e.target.value.replace(/[^0-9/]/g, ''))
                         }}
                       />
                       {!!errors.house_number &&
@@ -332,7 +332,7 @@ function SignUpForm(props: Props) {
                           fontFamily: 'Noto Sans Thai'
                         }}
                         onChange={(e) => {
-                          field.onChange(e.target.value.replace(/[^0-9]/g, ''))
+                          field.onChange(e.target.value.replace(/[^0-9/]/g, ''))
                         }}
                       />
                       {!!errors.village &&

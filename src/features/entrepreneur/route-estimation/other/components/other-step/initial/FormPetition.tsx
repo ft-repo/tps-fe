@@ -221,7 +221,7 @@ const FormPetition: React.FC<Props> = (props) => {
                         fontFamily: 'Noto Sans Thai'
                       }}
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9]/g, ''))
+                        field.onChange(e.target.value.replace(/[^0-9/]/g, ''))
                       }}
                     />
                     {!!errors.company_address &&
@@ -253,7 +253,7 @@ const FormPetition: React.FC<Props> = (props) => {
                         fontFamily: 'Noto Sans Thai'
                       }}
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9]/g, ''))
+                        field.onChange(e.target.value.replace(/[^0-9/]/g, ''))
                       }}
                     />
                     {!!errors.company_village_number &&
@@ -899,7 +899,7 @@ const FormPetition: React.FC<Props> = (props) => {
                       }}
                       maxLength={10}
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                        field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                       }}
                     />
                     {!!errors.transferer_phone_number &&
@@ -931,7 +931,7 @@ const FormPetition: React.FC<Props> = (props) => {
                         fontFamily: 'Noto Sans Thai'
                       }}
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9]/g, ''))
+                        field.onChange(e.target.value.replace(/[^0-9/]/g, ''))
                       }}
                     />
                     {!!errors.transferer_company_address &&
@@ -963,7 +963,7 @@ const FormPetition: React.FC<Props> = (props) => {
                         fontFamily: 'Noto Sans Thai'
                       }}
                       onChange={(e) => {
-                        field.onChange(e.target.value.replace(/[^0-9]/g, ''))
+                        field.onChange(e.target.value.replace(/[^0-9/]/g, ''))
                       }}
                     />
                     {!!errors.transferer_company_village_no &&

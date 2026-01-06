@@ -161,7 +161,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                     fontFamily: 'Noto Sans Thai'
                   }}
                   onChange={(e) => {
-                    field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                    field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                   }}
                 />
                 {!!errors.office_tel &&
@@ -282,7 +282,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                   }}
                   maxLength={13}
                   onChange={(e) => {
-                    field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                    field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                   }}
                 />
                 {!!errors.citizen_id &&
@@ -317,7 +317,7 @@ const FormExecutiveData: React.FC<Props> = (props) => {
                   }}
                   maxLength={10}
                   onChange={(e) => {
-                    field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                    field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                   }}
                 />
                 {!!errors.contact_tel &&
