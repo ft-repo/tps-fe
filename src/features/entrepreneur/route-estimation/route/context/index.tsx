@@ -3,6 +3,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldTypeArr, RegionState } from '@/@types/entrepreneur/route-estimation';
 import { PetitionEstimateRequest, PetitionEstimateResponse, EstimateResponse } from '@/@types/services/petition';
+import { AxisMaxWeight } from '@/@types/shared';
 import { createContext, useContext, useState } from 'react'
 
 export interface ContextProps {
@@ -14,6 +15,10 @@ export interface ContextProps {
   item: EstimateResponse;
   setIndex: (value: number) => void;
   setItem: (value: EstimateResponse) => void;
+  towingMaxWeight: AxisMaxWeight[];                          // ← add
+  setTowingMaxWeight: (value: AxisMaxWeight[]) => void;     // ← add
+  semiMaxWeight: AxisMaxWeight[];                            // ← add
+  setSemiMaxWeight: (value: AxisMaxWeight[]) => void;       // ← add
 }
 
 export interface DataParser {
@@ -76,6 +81,8 @@ export const RouteProvider = (props: any) => {
     estimate_id: '',
     vehicle: []
   })
+  const [towingMaxWeight, setTowingMaxWeight] = useState<AxisMaxWeight[]>([])
+  const [semiMaxWeight, setSemiMaxWeight] = useState<AxisMaxWeight[]>([])
 
   return (
     <PageContext.Provider
@@ -87,7 +94,11 @@ export const RouteProvider = (props: any) => {
         index,
         item,
         setIndex,
-        setItem
+        setItem,
+        towingMaxWeight,
+        setTowingMaxWeight,
+        semiMaxWeight,
+        setSemiMaxWeight
       }}
     >
       {children}

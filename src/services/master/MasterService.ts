@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AxisType, DepartmentState, RoleState } from "@/@types/shared";
+import { AxisMaxWeight, AxisType, DepartmentState, RoleState } from "@/@types/shared";
 import ApiService from "../ApiService"
 import { NotificationPagination } from "@/@types/reducer/petition";
 import { VehiclePictures } from "@/@types/reducer/vehicle";
@@ -59,6 +59,10 @@ export interface RegionParams {
   province_id?: string | number | null;
   district_id?: string | number | null;
   sub_district_id?: string | number | null;
+}
+
+export interface GetAxisTypeParams {
+  vehicle_type_id?: number | string | null;
 }
 
 export const getEntityAPI = async () => {
@@ -168,9 +172,17 @@ export const getProductTypeAPI = async () => {
   })
 }
 
-export const getAxisTypeAPI = async () => {
-  return ApiService.fetchData<AxisType[]>({
+export const getAxisTypeAPI = async (params: GetAxisTypeParams) => {
+  return ApiService.fetchData<GetAxisTypeParams, AxisType[]>({
     url: '/client/vehicle/axis_type',
+    method: 'GET',
+    params: { ...params }
+  })
+}
+
+export const getAxisWeightAPI = async (id: string | number | null) => {
+  return ApiService.fetchData<AxisMaxWeight[]>({
+    url: `/client/vehicle/axis_type_weight/${id}`,
     method: 'GET',
   })
 }

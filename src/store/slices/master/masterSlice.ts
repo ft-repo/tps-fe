@@ -1,7 +1,7 @@
 import { AxisType, DepartmentState, EntityState, RoleState, SubDistrictState, ThailandState } from '@/@types/shared';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constants';
-import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI, getEntityTypeAPI, getDepartmentAPI, getRoleAPI, VehicleSelectionRequest, getVehicleSelectionAPI, VehicleSelectionResponse, getProductTypeAPI, getAxisTypeAPI } from '@/services/master/MasterService';
+import { getContactTypeAPI, getDistrictAPI, getSubDistrictAPI, getEntityAPI, getProvinceAPI, getVechicleTypeAPI, getEntityTypeAPI, getDepartmentAPI, getRoleAPI, VehicleSelectionRequest, getVehicleSelectionAPI, VehicleSelectionResponse, getProductTypeAPI, getAxisTypeAPI, GetAxisTypeParams } from '@/services/master/MasterService';
 
 export type MasterState = {
   entity: EntityState[];
@@ -106,8 +106,8 @@ export const getProductType = createAsyncThunk(SLICE_BASE_NAME + '/apiGetProduct
   return response.data
 })
 
-export const getAxisType = createAsyncThunk(SLICE_BASE_NAME + '/apiGetAxisType', async () => {
-  const response = await getAxisTypeAPI()
+export const getAxisType = createAsyncThunk(SLICE_BASE_NAME + '/apiGetAxisType', async (params: GetAxisTypeParams) => {
+  const response = await getAxisTypeAPI(params)
   return response.data
 })
 

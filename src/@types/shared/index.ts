@@ -259,4 +259,12 @@ export interface AxisType {
   max_weight: number;
   max_carry_weight: number;
   axis_number: number;
+  axis_max_weight: AxisMaxWeight[];
+}
+
+export interface AxisMaxWeight {
+  id: number
+  axis_type_id: number
+  axis_number: number
+  axis_max_weight: number
 }

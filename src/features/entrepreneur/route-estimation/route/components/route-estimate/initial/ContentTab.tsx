@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useState } from 'react'
 import { Tabs, type TabsProps } from 'antd'
-import { Control, useFieldArray, UseFormSetValue } from 'react-hook-form'
+import { Control, useFieldArray, UseFormSetValue, UseFormTrigger } from 'react-hook-form'
 import { FieldTypeArr } from '@/@types/entrepreneur/route-estimation'
 import FormVehicle from './FormVehicle';
 import { useRouteContext } from '../../../context';
@@ -10,13 +10,14 @@ import { useRouteContext } from '../../../context';
 interface Props {
   control: Control<FieldTypeArr>;
   setValue: UseFormSetValue<FieldTypeArr>;
+  trigger: UseFormTrigger<FieldTypeArr>;   // ← add
 }
 
 type TabItem = NonNullable<TabsProps['items']>[number]
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
 const ContentTab: React.FC<Props> = (props) => {
-  const { control, setValue } = props
+  const { control, setValue, trigger } = props
   const { fields, append, remove } = useFieldArray({ control, name: 'route_form' })
   const { dataParser } = useRouteContext()
   // DECLARE INIT STATE
@@ -31,6 +32,7 @@ const ContentTab: React.FC<Props> = (props) => {
             formIndex={index}
             control={control}
             setValue={setValue}
+            trigger={trigger}
           />
         ),
         closable: index === 0 ? false : true,
@@ -46,6 +48,7 @@ const ContentTab: React.FC<Props> = (props) => {
             formIndex={0}
             control={control}
             setValue={setValue}
+            trigger={trigger}
           />
         ),
         closable: false,
@@ -89,13 +92,14 @@ const ContentTab: React.FC<Props> = (props) => {
             formIndex={tabItems.length}
             control={control}
             setValue={setValue}
+            trigger={trigger}
           />
         ),
       }
     ]
     // SET TAB
     setTabItems([...tabItems, ...newTabItem])
-  }, [tabItems, setTabItems, append, fields, control, setValue])
+  }, [tabItems, setTabItems, append, fields, control, setValue, trigger])
 
   const onRemove = useCallback((targetKey: TargetKey) => {
     const newTabItems = tabItems.filter((item, index) => {
