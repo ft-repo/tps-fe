@@ -382,7 +382,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                           value: 2
                         },
                         {
-                          label: 'สินค้า / เครื่องจักร',
+                          label: 'รถกึ่งพ่วง',
                           value: 3
                         },
                       ]}
@@ -544,8 +544,15 @@ const FormVehicle: React.FC<Props> = (props) => {
               />
             </Col>
             : null}
-          {(match_type === 1 || match_type === 2) ?
-            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+          {(match_type === 1 || match_type === 2 || match_type === 3) ?
+            <Col
+              xs={24}
+              sm={24}
+              md={24}
+              lg={match_type === 3 ? 24 : 12}
+              xl={match_type === 3 ? 24 : 12}
+              xxl={match_type === 3 ? 24 : 12}
+            >
               <Controller
                 name={`route_form.${formIndex}.semi_trailer_vehicle`}
                 control={control}
@@ -611,7 +618,7 @@ const FormVehicle: React.FC<Props> = (props) => {
               />
             </Col>
             : null}
-          {(match_type === 1 || match_type === 3) ?
+          {(match_type === 1) ?
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Controller
                 name={`route_form.${formIndex}.etc_vehicle`}
