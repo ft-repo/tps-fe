@@ -450,7 +450,7 @@ const VehicleListDetail: React.FC<Props> = (props) => {
           </Row>
         </section>
         : null}
-      {item.etc_vehicle.length ?
+      {item.etc_vehicle && item.etc_vehicle.length ?
         renderETC(item.etc_vehicle)
         : null}
     </>
