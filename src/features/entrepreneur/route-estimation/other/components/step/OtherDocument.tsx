@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import { useOtherContext } from '../../context'
 import FormDocumentApproval from '../other-step/upload/FormDocumentApproval'
 import FormDocumentVehicle from '../other-step/upload/FormDocumentVehicle'
@@ -109,6 +109,10 @@ const OtherDocument: React.FC<Props> = (props) => {
         contact_info_url: {
           file: [],
           url: ''
+        },
+        mechanical_engineer_certifier_url: {
+          file: [],
+          url: ''
         }
       }
     }
@@ -119,6 +123,41 @@ const OtherDocument: React.FC<Props> = (props) => {
     control,
     setValue
   } = form
+
+  const renderResult = useMemo(() => {
+    return (
+      <div>
+        <h5 className='mb-1.5'>รายการเอกสารที่ผู้ยื่นคำขอจำเป็นต้องส่งไปยังกรมทางหลวงชนบท</h5>
+        <ol className='list-decimal list-inside'>
+          <li>กรณีเป็นบุคคลธรรมดาให้ใช้บัตรประจำตัวประชาชน  (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>กรณีเป็นนิติบุคคลให้ใช้หนังสือรับรองจดทะเบียนเป็นนิติบุคคล พร้อมวัตถุประสงค์ ( 1 ฉบับ ) และสำเนาประจำตัวประชาชนผู้มีอำนาจลงนาม  (ฉบับจริง 1 ชุด)</li>
+          <li>แผนผังถนนของทางหลวงชนบทที่ขออนุญาต เช่น ถนนหลวงชนบท (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>สำเนาบัตรผู้จัดการเดินรถและประวัติด้านพาหนะที่ได้รับอนุญาตใช้บนถนนสาธารณะ พร้อมแสดงหลักฐานการรับรองเจ้าหน้าที่ (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>รูปถ่ายลักษณะพาหนะ (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>รูปแบบขบวนพาหนะ โดยแสดงถึงขนาด ระยะ และน้ำหนักลงเพลาของขบวนพาหนะ (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>รูปแบบขบวนพาหนะโดยแสดงถึงมิติขนาดรวมของขบวนบรรทุก (กว้าง ยาว สูง) ทั้งก่อนและหลังมีการบรรทุกสิ่งของแล้ว(ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>กรณีใช้ชิ้นส่วนสำเร็จรูปประกอบมากกว่า 1 ชิ้น ให้แสดงรายละเอียดและน้ำหนักรวมของสิ่งของที่ต้องการขนส่ง(ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>รูปแบบพาหนะโดยแสดงถึงรัศมีวงเลี้ยว (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างสะพานทางผ่านในเส้นทางที่ขออนุญาต เมื่อมีการบรรทุกน้ำหนักแล้ว(ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>รายการคำนวณแรงที่เกิดขึ้นต่อโครงสร้างสะพานทางผ่านในเส้นทางที่กำหนดก่อนการขออนุญาต เมื่อมีการบรรทุกน้ำหนักแล้ว (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างสะพาน พร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร) (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>หนังสือรับรองของวิศวกรโยธาผู้คำนวณโครงสร้างทาง พร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร) (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>หนังสือรับรองของวิศวกรเครื่องกลผู้คำนวณน้ำหนักลงเพลา พร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร) (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>หนังสือรับรองของวิศวกรเครื่องกลผู้คำนวณแรงดึงหรือแรงฉุด พร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร) (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>รูปแบบการบริหารจัดการด้านความปลอดภัยในการใช้ทางหลวง (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>แผนที่เส้นทางเดินรถ (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>แผนและระยะเวลาการดำเนินงาน (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>ที่อยู่และสิ่งที่ใช้ในการจัดส่งเอกสาร (ฉบับจริง 1 ชุด สำเนา 4 ชุด)</li>
+          <li>หนังสือมอบอำนาจ (กรณีไม่สามารถมาดำเนินการด้วยตนเอง) ต้องติดอากรแสตมป์ 10 หรือ 30 บาท พร้อมสำเนาบัตรประชาชนของผู้มอบอำนาจและผู้รับมอบอำนาจ</li>
+        </ol>
+        <div className='mt-5'>
+          <p>ที่อยู่ผู้รับ :</p>
+          <p>กรมทางหลวงชนบท สำนักบำรุงทาง</p>
+          <p>เลขที่ 9 ถนนพหลโยธิน แขวงอนุสาวรีย์ เขตบางเขน กทม. 10220</p>
+        </div>
+      </div>
+    )
+  }, [])
 
   const onSubmit = useCallback(async (value: DocumentFieldType) => {
     const body: PetitionExtendedDocumentPostRequest = {
@@ -145,7 +184,8 @@ const OtherDocument: React.FC<Props> = (props) => {
         safety_management_plan_url: value.petition_extended_audit_document.safety_management_plan_url.url,
         route_map_url: value.petition_extended_audit_document.route_map_url.url,
         operation_plan_url: value.petition_extended_audit_document.operation_plan_url.url,
-        contact_info_url: value.petition_extended_audit_document.contact_info_url.url
+        contact_info_url: value.petition_extended_audit_document.contact_info_url.url,
+        mechanical_engineer_certifier_url: value.petition_extended_audit_document.mechanical_engineer_certifier_url.url
       }
     }
 
@@ -154,9 +194,10 @@ const OtherDocument: React.FC<Props> = (props) => {
       const response = await postConfirmPetitionExtendedAPI(dataParser.temporary_id, body)
       if (response.status === 200) {
         Modal.success({
-          title: 'สำเร็จ',
-          content: 'บันทึกข้อมูลสำเร็จ',
-          okText: 'ตกลง',
+          title: 'บันทึกข้อมูลสำเร็จ',
+          content: renderResult,
+          okText: 'รับทราบ',
+          width: 1000,
           onOk: () => {
             dispatch(getPetitionExtendedData(petition_extended.overview.search))
             navigate('/permit-list?tabKey=2')
@@ -168,6 +209,18 @@ const OtherDocument: React.FC<Props> = (props) => {
           },
           style: {
             fontFamily: 'Noto Sans Thai'
+          },
+          footer: (_, { OkBtn }) => {
+            return (
+              <>
+                <Button
+                  className='!bg-[#1629FF] !text-white'
+                >
+                  พิมพ์ที่อยู่
+                </Button>
+                <OkBtn />
+              </>
+            )
           }
         })
       }
@@ -193,13 +246,60 @@ const OtherDocument: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dataParser.temporary_id, dispatch, navigate, petition_extended.overview.search])
+  }, [dataParser.temporary_id, dispatch, navigate, petition_extended.overview.search, renderResult])
+
+  const onPrintAddress = useCallback(() => {
+    Modal.confirm({
+      title: 'ตรวจสอบเอกสารและพิมพ์ที่อยู่',
+      content: renderResult,
+      okText: 'พิมพ์ที่อยู่',
+      cancelText: 'รับทราบ',
+      width: 1000,
+      onOk: () => {
+        Modal.destroyAll()
+      },
+      onCancel: () => Modal.destroyAll(),
+      okButtonProps: {
+        style: {
+          fontFamily: 'Noto Sans Thai',
+          backgroundColor: '#1629FF',
+          color: '#FFFFFF'
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        }
+      },
+      style: {
+        fontFamily: 'Noto Sans Thai'
+      },
+      footer: (_, { OkBtn, CancelBtn }) => {
+        return (
+          <>
+            <OkBtn />
+            <CancelBtn />
+          </>
+        )
+      }
+    })
+  }, [renderResult])
 
   return (
     <main>
       <section className='flex justify-between items-center flex-wrap gap-5'>
         <h3>ขออนุญาตหมวด 2 (นอกเหนือ 4 - 7 เพลา)</h3>
         <div className='flex items-center gap-3'>
+          <Button
+            disabled={loading}
+            htmlType='button'
+            type='primary'
+            // size='large'
+            className='w-full lg:w-auto !bg-[#1629FF] hover:!bg-[#1629FF90]'
+            onClick={() => onPrintAddress()}
+          >
+            พิมพ์ที่อยู่
+          </Button>
           <Button
             disabled={loading}
             htmlType='button'

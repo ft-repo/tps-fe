@@ -419,6 +419,82 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
       </div>
       <div className='block mt-3'>
         <Controller
+          name='petition_extended_audit_document.mechanical_engineer_certifier_url.file'
+          control={control}
+          rules={{
+            required: 'กรุณาอัปโหลดหนังสือรับรองของวิศวกรเครื่องกลผู้คำนวณน้ำหนักลงเพลาพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร)'
+          }}
+          render={({ field }) => {
+            return (
+              <fieldset>
+                <label>หนังสือรับรองของวิศวกรเครื่องกลผู้คำนวณน้ำหนักลงเพลาพร้อมสำเนาใบอนุญาตผู้ประกอบวิชาชีพ (ระดับไม่ต่ำกว่าสามัญวิศวกร) <span className='text-red-500'>*</span></label>
+                <Upload
+                  {...field}
+                  fileList={field.value || []}
+                  maxCount={1}
+                  listType='text'
+                  accept='application/pdf'
+                  beforeUpload={(file) => {
+                    // DEFAULT VALUES
+                    const allowList = ['application/pdf']
+                    const maxFileSize = 10000000
+                    // CHECK
+                    const isListAvailable = allowList.some(item => item === file.type)
+                    const isLt10 = file.size < maxFileSize
+                    if (!isListAvailable) {
+                      message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                      return Upload.LIST_IGNORE
+                    }
+                    if (!isLt10) {
+                      message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                      return Upload.LIST_IGNORE
+                    }
+                    return false
+                  }}
+                  onChange={(e) => {
+                    field.onChange(e.fileList);
+                    if (e.fileList.length) {
+                      uploadFile('petition_extended_audit_document.mechanical_engineer_certifier_url.url', e.fileList)
+                    } else {
+                      setValue('petition_extended_audit_document.mechanical_engineer_certifier_url.url', '')
+                    }
+                  }}
+                  onPreview={(e) => {
+                    const url = URL.createObjectURL(e.originFileObj as RcFile);
+                    window.open(url);
+                  }}
+                >
+                  {field.value.length ? null :
+                    <div className='flex items-center gap-1'>
+                      <Input
+                        readOnly
+                        placeholder='กรุณาเลือกไฟล์'
+                        // size='large'
+                        className='w-full'
+                        style={{
+                          fontFamily: 'Noto Sans Thai'
+                        }}
+                      />
+                      <Button
+                        htmlType='button'
+                        type='primary'
+                      // size='large'
+                      >
+                        เลือก
+                      </Button>
+                    </div>
+                  }
+                </Upload>
+                {!!errors.petition_extended_audit_document?.mechanical_engineer_certifier_url?.file &&
+                  <p className='text-red-500'>{errors.petition_extended_audit_document?.mechanical_engineer_certifier_url?.file.message}</p>
+                }
+              </fieldset>
+            )
+          }}
+        />
+      </div>
+      <div className='block mt-3'>
+        <Controller
           name='petition_extended_audit_document.safety_management_plan_url.file'
           control={control}
           // rules={{

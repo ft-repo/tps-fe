@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldTypeArr, FieldTypeForRoute } from '@/@types/entrepreneur/route-estimation';
-import { useAppDispatch, useAppSelector } from '@/store';
+import { useAppSelector } from '@/store';
 import { Card, Col, Image, Input, message, Modal, Row, Select, Spin, Tooltip } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, UseFormTrigger, useWatch } from 'react-hook-form';
@@ -13,8 +13,7 @@ import { InfoCircleFilled } from '@ant-design/icons';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { AxisMaxWeight } from '@/@types/shared';
-import { getAxisTypeAPI, getAxisWeightAPI, VehicleDetail } from '@/services/master/MasterService';
+import { getAxisWeightAPI } from '@/services/master/MasterService';
 import { AxiosError } from 'axios';
 import { useRouteContext } from '../../../context';
 
@@ -552,7 +551,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        onChange={(value, option) => {
+                        onChange={(value, option: any) => {
                           field.onChange(value)
                           // SET TOWER WEIGHT
                           setValue(`route_form.${formIndex}.towering_weight1`, '')
@@ -632,8 +631,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        onChange={(value, option) => {
-                          console.log(option)
+                        onChange={(value, option: any) => {
                           field.onChange(value)
                           // SET SEMI WEIGHT
                           setValue(`route_form.${formIndex}.semi_weight1`, '')

@@ -171,6 +171,7 @@ export interface PetitionExtendedAuditDocument {
   route_map_url: FileType;
   operation_plan_url: FileType;
   contact_info_url: FileType;
+  mechanical_engineer_certifier_url: FileType;
 }
 
 export type RouteEstimationResponse = {

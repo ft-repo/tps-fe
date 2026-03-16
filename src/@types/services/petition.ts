@@ -173,6 +173,7 @@ export interface PetitionExtendedAuditDocument {
   route_map_url: string;
   operation_plan_url: string;
   contact_info_url: string;
+  mechanical_engineer_certifier_url: string;
 }
 
 // PETITION

@@ -186,6 +186,12 @@ export const protectedRoutes = [
         component: lazy(() => import('@/views/staff/tracking/view')),
         authority: ['ADMIN'],
     },
+    {
+        key: 'contact_channel',
+        path: '/contact-channel',
+        component: lazy(() => import('@/views/entrepreneur/contact-channel')),
+        authority: ['ADMIN'],
+    },
     // ACCESS DENIED
     {
         key: 'accessDenied',
