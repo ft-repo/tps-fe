@@ -1,20 +1,22 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { FieldTypeArr, RegionState } from '@/@types/entrepreneur/route-estimation'
+import { FieldTypeArr, FieldTypeForRoute, RegionState } from '@/@types/entrepreneur/route-estimation'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { Button, Col, Input, Modal, Row } from 'antd'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ContentTab } from '../../components'
-import { PetitionEstimateRequest } from '@/@types/services/petition'
-import { postPetitionEstimateAPI } from '@/services/entrepreneur/PetitionService'
+import { PetitionEstimateRequest, PostPetitionRoadMapRequest } from '@/@types/services/petition'
+import { postPetitionEstimateAPI, postPetitionRoadMapAPI } from '@/services/entrepreneur/PetitionService'
 import { useRouteContext } from '../../context'
 import Map from '../map/Map'
 import { FaTimes, FaEdit } from 'react-icons/fa';
 import { calculateRoute, geocodeAddress, swapCoordinates, swapCoordinatesDeep } from '@/utils/custom/updateMapAPI'
 import axios from 'axios'
 import { APIResponseRegion } from '@/@types/shared'
+import { getPetitionRoadMapData } from '@/store/slices/entrepreneur'
+import { s } from '@fullcalendar/core/internal-common'
 
 interface Props {
 
@@ -49,8 +51,10 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
   const { province } = useAppSelector(state => state.master)
+  const { petition_detail } = useAppSelector(state => state.entrepreneur.permitList)
   const navigate = useNavigate()
   const { dataParser, setStep, setDataParser } = useRouteContext()
+  const { state } = useLocation()
   // USE STATE
   const [startPoint, setStartPoint] = useState<LatLng | null>(null);
   const [endPoint, setEndPoint] = useState<LatLng | null>(null);
@@ -111,31 +115,15 @@ const RouteEstimation: React.FC<Props> = (props) => {
     formState: { errors },
   } = form
 
-  const onSubmit = useCallback(async (value: FieldTypeArr) => {
-    // CHECK ROUTE
-    if (!routes) {
-      Modal.error({
-        title: 'ผิดพลาด',
-        content: 'ยังไม่มีการประเมินเส้นทาง',
-        okText: 'ตกลง',
-        onOk: () => Modal.destroyAll(),
-        okButtonProps: {
-          style: {
-            fontFamily: 'Noto Sans Thai'
-          }
-        },
-        style: {
-          fontFamily: 'Noto Sans Thai'
-        }
-      })
-    }
+  const onCreate = useCallback(async (value: FieldTypeArr) => {
     // BUILD BODY
     const body: PetitionEstimateRequest = {
       vehicle: value.route_form.map((item) => {
         return {
           turn_radius: Number(item.turn_radius),
           towing_vehicle_id: item.match_type === 3 ? null : Number(item.towering_vehicle),
-          semi_trailer_vehicle_id: item.match_type === 3 ? null : Number(item.semi_trailer_vehicle),
+          // semi_trailer_vehicle_id: item.match_type === 3 ? null : Number(item.semi_trailer_vehicle),
+          semi_trailer_vehicle_id: Number(item.semi_trailer_vehicle),
           // etc_vehicle_id: item.match_type === 2 ? null : Number(item.etc_vehicle),
           etc_vehicle_id: item.match_type === 2 ? null : item.etc_vehicle,
           towing_axis_weight: [
@@ -218,7 +206,6 @@ const RouteEstimation: React.FC<Props> = (props) => {
           }
         })
       } else {
-        console.log('====', error)
         console.error(error)
       }
     } finally {
@@ -230,8 +217,166 @@ const RouteEstimation: React.FC<Props> = (props) => {
     setStep,
     routes?.alternative?.coordinates,
     routes?.main.coordinates,
-    selectedRoute
+    selectedRoute,
+    endDetail,
+    startDetail
   ])
+
+  const onUpdate = useCallback(async (value: FieldTypeArr) => {
+    const body: PostPetitionRoadMapRequest = {
+      petition_id: state?.petition_id || null,
+      vehicles: value.route_form.map((item, index) => {
+        return {
+          estimate_id: petition_detail.road_map.estimate[index].id,
+          turn_radius: Number(item.turn_radius),
+        }
+      }),
+      start_point: {
+        type: "Point",
+        coordinates: selectedRoute === 'main' ? swapCoordinates(routes?.main?.coordinates[0]) : swapCoordinates(routes?.alternative?.coordinates[0])
+      },
+      end_point: {
+        type: "Point",
+        coordinates: selectedRoute === 'main' ? swapCoordinates(routes?.main?.coordinates[routes?.main.coordinates?.length - 1]) : swapCoordinates(routes?.alternative?.coordinates[routes?.alternative?.coordinates.length - 1])
+      },
+      vehicle_route: {
+        type: "LineString",
+        coordinates: selectedRoute === 'main' ? swapCoordinatesDeep(routes?.main?.coordinates) : swapCoordinatesDeep(routes?.alternative?.coordinates)
+      }
+    }
+    // BUILD BODY
+    const formData: PetitionEstimateRequest = {
+      vehicle: value.route_form.map((item) => {
+        return {
+          turn_radius: Number(item.turn_radius),
+          towing_vehicle_id: item.match_type === 3 ? null : Number(item.towering_vehicle),
+          // semi_trailer_vehicle_id: item.match_type === 3 ? null : Number(item.semi_trailer_vehicle),
+          semi_trailer_vehicle_id: Number(item.semi_trailer_vehicle),
+          // etc_vehicle_id: item.match_type === 2 ? null : Number(item.etc_vehicle),
+          etc_vehicle_id: item.match_type === 2 ? null : item.etc_vehicle,
+          towing_axis_weight: [
+            Number(item.towering_weight1),
+            Number(item.towering_weight2),
+            Number(item.towering_weight3),
+            Number(item.towering_weight4),
+            Number(item.towering_weight5),
+            Number(item.towering_weight6),
+            Number(item.towering_weight7),
+          ],
+          semi_trailer_axis_weight: [
+            Number(item.semi_weight1),
+            Number(item.semi_weight2),
+            Number(item.semi_weight3),
+            Number(item.semi_weight4),
+            Number(item.semi_weight5),
+            Number(item.semi_weight6),
+            Number(item.semi_weight7),
+          ]
+        }
+      }),
+      start_point: {
+        type: "Point",
+        coordinates: selectedRoute === 'main' ? swapCoordinates(routes?.main?.coordinates[0]) : swapCoordinates(routes?.alternative?.coordinates[0])
+      },
+      end_point: {
+        type: "Point",
+        coordinates: selectedRoute === 'main' ? swapCoordinates(routes?.main?.coordinates[routes?.main.coordinates?.length - 1]) : swapCoordinates(routes?.alternative?.coordinates[routes?.alternative?.coordinates.length - 1])
+      },
+      vehicle_route: {
+        type: "LineString",
+        coordinates: selectedRoute === 'main' ? swapCoordinatesDeep(routes?.main?.coordinates) : swapCoordinatesDeep(routes?.alternative?.coordinates)
+      }
+    }
+    dispatch(setLoading(true))
+    try {
+      const response = await postPetitionRoadMapAPI(body)
+      console.log("===", response)
+      if (response.status === 200) {
+        Modal.success({
+          title: 'สำเร็จ',
+          content: 'บันทึกข้อมูลสำเร็จ',
+          okText: 'ตกลง',
+          onOk: () => {
+            setDataParser({
+              req_data: formData,
+              res_data: response.data,
+              raw_body: value,
+              region_detail: {
+                start: startDetail,
+                end: endDetail
+              }
+            })
+            setStep(2)
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [
+    state?.petition_id,
+    petition_detail.road_map.estimate,
+    selectedRoute,
+    routes,
+    setDataParser,
+    setStep,
+    endDetail,
+    startDetail,
+    dispatch
+  ])
+
+  const onSubmit = useCallback(async (value: FieldTypeArr) => {
+    // CHECK ROUTE
+    if (!routes) {
+      Modal.error({
+        title: 'ผิดพลาด',
+        content: 'ยังไม่มีการประเมินเส้นทาง',
+        okText: 'ตกลง',
+        onOk: () => Modal.destroyAll(),
+        okButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        },
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        }
+      })
+    }
+    // CHECK
+    if (state?.petition_id) {
+      onUpdate(value)
+    } else {
+      onCreate(value)
+    }
+  }, [routes, state?.petition_id, onCreate, onUpdate])
 
   const handleMapClick = useCallback((latlng: LatLng) => {
     if (isSelectingStart) {
@@ -467,7 +612,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [waypoints]);
+  }, [waypoints, calculateRoutes, isEditMode, startPoint, endPoint]);
 
   // Cleanup timeouts on unmount
   useEffect(() => {
@@ -490,6 +635,20 @@ const RouteEstimation: React.FC<Props> = (props) => {
       setEndPoint({ lat: convertEndPoint[0], lng: convertEndPoint[1] })
     }
   }, [dataParser.raw_body.start_point, dataParser.raw_body.end_point])
+
+  useEffect(() => {
+    if (!state?.petition_id) return
+    if (!petition_detail.road_map.start_point.length) return  // still loading
+
+    const startCoords = [petition_detail.road_map.start_point[1], petition_detail.road_map.start_point[0]]
+    const endCoords = [petition_detail.road_map.end_point[1], petition_detail.road_map.end_point[0]]
+
+    setValue('start_point', startCoords.join(', '))
+    setValue('end_point', endCoords.join(', '))
+
+    setStartPoint({ lat: startCoords[0], lng: startCoords[1] })
+    setEndPoint({ lat: endCoords[0], lng: endCoords[1] })
+  }, [petition_detail.road_map.start_point, petition_detail.road_map.end_point, state?.petition_id, setValue])
 
   return (
     <main>

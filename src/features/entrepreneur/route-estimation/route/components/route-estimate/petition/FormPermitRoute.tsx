@@ -14,6 +14,7 @@ import {
   AiOutlineDelete as DeleteOutlined
 } from "react-icons/ai";
 import dayjs, { Dayjs } from 'dayjs';
+import { useLocation } from 'react-router-dom';
 
 interface Props {
   control: Control<FieldTypePetition>;
@@ -27,6 +28,10 @@ const FormPermitRoute: React.FC<Props> = (props) => {
 
   const { errors } = useFormState({ control })
   const { start_date } = useWatch({ control })
+
+  const location = useLocation()
+  const { state } = location;
+  const isEditVehicle = state?.type === 'ตรวจยานพาหนะ' ? true : false
 
   const uploadFile = useCallback(async (fieldName: string, file: any) => {
     try {
@@ -67,16 +72,18 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                 window.open(url);
               }}
             />
-            <DeleteOutlined
-              className='delete-icon'
-              onClick={() => actions.remove(file)}
-            />
+            {!isEditVehicle && (
+              <DeleteOutlined
+                className='delete-icon'
+                onClick={() => actions.remove(file)}
+              />
+            )}
           </div>
         </div>
       )
     }
     return originNode
-  }, []);
+  }, [isEditVehicle]);
 
   return (
     <>
@@ -99,6 +106,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={isEditVehicle}
               name='start_date'
               control={control}
               rules={{
@@ -139,6 +147,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={isEditVehicle}
               name='end_date'
               control={control}
               rules={{
@@ -170,6 +179,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={isEditVehicle}
               name='contact_name'
               control={control}
               rules={{
@@ -199,6 +209,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={isEditVehicle}
               name='phone_number'
               control={control}
               rules={{
@@ -228,6 +239,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <Controller
+              disabled={isEditVehicle}
               name='project_name'
               control={control}
               rules={{
@@ -257,6 +269,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={state?.petition_id || isEditVehicle ? true : false}
               name='start_point'
               control={control}
               rules={{
@@ -286,6 +299,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={state?.petition_id || isEditVehicle ? true : false}
               name='start_province'
               control={control}
               rules={{
@@ -324,6 +338,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={state?.petition_id || isEditVehicle ? true : false}
               name='end_point'
               control={control}
               rules={{
@@ -353,6 +368,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
             <Controller
+              disabled={state?.petition_id || isEditVehicle ? true : false}
               name='end_Povince'
               control={control}
               rules={{
@@ -396,6 +412,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
             <Controller
+              disabled={isEditVehicle}
               name='poa_url.file'
               control={control}
               rules={{
@@ -406,6 +423,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                   <fieldset>
                     <label>หนังสือมอบอำนาจ <span className='text-red-500'>*</span></label>
                     <Upload
+                      disabled={isEditVehicle}
                       {...field}
                       fileList={field.value || []}
                       maxCount={1}
@@ -466,6 +484,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={8}>
             <Controller
+              disabled={isEditVehicle}
               name='mach_book_url.file'
               control={control}
               rules={{
@@ -476,6 +495,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                   <fieldset>
                     <label>หนังสือวิศวะเครื่องกล <span className='text-red-500'>*</span></label>
                     <Upload
+                      disabled={isEditVehicle}
                       {...field}
                       fileList={field.value || []}
                       maxCount={1}

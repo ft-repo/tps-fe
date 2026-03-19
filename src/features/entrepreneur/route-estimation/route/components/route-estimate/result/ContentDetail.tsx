@@ -181,7 +181,7 @@ const ContentDetail: React.FC<Props> = (props) => {
       case 2:
         return 'รถลากจูง + รถกึ่งพ่วง'
       case 3:
-        return 'เครื่องจักร / สินค้า'
+        return 'รถกึ่งพ่วง'
       default:
         return '-'
     }
@@ -454,6 +454,8 @@ const ContentDetail: React.FC<Props> = (props) => {
           </Row>
         </section>
         : null}
+      {console.log("=== dataParser ===", dataParser.raw_body.route_form[index])}
+      {console.log("=== detail ===", detail)}
       {dataParser.raw_body.route_form[index]?.etc_vehicle?.length ?
         <section className='mt-5'>
           <h5>รูปภาพเครื่องจักร / สินค้า</h5>

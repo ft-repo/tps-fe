@@ -135,7 +135,7 @@ const ContentRouteList: React.FC<Props> = (props) => {
         <TableRoute
           keyId={showTable}
           data={estimate[showTable].data}
-          loading={loading}
+          loading={loading.estimate[showTable].is_loading}
           handleTableChange={handleTableChange}
         />
       </section>

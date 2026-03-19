@@ -3,20 +3,61 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import { EstimateResult, RouteEstimation, RequestPermit } from '../components'
 import { useRouteContext } from '../context'
-import { useAppSelector } from '@/store'
+import { useAppDispatch, useAppSelector } from '@/store'
 import { Modal } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { getPetitionDetailDocumentData, getPetitionDetailVehicleData, getPetitionRoadMapData } from '@/store/slices/entrepreneur'
 
 interface Props {
 }
 
 const RouteEstimationScreen: React.FC<Props> = (props) => {
   const { } = props
-  const { step } = useRouteContext()
+  const { step, setStep } = useRouteContext()
   const { vehicle_selection, loading_string } = useAppSelector(state => state.master)
   // const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
-  const navigate = useNavigate()
   const openRef = useRef<boolean>(false)
+  // REACT HOOK
+  const navigate = useNavigate()
+  const location = useLocation();
+  // GET STATE
+  const { state } = location;
+  // DISPATCH
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    if (state?.petition_id) {
+      if (state?.type === 'ตรวจเส้นทาง') {
+        setStep(1)
+      } else {
+        setStep(3)
+      }
+    }
+  }, [setStep, state?.petition_id, state?.type])
+
+  useEffect(() => {
+    if (state?.petition_id) {
+      dispatch(getPetitionDetailDocumentData({
+        petition_id: state?.petition_id
+      }))
+    }
+  }, [dispatch, state?.petition_id])
+
+  useEffect(() => {
+    if (state?.petition_id) {
+      dispatch(getPetitionDetailVehicleData({
+        petition_id: state?.petition_id
+      }))
+    }
+  }, [dispatch, state?.petition_id])
+
+  useEffect(() => {
+    if (state?.petition_id) {
+      dispatch(getPetitionRoadMapData({
+        petition_id: state?.petition_id
+      }))
+    }
+  }, [state?.petition_id, dispatch])
 
   useEffect(() => {
     if (openRef.current) return

@@ -1,18 +1,22 @@
+/* eslint-disable no-useless-escape */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { FormPermitRoute } from '..'
 import DocumentTabList from '../route-estimate/petition/DocumentTabList'
 import { useRouteContext } from '../../context'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { Button, Col, Modal, Row } from 'antd'
+import { Button, Col, Modal, Row, UploadFile } from 'antd'
 import { FieldTypePetition } from '@/@types/entrepreneur/permit-list'
-import { PetitionConfirmRequest } from '@/@types/services/petition'
+import { PetitionConfirmRequest, PetitionDocumentRequest, PetitionVehicleRequest } from '@/@types/services/petition'
 import dayjs from 'dayjs'
-import { postConfirmPetitionAPI } from '@/services/entrepreneur/PetitionService'
+import { postConfirmPetitionAPI, putPetitionDocumentAPI, putPetitionVehicleAPI } from '@/services/entrepreneur/PetitionService'
 import { getPetitionData } from '@/store/slices/entrepreneur'
+import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
+import { APIResponseRegion } from '@/@types/shared'
+import axios from 'axios'
 
 interface Props {
 
@@ -26,22 +30,30 @@ const RequestPermit: React.FC<Props> = (props) => {
   const { loading } = useAppSelector(state => state.layout)
   const { user } = useAppSelector(state => state.auth)
   const { province } = useAppSelector(state => state.master)
-  const { petition } = useAppSelector(state => state.entrepreneur.permitList)
+  const { petition, petition_detail } = useAppSelector(state => state.entrepreneur.permitList)
+  // REACT HOOK
   const navigate = useNavigate()
+  const location = useLocation();
+  // GET STATE
+  const { state } = location;
+  const isEditDocument = state?.type === 'ตรวจเอกสาร' ? true : false
+  const isEditVehicle = (state?.type === 'ตรวจยานพาหนะ' || state?.type === 'รอแก้ไข') ? true : false
 
+  console.log("===", petition_detail)
+  console.log("===", state?.type)
   // console.log(dataParser)
   // console.log(user)
 
   const form = useForm<FieldTypePetition>({
     defaultValues: {
       set_id: dataParser.res_data.set_id,
-      start_date: dayjs().add(62, 'day'),
-      end_date: dayjs().add(62, 'day').add(1, 'year'),
-      contact_name: user.details.contact_info.contact_name,
-      phone_number: user.details.contact_info.phone_number,
-      project_name: '',
-      start_point: dataParser.raw_body.start_point,
-      end_point: dataParser.raw_body.end_point,
+      start_date: state?.petition_id ? dayjs(petition_detail.document.start_date) : dayjs().add(62, 'day'),
+      end_date: state?.petition_id ? dayjs(petition_detail.document.end_date) : dayjs().add(62, 'day').add(1, 'year'),
+      contact_name: state?.petition_id ? petition_detail.document.contact_name : user.details.contact_info.contact_name,
+      phone_number: state?.petition_id ? petition_detail.document.contact_phone_no : user.details.contact_info.phone_number,
+      project_name: state?.petition_id ? petition_detail.document.project_name : '',
+      start_point: state?.petition_id ? petition_detail.document.start_point : dataParser.raw_body.start_point,
+      end_point: state?.petition_id ? petition_detail.document.end_point : dataParser.raw_body.end_point,
       start_province: dataParser.region_detail.start.id,
       end_Povince: dataParser.region_detail.end.id,
       poa_url: {
@@ -52,53 +64,94 @@ const RequestPermit: React.FC<Props> = (props) => {
         file: [],
         url: ''
       },
-      vehicle: dataParser.res_data.estimate.map(item => {
-        return {
-          estimate_id: item.estimate_id,
-          truck_dimension_url: {
-            file: [],
-            url: ''
-          },
-          semi_trailer_dimension_url: {
-            file: [],
-            url: ''
-          },
-          combined_vehicle_url: {
-            file: [],
-            url: ''
-          },
-          turning_radius_url: {
-            file: [],
-            url: ''
-          },
-          cargo_dimension_url: {
-            file: [],
-            url: ''
-          },
-          highway_dept_permit_url: {
-            file: [],
-            url: ''
-          },
-          highway_dept_permit_number_url: {
-            file: [],
-            url: ''
-          },
-          rural_highway_dept_permit_url: {
-            file: [],
-            url: ''
-          },
-          rural_highway_dept_permit_number_url: {
-            file: [],
-            url: ''
-          },
-        }
-      })
+      vehicle: state?.petition_id ?
+        petition_detail.vehicle.vehicle_list.map(item => {
+          return {
+            estimate_id: item.sort,
+            truck_dimension_url: {
+              file: [],
+              url: ''
+            },
+            semi_trailer_dimension_url: {
+              file: [],
+              url: ''
+            },
+            combined_vehicle_url: {
+              file: [],
+              url: ''
+            },
+            turning_radius_url: {
+              file: [],
+              url: ''
+            },
+            cargo_dimension_url: {
+              file: [],
+              url: ''
+            },
+            highway_dept_permit_url: {
+              file: [],
+              url: ''
+            },
+            highway_dept_permit_number_url: {
+              file: [],
+              url: ''
+            },
+            rural_highway_dept_permit_url: {
+              file: [],
+              url: ''
+            },
+            rural_highway_dept_permit_number_url: {
+              file: [],
+              url: ''
+            },
+          }
+        })
+        : dataParser.res_data.estimate.map(item => {
+          return {
+            estimate_id: item.estimate_id,
+            truck_dimension_url: {
+              file: [],
+              url: ''
+            },
+            semi_trailer_dimension_url: {
+              file: [],
+              url: ''
+            },
+            combined_vehicle_url: {
+              file: [],
+              url: ''
+            },
+            turning_radius_url: {
+              file: [],
+              url: ''
+            },
+            cargo_dimension_url: {
+              file: [],
+              url: ''
+            },
+            highway_dept_permit_url: {
+              file: [],
+              url: ''
+            },
+            highway_dept_permit_number_url: {
+              file: [],
+              url: ''
+            },
+            rural_highway_dept_permit_url: {
+              file: [],
+              url: ''
+            },
+            rural_highway_dept_permit_number_url: {
+              file: [],
+              url: ''
+            },
+          }
+        })
     }
   })
+  const { handleSubmit, control, setValue, reset } = form
 
-  const { handleSubmit, control, setValue } = form
-
-  const onSubmit = useCallback(async (value: FieldTypePetition) => {
+  const onCreate = useCallback(async (value: FieldTypePetition) => {
     const body: PetitionConfirmRequest = {
       set_id: value.set_id,
       start_date: dayjs(value.start_date).format('YYYY-MM-DD'),
@@ -174,6 +227,151 @@ const RequestPermit: React.FC<Props> = (props) => {
     }
   }, [dispatch, province, petition.overview.search, navigate])
 
+  const onUpdateDocument = useCallback(async (value: FieldTypePetition) => {
+    const body: PetitionDocumentRequest = {
+      "petition_id": petition_detail.document.petition_id,
+      "start_date": dayjs(value.start_date).format('YYYY-MM-DD'),
+      "end_date": dayjs(value.end_date).format('YYYY-MM-DD'),
+      "contact_name": value.contact_name,
+      "phone_number": value.phone_number,
+      "project_name": value.project_name,
+      "poa_url": value.poa_url.url,
+      "mach_book_url": value.mach_book_url.url
+    }
+
+    dispatch(setLoading(true))
+    try {
+      const response = await putPetitionDocumentAPI(body)
+      if (response.status === 200) {
+        Modal.success({
+          title: 'ส่งคำขออนุญาตสำเร็จ',
+          content: 'เจ้าหน้าที่ได้รับคำขออนุญาตของคุณแล้ว ใช้ระยะเวลาการพิจารณาภายใน 61 วันทำการโดยไม่นับรวมระยะเวลาที่ผู้ยื่นคำขอใช้ในการแก้ไขหรือเพิ่มเติมเอกสาร ในกรณีที่เอกสารหลักฐานที่ยื่นไม่ครบถ้วนหรือไม่ถูกต้องตามหลักเกณฑ์ที่กำหนด คุณสามารถติดตามสถานะได้ที่ รายการขออนุญาต',
+          okText: 'ตกลง',
+          onOk: () => {
+            dispatch(getPetitionData(petition.overview.search))
+            navigate('/permit-list')
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [petition_detail.document.petition_id, dispatch, petition.overview.search, navigate])
+
+  const onUpdateVehicle = useCallback(async (value: FieldTypePetition) => {
+    const body: PetitionVehicleRequest = {
+      petition_id: state?.petition_id,
+      vehicle: value.vehicle.map((item) => {
+        return {
+          estimate_id: item.estimate_id,
+          truck_dimension_url: item.truck_dimension_url.url,
+          semi_trailer_dimension_url: item.semi_trailer_dimension_url.url,
+          combined_vehicle_url: item.combined_vehicle_url.url,
+          turning_radius_url: item.turning_radius_url.url,
+          cargo_dimension_url: item.cargo_dimension_url.url,
+          highway_dept_permit_url: item.highway_dept_permit_url.url,
+          highway_dept_permit_number_url: item.highway_dept_permit_number_url.url,
+          rural_highway_dept_permit_url: item.rural_highway_dept_permit_url.url,
+          rural_highway_dept_permit_number_url: item.rural_highway_dept_permit_number_url.url,
+        }
+      })
+    }
+
+    dispatch(setLoading(true))
+    try {
+      const response = await putPetitionVehicleAPI(body)
+      console.log(response)
+      if (response.status === 200) {
+        Modal.success({
+          title: 'ส่งคำขออนุญาตสำเร็จ',
+          content: 'เจ้าหน้าที่ได้รับคำขออนุญาตของคุณแล้ว ใช้ระยะเวลาการพิจารณาภายใน 61 วันทำการโดยไม่นับรวมระยะเวลาที่ผู้ยื่นคำขอใช้ในการแก้ไขหรือเพิ่มเติมเอกสาร ในกรณีที่เอกสารหลักฐานที่ยื่นไม่ครบถ้วนหรือไม่ถูกต้องตามหลักเกณฑ์ที่กำหนด คุณสามารถติดตามสถานะได้ที่ รายการขออนุญาต',
+          okText: 'ตกลง',
+          onOk: () => {
+            dispatch(getPetitionData(petition.overview.search))
+            navigate('/permit-list')
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error)
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, state?.petition_id, petition.overview.search, navigate])
+
+  const onSubmit = useCallback(async (value: FieldTypePetition) => {
+    if (state?.petition_id) {
+      console.log("FUNCTION WORK")
+      console.log(state?.petition_id)
+      console.log(isEditDocument)
+      console.log(isEditVehicle)
+      if (isEditDocument) {
+        onUpdateDocument(value)
+        console.log("FIRST")
+      }
+      if (isEditVehicle) {
+        onUpdateVehicle(value)
+        console.log("SECOND")
+      }
+    } else {
+      console.log("THIRD")
+      onCreate(value)
+    }
+  }, [onUpdateDocument, onUpdateVehicle, onCreate, state?.petition_id, isEditDocument, isEditVehicle])
+
   const confirmSubmit = useCallback(() => {
     Modal.confirm({
       title: 'ยืนยันการขอใบอนุญาต',
@@ -200,6 +398,145 @@ const RequestPermit: React.FC<Props> = (props) => {
     })
   }, [loading])
 
+  const resolveProvinceFromCoords = useCallback(async (
+    coordStr: string,
+    field: 'start_province' | 'end_Povince'
+  ) => {
+    const match = coordStr.match(/([\d.\-]+),\s*([\d.\-]+)/)
+    if (!match) return
+    try {
+      const response = await axios.get<APIResponseRegion>(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${match[1]}&longitude=${match[2]}&localityLanguage=th`
+      )
+      if (response.status === 200) {
+        const localText = response.data.principalSubdivision.replace(/^จังหวัด/, '')
+        const findProvinceId = province.find(item => item.name_th === localText)?.id
+        if (findProvinceId) {
+          setValue(field, Number(findProvinceId))
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }, [province, setValue])
+
+  useEffect(() => {
+    if (!state?.petition_id) return
+    if (!petition_detail.document.start_date) return
+
+    const stripCoords = (raw: string) => {
+      const m = raw.match(/([\d.\-]+,\s*[\d.\-]+)/)
+      return m ? m[1].trim() : raw
+    }
+
+    reset({
+      set_id: dataParser.res_data.set_id,
+      start_date: dayjs(petition_detail.document.start_date),
+      end_date: dayjs(petition_detail.document.end_date),
+      contact_name: petition_detail.document.contact_name,
+      phone_number: petition_detail.document.contact_phone_no,
+      project_name: petition_detail.document.project_name,
+      start_point: stripCoords(petition_detail.document.start_point),
+      end_point: stripCoords(petition_detail.document.end_point),
+      start_province: dataParser.region_detail.start.id,
+      end_Povince: dataParser.region_detail.end.id,
+      poa_url: { file: [], url: '' },
+      mach_book_url: { file: [], url: '' },
+      vehicle: petition_detail.vehicle.vehicle_list.map((item, index) => ({
+        estimate_id: petition_detail.road_map.estimate[index]?.id ?? '',
+        truck_dimension_url: { file: [], url: '' },
+        semi_trailer_dimension_url: { file: [], url: '' },
+        combined_vehicle_url: { file: [], url: '' },
+        turning_radius_url: { file: [], url: '' },
+        cargo_dimension_url: { file: [], url: '' },
+        highway_dept_permit_url: { file: [], url: '' },
+        highway_dept_permit_number_url: { file: [], url: '' },
+        rural_highway_dept_permit_url: { file: [], url: '' },
+        rural_highway_dept_permit_number_url: { file: [], url: '' },
+      })),
+    })
+    resolveProvinceFromCoords(petition_detail.document.start_point, 'start_province')
+    resolveProvinceFromCoords(petition_detail.document.end_point, 'end_Povince')
+  }, [
+    petition_detail.document,
+    petition_detail.vehicle.vehicle_list,
+    reset,
+    state?.petition_id,
+    dataParser.res_data.set_id,
+    dataParser.region_detail.start.id,
+    dataParser.region_detail.end.id,
+    resolveProvinceFromCoords,
+    petition_detail.road_map.estimate
+  ])
+
+  const extractUrl = useCallback((url: string) => {
+    return url.split('/upload')[1]
+  }, [])
+
+  const fetchFileToField = useCallback(async (fieldName: string, label: string, fullUrl: string) => {
+    const path = extractUrl(fullUrl)
+    if (!path) return
+    try {
+      const response = await getUploadAPI(path)
+      if (response.status === 200) {
+        const blobFile = new Blob([response.data], { type: response.data.type })
+        const objectUrl = URL.createObjectURL(blobFile)
+        setValue(`${fieldName}.file` as any, [{
+          name: label,
+          uid: fieldName,
+          status: 'done',
+          url: objectUrl,
+          type: response.data.type,
+          originFileObj: blobFile as any,
+        } as UploadFile])
+        setValue(`${fieldName}.url` as any, fullUrl)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }, [extractUrl, setValue])
+
+  useEffect(() => {
+    if (!state?.petition_id) return
+    if (!petition_detail.document.start_date) return
+    if (!petition_detail.road_map.estimate.length) return   // ← add this
+    if (petition_detail.road_map.estimate.length !== petition_detail.vehicle.vehicle_list.length) return  // ← add this
+
+    if (petition_detail.document.poa_url) {
+      fetchFileToField('poa_url', 'หนังสือมอบอำนาจ', petition_detail.document.poa_url)
+    }
+    if (petition_detail.document.mach_book_url) {
+      fetchFileToField('mach_book_url', 'สมุดคู่มือจดทะเบียน', petition_detail.document.mach_book_url)
+    }
+    petition_detail.vehicle.vehicle_list.forEach((item, index) => {
+      const urlFields: Array<[string, string]> = [
+        ['truck_dimension_url', 'รูปแบบที่แสดงมิติ รถลากจูง'],
+        ['semi_trailer_dimension_url', 'รูปแบบที่แสดงมิติ รถกึ่งพ่วง'],
+        ['combined_vehicle_url', 'รูปแบบยานพาหนะรวมสิ่งของ'],
+        ['turning_radius_url', 'รูปแบบที่แสดงรัศมีวงเลี่ยว'],
+        ['cargo_dimension_url', 'รูปแบบที่แสดงมิติ เครื่องจักร / สินค้า'],
+        ['highway_dept_permit_url', 'เอกสารขออนุญาตจาก ทล.'],
+        ['highway_dept_permit_number_url', 'เลขที่ขออนุญาตเดิมจาก ทล.'],
+        ['rural_highway_dept_permit_url', 'เอกสารขออนุญาตจาก ทช.'],
+        ['rural_highway_dept_permit_number_url', 'เลขที่ขออนุญาตเดิมจาก ทช.'],
+      ]
+      urlFields.forEach(([field, label]) => {
+        const url = (item as any)[field] as string
+        if (url) {
+          fetchFileToField(`vehicle.${index}.${field}`, label, url)
+        }
+      })
+    })
+  }, [
+    state?.petition_id,
+    petition_detail.document.start_date,
+    petition_detail.document.poa_url,
+    petition_detail.document.mach_book_url,
+    petition_detail.vehicle.vehicle_list,
+    petition_detail.road_map.estimate,
+    fetchFileToField,
+  ])
+
   return (
     <>
       <section className='flex justify-between items-center flex-wrap gap-5'>
@@ -211,7 +548,13 @@ const RequestPermit: React.FC<Props> = (props) => {
             type='default'
             // size='large'
             className='w-full lg:w-auto'
-            onClick={() => setStep((prev: number) => prev - 1)}
+            onClick={() => {
+              if (state?.petition_id) {
+                navigate('/permit-list')
+              } else {
+                setStep((prev: number) => prev - 1)
+              }
+            }}
           >
             ย้อนกลับ
           </Button>

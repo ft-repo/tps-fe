@@ -1,16 +1,18 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Tabs, type TabsProps } from 'antd'
 import { Control, useFieldArray, UseFormSetValue, UseFormTrigger } from 'react-hook-form'
-import { FieldTypeArr } from '@/@types/entrepreneur/route-estimation'
+import { FieldTypeArr, FieldTypeForRoute } from '@/@types/entrepreneur/route-estimation'
 import FormVehicle from './FormVehicle';
 import { useRouteContext } from '../../../context';
+import { useAppSelector } from '@/store';
+import { useLocation } from 'react-router-dom';
 
 interface Props {
   control: Control<FieldTypeArr>;
   setValue: UseFormSetValue<FieldTypeArr>;
-  trigger: UseFormTrigger<FieldTypeArr>;   // ← add
+  trigger: UseFormTrigger<FieldTypeArr>;
 }
 
 type TabItem = NonNullable<TabsProps['items']>[number]
@@ -18,29 +20,34 @@ type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
 const ContentTab: React.FC<Props> = (props) => {
   const { control, setValue, trigger } = props
-  const { fields, append, remove } = useFieldArray({ control, name: 'route_form' })
+  const { fields, append, remove, replace } = useFieldArray({ control, name: 'route_form' })
   const { dataParser } = useRouteContext()
+  const { petition_detail } = useAppSelector(state => state.entrepreneur.permitList)
+  const { state } = useLocation()
+
+  const isEditMode = !!state?.petition_id
+  const hasInitializedFromApiRef = useRef(false)
+
   // DECLARE INIT STATE
   const initTabItems: TabItem[] = dataParser.req_data.vehicle.length ?
-    dataParser.req_data.vehicle.map((item, index) => {
-      return {
-        key: String(index),
-        label: `รถคู่ที่ ${index + 1}`,
-        children: (
-          <FormVehicle
-            formItem={fields[index]}
-            formIndex={index}
-            control={control}
-            setValue={setValue}
-            trigger={trigger}
-          />
-        ),
-        closable: index === 0 ? false : true,
-      }
-    })
+    dataParser.req_data.vehicle.map((item, index) => ({
+      key: `init-${index}`,
+      label: `รถคู่ที่ ${index + 1}`,
+      children: (
+        <FormVehicle
+          formItem={fields[index]}
+          formIndex={index}
+          control={control}
+          setValue={setValue}
+          trigger={trigger}
+        />
+      ),
+      closable: isEditMode ? false : index !== 0,
+      forceRender: true,
+    }))
     : [
       {
-        key: '1',
+        key: 'init-0',
         label: 'รถคู่ที่ 1',
         children: (
           <FormVehicle
@@ -52,14 +59,75 @@ const ContentTab: React.FC<Props> = (props) => {
           />
         ),
         closable: false,
+        forceRender: true,
       },
     ]
+
   // DECLARE STATE
   const [tabKey, setTabKey] = useState(initTabItems[0].key)
   const [tabItems, setTabItems] = useState<TabItem[]>(initTabItems)
 
+  // Rebuild tabs from petition_detail.road_map.estimate when in edit mode
+  useEffect(() => {
+    if (!isEditMode) return
+    if (hasInitializedFromApiRef.current) return
+    if (!petition_detail.road_map.estimate.length) return
+
+    hasInitializedFromApiRef.current = true
+
+    const mappedRouteForm: FieldTypeForRoute[] = petition_detail.road_map.estimate.map((e) => {
+      const match_type =
+        e.towing_vehicle_id === null || e.towing_vehicle_id === undefined
+          ? 3
+          : !e.etc_vehicle || e.etc_vehicle.length === 0
+            ? 2
+            : 1
+      return {
+        match_type,
+        turn_radius: e.turn_radius,
+        towering_vehicle: e.towing_vehicle_id ?? null,
+        semi_trailer_vehicle: e.semi_trailer_vehicle_id,
+        etc_vehicle: e.etc_vehicle ? e.etc_vehicle.map((v) => v.vehicle_id) : [],
+        towering_weight1: e.towing_axis_weight[0] ?? 0,
+        towering_weight2: e.towing_axis_weight[1] ?? 0,
+        towering_weight3: e.towing_axis_weight[2] ?? 0,
+        towering_weight4: e.towing_axis_weight[3] ?? 0,
+        towering_weight5: e.towing_axis_weight[4] ?? 0,
+        towering_weight6: e.towing_axis_weight[5] ?? 0,
+        towering_weight7: e.towing_axis_weight[6] ?? 0,
+        semi_weight1: e.semi_trailer_axis_weight[0] ?? 0,
+        semi_weight2: e.semi_trailer_axis_weight[1] ?? 0,
+        semi_weight3: e.semi_trailer_axis_weight[2] ?? 0,
+        semi_weight4: e.semi_trailer_axis_weight[3] ?? 0,
+        semi_weight5: e.semi_trailer_axis_weight[4] ?? 0,
+        semi_weight6: e.semi_trailer_axis_weight[5] ?? 0,
+        semi_weight7: e.semi_trailer_axis_weight[6] ?? 0,
+      }
+    })
+
+    replace(mappedRouteForm)
+
+    const newTabItems: TabItem[] = mappedRouteForm.map((item, index) => ({
+      key: `api-${index}`,         // ← unique prefix: never matches any 'init-N' key
+      label: `รถคู่ที่ ${index + 1}`,
+      children: (
+        <FormVehicle
+          formItem={item}
+          formIndex={index}
+          control={control}
+          setValue={setValue}
+          trigger={trigger}
+        />
+      ),
+      closable: false,
+      forceRender: true,
+    }))
+
+    setTabItems(newTabItems)
+    setTabKey('api-0')
+  }, [petition_detail.road_map.estimate, isEditMode, replace, control, setValue, trigger])
+
   const onAdd = useCallback(() => {
-    // APEND FIELD
     append({
       "match_type": null,
       "turn_radius": "",
@@ -81,10 +149,9 @@ const ContentTab: React.FC<Props> = (props) => {
       "semi_weight6": 0,
       "semi_weight7": 0,
     })
-    // APPEND TAB
     const newTabItem: TabsProps['items'] = [
       {
-        key: `${tabItems.length + 1}`,
+        key: `new-${tabItems.length}`,
         label: `รถคู่ที่ ${tabItems.length + 1}`,
         children: (
           <FormVehicle
@@ -95,11 +162,12 @@ const ContentTab: React.FC<Props> = (props) => {
             trigger={trigger}
           />
         ),
+        closable: true,
+        forceRender: true,
       }
     ]
-    // SET TAB
     setTabItems([...tabItems, ...newTabItem])
-  }, [tabItems, setTabItems, append, fields, control, setValue, trigger])
+  }, [tabItems, append, fields, control, setValue, trigger])
 
   const onRemove = useCallback((targetKey: TargetKey) => {
     const newTabItems = tabItems.filter((item, index) => {
@@ -113,34 +181,33 @@ const ContentTab: React.FC<Props> = (props) => {
     const reorderTabItems = newTabItems.map((item, index) => ({
       ...item,
       label: `รถคู่ที่ ${index + 1}`,
-      key: `${index + 1}`,
     }))
 
     setTabItems(reorderTabItems)
-  }, [tabItems, setTabItems, remove])
+  }, [tabItems, remove])
 
   const onEdit = useCallback((targetKey: React.MouseEvent | React.KeyboardEvent | string, action: 'add' | 'remove') => {
+    if (isEditMode) return
     if (action === 'add') {
       const MAX_TABS = 4;
-      if (tabItems.length >= MAX_TABS) {
-        return; // Don't add if limit reached
-      }
+      if (tabItems.length >= MAX_TABS) return;
       onAdd()
     } else {
       onRemove(targetKey)
     }
-  }, [onAdd, onRemove, tabItems])
+  }, [isEditMode, onAdd, onRemove, tabItems])
 
   const onChange = useCallback((newActiveKey: string) => {
     setTabKey(newActiveKey)
-  }, [setTabKey])
+  }, [])
 
   return (
     <Tabs
       type="editable-card"
-      defaultActiveKey={tabKey}
+      activeKey={tabKey}
       items={tabItems}
-      onChange={(tabKey) => onChange(tabKey)}
+      hideAdd={isEditMode}
+      onChange={onChange}
       onEdit={(tabKey, action) => onEdit(tabKey, action)}
     />
   )

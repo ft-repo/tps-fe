@@ -42,12 +42,12 @@ const FormDocumentVehicle: React.FC<Props> = (props) => {
           name='petition_extended_vehicle_document.vehicle_registration_url.file'
           control={control}
           rules={{
-            required: 'กรุณาอัปโหลดสำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง'
+            required: 'กรุณาอัปโหลดสำเนาคู่มือจดทะเบียนและประวัติยานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง'
           }}
           render={({ field }) => {
             return (
               <fieldset>
-                <label>สำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
+                <label>สำเนาคู่มือจดทะเบียนและประวัติยานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง (รองรับไฟล์ .pdf เท่านั้น) <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}

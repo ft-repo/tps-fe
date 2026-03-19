@@ -6,7 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, UseFormTrigger, useWatch } from 'react-hook-form';
 // import { VehicleDetail } from '@/services/master/MasterService';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules'
 import { InfoCircleFilled } from '@ant-design/icons';
@@ -56,6 +56,8 @@ const FormVehicle: React.FC<Props> = (props) => {
   const navigate = useNavigate()
   // CONTEXT
   const { towingMaxWeight, setTowingMaxWeight, semiMaxWeight, setSemiMaxWeight } = useRouteContext()
+  const { state } = useLocation()
+  const isRoadMap = state?.type === 'ตรวจเส้นทาง' ? true : false
 
   const {
     match_type,
@@ -406,6 +408,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                   <fieldset>
                     <label>เลือกประเภทจับคู่ <span className='text-red-500'>*</span></label>
                     <Select
+                      disabled={isRoadMap}
                       {...field}
                       allowClear
                       showSearch
@@ -532,6 +535,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       <h5>รถลากจูง</h5>
                       <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                       <Select
+                        disabled={isRoadMap}
                         {...field}
                         allowClear
                         showSearch
@@ -612,6 +616,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       <h5>รถกึ่งพ่วง</h5>
                       <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                       <Select
+                        disabled={isRoadMap}
                         {...field}
                         allowClear
                         showSearch
@@ -680,6 +685,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       <h5>สินค้า / เครื่องจักร</h5>
                       <label>ชื่อสินค้า / เครื่องจักร <span className='text-red-500'>*</span></label>
                       <Select
+                        disabled={isRoadMap}
                         {...field}
                         allowClear
                         showSearch
@@ -745,6 +751,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       return (
                         <fieldset>
                           <Input
+                            disabled={isRoadMap}
                             {...field}
                             name={field.name}
                             placeholder='กรุณาระบุ'
@@ -788,6 +795,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       return (
                         <fieldset>
                           <Input
+                            disabled={isRoadMap}
                             {...field}
                             name={field.name}
                             placeholder='กรุณาระบุ'
@@ -831,6 +839,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -873,6 +882,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -915,6 +925,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -957,6 +968,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -999,6 +1011,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1049,6 +1062,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       return (
                         <fieldset>
                           <Input
+                            disabled={isRoadMap}
                             {...field}
                             name={field.name}
                             placeholder='กรุณาระบุ'
@@ -1089,6 +1103,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       return (
                         <fieldset>
                           <Input
+                            disabled={isRoadMap}
                             {...field}
                             name={field.name}
                             placeholder='กรุณาระบุ'
@@ -1132,6 +1147,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1174,6 +1190,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1216,6 +1233,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1258,6 +1276,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1299,6 +1318,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
+                          disabled={isRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'

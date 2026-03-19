@@ -124,6 +124,75 @@ const OtherDocument: React.FC<Props> = (props) => {
     setValue
   } = form
 
+  const onPrintAddress = useCallback(() => {
+    const postalCode = '10220'
+    const circles = postalCode.split('').map(d =>
+      `<span class="circle">${d}</span>`
+    ).join('')
+
+    const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans Thai', sans-serif; padding: 48px; }
+    .label { width: 640px; }
+    .title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+    .line {
+      border-bottom: 2px dashed #999;
+      padding-bottom: 6px;
+      margin-bottom: 22px;
+      font-size: 15px;
+      min-height: 28px;
+    }
+    .postal-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+    .label-text { font-size: 15px; font-weight: 700; margin-right: 4px; }
+    .circle {
+      width: 34px; height: 34px;
+      border: 1.5px solid #888;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    @media print { body { padding: 24px; } }
+  </style>
+</head>
+<body>
+  <div class="label">
+    <div class="title">ชื่อผู้รับ</div>
+    <div class="line">กรมทางหลวงชนบท สำนักบำรุงทาง</div>
+    <div class="line">เลขที่ 9 ถนนพหลโยธิน</div>
+    <div class="line">แขวงอนุสาวรีย์ เขตบางเขน กทม. 10220</div>
+    <div class="line"></div>
+    <div class="postal-row">
+      <span class="label-text">รหัสไปรษณีย์</span>
+      ${circles}
+    </div>
+  </div>
+</body>
+</html>`
+
+    const iframe = document.createElement('iframe')
+    iframe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;border:none;visibility:hidden;'
+    document.body.appendChild(iframe)
+
+    const doc = iframe.contentDocument || iframe.contentWindow?.document
+    if (!doc) return
+
+    doc.open()
+    doc.write(html)
+    doc.close()
+
+    iframe.contentWindow?.focus()
+    iframe.contentWindow?.print()
+
+    setTimeout(() => document.body.removeChild(iframe), 1000)
+  }, [])
+
   const renderResult = useMemo(() => {
     return (
       <div>
@@ -204,6 +273,13 @@ const OtherDocument: React.FC<Props> = (props) => {
           },
           okButtonProps: {
             style: {
+              fontFamily: 'Noto Sans Thai',
+              backgroundColor: '#1629FF',
+              color: '#FFFFFF'
+            }
+          },
+          cancelButtonProps: {
+            style: {
               fontFamily: 'Noto Sans Thai'
             }
           },
@@ -215,6 +291,7 @@ const OtherDocument: React.FC<Props> = (props) => {
               <>
                 <Button
                   className='!bg-[#1629FF] !text-white'
+                  onClick={() => onPrintAddress()}
                 >
                   พิมพ์ที่อยู่
                 </Button>
@@ -246,18 +323,16 @@ const OtherDocument: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dataParser.temporary_id, dispatch, navigate, petition_extended.overview.search, renderResult])
+  }, [dataParser.temporary_id, dispatch, navigate, petition_extended.overview.search, renderResult, onPrintAddress])
 
-  const onPrintAddress = useCallback(() => {
+  const onConfirmPrintAddress = useCallback(() => {
     Modal.confirm({
       title: 'ตรวจสอบเอกสารและพิมพ์ที่อยู่',
       content: renderResult,
       okText: 'พิมพ์ที่อยู่',
       cancelText: 'รับทราบ',
       width: 1000,
-      onOk: () => {
-        Modal.destroyAll()
-      },
+      onOk: () => onPrintAddress(),
       onCancel: () => Modal.destroyAll(),
       okButtonProps: {
         style: {
@@ -283,7 +358,7 @@ const OtherDocument: React.FC<Props> = (props) => {
         )
       }
     })
-  }, [renderResult])
+  }, [renderResult, onPrintAddress])
 
   return (
     <main>
@@ -296,7 +371,7 @@ const OtherDocument: React.FC<Props> = (props) => {
             type='primary'
             // size='large'
             className='w-full lg:w-auto !bg-[#1629FF] hover:!bg-[#1629FF90]'
-            onClick={() => onPrintAddress()}
+            onClick={() => onConfirmPrintAddress()}
           >
             พิมพ์ที่อยู่
           </Button>
