@@ -154,7 +154,7 @@ const ContentSearchOther: React.FC<Props> = (props) => {
       <section className='mt-3'>
         <TablePetitionExtended
           data={petition_extended.overview.data}
-          loading={loading}
+          loading={loading.petition_extended.overview.is_loading}
           handleTableChange={handleTableChange}
           openMessageModal={openMessageModal}
         />

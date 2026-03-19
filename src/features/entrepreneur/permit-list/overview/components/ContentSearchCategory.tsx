@@ -66,6 +66,15 @@ export const INIT_MODAL_MESSAGE: ModalMessageStateProps = {
       last_name: '',
       department_id: 0,
       role_id: 0
+    },
+    petition_hold: {
+      id: 0,
+      petition_flow_id: 0,
+      hold_date: '',
+      date_expired: '',
+      created_by: '',
+      created_at: '',
+      is_end: false,
     }
   }
 }
@@ -179,6 +188,28 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
     }
   }, [dispatch, petition.overview.search])
 
+  const refetchMessage = useCallback(async () => {
+    if (!openMessage.data.id) return
+    dispatch(setLoading(true))
+    try {
+      const response = await getPetitionMessageAPI({ message_id: openMessage.data.id })
+      if (response.status === 200) {
+        setOpenMessage(prev => ({
+          ...prev,
+          data: response.data
+        }))
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [dispatch, openMessage.data.id])
+
   return (
     <div>
       <Flex
@@ -205,7 +236,7 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
       <section className='mt-3'>
         <TablePetition
           data={petition.overview.data}
-          loading={loading}
+          loading={loading.petition.overview.is_loading}
           handleTableChange={handleTableChange}
           openDataModal={openDataModal}
           openMessageModal={openMessageModal}
@@ -215,6 +246,8 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
         open={openMessage.open}
         data={openMessage.data}
         setOpen={setOpenMessage}
+        onRefetch={refetchMessage}   // ← add
+
       />
       <ModalRuralRoadDetails
         open={open.open}
