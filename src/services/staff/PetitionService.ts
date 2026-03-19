@@ -1,4 +1,4 @@
-import { GetEstimateDetailParams, GetPetitionDetailParams, GetPetitionExtendedDetailParams, GetPetitionParams, PetitionExtendedPostBody, PetitionPostBody } from "@/@types/services/petition"
+import { GetEstimateDetailParams, GetPetitionDetailParams, GetPetitionExtendedDetailParams, GetPetitionParams, PetitionExtendedPostBody, PetitionPostBody, PostPetitionEndRequest, PostPetitionEndResponse } from "@/@types/services/petition"
 import ApiService from "../ApiService"
 import { AdminPetitionCount, AdminPetitionData, AdminPetitionExtendedData } from "@/@types/reducer/petition"
 import { GetPaginateParams } from "@/@types/shared"
@@ -122,9 +122,18 @@ export const getPetitionCountAPI = async () => {
     method: 'get',
   })
 }
+
 export const getPetitionExtendedCountAPI = async () => {
   return ApiService.fetchData<AdminPetitionCount[]>({
     url: `/admin/petition_extended/count`,
     method: 'get',
+  })
+}
+
+export const postPetitionEndAPI = async (data: PostPetitionEndRequest) => {
+  return ApiService.fetchData<PostPetitionEndResponse, PostPetitionEndRequest>({
+    url: `/admin/petition/end`,
+    method: 'POST',
+    data: { ...data }
   })
 }

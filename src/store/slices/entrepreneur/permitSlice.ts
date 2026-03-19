@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { SLICE_BASE_NAME } from './constant'
 import { PetitionState } from '@/@types/reducer/petition'
-import { getPetitionAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateDetailAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedAPI } from '@/services/entrepreneur/PetitionService'
-import { GetEstimateDetailParams, GetEstimateParams, GetPetitionParams } from '@/@types/services/petition'
+import { getPetitionAPI, getPetitionDetailDocumentAPI, getPetitionDetailVehicleAPI, getPetitionEstimateBridgeAPI, getPetitionEstimateDetailAPI, getPetitionEstimateSummaryAPI, getPetitionEstimateTurnRadiusAPI, getPetitionExtendedAPI, getPetitionRoadMapAPI } from '@/services/entrepreneur/PetitionService'
+import { GetEstimateDetailParams, GetEstimateParams, GetPetitionDetailParams, GetPetitionParams, PetitionRoadMapRequest } from '@/@types/services/petition'
 
 const initialState: PetitionState = {
 	petition: {
@@ -116,7 +116,91 @@ const initialState: PetitionState = {
 			}
 		}
 	},
-	loading: false
+	petition_detail: {
+		document: {
+			"petition_id": 0,
+			"registration_no": "",
+			"business_name": "",
+			"entity_type": "",
+			"address": "",
+			"business_phone_no": "",
+			"contact_name": "",
+			"contact_phone_no": "",
+			"project_name": "",
+			"petition_type": "",
+			"start_date": "",
+			"end_date": "",
+			"start_point": "",
+			"end_point": "",
+			"poa_url": "",
+			"mach_book_url": ""
+		},
+		vehicle: {
+			"petition_id": 0,
+			"vehicle_list": []
+		},
+		road_map: {
+			id: '',
+			vehicle_route: [],
+			start_point: [],
+			end_point: [],
+			estimate: [],
+		}
+	},
+	loading: {
+		petition: {
+			overview: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			},
+			detail: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			}
+		},
+		petition_extended: {
+			overview: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			},
+			detail: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			}
+		},
+		estimate: {
+			bridge: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			},
+			detail: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			},
+			summary: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			},
+			turn_radius: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			}
+		},
+		petition_detail: {
+			document: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			},
+			vehicle: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			},
+			road_map: {
+				is_loading: false,
+				loading_string: 'IDLE'
+			}
+		}
+	}
 }
 
 // export const SLICE_NAME = 'yourSliceName';
@@ -157,6 +241,24 @@ export const getEstimateTurnRadiusData = createAsyncThunk(`${SLICE_BASE_NAME}/pe
 	return response.data
 })
 
+export const getPetitionDetailDocumentData = createAsyncThunk(`${SLICE_BASE_NAME}/petition` + '/apiGetPetitionDetailDocumentData', async (params: GetPetitionDetailParams) => {
+	// assume someService required reesponse & require type as generic
+	const response = await getPetitionDetailDocumentAPI(params)
+	return response.data
+})
+
+export const getPetitionDetailVehicleData = createAsyncThunk(`${SLICE_BASE_NAME}/petition` + '/apiGetPetitionDetailVehicleData', async (params: GetPetitionDetailParams) => {
+	// assume someService required reesponse & require type as generic
+	const response = await getPetitionDetailVehicleAPI(params)
+	return response.data
+})
+
+export const getPetitionRoadMapData = createAsyncThunk(`${SLICE_BASE_NAME}/petition` + '/apiGetPetitionRoadMapData', async (params: PetitionRoadMapRequest) => {
+	// assume someService required reesponse & require type as generic
+	const response = await getPetitionRoadMapAPI(params)
+	return response.data
+})
+
 const petitionSlice = createSlice({
 	name: `${SLICE_BASE_NAME}/petition`,
 	initialState,
@@ -190,76 +292,157 @@ const petitionSlice = createSlice({
 			state.estimate.turn_radius.search = action.payload.params,
 				state.estimate.turn_radius.data = action.payload.data
 		},
+		setPetitionDetailDocument: (state, action) => {
+			state.petition_detail.document = action.payload
+		},
+		setPetitionDetailRoadMap: (state, action) => {
+			state.petition_detail.road_map = action.payload
+		},
+		// RESET
+		resetPetitionDetailDocument: (state) => {
+			state.petition_detail.document = initialState.petition_detail.document
+		},
+		resetPetitionDetailRoadMap: (state) => {
+			state.petition_detail.road_map = initialState.petition_detail.road_map
+		},
 	},
 	extraReducers: (builder) => {
-		builder.addCase(getPetitionData.fulfilled, (state, action) => {
-			state.petition.overview.data = action.payload,
-				state.loading = false
-		})
+		builder
+			.addCase(getPetitionData.fulfilled, (state, action) => {
+				state.petition.overview.data = action.payload,
+					state.loading.petition.overview.is_loading = false,
+					state.loading.petition.overview.loading_string = 'SUCCESS'
+			})
 			.addCase(getPetitionData.pending, (state) => {
-				state.loading = true
+				state.loading.petition.overview.is_loading = true,
+					state.loading.petition.overview.loading_string = 'LOADING'
 			})
 			.addCase(getPetitionData.rejected, (state) => {
-				state.loading = false
+				state.loading.petition.overview.is_loading = false,
+					state.loading.petition.overview.loading_string = 'FAILED'
 			})
-		builder.addCase(getPetitionExtendedData.fulfilled, (state, action) => {
-			state.petition_extended.overview.data = action.payload,
-				state.loading = false
-		})
+		builder
+			.addCase(getPetitionExtendedData.fulfilled, (state, action) => {
+				state.petition_extended.overview.data = action.payload,
+					state.loading.petition_extended.overview.is_loading = false,
+					state.loading.petition_extended.overview.loading_string = 'SUCCESS'
+			})
 			.addCase(getPetitionExtendedData.pending, (state) => {
-				state.loading = true
+				state.loading.petition_extended.overview.is_loading = true,
+					state.loading.petition_extended.overview.loading_string = 'LOADING'
 			})
 			.addCase(getPetitionExtendedData.rejected, (state) => {
-				state.loading = false
+				state.loading.petition_extended.overview.is_loading = false,
+					state.loading.petition_extended.overview.loading_string = 'FAILED'
 			})
 		// ESTIMATE DETAIL
-		builder.addCase(getEstimateDetailData.fulfilled, (state, action) => {
-			state.estimate.detail = action.payload,
-				state.loading = false
-		})
+		builder
+			.addCase(getEstimateDetailData.fulfilled, (state, action) => {
+				state.estimate.detail = action.payload,
+					state.loading.estimate.detail.is_loading = false,
+					state.loading.estimate.detail.loading_string = 'SUCCESS'
+			})
 			.addCase(getEstimateDetailData.pending, (state) => {
-				state.loading = true
+				state.loading.estimate.detail.is_loading = true,
+					state.loading.estimate.detail.loading_string = 'LOADING'
+
 			})
 			.addCase(getEstimateDetailData.rejected, (state) => {
-				state.loading = false
+				state.loading.estimate.detail.is_loading = false,
+					state.loading.estimate.detail.loading_string = 'FAILED'
 			})
 		// ESTIMATE SUMMARY
-		builder.addCase(getEstimateSummaryData.fulfilled, (state, action) => {
-			state.estimate.summary.data.data = action.payload,
-				state.loading = false
-		})
+		builder
+			.addCase(getEstimateSummaryData.fulfilled, (state, action) => {
+				state.estimate.summary.data.data = action.payload,
+					state.loading.estimate.summary.is_loading = false,
+					state.loading.estimate.summary.loading_string = 'SUCCESS'
+			})
 			.addCase(getEstimateSummaryData.pending, (state) => {
-				state.loading = true
+				state.loading.estimate.summary.is_loading = true,
+					state.loading.estimate.summary.loading_string = 'LOADING'
 			})
 			.addCase(getEstimateSummaryData.rejected, (state) => {
-				state.loading = false
+				state.loading.estimate.summary.is_loading = false,
+					state.loading.estimate.summary.loading_string = 'FAILED'
 			})
 		// ESTIMATE BRIDGE
-		builder.addCase(getEstimateBridgeData.fulfilled, (state, action) => {
-			state.estimate.bridge.data = action.payload,
-				state.loading = false
-		})
+		builder
+			.addCase(getEstimateBridgeData.fulfilled, (state, action) => {
+				state.estimate.bridge.data = action.payload,
+					state.loading.estimate.bridge.is_loading = false,
+					state.loading.estimate.bridge.loading_string = 'SUCCESS'
+			})
 			.addCase(getEstimateBridgeData.pending, (state) => {
-				state.loading = true
+				state.loading.estimate.bridge.is_loading = true,
+					state.loading.estimate.bridge.loading_string = 'LOADING'
 			})
 			.addCase(getEstimateBridgeData.rejected, (state) => {
-				state.loading = false
+				state.loading.estimate.bridge.is_loading = false,
+					state.loading.estimate.bridge.loading_string = 'FAILED'
 			})
-		// ESTIMATE BRIDGE
-		builder.addCase(getEstimateTurnRadiusData.fulfilled, (state, action) => {
-			state.estimate.turn_radius.data = action.payload,
-				state.loading = false
-		})
+		// ESTIMATE TURN RADIUS
+		builder
+			.addCase(getEstimateTurnRadiusData.fulfilled, (state, action) => {
+				state.estimate.turn_radius.data = action.payload,
+					state.loading.estimate.turn_radius.is_loading = false,
+					state.loading.estimate.turn_radius.loading_string = 'SUCCESS'
+			})
 			.addCase(getEstimateTurnRadiusData.pending, (state) => {
-				state.loading = true
+				state.loading.estimate.turn_radius.is_loading = true,
+					state.loading.estimate.turn_radius.loading_string = 'LOADING'
 			})
 			.addCase(getEstimateTurnRadiusData.rejected, (state) => {
-				state.loading = false
+				state.loading.estimate.turn_radius.is_loading = false,
+					state.loading.estimate.turn_radius.loading_string = 'FAILED'
+			})
+		// PETITION DETAIL DOCUMENT
+		builder
+			.addCase(getPetitionDetailDocumentData.fulfilled, (state, action) => {
+				state.petition_detail.document = action.payload,
+					state.loading.petition_detail.document.is_loading = false,
+					state.loading.petition_detail.document.loading_string = 'SUCCESS'
+			})
+			.addCase(getPetitionDetailDocumentData.pending, (state) => {
+				state.loading.petition_detail.document.is_loading = true,
+					state.loading.petition_detail.document.loading_string = 'LOADING'
+			})
+			.addCase(getPetitionDetailDocumentData.rejected, (state) => {
+				state.loading.petition_detail.document.is_loading = false,
+					state.loading.petition_detail.document.loading_string = 'FAILED'
+			})
+		// PETITION DETAIL VEHICLE
+		builder
+			.addCase(getPetitionDetailVehicleData.fulfilled, (state, action) => {
+				state.petition_detail.vehicle = action.payload,
+					state.loading.petition_detail.vehicle.is_loading = false,
+					state.loading.petition_detail.vehicle.loading_string = 'SUCCESS'
+			})
+			.addCase(getPetitionDetailVehicleData.pending, (state) => {
+				state.loading.petition_detail.vehicle.is_loading = true,
+					state.loading.petition_detail.vehicle.loading_string = 'LOADING'
+			})
+			.addCase(getPetitionDetailVehicleData.rejected, (state) => {
+				state.loading.petition_detail.vehicle.is_loading = false,
+					state.loading.petition_detail.vehicle.loading_string = 'FAILED'
+			})
+		// PETITION DETAIL ROAD MAP
+		builder
+			.addCase(getPetitionRoadMapData.fulfilled, (state, action) => {
+				state.petition_detail.road_map = action.payload,
+					state.loading.petition_detail.road_map.is_loading = false,
+					state.loading.petition_detail.road_map.loading_string = 'SUCCESS'
+			})
+			.addCase(getPetitionRoadMapData.pending, (state) => {
+				state.loading.petition_detail.road_map.is_loading = true,
+					state.loading.petition_detail.road_map.loading_string = 'LOADING'
+			})
+			.addCase(getPetitionRoadMapData.rejected, (state) => {
+				state.loading.petition_detail.road_map.is_loading = false,
+					state.loading.petition_detail.road_map.loading_string = 'FAILED'
 			})
 	}
 })
-
-
 
 export const {
 	setPetitionData,
@@ -269,7 +452,11 @@ export const {
 	setRouteEstimationDetail,
 	setRouteEstimationSummary,
 	setRouteEstimationBridge,
-	setRouteEstimationTurnRadius
+	setRouteEstimationTurnRadius,
+	setPetitionDetailDocument,
+	setPetitionDetailRoadMap,
+	resetPetitionDetailDocument,
+	resetPetitionDetailRoadMap
 } = petitionSlice.actions
 
 export default petitionSlice.reducer

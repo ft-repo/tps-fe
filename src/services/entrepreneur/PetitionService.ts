@@ -1,4 +1,4 @@
-import { GetEstimateDetailParams, GetEstimateParams, GetPetitionParams, GetPetitionResponse, GetRuralRoadParams, PetitionConfirmRequest, PetitionConfirmResponse, PetitionEstimateRequest, PetitionEstimateResponse, PetitionExtendedDocumentPostRequest, PetitionExtendedMessageResponse, PetitionExtendedPostRequest, PetitionExtendedPostResponse, PetitionMessageRequest, PetitionMessageResponse } from "@/@types/services/petition"
+import { GetEstimateDetailParams, GetEstimateParams, GetPetitionDetailParams, GetPetitionParams, GetPetitionResponse, GetRuralRoadParams, PetitionConfirmRequest, PetitionConfirmResponse, PetitionDetailDocumentResponse, PetitionDetailVehicleResponse, PetitionDocumentRequest, PetitionDocumentResponse, PetitionEstimateRequest, PetitionEstimateResponse, PetitionExtendedDocumentPostRequest, PetitionExtendedMessageResponse, PetitionExtendedPostRequest, PetitionExtendedPostResponse, PetitionHoldRequest, PetitionHoldResponse, PetitionMessageRequest, PetitionMessageResponse, PetitionRoadMapRequest, PetitionRoadMapResponse, PetitionVehicleRequest, PetitionVehicleResponse, PostConfirmPetitionRoadMapRequest, PostConfirmPetitionRoadMapResponse, PostPetitionRoadMapRequest, PostPetitionRoadMapResponse } from "@/@types/services/petition"
 import ApiService from "../ApiService"
 import { UploadRequest, UploadResponse } from "@/@types/shared"
 import { RoadInfo } from "@/features/entrepreneur/permit-list/overview/components/ModalRuralRoadDetails"
@@ -164,5 +164,69 @@ export const getPetitionExtendedMessageAPI = async (params: PetitionMessageReque
     url: '/client/petition_extended/status/message',
     method: 'get',
     params: { ...params }
+  })
+}
+
+export const getPetitionDetailDocumentAPI = async (params: GetPetitionDetailParams) => {
+  return ApiService.fetchData<PetitionDetailDocumentResponse, GetPetitionDetailParams>({
+    url: '/client/petition/documents',
+    method: 'GET',
+    params: { ...params }
+  })
+}
+
+export const getPetitionDetailVehicleAPI = async (params: GetPetitionDetailParams) => {
+  return ApiService.fetchData<PetitionDetailVehicleResponse, GetPetitionDetailParams>({
+    url: '/client/petition/vehicle',
+    method: 'GET',
+    params: { ...params }
+  })
+}
+
+export const patchPetitionHoldAPI = async (data: PetitionHoldRequest) => {
+  return ApiService.fetchData<PetitionHoldResponse, PetitionHoldRequest>({
+    url: '/client/petition/hold_date',
+    method: 'PATCH',
+    data: { ...data },
+  })
+}
+
+export const putPetitionDocumentAPI = async (data: PetitionDocumentRequest) => {
+  return ApiService.fetchData<PetitionDocumentResponse, PetitionDocumentRequest>({
+    url: '/client/petition/documents',
+    method: 'PUT',
+    data: { ...data },
+  })
+}
+
+export const putPetitionVehicleAPI = async (data: PetitionVehicleRequest) => {
+  return ApiService.fetchData<PetitionVehicleResponse, PetitionVehicleRequest>({
+    url: '/client/petition/vehicle',
+    method: 'PUT',
+    data: { ...data },
+  })
+}
+
+export const getPetitionRoadMapAPI = async (params: PetitionRoadMapRequest) => {
+  return ApiService.fetchData<PetitionRoadMapResponse, PetitionRoadMapRequest>({
+    url: '/client/petition/road_map',
+    method: 'GET',
+    params: { ...params }
+  })
+}
+
+export const postPetitionRoadMapAPI = async (data: PostPetitionRoadMapRequest) => {
+  return ApiService.fetchData<PostPetitionRoadMapResponse, PostPetitionRoadMapRequest>({
+    url: '/client/petition/road_map',
+    method: 'POST',
+    data: { ...data }
+  })
+}
+
+export const postConfirmPetitionRoadMapAPI = async (data: PostConfirmPetitionRoadMapRequest) => {
+  return ApiService.fetchData<PostConfirmPetitionRoadMapResponse, PostConfirmPetitionRoadMapRequest>({
+    url: '/client/petition/road_map/confirm',
+    method: 'POST',
+    data: { ...data }
   })
 }
