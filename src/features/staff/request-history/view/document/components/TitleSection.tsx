@@ -224,8 +224,8 @@ const TitleSection: React.FC<Props> = (props) => {
     },
     {
       key: '5',
-      label: 'สำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง',
-      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.prefab_parts_details_url), 'สำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง')
+      label: 'สำเนาคู่มือจดทะเบียนและประวัติยานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง',
+      onClick: () => showFile(extractUrl(petition_extended?.detail?.vehicle_document?.prefab_parts_details_url), 'สำเนาคู่มือจดทะเบียนและประวัติยานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง')
     },
     {
       key: '6',

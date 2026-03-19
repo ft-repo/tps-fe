@@ -75,7 +75,7 @@ const TableVehicleDocument: React.FC<Props> = () => {
     {
       no: '1',
       petition_list:
-        'สำเนาคู่มือจดทะเบียนและประวัติบานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง',
+        'สำเนาคู่มือจดทะเบียนและประวัติยานพาหนะที่ขออนุญาต พร้อมหลักฐานฉบับจริง',
       file_id: detail?.vehicle_document?.prefab_parts_details_url,
     },
     {
