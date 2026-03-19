@@ -1,10 +1,11 @@
+/* eslint-disable react/display-name */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react'
 import { Table, type TableProps, Tag, Tooltip } from 'antd'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
 import { ADMIN_PETITION_STATUS } from '@/utils/constant'
-import type { AdminPetitionData, AdminPetitionTableData } from '@/@types/reducer/petition'
+import type { AdminPetitionData, AdminPetitionTableData, PetitionHold } from '@/@types/reducer/petition'
 
 type ApprovalKey = keyof typeof ADMIN_PETITION_STATUS
 type StepStatus =
@@ -27,6 +28,7 @@ type FlowItem = {
   is_approved: boolean
   created_date?: string | null
   is_skipped?: boolean
+  petition_hold?: PetitionHold
 }
 type MaybeFlow = FlowItem | null
 
@@ -65,6 +67,15 @@ const toApproval = (flowItem: MaybeFlow): StepStatus => {
       ? { key: 'APPROVE', date: flowItem.created_date }
       : { key: 'IN_PROGRESS' }
   }
+  // IF ไม่ผ่านการตรวจและมี hold แต่ยังไม่ end => PETITION_HOLD
+  if (flowItem.is_approved === false && flowItem.petition_hold?.is_end === false) {
+    return { key: 'PETITION_HOLD', date: flowItem.created_date ?? null }
+  }
+  // IF ไม่ผ่านการตรวจและมี hold และ end => PETITION_END
+  if (flowItem.is_approved === false && flowItem.petition_hold?.is_end === true) {
+    return { key: 'PETITION_END' }
+  }
+  // IF ไม่ผ่านการตรวจและไม่มี hold => NOT_APPROVE
   if (flowItem.is_approved === false) {
     return { key: 'NOT_APPROVE', date: flowItem.created_date ?? null }
   }
@@ -130,21 +141,6 @@ const makeStepRenderer =
             opacity: clickable ? 1 : 0.6,
             userSelect: 'none',
           }}
-          onClick={
-            clickable
-              ? () => {
-                const flow = latestFlowByStatus((record as any).petition_flow, stepId)
-                const approved =
-                  flow?.is_approved === true ? 'true' :
-                    flow?.is_approved === false ? 'false' :
-                      'null'
-
-                navigate(
-                  `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`
-                )
-              }
-              : undefined
-          }
           role={clickable ? 'button' : undefined}
           tabIndex={clickable ? 0 : -1}
           onKeyDown={e => {
@@ -155,9 +151,42 @@ const makeStepRenderer =
                 flow?.is_approved === false ? 'false' :
                   'null'
             navigate(
-              `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`
+              path,
+              // `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`,
+              {
+                state: {
+                  petition_id: record.petition_id,
+                  status_id: record.status_id,
+                  is_approved: approved,
+                  petition_hold: flow?.petition_hold
+                }
+              }
             )
           }}
+          onClick={
+            clickable
+              ? () => {
+                const flow = latestFlowByStatus((record as any).petition_flow, stepId)
+                const approved =
+                  flow?.is_approved === true ? 'true' :
+                    flow?.is_approved === false ? 'false' :
+                      'null'
+
+                navigate(
+                  path,
+                  // `${path}?petition_id=${(record as any).petition_id ?? (record as any).id}&status_id=${record.status_id}&is_approved=${approved}`,
+                  {
+                    state: {
+                      petition_id: record.petition_id,
+                      status_id: record.status_id,
+                      is_approved: approved,
+                      petition_hold: flow?.petition_hold
+                    }
+                  }
+                )
+              }
+              : undefined
+          }
         >
           <span className={cfg.text_color}>{cfg.text}</span>
           {st.date ? (
@@ -278,6 +307,83 @@ const TablePetition: React.FC<Props> = ({ data, loading, handleTableChange }) =>
         }
         return '-'
       },
+    },
+    {
+      title: 'จำนวนวันแก้ไข',
+      dataIndex: 'petition_date',
+      key: 'petition_date',
+      width: 150,
+      align: 'center',
+      render: (item, record, index) => {
+        if (item) {
+          if (index === 0) {
+            return <strong>{dayjs(item, 'YYYY-MM-DD').format('DD/MM/YYYY')}</strong>
+          }
+          return dayjs(item).format('DD/MM/YYYY')
+        }
+        return '-'
+      },
+    },
+    {
+      title: 'จำนวนวันแก้ไข',
+      dataIndex: 'edited_amount',
+      key: 'edited_amount',
+      width: 150,
+      align: 'center',
+      render: (item, record, index) => {
+        if (record.petition_flow.some(item => !!item.petition_hold)) {
+          const petitionHold = record.petition_flow.find(item => !!item.petition_hold)?.petition_hold
+          const holdDate = dayjs(petitionHold?.hold_date, 'YYYY-MM-DD')
+          const expiredDate = dayjs(petitionHold?.date_expired, 'YYYY-MM-DD')
+          const isEnded = petitionHold?.is_end
+          const isExpired = dayjs().isAfter(expiredDate)
+
+          if (isEnded && isExpired) {
+            return index === 0 ? (
+              <div>
+                <strong><p className='text-[#FF0000]'>หมดเวลาส่งเอกสาร</p></strong>
+                <strong><p className='text-[#FF0000]'>{holdDate.format('DD/MM/YYYY')} - {expiredDate.format('DD/MM/YYYY')}</p></strong>
+              </div>
+            ) : (
+              <div>
+                <p className='text-[#FF0000]'>หมดเวลาส่งเอกสาร</p>
+                <p className='text-[#FF0000]'>{holdDate.format('DD/MM/YYYY')} - {expiredDate.format('DD/MM/YYYY')}</p>
+              </div>
+            )
+          }
+
+          if (isEnded) {
+            const createdAt = dayjs(petitionHold?.created_at)
+            return index === 0 ? (
+              <div>
+                <strong><p className='text-[#A2A2A2]'>ยกเลิกคำขอ</p></strong>
+                <strong><p className='text-[#A2A2A2]'>{createdAt.isValid() ? createdAt.format('DD/MM/YYYY') : '-'}</p></strong>
+              </div>
+            ) : (
+              <div>
+                <p className='text-[#A2A2A2]'>ยกเลิกคำขอ</p>
+                <p className='text-[#A2A2A2]'>{createdAt.isValid() ? createdAt.format('DD/MM/YYYY') : '-'}</p>
+              </div>
+            )
+          }
+
+          if (index === 0) {
+            return (
+              <div>
+                <strong><p>{expiredDate.diff(holdDate, 'day')} วัน</p></strong>
+                <strong><p>{holdDate.format('DD/MM/YYYY')} - {expiredDate.format('DD/MM/YYYY')}</p></strong>
+              </div>
+            )
+          }
+          return (
+            <div>
+              <p>{expiredDate.diff(holdDate, 'day')} วัน</p>
+              <p>{holdDate.format('DD/MM/YYYY')} - {expiredDate.format('DD/MM/YYYY')}</p>
+            </div>
+          )
+        }
+        return '-'
+      }
     },
     {
       title: 'ตรวจเอกสาร', key: 'validate_document', width: 150, align: 'center',

@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { Button, Spin } from 'antd'
 import { ContentTab } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { getPetitionDocument, getPetitionEstimateRoute, getPetitionStatus, getPetitionVehicle } from '@/store/slices/staff'
 // import { useReactToPrint } from 'react-to-print'
@@ -14,19 +14,29 @@ interface Props { }
 
 const VehicleScreen: React.FC<Props> = (props) => {
 	const { } = props;
-	const [params] = useSearchParams()
-	const petitionId = params.get('petition_id')
+	// const [params] = useSearchParams()
+	// const petitionId = params.get('petition_id')
 	const navigate = useNavigate()
 	const dispatch = useAppDispatch()
 	const defaultLoading = useAppSelector(s => s.layout.loading)
 	const { loading } = useAppSelector(s => s.staff.petition)
+	const { state } = useLocation()
 
 	useEffect(() => {
-		dispatch(getPetitionDocument({ petition_id: String(petitionId) }))
-		dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
-		dispatch(getPetitionVehicle({ petition_id: String(petitionId) }))
-		dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
-	}, [dispatch, petitionId])
+		dispatch(getPetitionDocument({ petition_id: String(state?.petition_id) }))
+	}, [dispatch, state?.petition_id])
+
+	useEffect(() => {
+		dispatch(getPetitionEstimateRoute({ petition_id: String(state?.petition_id) }))
+	}, [dispatch, state?.petition_id])
+
+	useEffect(() => {
+		dispatch(getPetitionVehicle({ petition_id: String(state?.petition_id) }))
+	}, [dispatch, state?.petition_id])
+
+	useEffect(() => {
+		dispatch(getPetitionStatus({ petition_id: String(state?.petition_id) }))
+	}, [dispatch, state?.petition_id])
 
 	// ---------- PRINT ----------
 	// const printRef = useRef<HTMLDivElement>(null)

@@ -17,6 +17,9 @@ const RouteIndex: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(resetAdminPetitionRouteEstimation())
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(resetPetitionStatus())
   }, [dispatch])
 

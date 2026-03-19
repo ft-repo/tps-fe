@@ -114,7 +114,7 @@ const ContentDetail: React.FC<Props> = (props) => {
 
   const renderETC = useCallback((value: ETCVehicle[]) => {
     const arr = []
-    if (value.length) {
+    if (value?.length) {
       for (const etc_id of value) {
         arr.push(etc_id)
       }

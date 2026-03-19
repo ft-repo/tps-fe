@@ -583,7 +583,7 @@ const ContentImage: React.FC<Props> = (props) => {
 
   const renderETC = useCallback((value: ETCVehicle[]) => {
     const arr = []
-    if (value.length) {
+    if (value?.length) {
       for (const etc_id of value) {
         arr.push(etc_id)
       }
@@ -722,7 +722,7 @@ const ContentImage: React.FC<Props> = (props) => {
               </Swiper>
             </Col>
             : null}
-          {item?.towing_vehicle?.vehicle_picture?.front_rear_url ?
+          {item?.semi_trailer_vehicle?.vehicle_picture?.front_rear_url ?
             <Col xs={24} sm={12} md={12} lg={12} xl={12} xxl={12}>
               <Swiper
                 modules={[Pagination]}
@@ -785,12 +785,13 @@ const ContentImage: React.FC<Props> = (props) => {
             : null}
         </Row>
       </section>
-      <section className='mt-5'>
-        <h5 className='mb-3'>รูปภาพเครื่องจักร / สินค้า</h5>
-        <Row gutter={[16, 16]}>
-          {renderETC(item.etc_vehicle)}
-        </Row>
-        {/* <Row gutter={[16, 16]}>
+      {item.etc_vehicle && (
+        <section className='mt-5'>
+          <h5 className='mb-3'>รูปภาพเครื่องจักร / สินค้า</h5>
+          <Row gutter={[16, 16]}>
+            {renderETC(item.etc_vehicle)}
+          </Row>
+          {/* <Row gutter={[16, 16]}>
           {item?.etc_vehicle?.vehicle_picture?.front_rear_url ?
             <Col xs={24} sm={12} md={12} lg={8} xl={12} xxl={8}>
               <Swiper
@@ -853,7 +854,8 @@ const ContentImage: React.FC<Props> = (props) => {
             </Col>
             : null}
         </Row> */}
-      </section>
+        </section>
+      )}
       <section className='mt-5'>
         <h5 className='mb-3'>เอกสารรายละเอียดยานพาหนะ</h5>
         {

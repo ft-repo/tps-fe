@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { ContentDetail, ContentForm, ContentPreviewPDF } from '../components'
 import { Button, Col, Row, Spin } from 'antd'
 import { AiOutlineLeft } from 'react-icons/ai'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { getPetitionDocument, getPetitionStatus } from '@/store/slices/staff'
 
@@ -14,17 +14,25 @@ interface Props {
 
 const DocumentScreen: React.FC<Props> = (props) => {
 	const { } = props
-	const [params] = useSearchParams()
-	const petitionId = params.get('petition_id')
+	// const [params] = useSearchParams()
+	// const petitionId = params.get('petition_id')
 	const navigate = useNavigate()
 	const dispatch = useAppDispatch()
 	const defaultLoading = useAppSelector(state => state.layout.loading)
 	const { loading } = useAppSelector(state => state.staff.petition)
+	const { state } = useLocation()
 
 	useEffect(() => {
-		dispatch(getPetitionDocument({ petition_id: String(petitionId) }))
-		dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
-	}, [dispatch, petitionId])
+		if (state?.petition_id) {
+			dispatch(getPetitionDocument({ petition_id: String(state?.petition_id) }))
+		}
+	}, [dispatch, state?.petition_id])
+
+	useEffect(() => {
+		if (state?.petition_id) {
+			dispatch(getPetitionStatus({ petition_id: String(state?.petition_id) }))
+		}
+	}, [dispatch, state?.petition_id])
 
 	return (
 		<Spin spinning={loading || defaultLoading}>

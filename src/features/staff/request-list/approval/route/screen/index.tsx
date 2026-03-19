@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Spin, Tooltip } from 'antd'
 import { ContentSection, ContentRouteList } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@/store'
 import { getPetitionEstimateRoute, getPetitionStatus } from '@/store/slices/staff'
 import { useRouteContext } from '../context'
@@ -17,8 +17,8 @@ import { InfoCircleFilled } from '@ant-design/icons'
 interface Props { }
 
 const RouteScreen: React.FC<Props> = () => {
-  const [params] = useSearchParams()
-  const petitionId = params.get('petition_id')
+  // const [params] = useSearchParams()
+  // const petitionId = params.get('petition_id')
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const defaultLoading = useAppSelector(state => state.layout.loading)
@@ -27,12 +27,19 @@ const RouteScreen: React.FC<Props> = () => {
   const { petition } = useAppSelector(state => state.staff.petition)
   const detail = petition.detail.estimate.route
   const [remark, setRemark] = useState<'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว'>('ตารางสรุป')
+  const { state } = useLocation()
 
   useEffect(() => {
-    if (!petitionId) return
-    dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
-    dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
-  }, [dispatch, petitionId])
+    if (state?.petition_id) {
+      dispatch(getPetitionEstimateRoute({ petition_id: String(state?.petition_id) }))
+    }
+  }, [dispatch, state?.petition_id])
+
+  useEffect(() => {
+    if (state?.petition_id) {
+      dispatch(getPetitionStatus({ petition_id: String(state?.petition_id) }))
+    }
+  }, [dispatch, state?.petition_id])
 
   // First index (always 0 for non-empty arrays)
   // const firstIndex = 0;

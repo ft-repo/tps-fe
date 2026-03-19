@@ -79,7 +79,7 @@ const FormSearchPetition: React.FC<Props> = (props) => {
               // type={isActive ? 'primary' : 'default'}
               type='primary'
               size='large'
-              style={isActive ? { backgroundColor: '#0958d9', borderColor: '#0958d9' } : { backgroundColor: '#4096ff', borderColor: '#4096ff' }}
+              style={isActive ? { backgroundColor: item.status_id === 9 ? '#CC6B00' : '#0958d9', borderColor: item.status_id === 9 ? '#CC6B00' : '#0958d9' } : { backgroundColor: item.status_id === 9 ? '#FF8716' : '#4096ff', borderColor: item.status_id === 9 ? '#FF8716' : '#4096ff' }}
               onClick={() => setValue('status_id', String(item.status_id))}
             >
               {item.status_name}
