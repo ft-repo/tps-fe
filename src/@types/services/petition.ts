@@ -1,4 +1,8 @@
+import { EditDocumentDetail, EditRoadMapDetail, EditVehicleDetail, PetitionHold } from "../reducer/petition";
 import { GetPaginateParams } from "../shared";
+
+export type PetitionDetailDocumentResponse = EditDocumentDetail
+export type PetitionDetailVehicleResponse = EditVehicleDetail
 
 export interface GetPetitionParams {
   search?: string;
@@ -39,7 +43,10 @@ export interface PetitionFlow {
   created_date: string;
   created_by: string;
   is_approved: boolean;
+  is_skipped: boolean;
+  is_readed: boolean;
   status: PetitionStatus;
+  petition_hold: PetitionHold;
 }
 
 export interface PetitionStatus {
@@ -272,6 +279,7 @@ export interface PetitionMessageResponse {
   is_readed: boolean;
   status: Status;
   admin_creaded: AdminCreaded;
+  petition_hold: PetitionHold;
 }
 export interface AdminCreaded {
   id: string;
@@ -301,3 +309,95 @@ export interface PetitionExtendedMessageResponse {
 export interface PetitionMessageRequest {
   message_id: string | number;
 }
+
+export interface PetitionHoldRequest {
+  hold_id: number;
+  days?: number;
+  cancel?: boolean;
+}
+
+export interface PetitionHoldResponse {
+  message: string;
+}
+
+export interface PetitionDocumentRequest {
+  petition_id: number
+  start_date: string
+  end_date: string
+  contact_name: string
+  phone_number: string
+  project_name: string
+  poa_url: string
+  mach_book_url: string
+}
+
+export type PetitionDocumentResponse = PetitionHoldResponse;
+
+export interface PetitionRoadMapRequest {
+  petition_id: string | number | null;
+}
+
+export type PetitionRoadMapResponse = EditRoadMapDetail;
+
+export interface PostPetitionRoadMapRequest {
+  petition_id: number;
+  vehicles: Vehicles[];
+  start_point: StartPoint;
+  end_point: EndPoint;
+  vehicle_route: VehicleRoute;
+}
+
+export interface Vehicles {
+  estimate_id: string;
+  turn_radius: number;
+}
+
+export interface PostPetitionRoadMapResponse {
+  estimate: RoadMapResponseEstimate[]
+  set_id: string
+}
+
+export interface RoadMapResponseEstimate {
+  estimate_id: string;
+  vehicle: RoadMapResponseVehicle[];
+}
+
+export interface RoadMapResponseVehicle {
+  id: number
+  vehicle_type: string
+  plate_no: string
+  plate_province: string
+}
+
+export interface PostConfirmPetitionRoadMapRequest {
+  petition_id: number;
+  new_set_id: string;
+}
+
+export type PostConfirmPetitionRoadMapResponse = EditRoadMapDetail;
+
+export interface PetitionVehicleRequest {
+  petition_id: number;
+  vehicle: VehicleDocument[];
+}
+
+export interface VehicleDocument {
+  truck_dimension_url: string
+  semi_trailer_dimension_url: string
+  combined_vehicle_url: string
+  turning_radius_url: string
+  cargo_dimension_url: string
+  highway_dept_permit_url: string
+  highway_dept_permit_number_url: string
+  rural_highway_dept_permit_url: string
+  rural_highway_dept_permit_number_url: string
+}
+
+export interface PetitionVehicleResponse { }
+
+export interface PostPetitionEndRequest {
+  petition_id: number;
+  remark: string;
+}
+
+export interface PostPetitionEndResponse { }

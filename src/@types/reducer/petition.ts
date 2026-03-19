@@ -1,9 +1,174 @@
+import { PromiseProperties } from "../shared";
+
 // REDUX CLIENT
 export interface PetitionState {
   petition: Petition;
   petition_extended: PetitionExtended;
   estimate: RouteEstimate;
-  loading: boolean;
+  petition_detail: EditPetitionDetail;
+  loading: PromiseModules;
+}
+
+// PETITION DETAIL
+export interface EditPetitionDetail {
+  document: EditDocumentDetail;
+  vehicle: EditVehicleDetail;
+  road_map: EditRoadMapDetail;
+}
+
+export interface EditRoadMapDetail {
+  id: string;
+  vehicle_route: number[][];
+  start_point: number[];
+  end_point: number[];
+  estimate: RoadMapEstimate[];
+}
+
+export interface RoadMapEstimate {
+  id: string;
+  turn_radius: number;
+  towing_vehicle_id?: number;
+  semi_trailer_vehicle_id: number;
+  towing_axis_weight: number[];
+  semi_trailer_axis_weight: number[];
+  sort: number;
+  created_by: string;
+  towing_vehicle?: RoadMapTowingVehicle;
+  semi_trailer_vehicle: RoadMapSemiTrailerVehicle;
+  etc_vehicle?: RoadMapEtcVehicle[];
+}
+
+export interface RoadMapTowingVehicle {
+  id: number
+  user_id: string
+  vehicle_type_id: number
+  plate_no: string
+  plate_province: string
+  brand: string
+  weight: number
+  color: string
+  kingpin_distance: number
+  width: number
+  length: number
+  height: number
+  axis_type_id: any
+  registration_document_url: string
+}
+
+export interface RoadMapSemiTrailerVehicle {
+  id: number
+  user_id: string
+  vehicle_type_id: number
+  plate_no: string
+  plate_province: string
+  brand: string
+  weight: number
+  color: string
+  kingpin_distance: number
+  width: number
+  length: number
+  height: number
+  axis_type_id: number
+  registration_document_url: string
+}
+
+export interface RoadMapEtcVehicle {
+  estimate_id: string;
+  vehicle_id: number;
+  vehicle: RoadMapETCVehicleDetail;
+}
+
+export interface RoadMapETCVehicleDetail {
+  id: number
+  user_id: string
+  vehicle_type_id: number
+  plate_no: string
+  plate_province: string
+  brand: string
+  weight: number
+  color: string
+  kingpin_distance: number
+  width: number
+  length: number
+  height: number
+  axis_type_id?: number
+  registration_document_url: string
+}
+
+export interface EditDocumentDetail {
+  petition_id: number
+  registration_no: string
+  business_name: string
+  entity_type: string
+  address: string
+  business_phone_no: string
+  contact_name: string
+  contact_phone_no: string
+  project_name: string
+  petition_type: string
+  start_date: string
+  end_date: string
+  start_point: string
+  end_point: string
+  poa_url: string
+  mach_book_url: string
+}
+
+export interface EditVehicleDetail {
+  petition_id: number
+  vehicle_list: EditVehicleList[]
+}
+
+export interface EditVehicleList {
+  sort: string
+  match_type: string
+  turn_radius: number
+  towing_vehicle?: EditTowingVehicle
+  semi_trailer_vehicle: EditSemiTrailerVehicle
+  etc_vehicle?: EditEtcVehicle[]
+  truck_dimension_url: string
+  semi_trailer_dimension_url: string
+  combined_vehicle_url: string
+  turning_radius_url: string
+  cargo_dimension_url: string
+  highway_dept_permit_url: string
+  highway_dept_permit_number_url: string
+  rural_highway_dept_permit_url: string
+  rural_highway_dept_permit_number_url: string
+}
+
+export interface EditSemiTrailerVehicle {
+  plate_no: string
+  plate_province: string
+  weight: number
+  axis_weight: number[]
+  width: number
+  length: number
+  height: number
+  vehicle_picture: VehiclePicture
+  axis_type: AxisType
+}
+
+export interface EditEtcVehicle {
+  plate_no: string
+  plate_province: string
+  weight: number
+  axis_weight: any
+  width: number
+  length: number
+  height: number
+  vehicle_picture: VehiclePicture
+}
+
+export interface EditTowingVehicle {
+  plate_no: string
+  plate_province: string
+  weight: number
+  axis_weight: number[]
+  width: number
+  length: number
+  height: number
+  vehicle_picture: VehiclePicture
 }
 
 // CLIENT PETITION
@@ -89,6 +254,17 @@ export interface PetitionFlow {
   is_skipped: boolean;
   is_readed: boolean;
   status: PetitionStatus;
+  petition_hold: PetitionHold;
+}
+
+export interface PetitionHold {
+  id: number;
+  petition_flow_id: number;
+  hold_date: string;
+  date_expired: string;
+  created_by: string;
+  created_at: string;
+  is_end: boolean;
 }
 
 export interface PetitionStatus {
@@ -758,4 +934,26 @@ export interface ClientETCVehicle {
   vehicle_plate: string
   vehicle_province: string
   vehicle_picture: string
+}
+
+export interface PromiseModules {
+  petition: {
+    overview: PromiseProperties;
+    detail: PromiseProperties;
+  };
+  petition_extended: {
+    overview: PromiseProperties;
+    detail: PromiseProperties;
+  };
+  estimate: {
+    detail: PromiseProperties;
+    summary: PromiseProperties;
+    bridge: PromiseProperties;
+    turn_radius: PromiseProperties;
+  };
+  petition_detail: {
+    document: PromiseProperties;
+    vehicle: PromiseProperties;
+    road_map: PromiseProperties;
+  };
 }

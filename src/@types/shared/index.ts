@@ -26,6 +26,11 @@ export interface ClientPetitionColor {
     text: string;
     text_color: string;
   }
+  FURTHER_PROGRESS: {
+    color: string;
+    text: string;
+    text_color: string;
+  }
 }
 
 export interface ClientPetitionExtendColor {
@@ -79,6 +84,16 @@ export interface StatusColor {
     text_color: string;
   };
   SKIPPED: {
+    color: string;
+    text: string;
+    text_color: string;
+  };
+  PETITION_HOLD: {
+    color: string;
+    text: string;
+    text_color: string;
+  };
+  PETITION_END: {
     color: string;
     text: string;
     text_color: string;
@@ -267,4 +282,9 @@ export interface AxisMaxWeight {
   axis_type_id: number
   axis_number: number
   axis_max_weight: number
+}
+
+export interface PromiseProperties {
+  is_loading: boolean;
+  loading_string: 'IDLE' | 'LOADING' | 'SUCCESS' | 'FAILED'
 }
