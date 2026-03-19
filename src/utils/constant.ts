@@ -36,6 +36,12 @@ export const CLIENT_PETITION_STATUS: ClientPetitionColor = {
     "color": "#FDDA0D",
     "text": "รอดำเนินการ",
     "text_color": "text-black"
+  },
+  "FURTHER_PROGRESS": {
+    "color": "#A9A9A9",
+    "text": "รอดำเนินการ",
+    "text_color": "text-black"
+
   }
 }
 
@@ -98,7 +104,17 @@ export const ADMIN_PETITION_STATUS: StatusColor = {
     "color": "#A9A9A9",
     "text": "ข้ามขั้นตอน",
     "text_color": "text-white"
-  }
+  },
+  "PETITION_HOLD": {
+    "color": "#FF8716",
+    "text": "ตีกลับ",
+    "text_color": "text-white"
+  },
+  "PETITION_END": {
+    "color": "#FF1616",
+    "text": "บันทึกข้อมูล",
+    "text_color": "text-white"
+  },
 }
 
 export const APPROVAL_STATUS: Record<string, ApprovalStatusValue> = {
