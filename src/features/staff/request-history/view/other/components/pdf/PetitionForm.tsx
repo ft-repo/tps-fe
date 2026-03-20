@@ -223,9 +223,9 @@ interface Props {
 }
 
 const PermitForm: React.FC<Props> = (props) => {
-  const { data, item, index } = props;
+  const { data, item } = props;
 
-  console.log(item, index)
+  // console.log(item, index)
 
   const convertAddress = useCallback((address: string) => {
     // Regular expression to match Thai address format

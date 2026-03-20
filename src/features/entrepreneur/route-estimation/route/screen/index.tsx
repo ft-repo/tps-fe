@@ -59,6 +59,12 @@ const RouteEstimationScreen: React.FC<Props> = (props) => {
     }
   }, [state?.petition_id, dispatch])
 
+  // useEffect(() => {
+  //   if (state?.petition_id) {
+  //     dispatch(resetPetitionDetailRoadMap())
+  //   }
+  // }, [state?.petition_id, dispatch])
+
   useEffect(() => {
     if (openRef.current) return
     // IF NO

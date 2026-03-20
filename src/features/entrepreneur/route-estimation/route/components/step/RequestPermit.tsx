@@ -39,8 +39,6 @@ const RequestPermit: React.FC<Props> = (props) => {
   const isEditDocument = state?.type === 'ตรวจเอกสาร' ? true : false
   const isEditVehicle = (state?.type === 'ตรวจยานพาหนะ' || state?.type === 'รอแก้ไข') ? true : false
 
-  console.log("===", petition_detail)
-  console.log("===", state?.type)
   // console.log(dataParser)
   // console.log(user)
 
@@ -307,7 +305,7 @@ const RequestPermit: React.FC<Props> = (props) => {
     dispatch(setLoading(true))
     try {
       const response = await putPetitionVehicleAPI(body)
-      console.log(response)
+      // console.log(response)
       if (response.status === 200) {
         Modal.success({
           title: 'ส่งคำขออนุญาตสำเร็จ',
@@ -329,7 +327,7 @@ const RequestPermit: React.FC<Props> = (props) => {
       }
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error)
+        // console.log(error)
         Modal.error({
           title: 'ผิดพลาด',
           content: 'ไม่สามารถบันทึกข้อมูลได้',
@@ -354,20 +352,20 @@ const RequestPermit: React.FC<Props> = (props) => {
 
   const onSubmit = useCallback(async (value: FieldTypePetition) => {
     if (state?.petition_id) {
-      console.log("FUNCTION WORK")
-      console.log(state?.petition_id)
-      console.log(isEditDocument)
-      console.log(isEditVehicle)
+      // console.log("FUNCTION WORK")
+      // console.log(state?.petition_id)
+      // console.log(isEditDocument)
+      // console.log(isEditVehicle)
       if (isEditDocument) {
         onUpdateDocument(value)
-        console.log("FIRST")
+        // console.log("FIRST")
       }
       if (isEditVehicle) {
         onUpdateVehicle(value)
-        console.log("SECOND")
+        // console.log("SECOND")
       }
     } else {
-      console.log("THIRD")
+      // console.log("THIRD")
       onCreate(value)
     }
   }, [onUpdateDocument, onUpdateVehicle, onCreate, state?.petition_id, isEditDocument, isEditVehicle])

@@ -364,7 +364,7 @@ const FormVehicle: React.FC<Props> = (props) => {
     try {
       const response = await getAxisWeightAPI(id)
       if (response.status === 200) {
-        console.log(response.data)
+        // console.log(response.data)
         setTowingMaxWeight(response.data)
       }
     } catch (error) {

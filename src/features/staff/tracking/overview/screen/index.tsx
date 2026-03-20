@@ -18,7 +18,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
     dispatch(getTrackingData(overview.search))
   }, [dispatch, overview.search])
 
-  console.log(overview)
+  // console.log(overview)
 
   const handleTableChange = useCallback((page: number, limit: number) => {
     dispatch(setLoading(true))

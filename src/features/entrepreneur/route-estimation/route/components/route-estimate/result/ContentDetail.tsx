@@ -454,8 +454,6 @@ const ContentDetail: React.FC<Props> = (props) => {
           </Row>
         </section>
         : null}
-      {console.log("=== dataParser ===", dataParser.raw_body.route_form[index])}
-      {console.log("=== detail ===", detail)}
       {dataParser.raw_body.route_form[index]?.etc_vehicle?.length ?
         <section className='mt-5'>
           <h5>รูปภาพเครื่องจักร / สินค้า</h5>

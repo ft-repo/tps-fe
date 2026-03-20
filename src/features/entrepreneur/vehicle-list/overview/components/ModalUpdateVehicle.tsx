@@ -33,7 +33,7 @@ const Content = (props: ContentProps) => {
   const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
   const { province } = useAppSelector(state => state.master)
 
-  console.log(data.vehicle_detail)
+  // console.log(data.vehicle_detail)
 
   const form = useForm<FieldType>({
     defaultValues: {

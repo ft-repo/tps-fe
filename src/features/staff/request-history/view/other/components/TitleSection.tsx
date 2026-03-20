@@ -23,7 +23,7 @@ const TitleSection: React.FC<Props> = (props) => {
   const navigate = useNavigate()
   const { petition, petition_status } = useAppSelector(state => state.staff.petition)
 
-  console.log(petition)
+  // console.log(petition)
 
   const pdfDocument = petition?.detail?.document
 

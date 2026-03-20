@@ -258,7 +258,7 @@ const TrackingMap: React.FC<Props> = (props) => {
         if (!project.gps.geom || !Array.isArray(project.gps.geom)) {
           return;
         }
-        console.log(project)
+        // console.log(project)
         markers.push(
           <LocationMarker
             key={`vehicle-${project.id}-${project.gps.plate}-${markerIndex}`}

@@ -41,7 +41,7 @@ const ContentDetail: React.FC<Props> = (props) => {
   // Calculate dimensions once
   const etcDimensions = useMemo(() => getMaxEtcDimensions(), [getMaxEtcDimensions]);
 
-  console.log(etcDimensions)
+  // console.log(etcDimensions)
 
   const vehicle_detail: DescriptionsProps['items'] = [
     {

@@ -290,7 +290,6 @@ const RouteEstimation: React.FC<Props> = (props) => {
     dispatch(setLoading(true))
     try {
       const response = await postPetitionRoadMapAPI(body)
-      console.log("===", response)
       if (response.status === 200) {
         Modal.success({
           title: 'สำเร็จ',

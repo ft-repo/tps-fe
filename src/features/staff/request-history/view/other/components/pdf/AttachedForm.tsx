@@ -105,7 +105,7 @@ interface Props {
 const AttachedForm: React.FC<Props> = (props) => {
   const { data, value } = props
 
-  console.log(data, value)
+  // console.log(data, value)
 
   const convertToThaiAlp = useCallback((value: string) => {
     const defaultAlp = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
