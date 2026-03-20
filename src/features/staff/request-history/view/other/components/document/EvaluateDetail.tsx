@@ -40,6 +40,11 @@ const PetitionDetail: React.FC<Props> = (props) => {
       label: 'หมายเหตุ',
       children: <p>{petition_status[0]?.remark || '-'}</p>,
     },
+    {
+      key: '5',
+      label: 'หมายเหตุการยกเลิก',
+      children: <p className={petition_status[0]?.canceled_remark ? 'text-red-500' : ''}>{petition_status[0]?.canceled_remark || '-'}</p>,
+    },
   ]
 
   return (

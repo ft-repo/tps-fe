@@ -178,8 +178,8 @@ const ContentForm: React.FC<Props> = (props) => {
 
   const onUpdate = useCallback(async (value: FieldType) => {
     const body: PostPetitionEndRequest = {
-      petition_id: Number(state?.petition_id),
-      remark: value.remark,
+      petition_flow_id: Number(state?.petition_hold?.petition_flow_id),
+      canceled_remark: value.remark,
     }
 
     dispatch(setLoading(true))
@@ -229,7 +229,7 @@ const ContentForm: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [state?.petition_id, dispatch, navigate, petition.overview.search])
+  }, [state?.petition_hold?.petition_flow_id, dispatch, navigate, petition.overview.search])
 
   const onSubmit = useCallback(async (value: FieldType) => {
     if (isEnded) {

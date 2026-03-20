@@ -40,6 +40,11 @@ const EvaluateDetail: React.FC<Props> = (props) => {
       label: 'หมายเหตุ',
       children: <p>{petition_status[2]?.remark || '-'}</p>,
     },
+    {
+      key: '5',
+      label: 'หมายเหตุการยกเลิก',
+      children: <p className={petition_status[2]?.canceled_remark ? 'text-red-500' : ''}>{petition_status[2]?.canceled_remark || '-'}</p>,
+    },
   ]
 
   return (
