@@ -292,11 +292,15 @@ const petitionSlice = createSlice({
 			state.estimate.turn_radius.search = action.payload.params,
 				state.estimate.turn_radius.data = action.payload.data
 		},
+		// SET
 		setPetitionDetailDocument: (state, action) => {
 			state.petition_detail.document = action.payload
 		},
 		setPetitionDetailRoadMap: (state, action) => {
 			state.petition_detail.road_map = action.payload
+		},
+		setPetitionDetailVehicle: (state, action) => {
+			state.petition_detail.vehicle = action.payload
 		},
 		// RESET
 		resetPetitionDetailDocument: (state) => {
@@ -304,6 +308,9 @@ const petitionSlice = createSlice({
 		},
 		resetPetitionDetailRoadMap: (state) => {
 			state.petition_detail.road_map = initialState.petition_detail.road_map
+		},
+		resetPetitionDetailVehicle: (state) => {
+			state.petition_detail.vehicle = initialState.petition_detail.vehicle
 		},
 	},
 	extraReducers: (builder) => {
@@ -455,8 +462,10 @@ export const {
 	setRouteEstimationTurnRadius,
 	setPetitionDetailDocument,
 	setPetitionDetailRoadMap,
+	setPetitionDetailVehicle,
 	resetPetitionDetailDocument,
-	resetPetitionDetailRoadMap
+	resetPetitionDetailRoadMap,
+	resetPetitionDetailVehicle
 } = petitionSlice.actions
 
 export default petitionSlice.reducer

@@ -67,6 +67,14 @@ const ContentTab: React.FC<Props> = (props) => {
   const [tabKey, setTabKey] = useState(initTabItems[0].key)
   const [tabItems, setTabItems] = useState<TabItem[]>(initTabItems)
 
+  // Reset initialization guard when estimate is cleared (e.g. road_map store reset before fetching a new petition)
+  useEffect(() => {
+    if (!isEditMode) return
+    if (petition_detail.road_map.estimate.length === 0) {
+      hasInitializedFromApiRef.current = false
+    }
+  }, [petition_detail.road_map.estimate, isEditMode])
+
   // Rebuild tabs from petition_detail.road_map.estimate when in edit mode
   useEffect(() => {
     if (!isEditMode) return
@@ -203,6 +211,7 @@ const ContentTab: React.FC<Props> = (props) => {
 
   return (
     <Tabs
+      destroyOnHidden
       type="editable-card"
       activeKey={tabKey}
       items={tabItems}

@@ -22,8 +22,17 @@ const OtherScreen: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(getPetitionDocument({ petition_id: String(petitionId) }))
+  }, [dispatch, petitionId])
+
+  useEffect(() => {
     dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
+  }, [dispatch, petitionId])
+
+  useEffect(() => {
     dispatch(getPetitionVehicle({ petition_id: String(petitionId) }))
+  }, [dispatch, petitionId])
+
+  useEffect(() => {
     dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
   }, [dispatch, petitionId])
 
