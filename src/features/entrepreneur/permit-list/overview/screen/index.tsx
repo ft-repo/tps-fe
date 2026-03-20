@@ -34,6 +34,7 @@ const PermitListScreen: React.FC<Props> = (props) => {
 
   return (
     <Tabs
+      destroyOnHidden
       defaultActiveKey={returnTab ? returnTab : tabKey}
       items={items}
       onChange={(tabKey) => setTabKey(tabKey)}

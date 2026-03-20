@@ -37,6 +37,7 @@ const RequestListScreen: React.FC<Props> = (props) => {
 
   return (
     <Tabs
+      destroyOnHidden
       activeKey={tabKey}
       items={items}
       onChange={(tabKey) => setTabKey(tabKey)}

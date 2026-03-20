@@ -90,6 +90,7 @@ const ContentPreviewPDF: React.FC<Props> = (props) => {
   return (
     <Spin spinning={loading}>
       <Tabs
+        destroyOnHidden
         defaultActiveKey={tabKey}
         items={items}
         onChange={(tabKey) => setTabKey(tabKey)}

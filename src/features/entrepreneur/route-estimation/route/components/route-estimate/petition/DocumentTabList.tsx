@@ -56,6 +56,7 @@ const ContentTab: React.FC<Props> = (props) => {
 
   return (
     <Tabs
+      destroyOnHidden
       defaultActiveKey={tabKey}
       items={items}
       onChange={(tabKey) => setTabKey(tabKey)}
