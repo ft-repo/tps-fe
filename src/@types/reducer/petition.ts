@@ -354,6 +354,7 @@ export interface AdminPetitionStatus {
   created_at: string;
   status: Status;
   admin_creaded: AdminCreaded;
+  canceled_remark: string;
 }
 
 export interface AdminPetitionExtendedStatus {

@@ -396,8 +396,8 @@ export interface VehicleDocument {
 export interface PetitionVehicleResponse { }
 
 export interface PostPetitionEndRequest {
-  petition_id: number;
-  remark: string;
+  petition_flow_id: number;
+  canceled_remark: string;
 }
 
 export interface PostPetitionEndResponse { }
