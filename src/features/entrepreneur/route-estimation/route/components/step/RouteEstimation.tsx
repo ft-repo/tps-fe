@@ -603,15 +603,15 @@ const RouteEstimation: React.FC<Props> = (props) => {
     }
   }, [getEndRegion, endPoint])
 
-  useEffect(() => {
-    if (startPoint && endPoint && waypoints.length > 0 && isEditMode) {
-      // Auto-recalculate when waypoints change in edit mode
-      const timer = setTimeout(() => {
-        calculateRoutes();
-      }, 500);
-      return () => clearTimeout(timer);
-    }
-  }, [waypoints, calculateRoutes, isEditMode, startPoint, endPoint]);
+  // useEffect(() => {
+  //   if (startPoint && endPoint && waypoints.length > 0 && isEditMode) {
+  //     // Auto-recalculate when waypoints change in edit mode
+  //     const timer = setTimeout(() => {
+  //       calculateRoutes();
+  //     }, 500);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [waypoints, calculateRoutes, isEditMode, startPoint, endPoint]);
 
   // Cleanup timeouts on unmount
   useEffect(() => {
