@@ -47,6 +47,16 @@ const navigationConfig: NavigationTree[] = [
         authority: ['USER'],
         subMenu: [],
     },
+    {
+        key: 'contact_channel',
+        path: '/contact-channel',
+        title: 'Contact Channel',
+        translateKey: 'nav.contact_channel',
+        icon: 'contact_channel',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: ['USER'],
+        subMenu: [],
+    },
     // STAFF ARE HERE
     // IF STAFF LOGIN IS READY, REMOVE USER FROM AUTHORITY
     {
@@ -111,16 +121,6 @@ const navigationConfig: NavigationTree[] = [
             },
         ],
     },
-    {
-        key: 'contact_channel',
-        path: '/contact-channel',
-        title: 'Contact Channel',
-        translateKey: 'nav.contact_channel',
-        icon: 'contact_channel',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: ['ADMIN'],
-        subMenu: [],
-    }
 ]
 
 export default navigationConfig
