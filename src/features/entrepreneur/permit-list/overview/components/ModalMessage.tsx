@@ -39,8 +39,8 @@ const Content = (props: ContentProps) => {
 
   const form = useForm<FieldType>({
     defaultValues: {
-      remark: data.remark || '',
-      duration: dayjs(data.petition_hold.date_expired).diff(dayjs(data.petition_hold.hold_date), 'day'),
+      remark: data?.remark || '',
+      duration: dayjs(data?.petition_hold?.date_expired).diff(dayjs(data?.petition_hold?.hold_date), 'day'),
     }
   })
 
