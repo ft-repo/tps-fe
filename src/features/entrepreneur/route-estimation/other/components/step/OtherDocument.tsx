@@ -138,7 +138,7 @@ const OtherDocument: React.FC<Props> = (props) => {
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Noto Sans Thai', sans-serif; padding: 48px; }
-    .label { width: 640px; }
+    .label { width: 100%; }
     .title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
     .line {
       border-bottom: 2px dashed #999;
@@ -158,7 +158,8 @@ const OtherDocument: React.FC<Props> = (props) => {
       justify-content: center;
       font-size: 14px;
     }
-    @media print { body { padding: 24px; } }
+@page { margin: 0mm; }
+@media print { body { padding: 24px; } }
   </style>
 </head>
 <body>
@@ -177,7 +178,7 @@ const OtherDocument: React.FC<Props> = (props) => {
 </html>`
 
     const iframe = document.createElement('iframe')
-    iframe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;border:none;visibility:hidden;'
+    iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:800px;height:0;border:none;visibility:hidden;'
     document.body.appendChild(iframe)
 
     const doc = iframe.contentDocument || iframe.contentWindow?.document
@@ -187,10 +188,11 @@ const OtherDocument: React.FC<Props> = (props) => {
     doc.write(html)
     doc.close()
 
-    iframe.contentWindow?.focus()
-    iframe.contentWindow?.print()
-
-    setTimeout(() => document.body.removeChild(iframe), 1000)
+    setTimeout(() => {
+      iframe.contentWindow?.focus()
+      iframe.contentWindow?.print()
+      setTimeout(() => document.body.removeChild(iframe), 1500)
+    }, 500)
   }, [])
 
   const renderResult = useMemo(() => {

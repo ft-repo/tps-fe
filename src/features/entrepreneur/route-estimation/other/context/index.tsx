@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-refresh/only-export-components */
 import { PetitionExtendedPostRequest } from '@/@types/services/petition'
+import { AxisMaxWeight } from '@/@types/shared';
 import React, { createContext, useContext, useState } from 'react'
 
 export interface ContextProps {
@@ -9,6 +10,10 @@ export interface ContextProps {
   setStep: (step: number | any) => void;
   dataParser: DataParser;
   setDataParser: (dataParser: DataParser) => void;
+  towingMaxWeight: AxisMaxWeight[];                          // ← add
+  setTowingMaxWeight: (value: AxisMaxWeight[]) => void;     // ← add
+  semiMaxWeight: AxisMaxWeight[];                            // ← add
+  setSemiMaxWeight: (value: AxisMaxWeight[]) => void;       // ← add
 }
 export interface DataParser extends MatchType {
   data: PetitionExtendedPostRequest;
@@ -90,6 +95,8 @@ export const OtherProvider = (props: any) => {
     match_type: 0,
     temporary_id: ''
   })
+  const [towingMaxWeight, setTowingMaxWeight] = useState<AxisMaxWeight[]>([])
+  const [semiMaxWeight, setSemiMaxWeight] = useState<AxisMaxWeight[]>([])
 
   return (
     <PageContext.Provider
@@ -97,7 +104,11 @@ export const OtherProvider = (props: any) => {
         step,
         setStep,
         dataParser,
-        setDataParser
+        setDataParser,
+        towingMaxWeight,
+        setTowingMaxWeight,
+        semiMaxWeight,
+        setSemiMaxWeight
       }}
     >
       {children}

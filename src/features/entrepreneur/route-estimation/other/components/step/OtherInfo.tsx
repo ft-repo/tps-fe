@@ -91,6 +91,7 @@ const OtherInfo: React.FC<Props> = (props) => {
     handleSubmit,
     control,
     setValue,
+    trigger,
   } = form
 
   const onSubmit = useCallback(async (value: FieldTypeForOther) => {
@@ -126,7 +127,7 @@ const OtherInfo: React.FC<Props> = (props) => {
       },
       petition_extended_vehicle: {
         towing_vehicle_id: value.match_type === 3 ? null : Number(value.towering_vehicle),
-        semi_trailer_vehicle_id: value.match_type === 3 ? null : Number(value.semi_trailer_vehicle),
+        semi_trailer_vehicle_id: Number(value.semi_trailer_vehicle),
         etc_vehicle_id: value.match_type === 2 ? null : value.etc_vehicle,
         axis_weight_towing: [
           Number(value.towering_weight1),
@@ -227,7 +228,22 @@ const OtherInfo: React.FC<Props> = (props) => {
           </Button>
         </div>
       </section>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, (errors) => {
+        const hasWeightError = Object.values(errors).some(
+          (fieldError: any) => fieldError?.message?.includes('น้ำหนักเกินเกณฑ์')
+        )
+
+        if (hasWeightError) {
+          Modal.warning({
+            title: 'น้ำหนักลงเพลาเกินเกณฑ์',
+            content: 'ไม่สามารถขออนุญาตได้ เนื่องจากน้ำหนักลงเพลาเกินเกณฑ์ตามข้อกำหนด กรุณาตรวจสอบน้ำหนักลงเพลา ',
+            okText: 'รับทราบ',
+            onOk: () => Modal.destroyAll(),
+            okButtonProps: { style: { fontFamily: 'Noto Sans Thai' } },
+            style: { fontFamily: 'Noto Sans Thai' }
+          })
+        }
+      })}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={12}>
             <FormPetition
@@ -239,6 +255,7 @@ const OtherInfo: React.FC<Props> = (props) => {
             <FormVehicleContent
               control={control}
               setValue={setValue}
+              trigger={trigger}
             />
           </Col>
         </Row>

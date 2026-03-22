@@ -1,25 +1,30 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FieldTypeForOther } from '@/@types/entrepreneur/route-estimation';
-import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
+import { Control, Controller, UseFormSetValue, useFormState, UseFormTrigger, useWatch } from 'react-hook-form';
 import { Col, Input, Modal, Row, Select } from 'antd';
 import { useAppSelector } from '@/store';
 import { useNavigate } from 'react-router-dom';
+import { useOtherContext } from '../../../context';
+import { getAxisWeightAPI } from '@/services/master/MasterService';
+import { AxiosError } from 'axios';
 // import { VehicleDetail } from '@/services/master/MasterService';
 
 interface Props {
   control: Control<FieldTypeForOther>;
   setValue: UseFormSetValue<FieldTypeForOther>;
+  trigger: UseFormTrigger<FieldTypeForOther>;
 }
 
 const FormVehicle: React.FC<Props> = (props) => {
-  const { control, setValue } = props
+  const { control, setValue, trigger } = props
   const { vehicle_selection } = useAppSelector(state => state.master)
   const { loading } = useAppSelector(state => state.layout)
   const [toweringVehicleWheel, setToweringVehicleWheel] = useState<number>(0)
   const [semiVehicleWheel, setSemiVehicleWheel] = useState<number>(0)
   const navigate = useNavigate()
+  const { towingMaxWeight, setTowingMaxWeight, semiMaxWeight, setSemiMaxWeight } = useOtherContext()
 
   const {
     match_type,
@@ -86,6 +91,37 @@ const FormVehicle: React.FC<Props> = (props) => {
     }
   }, [selectTowing?.vehicle_detail.axis_number, selectSemi?.vehicle_detail.axis_number, loading, navigate])
 
+  const fetchTowingMaxWeight = useCallback(async (id: string | number | null) => {
+    try {
+      const response = await getAxisWeightAPI(id)
+      if (response.status === 200) {
+        // console.log(response.data)
+        setTowingMaxWeight(response.data)
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error?.response?.data?.message)
+      } else {
+        console.error(error)
+      }
+    }
+  }, [setTowingMaxWeight])
+
+  const fetchSemiMaxWeight = useCallback(async (id: string | number | null) => {
+    try {
+      const response = await getAxisWeightAPI(id)
+      if (response.status === 200) {
+        setSemiMaxWeight(response.data)
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.log(error?.response?.data?.message)
+      } else {
+        console.error(error)
+      }
+    }
+  }, [setSemiMaxWeight])
+
   return (
     <div className='border-2 rounded-md p-4 mb-3'>
       <section>
@@ -117,7 +153,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                           value: 2
                         },
                         {
-                          label: 'เครื่องจักร / สินค้า',
+                          label: 'รถกึ่งพ่วง',
                           value: 3
                         },
                       ]}
@@ -194,7 +230,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        onChange={(value) => {
+                        onChange={(value, option: any) => {
                           field.onChange(value)
                           // SET TOWER WEIGHT
                           setValue(`towering_weight1`, '')
@@ -204,6 +240,8 @@ const FormVehicle: React.FC<Props> = (props) => {
                           setValue(`towering_weight5`, '')
                           setValue(`towering_weight6`, '')
                           setValue(`towering_weight7`, '')
+                          // FETCH MAX WEIGHT
+                          fetchTowingMaxWeight(option.axis_type_id)
                         }}
                       // onChange={(value, option) => {
                       //   const axis: VehicleDetail | any = option
@@ -232,8 +270,15 @@ const FormVehicle: React.FC<Props> = (props) => {
               />
             </Col>
             : null}
-          {(match_type === 1 || match_type === 2) ?
-            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+          {(match_type === 1 || match_type === 2 || match_type === 3) ?
+            <Col
+              xs={24}
+              sm={24}
+              md={24}
+              lg={match_type === 3 ? 24 : 12}
+              xl={match_type === 3 ? 24 : 12}
+              xxl={match_type === 3 ? 24 : 12}
+            >
               <Controller
                 name='semi_trailer_vehicle'
                 control={control}
@@ -265,7 +310,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        onChange={(value) => {
+                        onChange={(value, option: any) => {
                           field.onChange(value)
                           // SET SEMI WEIGHT
                           setValue(`semi_weight1`, '')
@@ -275,6 +320,8 @@ const FormVehicle: React.FC<Props> = (props) => {
                           setValue(`semi_weight5`, '')
                           setValue(`semi_weight6`, '')
                           setValue(`semi_weight7`, '')
+                          // FETCH MAX WEIGHT
+                          fetchSemiMaxWeight(option.axis_type_id)
                         }}
                       // onChange={(value, option) => {
                       //   const axis: VehicleDetail | any = option
@@ -303,7 +350,7 @@ const FormVehicle: React.FC<Props> = (props) => {
               />
             </Col>
             : null}
-          {(match_type === 1 || match_type === 3) ?
+          {(match_type === 1) ?
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Controller
                 name='etc_vehicle'
@@ -360,7 +407,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                     name='towering_weight1'
                     control={control}
                     rules={{
-                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                      validate: (value) => {
+                        const entry = towingMaxWeight.find(w => w.axis_number === 1) // change N per field
+                        if (!entry) return true
+                        return Number(value) <= entry.axis_max_weight
+                          || `น้ำหนักเกินเกณฑ์`
+                      }
                     }}
                     render={({ field }) => {
                       return (
@@ -375,7 +428,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                               fontFamily: 'Noto Sans Thai'
                             }}
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              const val = e.target.value.replace(/[^0-9]/g, "")
+                              field.onChange(val)
+                              trigger(`towering_weight1`)  // field-specific name
                             }}
                           />
                           {!!errors.towering_weight1 &&
@@ -391,7 +446,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                     name='towering_weight2'
                     control={control}
                     rules={{
-                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                      validate: (value) => {
+                        const entry = towingMaxWeight.find(w => w.axis_number === 2) // change N per field
+                        if (!entry) return true
+                        return Number(value) <= entry.axis_max_weight
+                          || `น้ำหนักเกินเกณฑ์`
+                      }
                     }}
                     render={({ field }) => {
                       return (
@@ -406,7 +467,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                               fontFamily: 'Noto Sans Thai'
                             }}
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              const val = e.target.value.replace(/[^0-9]/g, "")
+                              field.onChange(val)
+                              trigger(`towering_weight2`)  // field-specific name
                             }}
                           />
                           {!!errors.towering_weight2 &&
@@ -425,7 +488,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='towering_weight3'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = towingMaxWeight.find(w => w.axis_number === 3) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -440,7 +509,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`towering_weight3`)  // field-specific name
                           }}
                         />
                         {!!errors.towering_weight3 &&
@@ -458,7 +529,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='towering_weight4'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = towingMaxWeight.find(w => w.axis_number === 4) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -473,7 +550,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`towering_weight4`)  // field-specific name
                           }}
                         />
                         {!!errors.towering_weight4 &&
@@ -491,7 +570,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='towering_weight5'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = towingMaxWeight.find(w => w.axis_number === 5) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -506,7 +591,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`towering_weight5`)  // field-specific name
                           }}
                         />
                         {!!errors.towering_weight5 &&
@@ -524,7 +611,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='towering_weight6'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = towingMaxWeight.find(w => w.axis_number === 6) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -539,7 +632,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`towering_weight6`)  // field-specific name
                           }}
                         />
                         {!!errors.towering_weight6 &&
@@ -557,7 +652,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='towering_weight7'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = towingMaxWeight.find(w => w.axis_number === 7) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -572,7 +673,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`towering_weight7`)  // field-specific name
                           }}
                         />
                         {!!errors.towering_weight7 &&
@@ -598,7 +701,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                     name='semi_weight1'
                     control={control}
                     rules={{
-                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                      validate: (value) => {
+                        const entry = semiMaxWeight.find(w => w.axis_number === 1) // change N per field
+                        if (!entry) return true
+                        return Number(value) <= entry.axis_max_weight
+                          || `น้ำหนักเกินเกณฑ์`
+                      }
                     }}
                     render={({ field }) => {
                       return (
@@ -613,7 +722,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                               fontFamily: 'Noto Sans Thai'
                             }}
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              const val = e.target.value.replace(/[^0-9]/g, "")
+                              field.onChange(val)
+                              trigger(`semi_weight1`)  // field-specific name
                             }}
                           />
                           {!!errors.semi_weight1 &&
@@ -629,7 +740,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                     name='semi_weight2'
                     control={control}
                     rules={{
-                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                      required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                      validate: (value) => {
+                        const entry = semiMaxWeight.find(w => w.axis_number === 2) // change N per field
+                        if (!entry) return true
+                        return Number(value) <= entry.axis_max_weight
+                          || `น้ำหนักเกินเกณฑ์`
+                      }
                     }}
                     render={({ field }) => {
                       return (
@@ -644,7 +761,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                               fontFamily: 'Noto Sans Thai'
                             }}
                             onChange={(e) => {
-                              field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                              const val = e.target.value.replace(/[^0-9]/g, "")
+                              field.onChange(val)
+                              trigger(`semi_weight2`)  // field-specific name
                             }}
                           />
                           {!!errors.semi_weight2 &&
@@ -663,7 +782,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='semi_weight3'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = semiMaxWeight.find(w => w.axis_number === 3) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -678,7 +803,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`semi_weight3`)  // field-specific name
                           }}
                         />
                         {!!errors.semi_weight3 &&
@@ -696,7 +823,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='semi_weight4'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = semiMaxWeight.find(w => w.axis_number === 4) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -711,7 +844,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`semi_weight4`)  // field-specific name
                           }}
                         />
                         {!!errors.semi_weight4 &&
@@ -729,7 +864,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='semi_weight5'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = semiMaxWeight.find(w => w.axis_number === 5) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -744,7 +885,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`semi_weight5`)  // field-specific name
                           }}
                         />
                         {!!errors.semi_weight5 &&
@@ -762,7 +905,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='semi_weight6'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = semiMaxWeight.find(w => w.axis_number === 6) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -777,7 +926,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`semi_weight6`)  // field-specific name
                           }}
                         />
                         {!!errors.semi_weight6 &&
@@ -795,7 +946,13 @@ const FormVehicle: React.FC<Props> = (props) => {
                   name='semi_weight7'
                   control={control}
                   rules={{
-                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)'
+                    required: 'กรุณาระบุน้ำหนักลงเพลา (กิโลกรัม)',
+                    validate: (value) => {
+                      const entry = semiMaxWeight.find(w => w.axis_number === 7) // change N per field
+                      if (!entry) return true
+                      return Number(value) <= entry.axis_max_weight
+                        || `น้ำหนักเกินเกณฑ์`
+                    }
                   }}
                   render={({ field }) => {
                     return (
@@ -810,7 +967,9 @@ const FormVehicle: React.FC<Props> = (props) => {
                             fontFamily: 'Noto Sans Thai'
                           }}
                           onChange={(e) => {
-                            field.onChange(e.target.value.replace(/[^0-9.]/g, ""))
+                            const val = e.target.value.replace(/[^0-9]/g, "")
+                            field.onChange(val)
+                            trigger(`semi_weight7`)  // field-specific name
                           }}
                         />
                         {!!errors.semi_weight7 &&
