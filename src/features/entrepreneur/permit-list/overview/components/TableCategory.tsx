@@ -50,15 +50,15 @@ const TableCategory: React.FC<Props> = (props) => {
       }
     }
 
-    const tagBg = (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow.petition_hold.is_end) ?
+    const tagBg = (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow?.petition_hold?.is_end) ?
       '#5A9BC3'
       : CLIENT_PETITION_STATUS[text]?.color // ใช้สีจาก CLIENT_PETITION_STATUS
 
-    const tagText = (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow.petition_hold.is_end) ?
+    const tagText = (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow?.petition_hold?.is_end) ?
       'ข้อความใหม่'
       : CLIENT_PETITION_STATUS[text]?.text
 
-    const tagSubText = (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow.petition_hold.is_end) ?
+    const tagSubText = (typeof petitionFlow?.is_approved === 'boolean' && !petitionFlow?.is_approved && !petitionFlow?.petition_hold?.is_end) ?
       <Badge count={1} />
       : (text === 'IN_PROGRESS' || text === 'REJECTED') ? null :
         <span style={{ fontSize: 12 }}>{dayjs(petitionFlow?.created_date).format('DD/MM/YYYY')}</span>
