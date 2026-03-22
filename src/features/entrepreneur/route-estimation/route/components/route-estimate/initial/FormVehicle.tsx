@@ -57,7 +57,8 @@ const FormVehicle: React.FC<Props> = (props) => {
   // CONTEXT
   const { towingMaxWeight, setTowingMaxWeight, semiMaxWeight, setSemiMaxWeight } = useRouteContext()
   const { state } = useLocation()
-  const isRoadMap = state?.type === 'ตรวจเส้นทาง' ? true : false
+  const isEditRoadMap = state?.type === 'ตรวจเส้นทาง' ? true : false
+  const isEditVehicle = (state?.type === 'ตรวจยานพาหนะ' || state?.type === 'รอแก้ไข') ? true : false
 
   const {
     match_type,
@@ -408,7 +409,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                   <fieldset>
                     <label>เลือกประเภทจับคู่ <span className='text-red-500'>*</span></label>
                     <Select
-                      disabled={isRoadMap}
+                      disabled={isEditVehicle || isEditRoadMap}
                       {...field}
                       allowClear
                       showSearch
@@ -497,6 +498,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       </Tooltip>
                     </label>
                     <Input
+                      disabled={isEditVehicle}
                       {...field}
                       name={field.name}
                       placeholder='กรุณาระบุ'
@@ -535,7 +537,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       <h5>รถลากจูง</h5>
                       <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                       <Select
-                        disabled={isRoadMap}
+                        disabled={isEditVehicle || isEditRoadMap}
                         {...field}
                         allowClear
                         showSearch
@@ -616,7 +618,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       <h5>รถกึ่งพ่วง</h5>
                       <label>เลขทะเบียน / เลขตัวรถ <span className='text-red-500'>*</span></label>
                       <Select
-                        disabled={isRoadMap}
+                        disabled={isEditVehicle || isEditRoadMap}
                         {...field}
                         allowClear
                         showSearch
@@ -685,7 +687,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       <h5>สินค้า / เครื่องจักร</h5>
                       <label>ชื่อสินค้า / เครื่องจักร <span className='text-red-500'>*</span></label>
                       <Select
-                        disabled={isRoadMap}
+                        disabled={isEditVehicle || isEditRoadMap}
                         {...field}
                         allowClear
                         showSearch
@@ -751,7 +753,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       return (
                         <fieldset>
                           <Input
-                            disabled={isRoadMap}
+                            disabled={isEditRoadMap}
                             {...field}
                             name={field.name}
                             placeholder='กรุณาระบุ'
@@ -795,7 +797,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       return (
                         <fieldset>
                           <Input
-                            disabled={isRoadMap}
+                            disabled={isEditRoadMap}
                             {...field}
                             name={field.name}
                             placeholder='กรุณาระบุ'
@@ -839,7 +841,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -882,7 +884,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -925,7 +927,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -968,7 +970,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1011,7 +1013,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1062,7 +1064,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       return (
                         <fieldset>
                           <Input
-                            disabled={isRoadMap}
+                            disabled={isEditRoadMap}
                             {...field}
                             name={field.name}
                             placeholder='กรุณาระบุ'
@@ -1103,7 +1105,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                       return (
                         <fieldset>
                           <Input
-                            disabled={isRoadMap}
+                            disabled={isEditRoadMap}
                             {...field}
                             name={field.name}
                             placeholder='กรุณาระบุ'
@@ -1147,7 +1149,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1190,7 +1192,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1233,7 +1235,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1276,7 +1278,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'
@@ -1318,7 +1320,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                     return (
                       <fieldset>
                         <Input
-                          disabled={isRoadMap}
+                          disabled={isEditRoadMap}
                           {...field}
                           name={field.name}
                           placeholder='กรุณาระบุ'

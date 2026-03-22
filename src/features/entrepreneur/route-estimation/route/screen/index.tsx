@@ -27,10 +27,10 @@ const RouteEstimationScreen: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (state?.petition_id) {
-      if (state?.type === 'ตรวจเส้นทาง') {
-        setStep(1)
-      } else {
+      if (state?.type === "ตรวจเอกสาร") {
         setStep(3)
+      } else {
+        setStep(1)
       }
     }
   }, [setStep, state?.petition_id, state?.type])

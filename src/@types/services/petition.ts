@@ -382,15 +382,17 @@ export interface PetitionVehicleRequest {
 }
 
 export interface VehicleDocument {
-  truck_dimension_url: string
-  semi_trailer_dimension_url: string
-  combined_vehicle_url: string
-  turning_radius_url: string
-  cargo_dimension_url: string
-  highway_dept_permit_url: string
-  highway_dept_permit_number_url: string
-  rural_highway_dept_permit_url: string
-  rural_highway_dept_permit_number_url: string
+  truck_dimension_url?: string
+  semi_trailer_dimension_url?: string
+  combined_vehicle_url?: string
+  turning_radius_url?: string
+  cargo_dimension_url?: string
+  highway_dept_permit_url?: string
+  highway_dept_permit_number_url?: string
+  rural_highway_dept_permit_url?: string
+  rural_highway_dept_permit_number_url?: string
+  towing_axis_weight?: number[]
+  semi_trailer_axis_weight?: number[];
 }
 
 export interface PetitionVehicleResponse { }

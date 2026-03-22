@@ -247,7 +247,6 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
         data={openMessage.data}
         setOpen={setOpenMessage}
         onRefetch={refetchMessage}   // ← add
-
       />
       <ModalRuralRoadDetails
         open={open.open}

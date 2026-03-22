@@ -1,22 +1,21 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { FieldTypeArr, FieldTypeForRoute, RegionState } from '@/@types/entrepreneur/route-estimation'
+import { FieldTypeArr, RegionState } from '@/@types/entrepreneur/route-estimation'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { Button, Col, Input, Modal, Row } from 'antd'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ContentTab } from '../../components'
-import { PetitionEstimateRequest, PostPetitionRoadMapRequest } from '@/@types/services/petition'
-import { postPetitionEstimateAPI, postPetitionRoadMapAPI } from '@/services/entrepreneur/PetitionService'
+import { PetitionEstimateRequest, PetitionVehicleRequest, PostPetitionRoadMapRequest } from '@/@types/services/petition'
+import { postPetitionEstimateAPI, postPetitionRoadMapAPI, putPetitionVehicleAPI } from '@/services/entrepreneur/PetitionService'
 import { useRouteContext } from '../../context'
 import Map from '../map/Map'
 import { FaTimes, FaEdit } from 'react-icons/fa';
 import { calculateRoute, geocodeAddress, swapCoordinates, swapCoordinatesDeep } from '@/utils/custom/updateMapAPI'
 import axios from 'axios'
 import { APIResponseRegion } from '@/@types/shared'
-import { getPetitionRoadMapData } from '@/store/slices/entrepreneur'
-import { s } from '@fullcalendar/core/internal-common'
+import { getPetitionData } from '@/store/slices/entrepreneur'
 
 interface Props {
 
@@ -51,7 +50,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
   const { province } = useAppSelector(state => state.master)
-  const { petition_detail } = useAppSelector(state => state.entrepreneur.permitList)
+  const { petition, petition_detail } = useAppSelector(state => state.entrepreneur.permitList)
   const navigate = useNavigate()
   const { dataParser, setStep, setDataParser } = useRouteContext()
   const { state } = useLocation()
@@ -73,6 +72,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const endInputTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [startDetail, setStartDetail] = useState<RegionState>(INIT_REGION_STATE)
   const [endDetail, setEndDetail] = useState<RegionState>(INIT_REGION_STATE)
+  const isEditVehicle = (state?.type === 'ตรวจยานพาหนะ' || state?.type === 'รอแก้ไข') ? true : false
 
   // console.log(dataParser.raw_body.route_form)
 
@@ -222,7 +222,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
     startDetail
   ])
 
-  const onUpdate = useCallback(async (value: FieldTypeArr) => {
+  const onUpdateRoadMap = useCallback(async (value: FieldTypeArr) => {
     const body: PostPetitionRoadMapRequest = {
       petition_id: state?.petition_id || null,
       vehicles: value.route_form.map((item, index) => {
@@ -351,6 +351,87 @@ const RouteEstimation: React.FC<Props> = (props) => {
     dispatch
   ])
 
+  const onUpdateVehicle = useCallback(async (value: FieldTypeArr) => {
+    const body: PetitionVehicleRequest = {
+      petition_id: state?.petition_id,
+      vehicle: value.route_form.map((item, index) => {
+        return {
+          estimate_id: petition_detail.road_map.estimate[index].id,
+          towing_axis_weight: [
+            Number(item.towering_weight1),
+            Number(item.towering_weight2),
+            Number(item.towering_weight3),
+            Number(item.towering_weight4),
+            Number(item.towering_weight5),
+            Number(item.towering_weight6),
+            Number(item.towering_weight7),
+          ],
+          semi_trailer_axis_weight: [
+            Number(item.semi_weight1),
+            Number(item.semi_weight2),
+            Number(item.semi_weight3),
+            Number(item.semi_weight4),
+            Number(item.semi_weight5),
+            Number(item.semi_weight6),
+            Number(item.semi_weight7),
+          ]
+        }
+      })
+    }
+
+    dispatch(setLoading(true))
+    try {
+      const response = await putPetitionVehicleAPI(body)
+      if (response.status === 200) {
+        Modal.success({
+          title: 'ส่งคำขออนุญาตสำเร็จ',
+          content: 'เจ้าหน้าที่ได้รับคำขออนุญาตของคุณแล้ว ใช้ระยะเวลาการพิจารณาภายใน 61 วันทำการโดยไม่นับรวมระยะเวลาที่ผู้ยื่นคำขอใช้ในการแก้ไขหรือเพิ่มเติมเอกสาร ในกรณีที่เอกสารหลักฐานที่ยื่นไม่ครบถ้วนหรือไม่ถูกต้องตามหลักเกณฑ์ที่กำหนด คุณสามารถติดตามสถานะได้ที่ รายการขออนุญาต',
+          okText: 'ตกลง',
+          onOk: () => {
+            dispatch(getPetitionData(petition.overview.search))
+            navigate('/permit-list')
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        // console.log(error)
+        Modal.error({
+          title: 'ผิดพลาด',
+          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          okText: 'ตกลง',
+          onOk: () => Modal.destroyAll(),
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            }
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
+      } else {
+        console.error(error)
+      }
+    } finally {
+      dispatch(setLoading(false))
+    }
+  }, [
+    state?.petition_id,
+    petition_detail.road_map.estimate,
+    dispatch,
+    navigate,
+    petition.overview.search
+  ])
+
   const onSubmit = useCallback(async (value: FieldTypeArr) => {
     // CHECK ROUTE
     if (!routes) {
@@ -371,11 +452,15 @@ const RouteEstimation: React.FC<Props> = (props) => {
     }
     // CHECK
     if (state?.petition_id) {
-      onUpdate(value)
+      if (isEditVehicle) {
+        onUpdateVehicle(value)
+      } else {
+        onUpdateRoadMap(value)
+      }
     } else {
       onCreate(value)
     }
-  }, [routes, state?.petition_id, onCreate, onUpdate])
+  }, [routes, state?.petition_id, onCreate, onUpdateRoadMap, onUpdateVehicle, isEditVehicle])
 
   const handleMapClick = useCallback((latlng: LatLng) => {
     if (isSelectingStart) {
@@ -649,6 +734,12 @@ const RouteEstimation: React.FC<Props> = (props) => {
     setEndPoint({ lat: endCoords[0], lng: endCoords[1] })
   }, [petition_detail.road_map.start_point, petition_detail.road_map.end_point, state?.petition_id, setValue])
 
+  useEffect(() => {
+    if (state?.petition_id && isEditVehicle) {
+      calculateRoutes()
+    }
+  }, [calculateRoutes, isEditVehicle, state?.petition_id])
+
   return (
     <main>
       <section className='flex justify-between items-center flex-wrap gap-5 mb-5'>
@@ -716,7 +807,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                 startPoint={startPoint}
                 endPoint={endPoint}
                 waypoints={waypoints}
-                routes={routes || null}
+                routes={routes ? (isEditVehicle ? { ...routes, alternative: null } : routes) : null}
                 selectedRoute={selectedRoute}
                 // SET STATE
                 setStartPoint={setStartPoint}
@@ -750,7 +841,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                           <Input
                             {...field}
                             name={field.name}
-                            disabled={isGeocoding}
+                            disabled={isGeocoding || isEditVehicle}
                             placeholder='กรุณาระบุ'
                             className='w-full'
                             size='large'
@@ -769,18 +860,20 @@ const RouteEstimation: React.FC<Props> = (props) => {
                       )
                     }}
                   />
-                  <Button
-                    block
-                    htmlType='button'
-                    color='green'
-                    variant={isSelectingStart ? 'solid' : 'filled'}
-                    onClick={() => {
-                      setIsSelectingStart(true);
-                      setIsSelectingEnd(false);
-                    }}
-                  >
-                    {isSelectingStart ? 'กรุณาเลือกต้นทางบนแผนที่' : startPoint ? 'เปลี่ยนต้นทาง' : 'หรือเลือกบนแผนที่'}
-                  </Button>
+                  {!isEditVehicle && (
+                    <Button
+                      block
+                      htmlType='button'
+                      color='green'
+                      variant={isSelectingStart ? 'solid' : 'filled'}
+                      onClick={() => {
+                        setIsSelectingStart(true);
+                        setIsSelectingEnd(false);
+                      }}
+                    >
+                      {isSelectingStart ? 'กรุณาเลือกต้นทางบนแผนที่' : startPoint ? 'เปลี่ยนต้นทาง' : 'หรือเลือกบนแผนที่'}
+                    </Button>
+                  )}
                   {startPoint && (
                     <p className="text-xs text-gray-500 mt-1">
                       {startPoint.lat.toFixed(5)}, {startPoint.lng.toFixed(5)}
@@ -801,7 +894,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                           <Input
                             {...field}
                             name={field.name}
-                            disabled={isGeocoding}
+                            disabled={isGeocoding || isEditVehicle}
                             placeholder='กรุณาระบุ'
                             className='w-full'
                             size='large'
@@ -820,18 +913,20 @@ const RouteEstimation: React.FC<Props> = (props) => {
                       )
                     }}
                   />
-                  <Button
-                    block
-                    htmlType='button'
-                    color='red'
-                    variant={isSelectingEnd ? 'solid' : 'filled'}
-                    onClick={() => {
-                      setIsSelectingEnd(true);
-                      setIsSelectingStart(false);
-                    }}
-                  >
-                    {isSelectingEnd ? 'กรุณาเลือกปลายทางบนแผนที่' : endPoint ? 'เปลี่ยนปลายทาง' : 'หรือเลือกบนแผนที่'}
-                  </Button>
+                  {!isEditVehicle && (
+                    <Button
+                      block
+                      htmlType='button'
+                      color='red'
+                      variant={isSelectingEnd ? 'solid' : 'filled'}
+                      onClick={() => {
+                        setIsSelectingEnd(true);
+                        setIsSelectingStart(false);
+                      }}
+                    >
+                      {isSelectingEnd ? 'กรุณาเลือกปลายทางบนแผนที่' : endPoint ? 'เปลี่ยนปลายทาง' : 'หรือเลือกบนแผนที่'}
+                    </Button>
+                  )}
                   {endPoint && (
                     <p className="text-xs text-gray-500 mt-1">
                       {endPoint.lat.toFixed(5)}, {endPoint.lng.toFixed(5)}
@@ -844,7 +939,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                       block
                       htmlType='button'
                       type='primary'
-                      disabled={isCalculating}
+                      disabled={isCalculating || isEditVehicle}
                       onClick={calculateRoutes}
                     >
                       {isCalculating ? 'กำลังประเมินเส้นทาง...' : 'ประเมินเส้นทาง'}
@@ -863,11 +958,13 @@ const RouteEstimation: React.FC<Props> = (props) => {
                         {/* ปุ่มเส้นทางหลัก */}
                         <section>
                           <div
-                            className={`p-3 rounded-lg cursor-pointer transition-all mb-2 ${selectedRoute === 'main'
+                            className={`p-3 rounded-lg transition-all mb-2 ${isEditVehicle
                               ? 'bg-blue-100 border-2 border-blue-500'
-                              : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'
+                              : `cursor-pointer ${selectedRoute === 'main'
+                                ? 'bg-blue-100 border-2 border-blue-500'
+                                : 'bg-gray-50 border-2 border-transparent hover:bg-gray-100'}`
                               }`}
-                            onClick={() => setSelectedRoute('main')}
+                            onClick={() => !isEditVehicle && setSelectedRoute('main')}
                           >
                             <div className="flex justify-between items-start">
                               <div>
@@ -878,7 +975,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                             </div>
                           </div>
                           {/* ปุ่นเส้นทางรอง */}
-                          {routes.alternative && (
+                          {!isEditVehicle && routes.alternative && (
                             <div
                               className={`p-3 rounded-lg cursor-pointer transition-all ${selectedRoute === 'alternative'
                                 ? 'bg-blue-100 border-2 border-blue-500'
@@ -895,35 +992,37 @@ const RouteEstimation: React.FC<Props> = (props) => {
                               </div>
                             </div>
                           )}
-                          {!routes.alternative && (
+                          {!isEditVehicle && !routes.alternative && (
                             <div className="p-2 bg-gray-100 rounded text-sm text-gray-600">
                               ไม่พบเส้นทางอื่น
                             </div>
                           )}
                         </section>
-                        <section className='mt-5'>
-                          <Button
-                            block
-                            htmlType='button'
-                            color='orange'
-                            variant='solid'
-                            icon={<FaEdit />}
-                            onClick={handleEditRoute}
-                          >
-                            ปรับแต่งเส้นทาง
-                          </Button>
-                          <Button
-                            block
-                            htmlType='button'
-                            color='default'
-                            variant='outlined'
-                            icon={<FaTimes />}
-                            className='mt-3'
-                            onClick={resetMap}
-                          >
-                            ล้างค่าเส้นทาง
-                          </Button>
-                        </section>
+                        {!isEditVehicle && (
+                          <section className='mt-5'>
+                            <Button
+                              block
+                              htmlType='button'
+                              color='orange'
+                              variant='solid'
+                              icon={<FaEdit />}
+                              onClick={handleEditRoute}
+                            >
+                              ปรับแต่งเส้นทาง
+                            </Button>
+                            <Button
+                              block
+                              htmlType='button'
+                              color='default'
+                              variant='outlined'
+                              icon={<FaTimes />}
+                              className='mt-3'
+                              onClick={resetMap}
+                            >
+                              ล้างค่าเส้นทาง
+                            </Button>
+                          </section>
+                        )}
                       </div>
                     </>
                   )}
@@ -971,7 +1070,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                           block
                           htmlType='button'
                           type='primary'
-                          disabled={isCalculating}
+                          disabled={isCalculating || isEditVehicle}
                           onClick={calculateRoutes}
                         >
                           {isCalculating ? 'กำลังประเมินเส้นทางใหม่...' : 'แก้ไขเส้นทาง'}
@@ -982,7 +1081,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                           color='default'
                           variant='outlined'
                           className='mt-3'
-                          onClick={() => setIsEditMode(false)}
+                          onClick={() => { setIsEditMode(false); setWaypoints([]); }}
                         >
                           ยกเลิกการแก้ไข
                         </Button>
