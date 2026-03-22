@@ -239,7 +239,7 @@ const ModalMessage: React.FC<Props> = (props) => {
         fontFamily: 'Noto Sans Thai'
       }}
       footer={(_, { OkBtn }) => {
-        if (data.petition_hold.is_end) return false
+        if (data?.petition_hold?.is_end) return false
         return (
           <div className='flex items-center justify-between gap-5'>
             <Button
