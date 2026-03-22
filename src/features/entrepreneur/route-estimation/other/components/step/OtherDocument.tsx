@@ -13,6 +13,7 @@ import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { postConfirmPetitionExtendedAPI } from '@/services/entrepreneur/PetitionService'
 import { getPetitionExtendedData } from '@/store/slices/entrepreneur'
 import { useNavigate } from 'react-router-dom'
+import { CheckCircleFilled } from '@ant-design/icons'
 
 interface Props {
 
@@ -264,12 +265,15 @@ const OtherDocument: React.FC<Props> = (props) => {
     try {
       const response = await postConfirmPetitionExtendedAPI(dataParser.temporary_id, body)
       if (response.status === 200) {
-        Modal.success({
+        Modal.confirm({
+          icon: <CheckCircleFilled style={{ color: '#52c41a' }} />,
           title: 'บันทึกข้อมูลสำเร็จ',
           content: renderResult,
-          okText: 'รับทราบ',
+          okText: 'พิมพ์ที่อยู่',
+          cancelText: 'รับทราบ',
           width: 1000,
-          onOk: () => {
+          onOk: () => onPrintAddress(),
+          onCancel: () => {
             dispatch(getPetitionExtendedData(petition_extended.overview.search))
             navigate('/permit-list?tabKey=2')
           },
@@ -283,25 +287,59 @@ const OtherDocument: React.FC<Props> = (props) => {
           cancelButtonProps: {
             style: {
               fontFamily: 'Noto Sans Thai'
-            }
+            },
+            type: 'primary'
           },
           style: {
             fontFamily: 'Noto Sans Thai'
           },
-          footer: (_, { OkBtn }) => {
+          footer: (_, { OkBtn, CancelBtn }) => {
             return (
               <>
-                <Button
-                  className='!bg-[#1629FF] !text-white'
-                  onClick={() => onPrintAddress()}
-                >
-                  พิมพ์ที่อยู่
-                </Button>
                 <OkBtn />
+                <CancelBtn />
               </>
             )
           }
         })
+        // Modal.success({
+        //   title: 'บันทึกข้อมูลสำเร็จ',
+        //   content: renderResult,
+        //   okText: 'รับทราบ',
+        //   width: 1000,
+        //   onOk: () => {
+        //     dispatch(getPetitionExtendedData(petition_extended.overview.search))
+        //     navigate('/permit-list?tabKey=2')
+        //   },
+        //   okButtonProps: {
+        //     style: {
+        //       fontFamily: 'Noto Sans Thai',
+        //       backgroundColor: '#1629FF',
+        //       color: '#FFFFFF'
+        //     }
+        //   },
+        //   cancelButtonProps: {
+        //     style: {
+        //       fontFamily: 'Noto Sans Thai'
+        //     }
+        //   },
+        //   style: {
+        //     fontFamily: 'Noto Sans Thai'
+        //   },
+        //   footer: (_, { OkBtn }) => {
+        //     return (
+        //       <>
+        //         <Button
+        //           className='!bg-[#1629FF] !text-white'
+        //           onClick={() => onPrintAddress()}
+        //         >
+        //           พิมพ์ที่อยู่
+        //         </Button>
+        //         <OkBtn />
+        //       </>
+        //     )
+        //   }
+        // })
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -346,7 +384,8 @@ const OtherDocument: React.FC<Props> = (props) => {
       cancelButtonProps: {
         style: {
           fontFamily: 'Noto Sans Thai'
-        }
+        },
+        type: 'primary'
       },
       style: {
         fontFamily: 'Noto Sans Thai'
