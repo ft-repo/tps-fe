@@ -99,10 +99,10 @@ const Content = (props: ContentProps) => {
 
   const onSubmit = useCallback(async (value: FieldType) => {
     const body = value.duration !== 'Cancel' ? {
-      hold_id: data.petition_hold.id,
+      hold_id: data?.petition_hold?.id,
       days: Number(value.duration)
     } : {
-      hold_id: data.petition_hold.id,
+      hold_id: data?.petition_hold?.id,
       cancel: value.duration === 'Cancel' ? true : false,
     }
     try {
@@ -146,7 +146,7 @@ const Content = (props: ContentProps) => {
         console.error(error)
       }
     }
-  }, [data.petition_hold.id, setShowEditForm, onRefetch])
+  }, [data?.petition_hold?.id, setShowEditForm, onRefetch])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
