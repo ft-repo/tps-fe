@@ -52,19 +52,19 @@ const Content = (props: ContentProps) => {
   } = form
 
   const renderDuration = useCallback((duration: string | number) => {
-    if (duration === 'Cancel' || data.petition_hold.is_end) return 'ยกเลิกคำขอ'
-    const holdDate = dayjs(data.petition_hold.hold_date, 'YYYY-MM-DD')
+    if (duration === 'Cancel' || data?.petition_hold?.is_end) return 'ยกเลิกคำขอ'
+    const holdDate = dayjs(data?.petition_hold?.hold_date, 'YYYY-MM-DD')
     if (dirtyFields.duration) {
       const newExpired = holdDate.add(Number(duration), 'day')
       return `${duration} วัน (${holdDate.format('DD/MM/YYYY')} - ${newExpired.format('DD/MM/YYYY')})`
     }
-    const dayDiff = dayjs(data.petition_hold.date_expired).diff(holdDate, 'day')
-    return `${dayDiff} วัน (${holdDate.format('DD/MM/YYYY')} - ${dayjs(data.petition_hold.date_expired, 'YYYY-MM-DD').format('DD/MM/YYYY')})`
+    const dayDiff = dayjs(data?.petition_hold?.date_expired).diff(holdDate, 'day')
+    return `${dayDiff} วัน (${holdDate.format('DD/MM/YYYY')} - ${dayjs(data?.petition_hold?.date_expired, 'YYYY-MM-DD').format('DD/MM/YYYY')})`
   }, [
-    data.petition_hold.date_expired,
-    data.petition_hold.hold_date,
+    data?.petition_hold?.date_expired,
+    data?.petition_hold?.hold_date,
     dirtyFields.duration,
-    data.petition_hold.is_end,
+    data?.petition_hold?.is_end,
   ])
 
   const renderName = useCallback((title: string, firstName: string, lastName: string) => {
@@ -154,7 +154,7 @@ const Content = (props: ContentProps) => {
         <p><strong>ยื่นคำขอโดย</strong>: {name || '-'}</p>
       </section>
       <section className='mt-3'>
-        <p><strong>ตรวจสอบโดย</strong>: {renderName(data.admin_creaded.title, data.admin_creaded.first_name, data.admin_creaded.last_name)}</p>
+        <p><strong>ตรวจสอบโดย</strong>: {renderName(data?.admin_creaded?.title, data?.admin_creaded?.first_name, data?.admin_creaded?.last_name)}</p>
         <p><strong>วันที่ตรวจสอบ</strong>: {dayjs(data.created_at).format('DD/MM/YYYY HH:mm:ss')}</p>
       </section>
       {data.document_url ?
