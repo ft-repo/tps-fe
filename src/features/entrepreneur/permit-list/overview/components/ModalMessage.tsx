@@ -56,10 +56,10 @@ const Content = (props: ContentProps) => {
     const holdDate = dayjs(data?.petition_hold?.hold_date, 'YYYY-MM-DD')
     if (dirtyFields.duration) {
       const newExpired = holdDate.add(Number(duration), 'day')
-      return `${duration} วัน (${holdDate.format('DD/MM/YYYY')} - ${newExpired.format('DD/MM/YYYY')})`
+      return `${duration} วัน (${holdDate ? holdDate.format('DD/MM/YYYY') : '-'} - ${newExpired ? newExpired.format('DD/MM/YYYY') : '-'})`
     }
     const dayDiff = dayjs(data?.petition_hold?.date_expired).diff(holdDate, 'day')
-    return `${dayDiff} วัน (${holdDate.format('DD/MM/YYYY')} - ${dayjs(data?.petition_hold?.date_expired, 'YYYY-MM-DD').format('DD/MM/YYYY')})`
+    return `${dayDiff ? dayDiff : '-'} วัน (${holdDate ? holdDate.format('DD/MM/YYYY') : '-'} - ${data?.petition_hold?.date_expired ? dayjs(data?.petition_hold?.date_expired, 'YYYY-MM-DD').format('DD/MM/YYYY') : '-'})`
   }, [
     data?.petition_hold?.date_expired,
     data?.petition_hold?.hold_date,
