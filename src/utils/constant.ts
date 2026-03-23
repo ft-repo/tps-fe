@@ -41,7 +41,11 @@ export const CLIENT_PETITION_STATUS: ClientPetitionColor = {
     "color": "#A9A9A9",
     "text": "รอดำเนินการ",
     "text_color": "text-black"
-
+  },
+  "IS_CANCELED": {
+    "color": "#A9A9A9",
+    "text": "ยกเลิกคำขอ",
+    "text_color": "text-white"
   }
 }
 

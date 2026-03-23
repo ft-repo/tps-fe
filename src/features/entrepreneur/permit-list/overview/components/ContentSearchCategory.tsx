@@ -75,6 +75,7 @@ export const INIT_MODAL_MESSAGE: ModalMessageStateProps = {
       created_by: '',
       created_at: '',
       is_end: false,
+      is_canceled: false
     }
   }
 }

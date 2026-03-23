@@ -258,13 +258,14 @@ export interface PetitionFlow {
 }
 
 export interface PetitionHold {
-  id: number;
-  petition_flow_id: number;
-  hold_date: string;
-  date_expired: string;
-  created_by: string;
-  created_at: string;
-  is_end: boolean;
+  id: number
+  petition_flow_id: number
+  is_end: boolean
+  is_canceled: boolean
+  hold_date: string
+  date_expired: string
+  created_by: string
+  created_at: string
 }
 
 export interface PetitionStatus {

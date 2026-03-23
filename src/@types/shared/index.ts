@@ -31,6 +31,11 @@ export interface ClientPetitionColor {
     text: string;
     text_color: string;
   }
+  IS_CANCELED: {
+    color: string;
+    text: string;
+    text_color: string;
+  }
 }
 
 export interface ClientPetitionExtendColor {
