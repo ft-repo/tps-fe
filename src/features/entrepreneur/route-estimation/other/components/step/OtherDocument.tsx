@@ -265,49 +265,15 @@ const OtherDocument: React.FC<Props> = (props) => {
     try {
       const response = await postConfirmPetitionExtendedAPI(dataParser.temporary_id, body)
       if (response.status === 200) {
-        Modal.confirm({
-          icon: <CheckCircleFilled style={{ color: '#52c41a' }} />,
-          title: 'บันทึกข้อมูลสำเร็จ',
-          content: renderResult,
-          okText: 'พิมพ์ที่อยู่',
-          cancelText: 'รับทราบ',
-          width: 1000,
-          onOk: () => onPrintAddress(),
-          onCancel: () => {
-            dispatch(getPetitionExtendedData(petition_extended.overview.search))
-            navigate('/permit-list?tabKey=2')
-          },
-          okButtonProps: {
-            style: {
-              fontFamily: 'Noto Sans Thai',
-              backgroundColor: '#1629FF',
-              color: '#FFFFFF'
-            }
-          },
-          cancelButtonProps: {
-            style: {
-              fontFamily: 'Noto Sans Thai'
-            },
-            type: 'primary'
-          },
-          style: {
-            fontFamily: 'Noto Sans Thai'
-          },
-          footer: (_, { OkBtn, CancelBtn }) => {
-            return (
-              <>
-                <OkBtn />
-                <CancelBtn />
-              </>
-            )
-          }
-        })
-        // Modal.success({
+        // Modal.confirm({
+        //   icon: <CheckCircleFilled style={{ color: '#52c41a' }} />,
         //   title: 'บันทึกข้อมูลสำเร็จ',
         //   content: renderResult,
-        //   okText: 'รับทราบ',
+        //   okText: 'พิมพ์ที่อยู่',
+        //   cancelText: 'รับทราบ',
         //   width: 1000,
-        //   onOk: () => {
+        //   onOk: () => onPrintAddress(),
+        //   onCancel: () => {
         //     dispatch(getPetitionExtendedData(petition_extended.overview.search))
         //     navigate('/permit-list?tabKey=2')
         //   },
@@ -321,25 +287,46 @@ const OtherDocument: React.FC<Props> = (props) => {
         //   cancelButtonProps: {
         //     style: {
         //       fontFamily: 'Noto Sans Thai'
-        //     }
+        //     },
+        //     type: 'primary'
         //   },
         //   style: {
         //     fontFamily: 'Noto Sans Thai'
         //   },
-        //   footer: (_, { OkBtn }) => {
+        //   footer: (_, { OkBtn, CancelBtn }) => {
         //     return (
         //       <>
-        //         <Button
-        //           className='!bg-[#1629FF] !text-white'
-        //           onClick={() => onPrintAddress()}
-        //         >
-        //           พิมพ์ที่อยู่
-        //         </Button>
         //         <OkBtn />
+        //         <CancelBtn />
         //       </>
         //     )
         //   }
         // })
+        Modal.success({
+          title: 'บันทึกข้อมูลสำเร็จ',
+          content: renderResult,
+          okText: 'รับทราบ',
+          width: 1000,
+          onOk: () => {
+            dispatch(getPetitionExtendedData(petition_extended.overview.search))
+            navigate('/permit-list?tabKey=2')
+          },
+          okButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            },
+            loading: loading
+          },
+          cancelButtonProps: {
+            style: {
+              fontFamily: 'Noto Sans Thai'
+            },
+            disabled: loading
+          },
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        })
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -363,7 +350,14 @@ const OtherDocument: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dataParser.temporary_id, dispatch, navigate, petition_extended.overview.search, renderResult, onPrintAddress])
+  }, [
+    dataParser.temporary_id,
+    dispatch,
+    navigate,
+    petition_extended.overview.search,
+    renderResult,
+    loading,
+  ])
 
   const onConfirmPrintAddress = useCallback(() => {
     Modal.confirm({
@@ -374,6 +368,43 @@ const OtherDocument: React.FC<Props> = (props) => {
       width: 1000,
       onOk: () => onPrintAddress(),
       onCancel: () => Modal.destroyAll(),
+      okButtonProps: {
+        style: {
+          fontFamily: 'Noto Sans Thai',
+          backgroundColor: '#1629FF',
+          color: '#FFFFFF'
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        },
+        type: 'primary'
+      },
+      style: {
+        fontFamily: 'Noto Sans Thai'
+      },
+      footer: (_, { OkBtn, CancelBtn }) => {
+        return (
+          <>
+            <OkBtn />
+            <CancelBtn />
+          </>
+        )
+      }
+    })
+  }, [renderResult, onPrintAddress])
+
+  const confirmSubmit = useCallback(() => {
+    Modal.confirm({
+      icon: <CheckCircleFilled style={{ color: '#52c41a' }} />,
+      title: 'ยืนยันการขอใบอนุญาต',
+      content: renderResult,
+      okText: 'พิมพ์ที่อยู่',
+      cancelText: 'ขอใบอนุญาต',
+      width: 1000,
+      onOk: () => onPrintAddress(),
+      onCancel: () => submitRef.current?.click(),
       okButtonProps: {
         style: {
           fontFamily: 'Noto Sans Thai',
@@ -432,7 +463,8 @@ const OtherDocument: React.FC<Props> = (props) => {
             type='primary'
             // size='large'
             className='w-full lg:w-auto'
-            onClick={() => submitRef.current?.click()}
+            // onClick={() => submitRef.current?.click()}
+            onClick={() => confirmSubmit()}
           >
             บันทึกข้อมูล
           </Button>
