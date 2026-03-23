@@ -29,6 +29,7 @@ export interface DataParser {
     start: RegionState,
     end: RegionState
   }
+  waypoints: { lat: number; lng: number }[];
 }
 
 export const PageContext = createContext<ContextProps | null>(null)
@@ -74,7 +75,8 @@ export const RouteProvider = (props: any) => {
         id: null,
         name: null
       },
-    }
+    },
+    waypoints: []
   })
   const [index, setIndex] = useState<number>(0)
   const [item, setItem] = useState<EstimateResponse>({

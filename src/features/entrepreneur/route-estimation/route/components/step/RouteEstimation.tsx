@@ -72,6 +72,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
   const endInputTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [startDetail, setStartDetail] = useState<RegionState>(INIT_REGION_STATE)
   const [endDetail, setEndDetail] = useState<RegionState>(INIT_REGION_STATE)
+  const [resetViewTrigger, setResetViewTrigger] = useState(0);
+  // IS EDIT
   const isEditVehicle = (state?.type === 'ตรวจยานพาหนะ' || state?.type === 'รอแก้ไข') ? true : false
 
   // console.log(dataParser.raw_body.route_form)
@@ -175,7 +177,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
               region_detail: {
                 start: startDetail,
                 end: endDetail
-              }
+              },
+              waypoints: waypoints
             })
             setStep(2)
           },
@@ -219,7 +222,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
     routes?.main.coordinates,
     selectedRoute,
     endDetail,
-    startDetail
+    startDetail,
+    waypoints
   ])
 
   const onUpdateRoadMap = useCallback(async (value: FieldTypeArr) => {
@@ -303,7 +307,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
               region_detail: {
                 start: startDetail,
                 end: endDetail
-              }
+              },
+              waypoints: waypoints
             })
             setStep(2)
           },
@@ -348,7 +353,8 @@ const RouteEstimation: React.FC<Props> = (props) => {
     setStep,
     endDetail,
     startDetail,
-    dispatch
+    dispatch,
+    waypoints
   ])
 
   const onUpdateVehicle = useCallback(async (value: FieldTypeArr) => {
@@ -612,6 +618,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
     setError(null);
     setValue('start_point', '')
     setValue('end_point', '')
+    setResetViewTrigger(prev => prev + 1);
     // setStartInput('');
     // setEndInput('');
     // Clear any pending timeouts
@@ -740,6 +747,13 @@ const RouteEstimation: React.FC<Props> = (props) => {
     }
   }, [calculateRoutes, isEditVehicle, state?.petition_id])
 
+  // ADD after the existing useEffect that restores startPoint/endPoint
+  useEffect(() => {
+    if (dataParser.waypoints?.length) {
+      setWaypoints(dataParser.waypoints);
+    }
+  }, [dataParser.waypoints])
+
   return (
     <main>
       <section className='flex justify-between items-center flex-wrap gap-5 mb-5'>
@@ -822,6 +836,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                 setSelectedRoute={setSelectedRoute}
                 // REACT HOOK FORM
                 handleMapClick={handleMapClick}
+                resetViewTrigger={resetViewTrigger}
               />
             </div>
             <section className='mt-5'>
@@ -933,7 +948,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                     </p>
                   )}
                 </Col>
-                {startPoint && endPoint && !routes && (
+                {startPoint && endPoint && !routes && !isEditMode && (
                   <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
                     <Button
                       block
@@ -1056,6 +1071,7 @@ const RouteEstimation: React.FC<Props> = (props) => {
                                 </span>
                                 <button
                                   className="text-red-500 hover:text-red-700"
+                                  type='button'
                                   onClick={() => removeWaypoint(idx)}
                                 >
                                   <FaTimes />

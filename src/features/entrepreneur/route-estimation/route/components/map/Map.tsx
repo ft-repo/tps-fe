@@ -27,6 +27,7 @@ interface Props {
   setIsEditMode: (value: boolean) => void;
   setSelectedRoute: (value: RouteType) => void;
   handleMapClick: (value: LatLng) => void;
+  resetViewTrigger: number;
 }
 
 // Types
@@ -120,6 +121,17 @@ const FitBounds = ({ coordinates }: FitBoundsProps) => {
   return null;
 }
 
+// ADD after FitBounds component
+const ResetView = ({ trigger }: { trigger: number }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (trigger > 0) {
+      map.setView([13.736717, 100.523186], 5);
+    }
+  }, [trigger, map]);
+  return null;
+}
+
 const Map: React.FC<Props> = (props) => {
   const {
     // STATE
@@ -134,7 +146,8 @@ const Map: React.FC<Props> = (props) => {
     // SET STATE
     setSelectedRoute,
     // REACT HOOK FORM
-    handleMapClick
+    handleMapClick,
+    resetViewTrigger
   } = props
   const mapRef = useRef<any>(null)
 
@@ -155,6 +168,7 @@ const Map: React.FC<Props> = (props) => {
           isSelecting={isSelectingStart || isSelectingEnd || isEditMode}
           onMapClick={handleMapClick}
         />
+        <ResetView trigger={resetViewTrigger} />
         {/* Fit bounds to route when routes are calculated */}
         {routes && !isEditMode && (
           <FitBounds
