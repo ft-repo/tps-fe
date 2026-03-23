@@ -238,24 +238,16 @@ const FormVehicle: React.FC<Props> = (props) => {
         onOk: () => navigate('/route-estimation/other'),
         onCancel: () => Modal.destroyAll(),
         okButtonProps: {
-          style: {
-            fontFamily: 'Noto Sans Thai'
-          },
-          loading: loading
+          style: { fontFamily: 'Noto Sans Thai' }
         },
         cancelButtonProps: {
-          style: {
-            fontFamily: 'Noto Sans Thai'
-          },
-          disabled: loading
+          style: { fontFamily: 'Noto Sans Thai' }
         },
-        style: {
-          fontFamily: 'Noto Sans Thai'
-        }
+        style: { fontFamily: 'Noto Sans Thai' }
       })
     }
-  }, [selectTowing?.vehicle_detail.axis_number, selectSemi?.vehicle_detail.axis_number, loading, navigate])
-
+  }, [selectTowing?.vehicle_detail.axis_number, selectSemi?.vehicle_detail.axis_number, navigate])
+  //  ^^^^^^ removed `loading`
 
   const renderETC = useCallback((value: number[]) => {
     const arr = []

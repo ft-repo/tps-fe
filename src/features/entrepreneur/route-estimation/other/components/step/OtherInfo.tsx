@@ -21,6 +21,7 @@ const OtherInfo: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
   const { user } = useAppSelector(state => state.auth)
+  const { vehicle_selection } = useAppSelector(state => state.master)
   const navigate = useNavigate()
   const { dataParser, setStep, setDataParser } = useOtherContext()
   const submitRef = useRef<HTMLButtonElement>(null)
@@ -95,6 +96,30 @@ const OtherInfo: React.FC<Props> = (props) => {
   } = form
 
   const onSubmit = useCallback(async (value: FieldTypeForOther) => {
+    // Guard: if combined axis count < 7, redirect to category 2 instead of submitting
+    const towingAxisCount = Number(
+      vehicle_selection.data.find(item => item.vehicle_detail.id === value.towering_vehicle)
+        ?.vehicle_detail.axis_number ?? 0
+    )
+    const semiAxisCount = Number(
+      vehicle_selection.data.find(item => item.vehicle_detail.id === value.semi_trailer_vehicle)
+        ?.vehicle_detail.axis_number ?? 0
+    )
+    if (towingAxisCount + semiAxisCount < 7) {
+      Modal.confirm({
+        title: 'จำนวนเพลาต่ำกว่ากำหนด',
+        content: 'กรุณากดยืนยันเพื่อเข้าสู่ขบวนการขอใบอนุญาตหมวด 2 (4 - 7 เพลา)',
+        okText: 'ยืนยัน',
+        cancelText: 'ยกเลิก',
+        onOk: () => navigate('/route-estimation/route'),
+        onCancel: () => Modal.destroyAll(),
+        okButtonProps: { style: { fontFamily: 'Noto Sans Thai' } },
+        cancelButtonProps: { style: { fontFamily: 'Noto Sans Thai' } },
+        style: { fontFamily: 'Noto Sans Thai' }
+      })
+      return  // <-- prevents API call
+    }
+    // BODY
     const body: PetitionExtendedPostRequest = {
       petition_extended_detail: {
         cert_date: dayjs(value.registered_date).format('YYYY-MM-DD'),
@@ -199,7 +224,7 @@ const OtherInfo: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch, setDataParser, setStep])
+  }, [dispatch, navigate, setDataParser, setStep, vehicle_selection.data])
 
   return (
     <main>

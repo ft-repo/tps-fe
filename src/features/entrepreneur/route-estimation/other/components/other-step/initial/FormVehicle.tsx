@@ -20,7 +20,7 @@ interface Props {
 const FormVehicle: React.FC<Props> = (props) => {
   const { control, setValue, trigger } = props
   const { vehicle_selection } = useAppSelector(state => state.master)
-  const { loading } = useAppSelector(state => state.layout)
+  // const { loading } = useAppSelector(state => state.layout)
   const [toweringVehicleWheel, setToweringVehicleWheel] = useState<number>(0)
   const [semiVehicleWheel, setSemiVehicleWheel] = useState<number>(0)
   const navigate = useNavigate()
@@ -73,23 +73,16 @@ const FormVehicle: React.FC<Props> = (props) => {
         onOk: () => navigate('/route-estimation/route'),
         onCancel: () => Modal.destroyAll(),
         okButtonProps: {
-          style: {
-            fontFamily: 'Noto Sans Thai'
-          },
-          loading: loading
+          style: { fontFamily: 'Noto Sans Thai' }
         },
         cancelButtonProps: {
-          style: {
-            fontFamily: 'Noto Sans Thai'
-          },
-          disabled: loading
+          style: { fontFamily: 'Noto Sans Thai' }
         },
-        style: {
-          fontFamily: 'Noto Sans Thai'
-        }
+        style: { fontFamily: 'Noto Sans Thai' }
       })
     }
-  }, [selectTowing?.vehicle_detail.axis_number, selectSemi?.vehicle_detail.axis_number, loading, navigate])
+  }, [selectTowing?.vehicle_detail.axis_number, selectSemi?.vehicle_detail.axis_number, navigate])
+  //  ^^^^^^ removed `loading` from deps, and removed `loading: loading` from okButtonProps
 
   const fetchTowingMaxWeight = useCallback(async (id: string | number | null) => {
     try {
