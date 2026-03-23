@@ -355,7 +355,6 @@ const OtherDocument: React.FC<Props> = (props) => {
     dispatch,
     navigate,
     petition_extended.overview.search,
-    renderResult,
     loading,
   ])
 
@@ -395,7 +394,7 @@ const OtherDocument: React.FC<Props> = (props) => {
     })
   }, [renderResult, onPrintAddress])
 
-  const confirmSubmit = useCallback(() => {
+  const confirmSubmit = useCallback(async (value: DocumentFieldType) => {
     Modal.confirm({
       icon: <CheckCircleFilled style={{ color: '#52c41a' }} />,
       title: 'ยืนยันการขอใบอนุญาต',
@@ -404,7 +403,7 @@ const OtherDocument: React.FC<Props> = (props) => {
       cancelText: 'ขอใบอนุญาต',
       width: 1000,
       onOk: () => onPrintAddress(),
-      onCancel: () => submitRef.current?.click(),
+      onCancel: () => onSubmit(value),
       okButtonProps: {
         style: {
           fontFamily: 'Noto Sans Thai',
@@ -430,7 +429,7 @@ const OtherDocument: React.FC<Props> = (props) => {
         )
       }
     })
-  }, [renderResult, onPrintAddress])
+  }, [renderResult, onPrintAddress, onSubmit])
 
   return (
     <main>
@@ -463,14 +462,13 @@ const OtherDocument: React.FC<Props> = (props) => {
             type='primary'
             // size='large'
             className='w-full lg:w-auto'
-            // onClick={() => submitRef.current?.click()}
-            onClick={() => confirmSubmit()}
+            onClick={() => submitRef.current?.click()}
           >
             บันทึกข้อมูล
           </Button>
         </div>
       </section>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(confirmSubmit)}>
         <section className='mt-3'>
           <div className='block xl:grid grid-cols-2 gap-5 mt-5'>
             <FormDocumentProposal
