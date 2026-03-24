@@ -42,8 +42,8 @@ const Logo = (props: LogoProps) => {
 					alt={`${APP_NAME} ${mode} logo`}
 				/>
 				<div className={type === 'full' ? 'block text-center' : 'hidden'}>
-					<h3 className='text-white text-[1rem] font-bold'>TRUCK PERMISSION SYSTEM</h3>
-					<p className='text-white text-[0.8rem] opacity-80'>ระบบติดตามและควบคุมน้ำหนักรถบรรทุกบนโครงข่ายทางหลวงชนบท</p>
+					<h3 className='text-white text-[1rem] font-bold'>TRUCK PERMISSION SYSTEM (Under Section 61)</h3>
+					<p className='text-white text-[0.8rem] opacity-80'>การขออนุญาต/ต่อใบอนุญาตใช้ยานพาหนะบางชนิดบางประเภทเดินบนทางหลวงชนบท (มาตรา 61)</p>
 				</div>
 			</div>
 		</div>

@@ -21,8 +21,8 @@ const Side = ({ children, content, ...rest }: SideProps) => {
 					<div className='flex items-center gap-3'>
 						<img src="/img/logo/logo-TPS.png" className='w-20 h-20' alt="logo" />
 						<div>
-							<h3 className='text-white'>TRUCK PERMISSION SYSTEM</h3>
-							<p className='text-white'>ระบบติดตามและควบคุมน้ำหนักรถบรรทุกบนโครงข่ายทางหลวงชนบท</p>
+							<h3 className='text-white'>TRUCK PERMISSION SYSTEM (Under Section 61)</h3>
+							<p className='text-white'>การขออนุญาต/ต่อใบอนุญาตใช้ยานพาหนะบางชนิดบางประเภทเดินบนทางหลวงชนบท (มาตรา 61)</p>
 						</div>
 					</div>
 				</div>
