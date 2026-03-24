@@ -16,6 +16,9 @@ const DocumentIndex: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(resetAdminPetitionExtendedDetail())
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(resetPetitionExtendedStatus())
   }, [dispatch])
 

@@ -218,7 +218,7 @@ const ContentDetail: React.FC<Props> = (props) => {
 
   const renderETC = useCallback((value: number[]) => {
     const arr = []
-    if (value.length) {
+    if (value?.length) {
       for (const etc_id of value) {
         const selectETC = vehicle_selection.data.find(item => item.vehicle_detail.id === etc_id)
         if (selectETC) {
