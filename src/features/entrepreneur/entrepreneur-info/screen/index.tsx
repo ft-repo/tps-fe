@@ -2,7 +2,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '../components';
 import { useForm } from 'react-hook-form';
 import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
@@ -23,6 +23,13 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
   const userData = useAppSelector(state => state.entrepreneur.user)
   const loading = useAppSelector(state => state.layout.loading)
   const auth = useAppSelector(state => state.auth)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [bulkLoading, setBulkLoading] = useState({
+    profile: false,
+    cid: false,
+    certificate: false,
+    business: false
+  })
 
   const renderBusinessAddress = useCallback((
     houseNumber: string,
@@ -171,7 +178,8 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
   }, []);
 
   const fetchProfileUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
+    // dispatch(setLoading(true))
+    setBulkLoading(prev => ({ ...prev, profile: true }))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -200,12 +208,12 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      dispatch(setLoading(false))
+      setBulkLoading(prev => ({ ...prev, profile: false }))
     }
-  }, [userData.profile_url, setValue, dispatch])
+  }, [userData.profile_url, setValue])
 
   const fetchCIDUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
+    setBulkLoading(prev => ({ ...prev, cid: true }))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -234,12 +242,12 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      dispatch(setLoading(false))
+      setBulkLoading(prev => ({ ...prev, cid: false }))
     }
-  }, [userData.business_document.cid_card_file_url, setValue, dispatch])
+  }, [userData.business_document.cid_card_file_url, setValue])
 
   const fetchCertificateUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
+    setBulkLoading(prev => ({ ...prev, certificate: true }))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -268,12 +276,12 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      dispatch(setLoading(false))
+      setBulkLoading(prev => ({ ...prev, certificate: false }))
     }
-  }, [userData.business_document.certificate_file_url, setValue, dispatch])
+  }, [userData.business_document.certificate_file_url, setValue])
 
   const fetchBusinessUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
+    setBulkLoading(prev => ({ ...prev, business: true }))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -302,9 +310,9 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      dispatch(setLoading(false))
+      setBulkLoading(prev => ({ ...prev, business: false }))
     }
-  }, [userData.business_document.business_file_url, setValue, dispatch])
+  }, [userData.business_document.business_file_url, setValue])
 
   useEffect(() => {
     if (userData.profile_url) {

@@ -97,12 +97,12 @@ const _SidePanel = (props: SidePanelProps) => {
 			{
 				key: '1',
 				label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
-				onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่.pdf', '_blank')
+				onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
 			},
 			{
 				key: '2',
 				label: 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
-				onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ.pdf', '_blank')
+				onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
 			},
 		]
 	}, [])

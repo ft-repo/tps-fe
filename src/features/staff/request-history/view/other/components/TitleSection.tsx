@@ -184,45 +184,78 @@ const TitleSection: React.FC<Props> = (props) => {
   //   })
   // }, [onShowPDF, petition.detail.vehicle.vehicle_list])
 
+  // const ruralDoc = useMemo(() => {
+  //   return petition.detail.vehicle.vehicle_list.map((item, index) => {
+  //     return {
+  //       key: String(2 + (index + 1)),
+  //       label: `เอกสารขออนุญาตจาก ทช. ${item.sort}`,
+  //       onClick: () => showFile(extractUrl(item.rural_highway_dept_permit_url), `เอกสารขออนุญาตจาก ทช._${item.sort}.pdf`)
+  //     }
+  //   })
+  // }, [petition.detail.vehicle.vehicle_list, extractUrl, showFile])
+
   const ruralDoc = useMemo(() => {
-    return petition.detail.vehicle.vehicle_list.map((item, index) => {
-      return {
+    return petition.detail.vehicle.vehicle_list
+      .filter(item => !!item.rural_highway_dept_permit_url)
+      .map((item, index) => ({
         key: String(2 + (index + 1)),
         label: `เอกสารขออนุญาตจาก ทช. ${item.sort}`,
         onClick: () => showFile(extractUrl(item.rural_highway_dept_permit_url), `เอกสารขออนุญาตจาก ทช._${item.sort}.pdf`)
-      }
-    })
+      }))
   }, [petition.detail.vehicle.vehicle_list, extractUrl, showFile])
 
+  const fileItems = [
+    { key: '1', sourceUrl: pdfDocument?.poa_url, label: 'หนังสือมอบอำนาจ', fileName: 'หนังสือมอบอำนาจ.pdf' },
+    { key: '2', sourceUrl: pdfDocument?.mach_book_url, label: 'หนังสือวิศวะเครื่องกล', fileName: 'หนังสือวิศวะเครื่องกล.pdf' },
+    { key: '4', sourceUrl: petition_status[3]?.document_url, label: 'เอกสารลงนาม', fileName: 'เอกสารลงนาม.pdf' },
+    { key: '5', sourceUrl: petition_status[4]?.document_url, label: 'เอกสารใบอนุญาต', fileName: 'เอกสารใบอนุญาต.pdf' },
+  ]
+
   const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: 'หนังสือมอบอำนาจ',
-      onClick: () => showFile(extractUrl(pdfDocument?.poa_url), 'หนังสือมอบอำนาจ.pdf')
-    },
-    {
-      key: '2',
-      label: 'หนังสือวิศวะเครื่องกล',
-      onClick: () => showFile(extractUrl(pdfDocument?.mach_book_url), 'หนังสือวิศวะเครื่องกล.pdf')
-    },
+    ...fileItems
+      .filter((item): item is typeof item & { sourceUrl: string } => !!item.sourceUrl)
+      .map(item => ({
+        key: item.key,
+        label: item.label,
+        onClick: () => showFile(extractUrl(item.sourceUrl), item.fileName)
+      })),
     ...ruralDoc,
-    {
-      key: '4',
-      label: 'เอกสารลงนาม',
-      onClick: () => showFile(extractUrl(petition_status[3]?.document_url), 'เอกสารลงนาม.pdf')
-    },
-    {
-      key: '5',
-      label: 'เอกสารใบอนุญาต',
-      onClick: () => showFile(extractUrl(petition_status[4]?.document_url), 'เอกสารใบอนุญาต.pdf')
-    },
-    // ...vehicleDoc,
     {
       key: '10',
       label: 'ดาวน์โหลดทั้งหมด (.zip)',
       onClick: downloadAllFile
     },
-  ];
+  ]
+
+  // const items: MenuProps['items'] = [
+  //   {
+  //     key: '1',
+  //     label: 'หนังสือมอบอำนาจ',
+  //     onClick: () => showFile(extractUrl(pdfDocument?.poa_url), 'หนังสือมอบอำนาจ.pdf')
+  //   },
+  //   {
+  //     key: '2',
+  //     label: 'หนังสือวิศวะเครื่องกล',
+  //     onClick: () => showFile(extractUrl(pdfDocument?.mach_book_url), 'หนังสือวิศวะเครื่องกล.pdf')
+  //   },
+  //   ...ruralDoc,
+  //   {
+  //     key: '4',
+  //     label: 'เอกสารลงนาม',
+  //     onClick: () => showFile(extractUrl(petition_status[3]?.document_url), 'เอกสารลงนาม.pdf')
+  //   },
+  //   {
+  //     key: '5',
+  //     label: 'เอกสารใบอนุญาต',
+  //     onClick: () => showFile(extractUrl(petition_status[4]?.document_url), 'เอกสารใบอนุญาต.pdf')
+  //   },
+  //   // ...vehicleDoc,
+  //   {
+  //     key: '10',
+  //     label: 'ดาวน์โหลดทั้งหมด (.zip)',
+  //     onClick: downloadAllFile
+  //   },
+  // ];
 
   return (
     <Flex

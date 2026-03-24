@@ -20,7 +20,13 @@ const ExecutiveDataIndex: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(getUserData())
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(getContactType())
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(getEntityType())
   }, [dispatch])
 

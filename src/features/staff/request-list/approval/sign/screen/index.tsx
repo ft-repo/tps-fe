@@ -25,6 +25,7 @@ const SignScreen: React.FC<Props> = (props) => {
 	const [url, setUrl] = useState<string>('')
 	// LOCATION
 	const { state } = useLocation()
+	const isNotApproved = state?.is_approved !== 'null' ? true : false
 
 	useEffect(() => {
 		dispatch(getPetitionDocument({ petition_id: String(state?.petition_id) }))
@@ -75,6 +76,14 @@ const SignScreen: React.FC<Props> = (props) => {
 		}
 	}, [fetchImage, extractUrl, petition_status])
 
+	useEffect(() => {
+		if (isNotApproved) {
+			setStep(2)
+		} else {
+			setStep(1)
+		}
+	}, [isNotApproved])
+
 	const renderFormComponent = useMemo(() => {
 		switch (step) {
 			case 1:
@@ -116,7 +125,11 @@ const SignScreen: React.FC<Props> = (props) => {
 						if (step === 1) {
 							navigate('/request-list/overview')
 						} else {
-							setStep((prev: number) => prev - 1)
+							if (isNotApproved) {
+								navigate('/request-list/overview')
+							} else {
+								setStep((prev: number) => prev - 1)
+							}
 						}
 					}}
 				>
