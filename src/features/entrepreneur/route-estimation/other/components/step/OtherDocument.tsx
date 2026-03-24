@@ -138,29 +138,53 @@ const OtherDocument: React.FC<Props> = (props) => {
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Noto Sans Thai', sans-serif; padding: 48px; }
-    .label { width: 100%; }
-    .title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
-    .line {
-      border-bottom: 2px dashed #999;
-      padding-bottom: 6px;
-      margin-bottom: 22px;
-      font-size: 15px;
-      min-height: 28px;
+    @page { size: A4 landscape; margin: 0; }
+    html, body {
+      font-family: 'Noto Sans Thai', sans-serif;
+      width: 297mm;
+      height: 210mm;
+      overflow: hidden;
     }
-    .postal-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
-    .label-text { font-size: 15px; font-weight: 700; margin-right: 4px; }
+    body {
+      padding: 16mm 0 0 16mm;
+      display: block;
+    }
+    .label {
+      width: 120mm;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .line {
+      border-bottom: 1.5px dashed #888;
+      padding-bottom: 4px;
+      margin-bottom: 18px;
+      font-size: 14px;
+      min-height: 24px;
+    }
+    .postal-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 6px;
+    }
+    .label-text {
+      font-size: 14px;
+      font-weight: 700;
+      margin-right: 4px;
+      white-space: nowrap;
+    }
     .circle {
-      width: 34px; height: 34px;
+      width: 30px; height: 30px;
       border: 1.5px solid #888;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 13px;
     }
-@page { margin: 0mm; }
-@media print { body { padding: 24px; } }
   </style>
 </head>
 <body>
@@ -179,7 +203,7 @@ const OtherDocument: React.FC<Props> = (props) => {
 </html>`
 
     const iframe = document.createElement('iframe')
-    iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:800px;height:0;border:none;visibility:hidden;'
+    iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1122px;height:794px;border:none;visibility:hidden;'
     document.body.appendChild(iframe)
 
     const doc = iframe.contentDocument || iframe.contentWindow?.document
