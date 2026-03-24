@@ -43,7 +43,8 @@ const Logo = (props: LogoProps) => {
 				/>
 				<div className={type === 'full' ? 'block text-center' : 'hidden'}>
 					<h3 className='text-white text-[1rem] font-bold'>TRUCK PERMISSION SYSTEM (Under Section 61)</h3>
-					<p className='text-white text-[0.8rem] opacity-80'>การขออนุญาต/ต่อใบอนุญาตใช้ยานพาหนะบางชนิดบางประเภทเดินบนทางหลวงชนบท (มาตรา 61)</p>
+					<p className='text-white text-[0.8rem] opacity-80'>การขออนุญาต/ต่อใบอนุญาตใช้ยานพาหนะบางชนิดบางประเภทเดินบนทางหลวงชนบท</p>
+					<p className='text-white text-[0.8rem] opacity-80'>(มาตรา 61)</p>
 				</div>
 			</div>
 		</div>

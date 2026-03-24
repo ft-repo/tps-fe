@@ -16,6 +16,9 @@ const VehicleIndex: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(resetAdminPetitionVehicle())
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(resetPetitionStatus())
   }, [dispatch])
 
