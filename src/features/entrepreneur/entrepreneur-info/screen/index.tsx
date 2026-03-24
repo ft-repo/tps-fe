@@ -171,7 +171,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
   }, []);
 
   const fetchProfileUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -200,12 +200,12 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [userData.profile_url, setValue])
+  }, [userData.profile_url, setValue, dispatch])
 
   const fetchCIDUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -234,12 +234,12 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [userData.business_document.cid_card_file_url, setValue])
+  }, [userData.business_document.cid_card_file_url, setValue, dispatch])
 
   const fetchCertificateUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -268,12 +268,12 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [userData.business_document.certificate_file_url, setValue])
+  }, [userData.business_document.certificate_file_url, setValue, dispatch])
 
   const fetchBusinessUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -302,9 +302,9 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [userData.business_document.business_file_url, setValue])
+  }, [userData.business_document.business_file_url, setValue, dispatch])
 
   useEffect(() => {
     if (userData.profile_url) {

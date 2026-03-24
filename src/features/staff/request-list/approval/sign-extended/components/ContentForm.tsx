@@ -9,10 +9,11 @@ import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getAdminPetitionExtendedData } from '@/store/slices/staff';
 import { Flex, Input, message, Modal, Upload, Button } from 'antd';
 import { RcFile } from 'antd/es/upload';
+import { AxiosError } from 'axios';
 import React, { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 interface Props {
   setUrl: (value: string) => void
@@ -31,17 +32,19 @@ interface FileType {
 const ContentForm: React.FC<Props> = (props) => {
   const { setUrl } = props
   // PARAMS
-  const [params] = useSearchParams()
-  const petitionId = params.get('petition_id')
-  const statusId = params.get('status_id')
-  const isApproved = params.get('is_approved')
+  // const [params] = useSearchParams()
+  // const petitionId = params.get('petition_id')
+  // const statusId = params.get('status_id')
+  // const isApproved = params.get('is_approved')
   // REDUX MANAGE
   const { petition_extended, petition_extended_status } = useAppSelector(state => state.staff.petition)
   const dispatch = useAppDispatch()
   // NAVIGATE
   const navigate = useNavigate()
+  // LOCATION
+  const { state } = useLocation()
   // IS DISABLED
-  const disabled = isApproved !== 'null' ? true : false
+  const disabled = state?.is_approved !== 'null' ? true : false
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -85,8 +88,8 @@ const ContentForm: React.FC<Props> = (props) => {
 
   const onSubmit = useCallback(async (value: FieldType) => {
     const body: PetitionExtendedPostBody = {
-      petition_exid: Number(petitionId),
-      status_id: Number(statusId),
+      petition_exid: Number(state?.petition_id),
+      status_id: Number(state?.status_id),
       is_approved: true,
       remark: value.remark,
       reply_message: '',
@@ -119,10 +122,10 @@ const ContentForm: React.FC<Props> = (props) => {
         })
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof AxiosError) {
         Modal.error({
-          title: 'ผิดพลาด',
-          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          title: 'ไม่สามารถบันทึกข้อมูลได้',
+          content: error.response?.data?.res_data?.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล',
           okText: 'ตกลง',
           onOk: () => Modal.destroyAll(),
           okButtonProps: {
@@ -140,7 +143,7 @@ const ContentForm: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [petitionId, statusId, dispatch, navigate, petition_extended.overview.search])
+  }, [dispatch, navigate, petition_extended.overview.search, state?.petition_id, state?.status_id])
 
   // const extractFileName = useCallback((url: string | null) => {
   //   const match = url?.match(/\/([^\/]+)$/);
@@ -153,7 +156,7 @@ const ContentForm: React.FC<Props> = (props) => {
   }, []);
 
   const fetchImage = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -181,9 +184,9 @@ const ContentForm: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [setValue])
+  }, [setValue, dispatch])
 
   useEffect(() => {
     if (petition_extended_status[1]?.document_url) {

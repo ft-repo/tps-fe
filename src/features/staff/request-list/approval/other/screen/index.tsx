@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { Button, Spin } from 'antd';
 import { ContentForm } from '../components';
 import { AiOutlineLeft } from 'react-icons/ai';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { getPetitionExtendedStatus } from '@/store/slices/staff';
 
@@ -14,15 +14,17 @@ interface Props {
 
 const PermitScreen: React.FC<Props> = (props) => {
   const { } = props
-  const [params] = useSearchParams()
-  const petitionId = params.get('petition_id')
+  // const [params] = useSearchParams()
+  // const petitionId = params.get('petition_id')
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.staff.petition)
+  // LOCATION
+  const { state } = useLocation()
 
   useEffect(() => {
-    dispatch(getPetitionExtendedStatus({ petition_exid: String(petitionId) }))
-  }, [dispatch, petitionId])
+    dispatch(getPetitionExtendedStatus({ petition_exid: String(state?.petition_id) }))
+  }, [dispatch, state?.petition_id])
 
   return (
     <Spin spinning={loading}>
@@ -30,7 +32,7 @@ const PermitScreen: React.FC<Props> = (props) => {
         <Button
           type='text'
           icon={<AiOutlineLeft />}
-					onClick={() => navigate('/request-list/overview?tabKey=2')}
+          onClick={() => navigate('/request-list/overview?tabKey=2')}
         >
           ย้อนกลับ
         </Button>

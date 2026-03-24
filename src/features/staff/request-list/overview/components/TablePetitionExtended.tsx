@@ -98,11 +98,17 @@ const makeStepRenderer =
             : 'null'
 
       const pid = (record as any).id ?? ''
-      const href = `${path}?petition_id=${encodeURIComponent(String(pid))}&status_id=${record.status_id}&is_approved=${approvedParam}`
+      // const href = `${path}?petition_id=${encodeURIComponent(String(pid))}&status_id=${record.status_id}&is_approved=${approvedParam}`
+      const href = path
+      const state = {
+        petition_id: pid,
+        status_id: record.status_id,
+        is_approved: approvedParam
+      }
 
       const go = (e?: React.MouseEvent) => {
         e?.stopPropagation()
-        navigate(href)
+        navigate(href, { state })
       }
 
       const content = (

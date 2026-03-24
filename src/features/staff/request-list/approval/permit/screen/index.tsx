@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Col, message, Row, Spin } from 'antd';
 import { ContentForm, ContentPreviewPDF } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 import { getPetitionStatus } from '@/store/slices/staff';
@@ -15,17 +15,19 @@ interface Props {
 
 const PermitScreen: React.FC<Props> = (props) => {
   const { } = props
-  const [params] = useSearchParams()
-  const petitionId = params.get('petition_id')
+  // const [params] = useSearchParams()
+  // const petitionId = params.get('petition_id')
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { petition_status, loading } = useAppSelector(state => state.staff.petition)
   // STATE
   const [url, setUrl] = useState<string>('')
+  // LOCATION
+  const { state } = useLocation()
 
   useEffect(() => {
-    dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
-  }, [dispatch, petitionId])
+    dispatch(getPetitionStatus({ petition_id: String(state?.petition_id) }))
+  }, [dispatch, state?.petition_id])
 
   const extractUrl = useCallback((url: string) => {
     const path = url.split('/upload')[1];

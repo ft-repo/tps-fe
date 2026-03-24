@@ -236,7 +236,7 @@ const ContentForm: React.FC<Props> = (props) => {
   }, []);
 
   const fetchImage = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -264,9 +264,9 @@ const ContentForm: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [setValue])
+  }, [setValue, dispatch])
 
   useEffect(() => {
     if (petition_status[1]?.document_url) {

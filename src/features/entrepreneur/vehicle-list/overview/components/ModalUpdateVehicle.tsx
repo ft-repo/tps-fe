@@ -182,7 +182,7 @@ const Content = (props: ContentProps) => {
   }, []);
 
   const fetchRegistrationUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -211,12 +211,12 @@ const Content = (props: ContentProps) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [data.vehicle_detail.registration_document_url, setValue])
+  }, [data.vehicle_detail.registration_document_url, setValue, dispatch])
 
   const fetchPropertyUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -245,12 +245,12 @@ const Content = (props: ContentProps) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [data.vehicle_owner_documents.owner_document_url, setValue])
+  }, [data.vehicle_owner_documents.owner_document_url, setValue, dispatch])
 
   const fetchHireUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -279,12 +279,12 @@ const Content = (props: ContentProps) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [data.vehicle_owner_documents.employment_contact_url, setValue])
+  }, [data.vehicle_owner_documents.employment_contact_url, setValue, dispatch])
 
   const fetchPurchaseUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -313,12 +313,12 @@ const Content = (props: ContentProps) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [data.vehicle_owner_documents.buyer_contact_url, setValue])
+  }, [data.vehicle_owner_documents.buyer_contact_url, setValue, dispatch])
 
   const fetchTransferUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -347,12 +347,12 @@ const Content = (props: ContentProps) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [data.vehicle_owner_documents.assignment_contact_url, setValue])
+  }, [data.vehicle_owner_documents.assignment_contact_url, setValue, dispatch])
 
   const fetchFrontUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -381,12 +381,12 @@ const Content = (props: ContentProps) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [data.vehicle_pictures.front_rear_url, setValue])
+  }, [data.vehicle_pictures.front_rear_url, setValue, dispatch])
 
   const fetchSideUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -415,12 +415,12 @@ const Content = (props: ContentProps) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [data.vehicle_pictures.side_rear_url, setValue])
+  }, [data.vehicle_pictures.side_rear_url, setValue, dispatch])
 
   const fetchBackUrl = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -449,9 +449,9 @@ const Content = (props: ContentProps) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [data.vehicle_pictures.back_rear_url, setValue])
+  }, [data.vehicle_pictures.back_rear_url, setValue, dispatch])
 
   useEffect(() => {
     if (data.vehicle_detail.registration_document_url) {

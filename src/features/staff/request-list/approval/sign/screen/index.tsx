@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button, Col, message, Row, Spin } from 'antd';
 import { ContentForm, ContentPreviewPDF, FormDownloadTemplate } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getPetitionDocument, getPetitionEstimateRoute, getPetitionStatus, getPetitionVehicle } from '@/store/slices/staff';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
@@ -15,21 +15,32 @@ interface Props {
 
 const SignScreen: React.FC<Props> = (props) => {
 	const { } = props
-	const [params] = useSearchParams()
-	const petitionId = params.get('petition_id')
+	// const [params] = useSearchParams()
+	// const petitionId = params.get('petition_id')
 	const navigate = useNavigate()
 	const dispatch = useAppDispatch()
 	const { petition_status, loading } = useAppSelector(state => state.staff.petition)
 	const [step, setStep] = useState<number>(1)
 	// STATE
 	const [url, setUrl] = useState<string>('')
+	// LOCATION
+	const { state } = useLocation()
 
 	useEffect(() => {
-		dispatch(getPetitionDocument({ petition_id: String(petitionId) }))
-		dispatch(getPetitionEstimateRoute({ petition_id: String(petitionId) }))
-		dispatch(getPetitionVehicle({ petition_id: String(petitionId) }))
-		dispatch(getPetitionStatus({ petition_id: String(petitionId) }))
-	}, [dispatch, petitionId])
+		dispatch(getPetitionDocument({ petition_id: String(state?.petition_id) }))
+	}, [dispatch, state?.petition_id])
+
+	useEffect(() => {
+		dispatch(getPetitionEstimateRoute({ petition_id: String(state?.petition_id) }))
+	}, [dispatch, state?.petition_id])
+
+	useEffect(() => {
+		dispatch(getPetitionVehicle({ petition_id: String(state?.petition_id) }))
+	}, [dispatch, state?.petition_id])
+
+	useEffect(() => {
+		dispatch(getPetitionStatus({ petition_id: String(state?.petition_id) }))
+	}, [dispatch, state?.petition_id])
 
 	const extractUrl = useCallback((url: string) => {
 		const path = url.split('/upload')[1];

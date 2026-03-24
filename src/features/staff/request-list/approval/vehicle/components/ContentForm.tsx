@@ -9,6 +9,7 @@ import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getAdminPetitionData } from '@/store/slices/staff';
 import { Flex, Input, message, Modal, Radio, Upload, Button } from 'antd';
 import { RcFile } from 'antd/es/upload';
+import { AxiosError } from 'axios';
 import React, { useCallback, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
@@ -153,10 +154,10 @@ const ContentForm: React.FC<Props> = (props) => {
         })
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof AxiosError) {
         Modal.error({
-          title: 'ผิดพลาด',
-          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          title: 'ไม่สามารถบันทึกข้อมูลได้',
+          content: error.response?.data?.res_data?.message || 'เกิดข้อผิดพลาดในการบันทึกข้อมูล',
           okText: 'ตกลง',
           onOk: () => Modal.destroyAll(),
           okButtonProps: {
@@ -250,7 +251,7 @@ const ContentForm: React.FC<Props> = (props) => {
   }, []);
 
   const fetchImage = useCallback(async (imgUrl: string) => {
-    setLoading(true)
+    dispatch(setLoading(true))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -278,9 +279,9 @@ const ContentForm: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      setLoading(false)
+      dispatch(setLoading(false))
     }
-  }, [setValue])
+  }, [setValue, dispatch])
 
   useEffect(() => {
     if (petition_status[2]?.document_url) {
