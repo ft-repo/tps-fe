@@ -92,6 +92,9 @@ const ViewIndex: FC = () => {
 
   useEffect(() => {
     dispatch(getContactType())
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(getEntityType())
   }, [dispatch])
 

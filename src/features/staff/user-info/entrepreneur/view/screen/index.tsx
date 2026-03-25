@@ -2,7 +2,7 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FormExecutiveData, FormExecutiveDocument } from '@/features/entrepreneur/entrepreneur-info/components';
 import { useForm } from 'react-hook-form';
 import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
@@ -24,6 +24,13 @@ const ViewScreen: React.FC<Props> = (props) => {
   const { detail } = useAppSelector(state => state.staff.staff.client)
   const loading = useAppSelector(state => state.layout.loading)
   const navigate = useNavigate()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [bulkLoading, setBulkLoading] = useState({
+    profile: false,
+    cid: false,
+    certificate: false,
+    business: false
+  })
 
   const renderBusinessAddress = useCallback((
     houseNumber: string,
@@ -166,7 +173,8 @@ const ViewScreen: React.FC<Props> = (props) => {
   }, []);
 
   const fetchProfileUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
+    // dispatch(setLoading(true))
+    setBulkLoading(prev => ({ ...prev, profile: true }))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -195,12 +203,14 @@ const ViewScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      dispatch(setLoading(false))
+      // dispatch(setLoading(false))
+      setBulkLoading(prev => ({ ...prev, profile: false }))
     }
-  }, [detail.profile_url, setValue, dispatch])
+  }, [detail.profile_url, setValue])
 
   const fetchCIDUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
+    // dispatch(setLoading(true))
+    setBulkLoading(prev => ({ ...prev, cid: true }))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -229,12 +239,14 @@ const ViewScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      dispatch(setLoading(false))
+      // dispatch(setLoading(false))
+      setBulkLoading(prev => ({ ...prev, cid: false }))
     }
-  }, [detail.documents.cid_card_file_url, setValue, dispatch])
+  }, [detail.documents.cid_card_file_url, setValue])
 
   const fetchCertificateUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
+    // dispatch(setLoading(true))
+    setBulkLoading(prev => ({ ...prev, certificate: true }))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -263,12 +275,14 @@ const ViewScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      dispatch(setLoading(false))
+      // dispatch(setLoading(false))
+      setBulkLoading(prev => ({ ...prev, certificate: false }))
     }
-  }, [detail.documents.certificate_file_url, setValue, dispatch])
+  }, [detail.documents.certificate_file_url, setValue])
 
   const fetchBusinessUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
+    // dispatch(setLoading(true))
+    setBulkLoading(prev => ({ ...prev, business: true }))
     try {
       const response = await getUploadAPI(imgUrl)
       if (response.status === 200) {
@@ -297,9 +311,10 @@ const ViewScreen: React.FC<Props> = (props) => {
         console.error(error)
       }
     } finally {
-      dispatch(setLoading(false))
+      // dispatch(setLoading(false))
+      setBulkLoading(prev => ({ ...prev, business: false }))
     }
-  }, [detail.documents.business_file_url, setValue, dispatch])
+  }, [detail.documents.business_file_url, setValue])
 
   useEffect(() => {
     if (detail.profile_url) {
