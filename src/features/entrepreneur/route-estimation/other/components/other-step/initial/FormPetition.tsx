@@ -354,8 +354,10 @@ const FormPetition: React.FC<Props> = (props) => {
                       onChange={(value) => {
                         field.onChange(value)
                         // fetchProvinceAPI('contact', value, company_district, company_sub_district)
-                        fetchDistrictAPI('contact', value, company_district, company_sub_district)
-                        fetchSubDistrictAPI('contact', value, company_district, company_sub_district)
+                        // fetchDistrictAPI('contact', value, company_district, company_sub_district)
+                        // fetchSubDistrictAPI('contact', value, company_district, company_sub_district)
+                        fetchDistrictAPI('contact', value, null, null)
+                        fetchSubDistrictAPI('contact', value, null, null)
                         // SET VALUE
                         setValue('company_district', null)
                         setValue('company_sub_district', null)
@@ -406,9 +408,10 @@ const FormPetition: React.FC<Props> = (props) => {
                       }}
                       onChange={(value) => {
                         field.onChange(value)
-                        fetchProvinceAPI('contact', company_province, value, company_sub_district)
+                        // fetchProvinceAPI('contact', company_province, value, company_sub_district)
                         // fetchDistrictAPI('contact', value, company_district, company_sub_district)
-                        fetchSubDistrictAPI('contact', null, value, company_sub_district)
+                        // fetchSubDistrictAPI('contact', null, value, company_sub_district)
+                        fetchSubDistrictAPI('contact', null, value, null)
                         // SET VALUE
                         setValue('company_sub_district', null)
                         setValue('company_postcode', '')
@@ -454,8 +457,8 @@ const FormPetition: React.FC<Props> = (props) => {
                       }}
                       onChange={(value) => {
                         field.onChange(value)
-                        fetchProvinceAPI('contact', company_province, company_district, value)
-                        fetchDistrictAPI('contact', company_province, company_district, value)
+                        // fetchProvinceAPI('contact', company_province, company_district, value)
+                        // fetchDistrictAPI('contact', company_province, company_district, value)
                         // fetchSubDistrictAPI('contact', value, company_district, company_sub_district)
                         const zip_code = contactSubDistrict.find(item => item.id === value)?.zip_code
                         if (zip_code) {
@@ -1064,8 +1067,10 @@ const FormPetition: React.FC<Props> = (props) => {
                       onChange={(value) => {
                         field.onChange(value)
                         // fetchProvinceAPI('poa', value, transferer_company_district, transferer_company_sub_district)
-                        fetchDistrictAPI('poa', value, transferer_company_district, transferer_company_sub_district)
-                        fetchSubDistrictAPI('poa', value, transferer_company_district, transferer_company_sub_district)
+                        // fetchDistrictAPI('poa', value, transferer_company_district, transferer_company_sub_district)
+                        // fetchSubDistrictAPI('poa', value, transferer_company_district, transferer_company_sub_district)
+                        fetchDistrictAPI('poa', value, null, null)
+                        fetchSubDistrictAPI('poa', value, null, null)
                         // SET VALUE
                         setValue('transferer_company_district', null)
                         setValue('transferer_company_sub_district', null)
@@ -1115,9 +1120,10 @@ const FormPetition: React.FC<Props> = (props) => {
                       }}
                       onChange={(value) => {
                         field.onChange(value)
-                        fetchProvinceAPI('poa', transferer_company_province, value, transferer_company_sub_district)
+                        // fetchProvinceAPI('poa', transferer_company_province, value, transferer_company_sub_district)
                         // fetchDistrictAPI('poa', transferer_company_province, value, transferer_company_sub_district)
-                        fetchSubDistrictAPI('poa', null, value, transferer_company_sub_district)
+                        // fetchSubDistrictAPI('poa', null, value, transferer_company_sub_district)
+                        fetchSubDistrictAPI('poa', null, value, null)
                         // SET VALUE
                         setValue('transferer_company_sub_district', null)
                         setValue('transferer_company_postcode', '')
@@ -1163,8 +1169,8 @@ const FormPetition: React.FC<Props> = (props) => {
                       }}
                       onChange={(value) => {
                         field.onChange(value)
-                        fetchProvinceAPI('poa', transferer_company_province, transferer_company_district, value)
-                        fetchDistrictAPI('poa', transferer_company_province, transferer_company_district, value)
+                        // fetchProvinceAPI('poa', transferer_company_province, transferer_company_district, value)
+                        // fetchDistrictAPI('poa', transferer_company_province, transferer_company_district, value)
                         // fetchSubDistrictAPI('poa', transferer_company_province, transferer_company_district, value)
                         // SET VALUE
                         const zip_code = poaSubDistrict.find(item => item.id === value)?.zip_code
@@ -1228,14 +1234,24 @@ const FormPetition: React.FC<Props> = (props) => {
                       onChange={(e) => {
                         field.onChange(e)
                         if (e.length) {
-                          setValue('transferer_company_address', String(company_address))
-                          setValue('transferer_company_village_no', String(company_village_number))
-                          setValue('transferer_company_alley', String(company_alley))
-                          setValue('transferer_company_road', String(company_road))
-                          setValue('transferer_company_province', company_province ? Number(company_province) : null)
-                          setValue('transferer_company_district', company_district ? Number(company_district) : null)
-                          setValue('transferer_company_sub_district', company_sub_district ? Number(company_sub_district) : null)
-                          setValue('transferer_company_postcode', String(company_postcode))
+                          if (e.length) {
+                            setValue('transferer_company_address', String(company_address))
+                            setValue('transferer_company_village_no', String(company_village_number))
+                            setValue('transferer_company_alley', String(company_alley))
+                            setValue('transferer_company_road', String(company_road))
+                            setValue('transferer_company_province', company_province ? Number(company_province) : null)
+                            setValue('transferer_company_district', company_district ? Number(company_district) : null)
+                            setValue('transferer_company_sub_district', company_sub_district ? Number(company_sub_district) : null)
+                            setValue('transferer_company_postcode', String(company_postcode))
+                            // Re-fetch POA district/sub_district options using the copied company province/district
+                            // so the Select dropdowns have the correct options to resolve the copied IDs to labels
+                            if (company_province) {
+                              fetchDistrictAPI('poa', company_province, company_district, company_sub_district)
+                            }
+                            if (company_district) {
+                              fetchSubDistrictAPI('poa', null, company_district, company_sub_district)
+                            }
+                          }
                         } else {
                           setValue('transferer_company_address', '')
                           setValue('transferer_company_village_no', '')
