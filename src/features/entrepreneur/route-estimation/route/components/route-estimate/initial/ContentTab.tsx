@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react'
 import { Tabs, type TabsProps } from 'antd'
 import { Control, useFieldArray, UseFormSetValue, UseFormTrigger } from 'react-hook-form'
 import { FieldTypeArr, FieldTypeForRoute } from '@/@types/entrepreneur/route-estimation'
@@ -9,17 +9,22 @@ import { useRouteContext } from '../../../context';
 import { useAppSelector } from '@/store';
 import { useLocation } from 'react-router-dom';
 
+export interface ContentTabHandle {
+  switchToTabByIndex: (index: number) => void
+}
+
 interface Props {
   control: Control<FieldTypeArr>;
   setValue: UseFormSetValue<FieldTypeArr>;
   trigger: UseFormTrigger<FieldTypeArr>;
+  errorTabIndices: Set<number>;
 }
 
 type TabItem = NonNullable<TabsProps['items']>[number]
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
-const ContentTab: React.FC<Props> = (props) => {
-  const { control, setValue, trigger } = props
+const ContentTabInner = forwardRef<ContentTabHandle, Props>((props, ref) => {
+  const { control, setValue, trigger, errorTabIndices } = props
   const { fields, append, remove, replace } = useFieldArray({ control, name: 'route_form' })
   const { dataParser } = useRouteContext()
   const { petition_detail } = useAppSelector(state => state.entrepreneur.permitList)
@@ -66,6 +71,25 @@ const ContentTab: React.FC<Props> = (props) => {
   // DECLARE STATE
   const [tabKey, setTabKey] = useState(initTabItems[0].key)
   const [tabItems, setTabItems] = useState<TabItem[]>(initTabItems)
+
+  useImperativeHandle(ref, () => ({
+    switchToTabByIndex: (index: number) => {
+      const tab = tabItems[index]
+      if (tab) setTabKey(String(tab.key))
+    }
+  }), [tabItems])
+
+  const displayItems = useMemo(() =>
+    tabItems.map((item, index) => ({
+      ...item,
+      label: errorTabIndices.has(index) ? (
+        <span className="flex items-center gap-1">
+          <span>{`รถคู่ที่ ${index + 1}`}</span>
+          <span className="inline-block w-2 h-2 rounded-full bg-red-500" />
+        </span>
+      ) : `รถคู่ที่ ${index + 1}`,
+    }))
+  , [tabItems, errorTabIndices])
 
   // Reset initialization guard when estimate is cleared (e.g. road_map store reset before fetching a new petition)
   useEffect(() => {
@@ -214,12 +238,12 @@ const ContentTab: React.FC<Props> = (props) => {
       destroyOnHidden
       type="editable-card"
       activeKey={tabKey}
-      items={tabItems}
+      items={displayItems}
       hideAdd={isEditMode}
       onChange={onChange}
       onEdit={(tabKey, action) => onEdit(tabKey, action)}
     />
   )
-}
-
-export default React.memo<Props>(ContentTab)
+})
+ContentTabInner.displayName = 'ContentTab'
+export default React.memo(ContentTabInner)

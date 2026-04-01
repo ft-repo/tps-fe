@@ -6,7 +6,7 @@ import { Button, Col, Input, Modal, Row } from 'antd'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ContentTab } from '../../components'
+import { ContentTab, ContentTabHandle } from '../../components'
 import { PetitionEstimateRequest, PetitionVehicleRequest, PostPetitionRoadMapRequest } from '@/@types/services/petition'
 import { postPetitionEstimateAPI, postPetitionRoadMapAPI, putPetitionVehicleAPI } from '@/services/entrepreneur/PetitionService'
 import { useRouteContext } from '../../context'
@@ -47,6 +47,7 @@ const INIT_REGION_STATE: RegionState = { id: null, name: null }
 const RouteEstimation: React.FC<Props> = (props) => {
   const { } = props
   const submitRef = useRef<HTMLButtonElement>(null)
+  const contentTabRef = useRef<ContentTabHandle>(null)
   const dispatch = useAppDispatch()
   const { loading } = useAppSelector(state => state.layout)
   const { province } = useAppSelector(state => state.master)
@@ -116,6 +117,13 @@ const RouteEstimation: React.FC<Props> = (props) => {
     trigger,
     formState: { errors },
   } = form
+
+  const errorTabIndices = new Set<number>()
+  if (Array.isArray(errors.route_form)) {
+    (errors.route_form as (object | undefined)[]).forEach((item, index) => {
+      if (item && Object.keys(item).length > 0) errorTabIndices.add(index)
+    })
+  }
 
   const onCreate = useCallback(async (value: FieldTypeArr) => {
     // BUILD BODY
@@ -801,13 +809,24 @@ const RouteEstimation: React.FC<Props> = (props) => {
             style: { fontFamily: 'Noto Sans Thai' }
           })
         }
+
+        if (Array.isArray(routeFormErrors)) {
+          const firstErrorIndex = routeFormErrors.findIndex(
+            item => item && Object.keys(item).length > 0
+          )
+          if (firstErrorIndex !== -1) {
+            contentTabRef.current?.switchToTabByIndex(firstErrorIndex)
+          }
+        }
       })}>
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={14}>
             <ContentTab
+              ref={contentTabRef}
               control={control}
               setValue={setValue}
               trigger={trigger}
+              errorTabIndices={errorTabIndices}
             />
           </Col>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={10}>
