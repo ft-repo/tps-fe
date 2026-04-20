@@ -14,6 +14,7 @@ export type SignInResponse = {
     id: string;
     registration_no: string;
     profile_url: string;
+    is_personal: boolean;
     business_details: {
       entity_type_id: number;
       business_name: string;
@@ -125,11 +126,12 @@ export type SignUpFieldType = {
 }
 
 export type SignUpCredential = {
+  is_personal: boolean;
   password: string
   business_detail: {
     business_name: string
     registration_no: string
-    entity_type_id: number
+    entity_type_id: number | null
   },
   business_address: {
     house_number: string

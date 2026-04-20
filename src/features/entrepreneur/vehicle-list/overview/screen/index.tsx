@@ -77,6 +77,10 @@ const OverviewScreen: React.FC<Props> = (props) => {
   const loading = useAppSelector(state => state.layout.loading)
   const [open, setOpen] = useState<OpenDialogProps>(INIT_VEHICLE_MODAL)
 
+  const state = useAppSelector(state => state)
+
+  console.log(state.auth.user.details.is_personal)
+
   useEffect(() => {
     dispatch(getVehicleData(vehicle.overview.search))
   }, [dispatch, vehicle.overview.search])

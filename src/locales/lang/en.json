@@ -25,6 +25,7 @@
         "request_history": "Request History",
         "entrepreneur_overview": "Entrepreneur Info",
         "staff_overview": "Staff Info",
+        "general_user_overview": "General User Info",
         "tracking": "Tracking",
         "contact_channel": "Contact Channel"
     }

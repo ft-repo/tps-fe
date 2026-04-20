@@ -57,24 +57,24 @@ const ViewScreen: React.FC<Props> = (props) => {
 
   const form = useForm<FieldType>({
     defaultValues: {
-      business_type: detail.business_details.entity_type.name,
-      business_name: detail.business_details.business_name,
+      business_type: detail.business_details.entity_type?.name || "",
+      business_name: detail.business_details.business_name || "",
       business_address: renderBusinessAddress(
-        detail.business_address.house_number,
-        detail.business_address.village,
-        detail.business_address.lane,
-        detail.business_address.road,
-        detail.business_address.province.name_th,
-        detail.business_address.district.name_th,
-        detail.business_address.sub_district.name_th,
-        detail.business_address.zip_codes
+        detail.business_address.house_number || "",
+        detail.business_address.village || "",
+        detail.business_address.lane || "",
+        detail.business_address.road || "",
+        detail.business_address.province?.name_th || "",
+        detail.business_address.district?.name_th || "",
+        detail.business_address.sub_district?.name_th || "",
+        detail.business_address.zip_codes || ""
       ),
-      office_tel: detail.business_address.phone_number,
-      business_no: detail.registration_no,
-      contact_name: detail.contact_info.contact_name,
-      contact_type: Number(detail.contact_info.contact_type.id),
-      citizen_id: detail.contact_info.cid,
-      contact_tel: detail.contact_info.phone_number,
+      office_tel: detail.business_address.phone_number || "",
+      business_no: detail.registration_no || "",
+      contact_name: detail.contact_info.contact_name || "",
+      contact_type: Number(detail.contact_info.contact_type?.id) || 0,
+      citizen_id: detail.contact_info.cid || "",
+      contact_tel: detail.contact_info.phone_number || "",
       file_id: {
         file: [],
         url: ''
@@ -352,7 +352,7 @@ const ViewScreen: React.FC<Props> = (props) => {
   return (
     <>
       <section className='flex justify-between items-center flex-wrap'>
-        <h3>ข้อมูลผู้ประกอบการ</h3>
+        <h3>ข้อมูลผู้ยื่นคำขอฯ สำหรับผู้ประกอบการ</h3>
         <div className='flex items-center gap-3'>
           <Button
             htmlType='button'

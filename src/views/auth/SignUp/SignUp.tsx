@@ -19,8 +19,11 @@ import { useNavigate } from 'react-router-dom'
 import useQuery from '@/utils/hooks/useQuery'
 import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import appConfig from '@/configs/app.config'
+import { AxiosError } from 'axios'
 
 export interface FieldType {
+  // IS_PERSONAL
+  is_personal: 'ADMIN' | 'PERSONAL' | null;
   // BUSINESS
   entity_type_id: string | number | null;
   registration_no: string;
@@ -59,6 +62,8 @@ const SignUp = () => {
 
   const form = useForm<FieldType>({
     defaultValues: {
+      // IS_PERSONAL
+      is_personal: "ADMIN",
       // BUSINESS
       entity_type_id: null,
       registration_no: '',
@@ -88,7 +93,14 @@ const SignUp = () => {
     }
   })
 
-  const { handleSubmit, control, setValue, setError, formState: { errors } } = form
+  const {
+    handleSubmit,
+    control,
+    reset,
+    setValue,
+    setError,
+    formState: { errors }
+  } = form
 
   useEffect(() => {
     // LOCATION
@@ -102,11 +114,12 @@ const SignUp = () => {
 
   const onSubmit = useCallback(async (value: FieldType) => {
     const body: SignUpCredential = {
+      is_personal: value.is_personal === "PERSONAL" ? true : false,
       password: value.password,
       business_detail: {
         business_name: value.business_name,
         registration_no: value.registration_no,
-        entity_type_id: Number(value.entity_type_id),
+        entity_type_id: value.is_personal === "PERSONAL" ? null : Number(value.entity_type_id),
       },
       business_address: {
         house_number: value.house_number,
@@ -180,10 +193,10 @@ const SignUp = () => {
         })
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof AxiosError) {
         Modal.error({
           title: 'ผิดพลาด',
-          content: error.message || 'ไม่สามารถบันทึกข้อมูลได้',
+          content: error.response?.data?.res_data?.message || 'ไม่สามารถบันทึกข้อมูลได้',
           okText: 'ตกลง',
           onOk: () => Modal.destroyAll(),
           okButtonProps: {
@@ -213,8 +226,8 @@ const SignUp = () => {
     >
       <div className="m-auto xl:max-w-[600px] max-w-[450px]">
         <div className="mb-8">
-          <h3 className="mb-1">ลงทะเบียนผู้ประกอบการ</h3>
-          <p>ลงทะเบียนผู้ประกอบการสำหรับการประเมินและขอใช้เส้นทาง</p>
+          <h3 className="mb-1">ลงทะเบียน</h3>
+          <p>ลงทะเบียนสำหรับการประเมินและขอใช้เส้นทาง</p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <SignUpForm
@@ -222,6 +235,7 @@ const SignUp = () => {
             setValue={setValue}
             setError={setError}
             errors={errors}
+            reset={reset}
           />
           <div className='flex items-center gap-3'>
             <AiOutlineExclamationCircle />

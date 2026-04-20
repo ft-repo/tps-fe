@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { FormPermitRoute } from '..'
 import DocumentTabList from '../route-estimate/petition/DocumentTabList'
 import { useRouteContext } from '../../context'
@@ -17,6 +17,7 @@ import { getPetitionData } from '@/store/slices/entrepreneur'
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
 import { APIResponseRegion } from '@/@types/shared'
 import axios from 'axios'
+import { CheckCircleFilled } from '@ant-design/icons'
 
 interface Props {
 
@@ -370,31 +371,31 @@ const RequestPermit: React.FC<Props> = (props) => {
     }
   }, [onUpdateDocument, onUpdateVehicle, onCreate, state?.petition_id, isEditDocument, isEditVehicle])
 
-  const confirmSubmit = useCallback(() => {
-    Modal.confirm({
-      title: 'ยืนยันการขอใบอนุญาต',
-      content: 'กรุณาตรวจสอบข้อมูลให้ครบถ้วน',
-      okText: 'ขอใบอนุญาต',
-      cancelText: 'ยกเลิก',
-      onOk: () => submitRef.current?.click(),
-      onCancel: () => Modal.destroyAll(),
-      okButtonProps: {
-        style: {
-          fontFamily: 'Noto Sans Thai'
-        },
-        loading: loading
-      },
-      cancelButtonProps: {
-        style: {
-          fontFamily: 'Noto Sans Thai'
-        },
-        disabled: loading
-      },
-      style: {
-        fontFamily: 'Noto Sans Thai'
-      }
-    })
-  }, [loading])
+  // const confirmSubmit = useCallback(() => {
+  //   Modal.confirm({
+  //     title: 'ยืนยันการขอใบอนุญาต',
+  //     content: 'กรุณาตรวจสอบข้อมูลให้ครบถ้วน',
+  //     okText: 'ขอใบอนุญาต',
+  //     cancelText: 'ยกเลิก',
+  //     onOk: () => submitRef.current?.click(),
+  //     onCancel: () => Modal.destroyAll(),
+  //     okButtonProps: {
+  //       style: {
+  //         fontFamily: 'Noto Sans Thai'
+  //       },
+  //       loading: loading
+  //     },
+  //     cancelButtonProps: {
+  //       style: {
+  //         fontFamily: 'Noto Sans Thai'
+  //       },
+  //       disabled: loading
+  //     },
+  //     style: {
+  //       fontFamily: 'Noto Sans Thai'
+  //     }
+  //   })
+  // }, [loading])
 
   const resolveProvinceFromCoords = useCallback(async (
     coordStr: string,
@@ -535,11 +536,209 @@ const RequestPermit: React.FC<Props> = (props) => {
     fetchFileToField,
   ])
 
+  const onPrintAddress = useCallback(() => {
+    const postalCode = '10220'
+    const circles = postalCode.split('').map(d =>
+      `<span class="circle">${d}</span>`
+    ).join('')
+
+    const html = `<!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      @page { size: A4 landscape; margin: 0; }
+      html, body {
+        font-family: 'Noto Sans Thai', sans-serif;
+        width: 297mm;
+        height: 210mm;
+        overflow: hidden;
+      }
+      body {
+        padding: 16mm 0 0 16mm;
+        display: block;
+      }
+      .label {
+        width: 120mm;
+      }
+      .title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 16px;
+      }
+      .line {
+        border-bottom: 1.5px dashed #888;
+        padding-bottom: 4px;
+        margin-bottom: 18px;
+        font-size: 14px;
+        min-height: 24px;
+      }
+      .postal-row {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 6px;
+      }
+      .label-text {
+        font-size: 14px;
+        font-weight: 700;
+        margin-right: 4px;
+        white-space: nowrap;
+      }
+      .circle {
+        width: 30px; height: 30px;
+        border: 1.5px solid #888;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="label">
+      <div class="title">ชื่อผู้รับ</div>
+      <div class="line">กรมทางหลวงชนบท สำนักบำรุงทาง</div>
+      <div class="line">เลขที่ 9 ถนนพหลโยธิน</div>
+      <div class="line">แขวงอนุสาวรีย์ เขตบางเขน กทม. 10220</div>
+      <div class="line"></div>
+      <div class="postal-row">
+        <span class="label-text">รหัสไปรษณีย์</span>
+        ${circles}
+      </div>
+    </div>
+  </body>
+  </html>`
+
+    const iframe = document.createElement('iframe')
+    iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1122px;height:794px;border:none;visibility:hidden;'
+    document.body.appendChild(iframe)
+
+    const doc = iframe.contentDocument || iframe.contentWindow?.document
+    if (!doc) return
+
+    doc.open()
+    doc.write(html)
+    doc.close()
+
+    setTimeout(() => {
+      iframe.contentWindow?.focus()
+      iframe.contentWindow?.print()
+      setTimeout(() => document.body.removeChild(iframe), 1500)
+    }, 500)
+  }, [])
+
+  const renderResult = useMemo(() => {
+    return (
+      <div>
+        <h5 className='mb-1.5'>รายการเอกสารที่ผู้ยื่นคำขอจำเป็นต้องส่งไปยังกรมทางหลวงชนบท ดังนี้</h5>
+        <ol className='list-decimal list-inside mb-5'>
+          <li>รูปแบบพาหนะโดยแสดงถึงรัศมีวงเลี้ยว (ฉบับจริง 1 ชุด สำเนา 1 ชุด) พร้อมเซ็นชื่อกำกับ</li>
+        </ol>
+        <div className='bg-[#FFE3A7] border-[#FF9C00] border-2 p-3 rounded-lg'>
+          <p>หมายเหตุ : หากคณะกรรมการพิจารณาคำขออนุญาตใช้ยานพาหนะบางชนิด บางประเภทเดินบนทางหลวงชนบทพิจารณางานขออนุญาต เกิดความไม่สมบูรณ์ของข้อมูลคณะกรรมการฯจะประสานทางผู้ขออนุญาตจำเป็นต้องเข้ามาชี้แจงให้ข้อมูลประกอบการพิจารณาโดยหากผู้ขออนุญาตไม่เข้ามาชี้แจงภายในระยะเวลาตามที่คณะกรรมการฯกำหนด และคณะกรรมการฯจะทำการพิจารณาตามข้อมูลที่ผู้ขออนุญาตยื่นไว้</p>
+        </div>
+        <div className='mt-5'>
+          <p>ที่อยู่ผู้รับ :</p>
+          <p>กรมทางหลวงชนบท สำนักบำรุงทาง</p>
+          <p>เลขที่ 9 ถนนพหลโยธิน แขวงอนุสาวรีย์ เขตบางเขน กทม. 10220</p>
+        </div>
+      </div>
+    )
+  }, [])
+
+  const onConfirmPrintAddress = useCallback(() => {
+    Modal.confirm({
+      title: 'ตรวจสอบเอกสารและพิมพ์ที่อยู่',
+      content: renderResult,
+      okText: 'พิมพ์ที่อยู่',
+      cancelText: 'รับทราบ',
+      width: 1400,
+      onOk: () => onPrintAddress(),
+      onCancel: () => Modal.destroyAll(),
+      okButtonProps: {
+        style: {
+          fontFamily: 'Noto Sans Thai',
+          backgroundColor: '#1629FF',
+          color: '#FFFFFF'
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        },
+        type: 'primary'
+      },
+      style: {
+        fontFamily: 'Noto Sans Thai'
+      },
+      footer: (_, { OkBtn, CancelBtn }) => {
+        return (
+          <>
+            <OkBtn />
+            <CancelBtn />
+          </>
+        )
+      }
+    })
+  }, [renderResult, onPrintAddress])
+
+
+  const confirmSubmit = useCallback(async (value: FieldTypePetition) => {
+    Modal.confirm({
+      icon: <CheckCircleFilled style={{ color: '#52c41a' }} />,
+      title: 'ยืนยันการขอใบอนุญาต',
+      content: renderResult,
+      okText: 'พิมพ์ที่อยู่',
+      cancelText: 'ขอใบอนุญาต',
+      width: 1400,
+      onOk: () => onPrintAddress(),
+      onCancel: () => onSubmit(value),
+      okButtonProps: {
+        style: {
+          fontFamily: 'Noto Sans Thai',
+          backgroundColor: '#1629FF',
+          color: '#FFFFFF'
+        }
+      },
+      cancelButtonProps: {
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        },
+        type: 'primary'
+      },
+      style: {
+        fontFamily: 'Noto Sans Thai'
+      },
+      footer: (_, { OkBtn, CancelBtn }) => {
+        return (
+          <>
+            <OkBtn />
+            <CancelBtn />
+          </>
+        )
+      }
+    })
+  }, [renderResult, onPrintAddress, onSubmit])
+
   return (
     <>
       <section className='flex justify-between items-center flex-wrap gap-5'>
         <h3>ใบขออนุญาต</h3>
         <div className='flex items-center gap-3'>
+          <Button
+            disabled={loading}
+            htmlType='button'
+            type='primary'
+            // size='large'
+            className='w-full lg:w-auto !bg-[#1629FF] hover:!bg-[#1629FF90]'
+            onClick={() => onConfirmPrintAddress()}
+          >
+            พิมพ์ที่อยู่
+          </Button>
           <Button
             disabled={loading}
             htmlType='button'
@@ -562,14 +761,15 @@ const RequestPermit: React.FC<Props> = (props) => {
             type='primary'
             // size='large'
             className='w-full lg:w-auto'
-            onClick={() => confirmSubmit()}
+            // onClick={() => confirmSubmit()}
+            onClick={() => submitRef.current?.click()}
           >
             บันทึก
           </Button>
         </div>
       </section>
       <section className='mt-5'>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(confirmSubmit)}>
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={24} md={24} lg={24} xl={12} xxl={12}>
               <FormPermitRoute

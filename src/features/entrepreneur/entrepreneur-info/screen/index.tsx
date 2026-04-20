@@ -3,7 +3,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { FormExecutiveData, FormExecutiveDocument } from '../components';
+import { FormExecutiveData, FormExecutiveDocument, FormGeneralUser } from '../components';
 import { useForm } from 'react-hook-form';
 import { APIPutBody, FieldType } from '@/@types/entrepreneur/executive-data';
 import { setLoading, setUser, signInSuccess, useAppDispatch, useAppSelector } from '@/store';
@@ -56,6 +56,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
 
   const form = useForm<FieldType>({
     defaultValues: {
+      registration_no: userData.important_info.registration_no || "",
       business_type: userData.important_info.entity_name,
       business_name: userData.important_info.business_name,
       business_address: renderBusinessAddress(
@@ -350,7 +351,7 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
   return (
     <>
       <section className='flex justify-between items-center flex-wrap'>
-        <h3>ข้อมูลผู้ประกอบการ</h3>
+        <h3>{auth.user.details.is_personal ? 'ข้อมูลผู้ยื่นคำขอฯ สำหรับบุคคลทั่วไป' : 'ข้อมูลผู้ยื่นคำขอฯ สำหรับผู้ประกอบการ'}</h3>
         <div className='flex items-center gap-3'>
           <Button
             disabled={loading}
@@ -393,10 +394,17 @@ const ExecutiveDataScreen: React.FC<Props> = (props) => {
       <section className='mt-5'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className='block xl:grid grid-cols-2 gap-5'>
-            <FormExecutiveData
-              control={control}
-              setValue={setValue}
-            />
+            {auth.user.details.is_personal ?
+              <FormGeneralUser
+                control={control}
+                setValue={setValue}
+              />
+              :
+              <FormExecutiveData
+                control={control}
+                setValue={setValue}
+              />
+            }
             <FormExecutiveDocument
               control={control}
               setValue={setValue}

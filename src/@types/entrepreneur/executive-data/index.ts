@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface FieldType {
+  registration_no: string;
   business_type: string;
   business_name: string;
   business_address: string;

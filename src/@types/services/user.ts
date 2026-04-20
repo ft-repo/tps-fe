@@ -7,6 +7,7 @@ export interface GetClientParams {
   search: string;
   page: number;
   limit: number;
+  is_personal?: boolean;
 }
 
 export interface GetAdminParams {

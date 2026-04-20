@@ -5,17 +5,19 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormReset,
   UseFormSetError,
   UseFormSetValue,
   useFormState,
   useWatch,
 } from 'react-hook-form'
-import { Col, Row, Select as AntdSelect, Input as AntdInput, message } from 'antd'
+import { Col, Row, Select as AntdSelect, Input as AntdInput, message, Radio } from 'antd'
 import { FieldType } from './SignUp'
 import { getNewDistrictAPI, getNewProvinceAPI, getNewSubDistrictAPI } from '@/services/master/MasterService'
 import { SubDistrictState, ThailandState } from '@/@types/shared'
 
 interface Props {
+  reset: UseFormReset<FieldType>;
   control: Control<FieldType>
   setValue: UseFormSetValue<FieldType>
   errors: FieldErrors<FieldType>
@@ -23,7 +25,7 @@ interface Props {
 }
 
 function SignUpForm(props: Props) {
-  const { control, setValue } = props
+  const { reset, control, setValue } = props
   const { entity_type, contact_type } = useAppSelector((state) => state.master)
   const { loading } = useAppSelector((state) => state.layout)
   const dispatch = useAppDispatch()
@@ -36,7 +38,8 @@ function SignUpForm(props: Props) {
     password,
     province_id,
     district_id,
-    sub_district_id
+    sub_district_id,
+    is_personal
   } = useWatch({ control })
 
   const { errors } = useFormState({ control })
@@ -132,50 +135,85 @@ function SignUpForm(props: Props) {
       <section className="mt-5">
         <section>
           <Row gutter={[16, 16]}>
-            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Controller
-                name='entity_type_id'
+                name='is_personal'
                 control={control}
-                rules={{
-                  required: 'กรุณาเลือกประเภทนิติบุคคล'
-                }}
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>ประเภทนิติบุคคล <span className='text-red-500'>*</span></label>
-                      <AntdSelect
+                      <label className='block mb-1.5'>ประเภทผู้ยื่นคำขอฯ</label>
+                      <Radio.Group
                         {...field}
-                        allowClear
-                        showSearch
-                        placeholder='กรุณาเลือกประเภทนิติบุคคล'
-                        options={entity_type}
-                        fieldNames={{
-                          label: 'name',
-                          value: 'id'
-                        }}
-                        filterOption={(input, option) => {
-                          return option ? option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
-                        }}
-                        className='w-full'
-                        size='large'
-                        style={{
-                          fontFamily: 'Noto Sans Thai'
+                        name={field.name}
+                        options={[
+                          {
+                            label: "ผู้ประกอบการ",
+                            value: "ADMIN"
+                          },
+                          {
+                            label: "บุคคลทั่วไป",
+                            value: "PERSONAL"
+                          },
+                        ]}
+                        onChange={(e) => {
+                          reset()
+                          setValue('is_personal', e.target.value)
+                          setDistrict([])
+                          setSubDistrict([])
                         }}
                       />
-                      {!!errors.entity_type_id &&
-                        <p className='text-red-500'>{errors.entity_type_id.message}</p>
-                      }
                     </fieldset>
                   )
                 }}
               />
             </Col>
-            <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+            {is_personal === "ADMIN" &&
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Controller
+                  name='entity_type_id'
+                  control={control}
+                  rules={{
+                    required: 'กรุณาเลือกประเภทนิติบุคคล'
+                  }}
+                  render={({ field }) => {
+                    return (
+                      <fieldset>
+                        <label>ประเภทนิติบุคคล <span className='text-red-500'>*</span></label>
+                        <AntdSelect
+                          {...field}
+                          allowClear
+                          showSearch
+                          placeholder='กรุณาเลือกประเภทนิติบุคคล'
+                          options={entity_type}
+                          fieldNames={{
+                            label: 'name',
+                            value: 'id'
+                          }}
+                          filterOption={(input, option) => {
+                            return option ? option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0 : false;
+                          }}
+                          className='w-full'
+                          size='large'
+                          style={{
+                            fontFamily: 'Noto Sans Thai'
+                          }}
+                        />
+                        {!!errors.entity_type_id &&
+                          <p className='text-red-500'>{errors.entity_type_id.message}</p>
+                        }
+                      </fieldset>
+                    )
+                  }}
+                />
+              </Col>
+            }
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Controller
                 name='registration_no'
                 control={control}
                 rules={{
-                  required: 'กรุณาระบุเลขทะเบียนนิติบุคคล',
+                  required: is_personal === "ADMIN" ? 'กรุณาระบุเลขทะเบียนนิติบุคคล' : 'กรุณาระบุเลขบัตรประชาชน',
                   pattern: {
                     value: /^\d+$/,
                     message: 'กรุณากรอกเฉพาะตัวเลข',
@@ -186,11 +224,11 @@ function SignUpForm(props: Props) {
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>เลขทะเบียนนิติบุคคล <span className='text-red-500'>*</span></label>
+                      <label>{is_personal === "ADMIN" ? "เลขทะเบียนนิติบุคคล" : "เลขบัตรประชาชน"} <span className='text-red-500'>*</span></label>
                       <AntdInput
                         {...field}
                         name={field.name}
-                        placeholder='กรุณาระบุเลขทะเบียนนิติบุคคล'
+                        placeholder={is_personal === "ADMIN" ? 'กรุณาระบุเลขทะเบียนนิติบุคคล' : 'กรุณาระบุเลขบัตรประชาชน'}
                         className='w-full'
                         size='large'
                         style={{
@@ -214,16 +252,16 @@ function SignUpForm(props: Props) {
                 name='business_name'
                 control={control}
                 rules={{
-                  required: 'กรุณาระบุชื่อบริษัท/ห้าง/ร้าน'
+                  required: is_personal === "ADMIN" ? 'กรุณาระบุชื่อบริษัท/ห้าง/ร้าน' : 'กรุณาระบุชื่อ-นามสกุล'
                 }}
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>ชื่อบริษัท/ห้าง/ร้าน <span className='text-red-500'>*</span></label>
+                      <label>{is_personal === "ADMIN" ? "ชื่อบริษัท/ห้าง/ร้าน" : "ชื่อ-นามสกุล"} <span className='text-red-500'>*</span></label>
                       <AntdInput
                         {...field}
                         name={field.name}
-                        placeholder='กรุณาระบุชื่อบริษัท/ห้าง/ร้าน'
+                        placeholder={is_personal === "ADMIN" ? 'กรุณาระบุชื่อบริษัท/ห้าง/ร้าน' : 'กรุณาระบุชื่อ-นามสกุล'}
                         className='w-full'
                         size='large'
                         style={{
@@ -243,7 +281,7 @@ function SignUpForm(props: Props) {
                 name='business_phone_number'
                 control={control}
                 rules={{
-                  required: 'กรุณาระบุเบอร์โทรสำนักงาน',
+                  required: is_personal === "ADMIN" ? 'กรุณาระบุเบอร์โทรสำนักงาน' : 'กรุณาระบุเบอร์โทรศัพท์',
                   pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
                   minLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
                   maxLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
@@ -251,11 +289,11 @@ function SignUpForm(props: Props) {
                 render={({ field }) => {
                   return (
                     <fieldset>
-                      <label>เบอร์โทรสำนักงาน <span className='text-red-500'>*</span></label>
+                      <label>{is_personal === "ADMIN" ? "เบอร์โทรสำนักงาน" : "เบอร์โทรศัพท์"} <span className='text-red-500'>*</span></label>
                       <AntdInput
                         {...field}
                         name={field.name}
-                        placeholder='กรุณาระบุเบอร์โทรสำนักงาน'
+                        placeholder={is_personal === "ADMIN" ? 'กรุณาระบุเบอร์โทรสำนักงาน' : 'กรุณาระบุเบอร์โทรศัพท์'}
                         className='w-full'
                         size='large'
                         style={{
@@ -732,32 +770,34 @@ function SignUpForm(props: Props) {
                 }}
               />
             </Col>
-            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
-              <Controller
-                name="certificate_file_url"
-                control={control}
-                rules={{
-                  required: 'กรุณาอัปโหลดหนังสือรับรองนิติบุคคล'
-                }}
-                render={({ field, fieldState }) => (
-                  <Upload
-                    isRequired
-                    name="certificate_file_url"
-                    fixedFileName="หนังสือรับรองนิติบุคคล"
-                    label="หนังสือรับรองนิติบุคคล"
-                    accept=".pdf"
-                    maxSize={10}
-                    value={field.value}
-                    error={fieldState.error?.message}
-                    control={control}
-                    fieldName="certificate_file_url"
-                    onUploadError={(error) => {
-                      handleUploadError(error)
-                    }}
-                  />
-                )}
-              />
-            </Col>
+            {is_personal === "ADMIN" &&
+              <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+                <Controller
+                  name="certificate_file_url"
+                  control={control}
+                  rules={{
+                    required: 'กรุณาอัปโหลดหนังสือรับรองนิติบุคคล'
+                  }}
+                  render={({ field, fieldState }) => (
+                    <Upload
+                      isRequired
+                      name="certificate_file_url"
+                      fixedFileName="หนังสือรับรองนิติบุคคล"
+                      label="หนังสือรับรองนิติบุคคล"
+                      accept=".pdf"
+                      maxSize={10}
+                      value={field.value}
+                      error={fieldState.error?.message}
+                      control={control}
+                      fieldName="certificate_file_url"
+                      onUploadError={(error) => {
+                        handleUploadError(error)
+                      }}
+                    />
+                  )}
+                />
+              </Col>
+            }
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
               <Controller
                 name="cid_card_file_url"
@@ -790,14 +830,14 @@ function SignUpForm(props: Props) {
                 name="business_file_url"
                 control={control}
                 rules={{
-                  required: 'กรุณาอัปโหลดรูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ'
+                  required: is_personal === "ADMIN" ? 'กรุณาอัปโหลดรูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ' : 'กรุณาอัปโหลดรูปผู้ติดต่อ / ผู้มอบอำนาจ'
                 }}
                 render={({ field, fieldState }) => (
                   <Upload
                     // isRequired
                     name="business_file_url"
-                    fixedFileName="รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ"
-                    label="รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ"
+                    fixedFileName={is_personal === "ADMIN" ? "รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ" : "รูปผู้ติดต่อ / ผู้มอบอำนาจ"}
+                    label={is_personal === "ADMIN" ? "รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ" : "รูปผู้ติดต่อ / ผู้มอบอำนาจ"}
                     accept=".pdf,.png,.jpeg,.jpg"
                     isImage={true}
                     value={field.value}

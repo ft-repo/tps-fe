@@ -8,6 +8,7 @@ import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
 import { message, Upload } from 'antd';
 import { RcFile } from 'antd/es/upload';
+import { useAppSelector } from '@/store';
 
 interface Props {
   control: Control<FieldType>;
@@ -16,6 +17,7 @@ interface Props {
 
 const FormExecutiveDocument: React.FC<Props> = (props) => {
   const { control, setValue } = props
+  const { user } = useAppSelector(state => state.auth)
 
   const { errors } = useFormState({ control })
 
@@ -108,83 +110,85 @@ const FormExecutiveDocument: React.FC<Props> = (props) => {
             )
           }}
         />
-        <Controller
-          name='file_trasfer_ownership_image_id.file'
-          control={control}
-          rules={{
-            required: 'กรุณาอัปโหลดรูปหนังสือรับรองนิติบุคคล'
-          }}
-          render={({ field }) => {
-            return (
-              <fieldset>
-                <label>หนังสือรับรองนิติบุคคล <span className='text-red-500'>*</span></label>
-                <Upload
-                  {...field}
-                  fileList={field.value || []}
-                  maxCount={1}
-                  listType='picture-card'
-                  accept='image/jpg,image/jpeg,image/png'
-                  beforeUpload={(file) => {
-                    // DEFAULT VALUES
-                    const allowList = ['image/jpg', 'image/jpeg', 'image/png']
-                    const maxFileSize = 10000000
-                    // CHECK
-                    const isListAvailable = allowList.some(item => item === file.type)
-                    const isLt10 = file.size < maxFileSize
-                    if (!isListAvailable) {
-                      message.error('ประเภทไฟล์ไม่ถูกต้อง')
-                      return Upload.LIST_IGNORE
-                    }
-                    if (!isLt10) {
-                      message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
-                      return Upload.LIST_IGNORE
-                    }
-                    return false
-                  }}
-                  onChange={(e) => {
-                    field.onChange(e.fileList);
-                    if (e.fileList.length) {
-                      uploadFile('file_trasfer_ownership_image_id.url', e.fileList)
-                    } else {
-                      setValue('file_trasfer_ownership_image_id.url', '')
-                    }
-                  }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
-                >
-                  {field.value.length ? null :
-                    <div className="my-8 text-center">
-                      <div className="text-6xl mb-4 flex justify-center">
-                        <UploadIcon />
+        {user.details.is_personal ? null :
+          <Controller
+            name='file_trasfer_ownership_image_id.file'
+            control={control}
+            rules={{
+              required: 'กรุณาอัปโหลดรูปหนังสือรับรองนิติบุคคล'
+            }}
+            render={({ field }) => {
+              return (
+                <fieldset>
+                  <label>หนังสือรับรองนิติบุคคล <span className='text-red-500'>*</span></label>
+                  <Upload
+                    {...field}
+                    fileList={field.value || []}
+                    maxCount={1}
+                    listType='picture-card'
+                    accept='image/jpg,image/jpeg,image/png'
+                    beforeUpload={(file) => {
+                      // DEFAULT VALUES
+                      const allowList = ['image/jpg', 'image/jpeg', 'image/png']
+                      const maxFileSize = 10000000
+                      // CHECK
+                      const isListAvailable = allowList.some(item => item === file.type)
+                      const isLt10 = file.size < maxFileSize
+                      if (!isListAvailable) {
+                        message.error('ประเภทไฟล์ไม่ถูกต้อง')
+                        return Upload.LIST_IGNORE
+                      }
+                      if (!isLt10) {
+                        message.error('ไม่สามารถอัปโหลดไฟล์ได้ ไฟล์ที่อัปโหลดมีขนาดเกิน 10 MB')
+                        return Upload.LIST_IGNORE
+                      }
+                      return false
+                    }}
+                    onChange={(e) => {
+                      field.onChange(e.fileList);
+                      if (e.fileList.length) {
+                        uploadFile('file_trasfer_ownership_image_id.url', e.fileList)
+                      } else {
+                        setValue('file_trasfer_ownership_image_id.url', '')
+                      }
+                    }}
+                    onPreview={(e) => {
+                      const url = URL.createObjectURL(e.originFileObj as RcFile);
+                      window.open(url);
+                    }}
+                  >
+                    {field.value.length ? null :
+                      <div className="my-8 text-center">
+                        <div className="text-6xl mb-4 flex justify-center">
+                          <UploadIcon />
+                        </div>
+                        <p className="font-semibold text-gray-800 dark:text-white">
+                          เพิ่มไฟล์
+                        </p>
+                        <p className="mt-1 opacity-60 dark:text-white">
+                          กรุณาอัปโหลดไฟล์ประเภท JPG JPEG หรือ PNG
+                        </p>
                       </div>
-                      <p className="font-semibold text-gray-800 dark:text-white">
-                        เพิ่มไฟล์
-                      </p>
-                      <p className="mt-1 opacity-60 dark:text-white">
-                        กรุณาอัปโหลดไฟล์ประเภท JPG JPEG หรือ PNG
-                      </p>
-                    </div>
+                    }
+                  </Upload>
+                  {!!errors.file_trasfer_ownership_image_id?.file &&
+                    <p className='text-red-500'>{errors.file_trasfer_ownership_image_id.file.message}</p>
                   }
-                </Upload>
-                {!!errors.file_trasfer_ownership_image_id?.file &&
-                  <p className='text-red-500'>{errors.file_trasfer_ownership_image_id.file.message}</p>
-                }
-              </fieldset>
-            )
-          }}
-        />
+                </fieldset>
+              )
+            }}
+          />
+        }
         <Controller
           name='file_legal_entity_id.file'
           control={control}
           rules={{
-            required: 'กรุณาอัปโหลดรูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ'
+            required: user.details.is_personal ? 'กรุณาอัปโหลดรูปผู้ติดต่อ / ผู้มอบอำนาจ' : 'กรุณาอัปโหลดรูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ'
           }}
           render={({ field }) => {
             return (
               <fieldset>
-                <label>รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ <span className='text-red-500'>*</span></label>
+                <label>{user.details.is_personal ? 'รูปผู้ติดต่อ / ผู้มอบอำนาจ' : 'รูปบริษัท / ผู้ติดต่อ / ผู้มอบอำนาจ'} <span className='text-red-500'>*</span></label>
                 <Upload
                   {...field}
                   fileList={field.value || []}

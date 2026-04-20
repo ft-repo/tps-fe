@@ -85,6 +85,18 @@ export const protectedRoutes = [
         authority: ['ADMIN'],
     },
     {
+        key: 'general_user_overview',
+        path: '/user-info/general-user/overview',
+        component: lazy(() => import('@/views/staff/user-info/general-user/overview')),
+        authority: ['ADMIN'],
+    },
+    {
+        key: 'general_user_view',
+        path: '/user-info/general-user/view/:id',
+        component: lazy(() => import('@/views/staff/user-info/general-user/view')),
+        authority: ['ADMIN'],
+    },
+    {
         key: 'create_staff',
         path: '/user-info/staff/create',
         component: lazy(() => import('@/views/staff/user-info/staff/create')),

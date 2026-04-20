@@ -67,6 +67,7 @@ export interface SearchClient {
   search: string;
   page: number;
   limit: number;
+  is_personal?: boolean;
 }
 
 export interface ClientListsResponse {

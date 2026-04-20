@@ -210,6 +210,19 @@ const Content = (props: ContentProps) => {
           />
         }
       </section>
+      {showEditForm &&
+        <>
+          <section className='mt-3'>
+            <div className='bg-[#FEB2B2] border-[#FF5858] border-2 p-3 rounded-lg'>
+              <p>หมายเหตุ : การแก้ไขระยะเวลาสามารถแก้ไขได้เพียง 1 ครั้ง เท่านั้น หากไม่สามารถดำเนินการแก้ไขแล้วเสร็จในระยะเวลาที่กำหนด ระบบจะทำการยกเลิกคำขออัตโนมัติ ผู้ประกอบการจำเป็นต้องยื่นคำขอฯใหม่อีกครั้ง</p>
+            </div>
+          </section>
+          <section className='mt-3'>
+            <div className='bg-[#FFE3A7] border-[#FF9C00] border-2 p-3 rounded-lg'>
+              <p>หมายเหตุ : ระยะเวลาการแก้ไขเอกสารของผู้ยื่นคำขอฯ จะไม่นับรวมกับวันตรวจเอกสารของเจ้าหน้าที่</p>
+            </div>
+          </section>
+        </>}
       <button ref={submitRef} type='submit' className='hidden' />
     </form>
   )

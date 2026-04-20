@@ -11,6 +11,7 @@ export type UserState = {
 		registration_no: string
 		created_at: string
 		profile_url: string
+		is_personal: boolean
 		business_details: {
 			entity_type_id: number
 			business_name: string
@@ -82,6 +83,7 @@ const initialState: UserState = {
 		registration_no: '',
 		created_at: '',
 		profile_url: '',
+		is_personal: false,
 		business_details: {
 			entity_type_id: 0,
 			business_name: '',
