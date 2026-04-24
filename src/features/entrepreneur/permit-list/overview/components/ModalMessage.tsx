@@ -258,7 +258,7 @@ const ModalMessage: React.FC<Props> = (props) => {
             <Button
               className='!bg-[#0009FF] !text-white'
               style={{
-                visibility: showEditForm ? 'hidden' : 'visible'
+                visibility: data.petition_hold.is_edited ? 'hidden' : (showEditForm ? 'hidden' : 'visible')
               }}
               onClick={() => setShowEditForm(true)}
             >

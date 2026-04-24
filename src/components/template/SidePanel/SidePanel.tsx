@@ -26,6 +26,8 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	const { notification } = useAppSelector(state => state.staff.petition)
 
+	const { is_personal } = useAppSelector(state => state.auth.user.details)
+
 	//STATE
 	const [cachedTotal, setCachedTotal] = useState<number>(0);
 	const [unreadCount, setUnreadCount] = useState<number>(0);
@@ -101,11 +103,11 @@ const _SidePanel = (props: SidePanelProps) => {
 			},
 			{
 				key: '2',
-				label: 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
-				onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
+				label: is_personal ? 'คู่มือระบบ TPS สำหรับบุคคลทั่วไป' : 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
+				onClick: () => window.open(is_personal ? '/pdf/คู่มือระบบ TPS สำหรับบุคคลทั่วไป V.02.pdf' : '/pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
 			},
 		]
-	}, [])
+	}, [is_personal])
 
 	const checkRole = useMemo(() => {
 		if (authority[0] !== 'ADMIN') {

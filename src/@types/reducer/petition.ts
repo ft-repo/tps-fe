@@ -262,6 +262,7 @@ export interface PetitionHold {
   petition_flow_id: number
   is_end: boolean
   is_canceled: boolean
+  is_edited: boolean
   hold_date: string
   date_expired: string
   created_by: string

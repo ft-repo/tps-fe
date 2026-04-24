@@ -14,6 +14,7 @@ import useMenuActive from '@/utils/hooks/useMenuActive'
 import { useTranslation } from 'react-i18next'
 import { Direction, NavMode } from '@/@types/theme'
 import type { NavigationTree } from '@/@types/navigation'
+import { useAppSelector } from '@/store'
 
 export interface VerticalMenuContentProps {
 	navMode: NavMode
@@ -44,6 +45,8 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
 
 	const { activedRoute } = useMenuActive(navigationTree, routeKey)
 
+	const { is_personal } = useAppSelector(state => state.auth.user.details)
+
 	useEffect(() => {
 		if (defaulExpandKey.length === 0 && activedRoute?.parentKey) {
 			setDefaulExpandKey([activedRoute?.parentKey])
@@ -56,11 +59,16 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
 	}
 
 	const getNavItem = (nav: NavigationTree) => {
+		// ← NEW: remap key when is_personal
+		const resolvedNav = is_personal && nav.key === 'entrepreneur_info'
+			? { ...nav, key: 'general_user_info', translateKey: 'nav.general_user_info' }
+			: nav
+
 		if (nav.subMenu.length === 0 && nav.type === NAV_ITEM_TYPE_ITEM) {
 			return (
 				<VerticalSingleMenuItem
-					key={nav.key}
-					nav={nav}
+					key={resolvedNav.key}        // ← changed
+					nav={resolvedNav}            // ← changed
 					sideCollapsed={collapsed}
 					userAuthority={userAuthority}
 					direction={direction}
@@ -72,8 +80,8 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
 		if (nav.subMenu.length > 0 && nav.type === NAV_ITEM_TYPE_COLLAPSE) {
 			return (
 				<VerticalCollapsedMenuItem
-					key={nav.key}
-					nav={nav}
+					key={resolvedNav.key}        // ← changed
+					nav={resolvedNav}            // ← changed
 					sideCollapsed={collapsed}
 					userAuthority={userAuthority}
 					direction={direction}
@@ -86,7 +94,7 @@ const VerticalMenuContent = (props: VerticalMenuContentProps) => {
 			if (nav.subMenu.length > 0) {
 				return (
 					<AuthorityCheck
-						key={nav.key}
+						key={resolvedNav.key}    // ← changed
 						userAuthority={userAuthority}
 						authority={nav.authority}
 					>

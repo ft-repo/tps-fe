@@ -15,6 +15,7 @@ interface SignInFormProps extends CommonProps {
 	disableSubmit?: boolean
 	forgotPasswordUrl?: string
 	signUpUrl?: string
+	formLabel?: string
 }
 
 type SignInFormSchema = {
@@ -37,6 +38,7 @@ const SignInForm = (props: SignInFormProps) => {
 		className,
 		// forgotPasswordUrl = '/forgot-password',
 		signUpUrl = '/sign-up',
+		formLabel
 	} = props
 
 	const [message, setMessage] = useTimeOutMessage()
@@ -85,7 +87,7 @@ const SignInForm = (props: SignInFormProps) => {
 					<Form>
 						<FormContainer>
 							<FormItem
-								label="เลขทะเบียนนิติบุคคล"
+								label={formLabel}
 								invalid={
 									(errors.registration_no &&
 										touched.registration_no) as boolean
@@ -96,7 +98,7 @@ const SignInForm = (props: SignInFormProps) => {
 									type="text"
 									autoComplete="off"
 									name="registration_no"
-									placeholder="เลขทะเบียนนิติบุคคล"
+									placeholder={formLabel}
 									component={Input}
 								/>
 							</FormItem>
