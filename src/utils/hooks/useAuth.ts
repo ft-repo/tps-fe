@@ -33,7 +33,12 @@ function useAuth() {
 		| undefined
 	> => {
 		try {
-			const resp = await apiSignIn(values)
+			const resp = await apiSignIn({
+				registration_no: values.registration_no,
+				password: values.password,
+			},
+				values.is_personal
+			)
 			if (resp.data) {
 				const { access_token } = resp.data
 				dispatch(signInSuccess(access_token))

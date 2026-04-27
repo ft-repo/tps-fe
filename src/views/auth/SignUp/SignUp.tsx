@@ -15,7 +15,7 @@ import { ActionLink } from '@/components/shared'
 import useAuth from '@/utils/hooks/useAuth'
 import { ConfigProvider, message, Modal } from 'antd'
 import { AiOutlineExclamationCircle } from "react-icons/ai";
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import useQuery from '@/utils/hooks/useQuery'
 import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import appConfig from '@/configs/app.config'
@@ -59,11 +59,12 @@ const SignUp = () => {
   const [messageApi, contextHolder] = message.useMessage()
   const navigate = useNavigate()
   const query = useQuery()
+  const { state } = useLocation()
 
   const form = useForm<FieldType>({
     defaultValues: {
       // IS_PERSONAL
-      is_personal: "ADMIN",
+      is_personal: state?.is_personal ? "PERSONAL" : "ADMIN",
       // BUSINESS
       entity_type_id: null,
       registration_no: '',
@@ -254,7 +255,12 @@ const SignUp = () => {
 
           <div className="mt-4 mb-8 text-center">
             <span>มีบัญชีอยู่แล้ว? </span>
-            <ActionLink to={'/sign-in'}>เข้าสู่ระบบ</ActionLink>
+            <ActionLink
+              to={'/sign-in'}
+              state={{ is_personal: form.getValues('is_personal') === "PERSONAL" ? true : false }}
+            >
+              เข้าสู่ระบบ
+            </ActionLink>
           </div>
         </form>
       </div>

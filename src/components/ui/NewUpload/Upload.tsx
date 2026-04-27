@@ -1,8 +1,9 @@
 import { postUploadFileAPI, postUploadImageAPI, getUploadAPI } from '@/services/entrepreneur/VehicleListService'
-import { FaUpload as UploadIcon, FaExpand as MaximizeIcon } from 'react-icons/fa6'
+import { FaUpload as UploadIcon/*, FaExpand as MaximizeIcon*/, FaFilePdf as PDFIcon } from 'react-icons/fa6'
 import { useCallback, useState, useEffect } from 'react'
 import { useFormContext, Controller, Control, FieldPath, FieldValues } from 'react-hook-form'
 import { Modal } from 'antd'
+// import { set } from 'lodash'
 
 export interface UploadProps<T extends FieldValues = FieldValues> {
   name: string
@@ -54,6 +55,9 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
   const [urlPreview, setUrlPreview] = useState<string | null>(null)
   // Image preview state
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  // IS PDF PREVIEW
+  const [isPdfPreview, setIsPdfPreview] = useState<boolean>(false)
+  const [pdfPreview, setPDFPreview] = useState<string | null>(null)
 
   const { setValue, watch } = isControllerMode ? {} : formContext
 
@@ -82,10 +86,18 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
         if (fileName) {
           const response = await getUploadAPI(fileName)
           if (response.status === 200 && response.data) {
-            // Create blob URL for preview
-            const blob = new Blob([response.data], { type: 'image/*' })
-            const previewUrl = URL.createObjectURL(blob)
-            setImagePreview(previewUrl)
+            // SET PDF PREVIEW
+            if (response.data.type === 'application/pdf') {
+              setIsPdfPreview(true)
+              const blob = new Blob([response.data], { type: 'application/pdf' })
+              const previewUrl = URL.createObjectURL(blob)
+              setPDFPreview(previewUrl)
+            } else {
+              // Create blob URL for image preview
+              const blob = new Blob([response.data], { type: 'image/*' })
+              const previewUrl = URL.createObjectURL(blob)
+              setImagePreview(previewUrl)
+            }
           }
         }
       } catch (error) {
@@ -103,6 +115,9 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
       if (imagePreview) {
         URL.revokeObjectURL(imagePreview)
       }
+      if (pdfPreview) {
+        URL.revokeObjectURL(pdfPreview)
+      }
     }
   }, [urlPreview, isImage])
 
@@ -118,6 +133,7 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
       setUrlPreview(null)
       setFileName('')
       setImagePreview(null)
+      setIsPdfPreview(false)
     }
   }, [value])
 
@@ -205,18 +221,20 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
     setUrlPreview(null)
     setImagePreview(null)
     setFileName('')
+    setIsPdfPreview(false)
   }
 
   const handleImageClick = () => {
     let size = '60%';
 
-    if (imagePreview) {
+    if (imagePreview && !isPdfPreview) {
       Modal.confirm({
         title: 'รูปภาพที่อัปโหลด',
         centered: true,
         content: <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />,
-        cancelText: 'ปิด',
-        okText: 'ขยาย',
+        // cancelText: 'ปิด',
+        // okText: 'ขยาย',
+        okText: 'ปิด',
         okType: 'primary',
         width: size,
         onOk: () => {
@@ -230,18 +248,28 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
         cancelButtonProps: {
           style: {
             fontFamily: 'Noto Sans Thai'
-          }
+          },
         },
         style: {
           fontFamily: 'Noto Sans Thai'
+        },
+        footer: (_, { OkBtn }) => {
+          return (
+            <OkBtn />
+          )
         }
       })
+    } else if (isPdfPreview) {
+      window.open(pdfPreview || '', '_blank');
     }
   }
 
   const getFileDisplayName = (url: string) => {
     if (isImage) {
       return 'รูปภาพ'
+    }
+    if (isPdfPreview) {
+      return 'ไฟล์ PDF'
     }
     // Extract filename from URL or use default
     const urlParts = url.split('/')
@@ -298,10 +326,13 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
                   {/* File info */}
                   <div className="flex items-center justify-between w-full p-4 border rounded-lg bg-gray-50">
                     <div className="flex items-center overflow-hidden cursor-pointer" onClick={handleImageClick}>
-                      {isImage && imagePreview && (
+                      {isImage && imagePreview && !isPdfPreview && (
                         <img src={imagePreview} alt="Preview" className="w-10 h-10 mr-2 object-cover" />
                       )}
-                      {!isImage && (
+                      {isPdfPreview && (
+                        <PDFIcon className="w-5 h-5 mr-2 text-gray-400 flex-shrink-0" />
+                      )}
+                      {!isImage && !isPdfPreview && (
                         <UploadIcon className="w-5 h-5 mr-2 text-gray-400 flex-shrink-0" />
                       )}
                       <span className="text-sm text-gray-600 truncate" title={fixedFileName ? fixedFileName : fileName}>
@@ -311,8 +342,8 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
                     <button
                       type="button"
                       className="text-red-500 hover:text-red-700 transition-colors flex-shrink-0 ml-2"
-                      onClick={() => handleRemoveFile(field.onChange)}
                       disabled={disabled}
+                      onClick={() => handleRemoveFile(field.onChange)}
                     >
                       ลบ
                     </button>
@@ -395,8 +426,8 @@ function Upload<T extends FieldValues = FieldValues>(props: UploadProps<T>) {
             <button
               type="button"
               className="text-red-500 hover:text-red-700 transition-colors"
-              onClick={() => handleRemoveFile()}
               disabled={disabled}
+              onClick={() => handleRemoveFile()}
             >
               ลบ
             </button>

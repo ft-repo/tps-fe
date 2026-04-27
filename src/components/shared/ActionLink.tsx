@@ -9,6 +9,7 @@ interface ActionLink extends CommonProps, ComponentPropsWithoutRef<'a'> {
     to?: string
     href?: string
     reloadDocument?: boolean
+    state?: Record<string, any>
 }
 
 const ActionLink = (props: ActionLink) => {

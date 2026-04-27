@@ -100,21 +100,21 @@ const navigationConfig: NavigationTree[] = [
         authority: ['ADMIN'],
         subMenu: [
             {
-                key: 'entrepreneur_overview',
-                path: '/user-info/entrepreneur/overview',
-                title: 'nav.entrepreneur_overview',
-                translateKey: 'nav.entrepreneur_overview',
-                icon: 'entrepreneur_overview',
-                type: NAV_ITEM_TYPE_ITEM,
-                authority: ['ADMIN'],
-                subMenu: []
-            },
-            {
                 key: 'staff_overview',
                 path: '/user-info/staff/overview',
                 title: 'nav.staff_overview',
                 translateKey: 'nav.staff_overview',
                 icon: 'staff_overview',
+                type: NAV_ITEM_TYPE_ITEM,
+                authority: ['ADMIN'],
+                subMenu: []
+            },
+            {
+                key: 'entrepreneur_overview',
+                path: '/user-info/entrepreneur/overview',
+                title: 'nav.entrepreneur_overview',
+                translateKey: 'nav.entrepreneur_overview',
+                icon: 'entrepreneur_overview',
                 type: NAV_ITEM_TYPE_ITEM,
                 authority: ['ADMIN'],
                 subMenu: []

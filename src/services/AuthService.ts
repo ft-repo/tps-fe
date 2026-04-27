@@ -10,11 +10,14 @@ import type {
     SignInStaffResponse,
 } from '@/@types/auth'
 
-export async function apiSignIn(data: SignInCredential) {
+export async function apiSignIn(data: SignInCredential, is_personal?: boolean) {
     return ApiService.fetchData<SignInResponse>({
-        url: '/client/auth/login',
+        url: `/client/auth/login`,
         method: 'post',
         data,
+        params: {
+            is_personal: is_personal
+        }
     })
 }
 

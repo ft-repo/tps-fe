@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SignInForm from './SignInForm'
 import { ConfigProvider, Segmented } from 'antd'
+import { useLocation } from 'react-router-dom'
 
 const SignIn = () => {
 	const [loginType, setLoginType] = useState<'PERSONAL' | 'ENTREPRENEUR'>('ENTREPRENEUR')
+	const { state } = useLocation()
 
 	const text = {
 		"PERSONAL": {
@@ -17,6 +19,12 @@ const SignIn = () => {
 	}
 
 	const currentText = text[loginType]
+
+	useEffect(() => {
+		if (state?.is_personal) {
+			setLoginType('PERSONAL')
+		}
+	}, [state])
 
 	return (
 		<ConfigProvider
@@ -36,6 +44,7 @@ const SignIn = () => {
 				<div className="mb-8">
 					<Segmented<string>
 						options={[{ label: 'ผู้ประกอบการ', value: 'ENTREPRENEUR' }, { label: 'บุคคลทั่วไป', value: 'PERSONAL' }]}
+						defaultValue={state?.is_personal ? 'PERSONAL' : 'ENTREPRENEUR'}
 						onChange={(value) => {
 							setLoginType(value as 'PERSONAL' | 'ENTREPRENEUR')
 						}}

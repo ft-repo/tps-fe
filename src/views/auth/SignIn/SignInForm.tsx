@@ -40,6 +40,7 @@ const SignInForm = (props: SignInFormProps) => {
 		signUpUrl = '/sign-up',
 		formLabel
 	} = props
+	const isPersonal = formLabel === 'เลขบัตรประชาชน' ? true : false
 
 	const [message, setMessage] = useTimeOutMessage()
 
@@ -52,7 +53,7 @@ const SignInForm = (props: SignInFormProps) => {
 		const { registration_no, password } = values
 		setSubmitting(true)
 
-		const result = await signIn({ registration_no, password })
+		const result = await signIn({ registration_no, password, is_personal: isPersonal })
 
 		if (result?.status === 'failed') {
 			setMessage(result.message)
@@ -140,7 +141,12 @@ const SignInForm = (props: SignInFormProps) => {
 							</Button>
 							<div className="mt-4 text-center">
 								<span>{`ยังไม่มีบัญชี?`} </span>
-								<ActionLink to={signUpUrl}>สมัครสมาชิก</ActionLink>
+								<ActionLink
+									to={signUpUrl}
+									state={{ is_personal: formLabel === 'เลขบัตรประชาชน' ? true : false }}
+								>
+									สมัครสมาชิก
+								</ActionLink>
 							</div>
 							<div className='mt-4 text-center'>
 								<ActionLink to={'/staff/sign-in'}>สำหรับเจ้าหน้าที่</ActionLink>

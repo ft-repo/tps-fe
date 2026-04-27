@@ -299,7 +299,7 @@ function SignUpForm(props: Props) {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        maxLength={9}
+                        maxLength={10}
                         onChange={(e) => {
                           field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                         }}
@@ -785,6 +785,7 @@ function SignUpForm(props: Props) {
                       fixedFileName="หนังสือรับรองนิติบุคคล"
                       label="หนังสือรับรองนิติบุคคล"
                       accept=".pdf"
+                      isImage={true}
                       maxSize={10}
                       value={field.value}
                       error={fieldState.error?.message}
