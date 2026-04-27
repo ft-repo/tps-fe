@@ -40,7 +40,8 @@ const OtherInfo: React.FC<Props> = (props) => {
       company_sub_district: dataParser.data.petition_extended_address.contact_address.sub_district_id || null,
       company_postcode: dataParser.data.petition_extended_address.contact_address.zip_code || '',
       // 1.1 REGISTERED DETAIL
-      business_type: user.details.business_details.entity_type.id,
+      // business_type: user.details.business_details.entity_type.id,
+      business_type: user.details.business_details.entity_type_id,
       registered_date: dataParser.data.petition_extended_detail.cert_date ? dayjs(dataParser.data.petition_extended_detail.cert_date) : user.details.created_at ? dayjs(user.details.created_at) : null,
       registered_company_address: user.details.business_address.house_number,
       registered_company_village_no: user.details.business_address.village,
