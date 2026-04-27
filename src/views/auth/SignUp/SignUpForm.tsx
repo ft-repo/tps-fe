@@ -283,8 +283,8 @@ function SignUpForm(props: Props) {
                 rules={{
                   required: is_personal === "ADMIN" ? 'กรุณาระบุเบอร์โทรสำนักงาน' : 'กรุณาระบุเบอร์โทรศัพท์',
                   pattern: { value: /^\d+$/, message: 'กรุณากรอกเฉพาะตัวเลข' },
-                  minLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
-                  maxLength: { value: 9, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                  minLength: { value: is_personal === "ADMIN" ? 9 : 10, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
+                  maxLength: { value: is_personal === "ADMIN" ? 9 : 10, message: 'กรุณากรอกหมายเลขให้ถูกต้อง' },
                 }}
                 render={({ field }) => {
                   return (
@@ -299,7 +299,7 @@ function SignUpForm(props: Props) {
                         style={{
                           fontFamily: 'Noto Sans Thai'
                         }}
-                        maxLength={10}
+                        maxLength={is_personal === "ADMIN" ? 9 : 10}
                         onChange={(e) => {
                           field.onChange(e.target.value.replace(/[^0-9]/g, ""))
                         }}
