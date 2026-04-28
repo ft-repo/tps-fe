@@ -95,34 +95,70 @@ const _SidePanel = (props: SidePanelProps) => {
 	// }
 
 	const items: MenuProps['items'] = useMemo(() => {
-		return [
-			{
-				key: '1',
-				label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
-				onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
-			},
-			{
-				key: '2',
-				label: is_personal ? 'คู่มือระบบ TPS สำหรับบุคคลทั่วไป' : 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
-				onClick: () => window.open(is_personal ? '/pdf/คู่มือระบบ TPS สำหรับบุคคลทั่วไป V.02.pdf' : '/pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
-			},
-		]
-	}, [is_personal])
+		if (authority[0] === 'ADMIN') {
+			return [
+				{
+					key: '1',
+					label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
+					onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
+				},
+				{
+					key: '2',
+					label: 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
+					onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
+				},
+				{
+					key: '3',
+					label: 'คู่มือระบบ TPS สำหรับบุคคลทั่วไป',
+					onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับบุคคลทั่วไป V.02.pdf', '_blank')
+				},
+			]
+		} else {
+			if (is_personal) {
+				return [
+					{
+						key: '1',
+						label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
+						onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
+					},
+					{
+						key: '2',
+						label: 'คู่มือระบบ TPS สำหรับบุคคลทั่วไป',
+						onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับบุคคลทั่วไป V.02.pdf', '_blank')
+					},
+				]
+			} else {
+				return [
+					{
+						key: '1',
+						label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
+						onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
+					},
+					{
+						key: '2',
+						label: 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
+						onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
+					},
+				]
+			}
 
-	const checkRole = useMemo(() => {
-		if (authority[0] !== 'ADMIN') {
-			return items.filter(item => item?.key !== '1')
 		}
+	}, [is_personal, authority])
 
-		return items
-	}, [items, authority])
+	// const checkRole = useMemo(() => {
+	// 	if (authority[0] !== 'ADMIN') {
+	// 		return items.filter(item => item?.key !== '1')
+	// 	}
+
+	// 	return items
+	// }, [items, authority])
 
 	return (
 		<>
 			<Tooltip title='คู่มือการใช้งานระบบ'>
 				<Dropdown
 					menu={{
-						items: checkRole
+						items: items
 					}}
 					trigger={['click']}
 				>

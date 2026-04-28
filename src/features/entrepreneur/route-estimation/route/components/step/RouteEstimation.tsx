@@ -43,6 +43,13 @@ interface RouteResponse {
 type RouteType = 'main' | 'alternative';
 
 const INIT_REGION_STATE: RegionState = { id: null, name: null }
+const THAILAND_BOUNDS = { minLat: 5.5, maxLat: 20.5, minLng: 97.3, maxLng: 105.7 }
+
+const isRouteInThailand = (coordinates: [number, number][]): boolean =>
+  coordinates.every(([lat, lng]) =>
+    lat >= THAILAND_BOUNDS.minLat && lat <= THAILAND_BOUNDS.maxLat &&
+    lng >= THAILAND_BOUNDS.minLng && lng <= THAILAND_BOUNDS.maxLng
+  )
 
 const RouteEstimation: React.FC<Props> = (props) => {
   const { } = props
@@ -464,6 +471,21 @@ const RouteEstimation: React.FC<Props> = (props) => {
         }
       })
     }
+    // CHECK THAILAND BOUNDS
+    const selectedCoordinates = selectedRoute === 'main'
+      ? routes?.main?.coordinates
+      : routes?.alternative?.coordinates
+    if (selectedCoordinates && !isRouteInThailand(selectedCoordinates)) {
+      Modal.error({
+        title: 'เส้นทางอยู่นอกประเทศไทย',
+        content: 'เส้นทางที่เลือกอยู่นอกประเทศไทย กรุณาเลือกเส้นทางภายในประเทศไทย',
+        okText: 'ตกลง',
+        onOk: () => Modal.destroyAll(),
+        okButtonProps: { style: { fontFamily: 'Noto Sans Thai' } },
+        style: { fontFamily: 'Noto Sans Thai' }
+      })
+      return
+    }
     // CHECK
     if (state?.petition_id) {
       if (isEditVehicle) {
@@ -474,7 +496,15 @@ const RouteEstimation: React.FC<Props> = (props) => {
     } else {
       onCreate(value)
     }
-  }, [routes, state?.petition_id, onCreate, onUpdateRoadMap, onUpdateVehicle, isEditVehicle])
+  }, [
+    routes,
+    state?.petition_id,
+    onCreate,
+    onUpdateRoadMap,
+    onUpdateVehicle,
+    isEditVehicle,
+    selectedRoute
+  ])
 
   const handleMapClick = useCallback((latlng: LatLng) => {
     if (isSelectingStart) {
