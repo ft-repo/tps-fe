@@ -91,7 +91,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
             <fieldset>
-              <label>ข้าพเจ้า (ชื่อบริษัท / ห้าง / ร้าน) <span className='text-red-500'>*</span></label>
+              <label>{details?.is_personal ? "ข้าพเจ้า (ชื่อ - นามสกุล)" : "ข้าพเจ้า (ชื่อบริษัท / ห้าง / ร้าน)"} <span className='text-red-500'>*</span></label>
               <Input
                 disabled
                 placeholder='กรุณาระบุ'

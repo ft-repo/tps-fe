@@ -16,6 +16,7 @@ interface Props {
 const FormPetition: React.FC<Props> = (props) => {
   const { control, setValue } = props
   const { province, district, sub_district, entity_type } = useAppSelector((state) => state.master)
+  const { details } = useAppSelector(state => state.auth.user)
   const {
     company_address,
     company_village_number,
@@ -151,7 +152,7 @@ const FormPetition: React.FC<Props> = (props) => {
               render={({ field }) => {
                 return (
                   <fieldset>
-                    <label>ข้าพเจ้า (ชื่อบริษัท / ห้าง / ร้าน) <span className='text-red-500'>*</span></label>
+                    <label>{details?.is_personal ? "ข้าพเจ้า (ชื่อ - นามสกุล)" : "ข้าพเจ้า (ชื่อบริษัท / ห้าง / ร้าน)"} <span className='text-red-500'>*</span></label>
                     <Input
                       {...field}
                       name={field.name}

@@ -470,6 +470,7 @@ export interface DocumentDetail {
   poa_url: string;
   mach_book_url: string;
   registration_no: string;
+  is_personal: boolean;
 }
 
 export interface EstimateDetail {
@@ -872,6 +873,7 @@ export interface PetitionExtendedUserCreated {
   registration_no: string;
   created_at: string;
   profile_url: string;
+  is_personal: boolean;
   business_details: BusinessDetails;
   business_address: BusinessAddress;
 }

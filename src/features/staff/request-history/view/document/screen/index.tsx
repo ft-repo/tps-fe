@@ -26,7 +26,9 @@ const DocumentScreen: React.FC<Props> = (props) => {
   }, [dispatch, petitionId])
 
   useEffect(() => {
-    dispatch(getPetitionExtendedDetail(String(petitionId)))
+    dispatch(getPetitionExtendedStatus({
+      petition_exid: String(petitionId)
+    }))
   }, [dispatch, petitionId])
 
   return (

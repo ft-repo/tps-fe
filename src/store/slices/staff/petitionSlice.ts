@@ -41,6 +41,7 @@ const initialState: PetitionAdminState = {
         poa_url: '',
         mach_book_url: '',
         registration_no: '',
+        is_personal: false
       },
       estimate: {
         route: {
@@ -287,6 +288,7 @@ const initialState: PetitionAdminState = {
         registration_no: '',
         created_at: '',
         profile_url: '',
+        is_personal: false,
         business_details: {
           business_name: '',
           entity_type_id: 0
@@ -359,6 +361,7 @@ const initialState: PetitionAdminState = {
         poa_url: '',
         mach_book_url: '',
         registration_no: '',
+        is_personal: false
       },
       estimate: {
         route: {
@@ -605,6 +608,7 @@ const initialState: PetitionAdminState = {
         registration_no: '',
         created_at: '',
         profile_url: '',
+        is_personal: false,
         business_details: {
           business_name: '',
           entity_type_id: 0
