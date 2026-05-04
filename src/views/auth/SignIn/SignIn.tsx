@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import SignInForm from './SignInForm'
-import { ConfigProvider, Segmented } from 'antd'
-import { useLocation } from 'react-router-dom'
+import { ConfigProvider, message, Segmented } from 'antd'
+import { useLocation, useSearchParams } from 'react-router-dom'
+import useAuth from '@/utils/hooks/useAuth'
 
 const SignIn = () => {
 	const [loginType, setLoginType] = useState<'PERSONAL' | 'ENTREPRENEUR'>('ENTREPRENEUR')
 	const { state } = useLocation()
+	const [params] = useSearchParams()
+	const paramsToken = params.get('token')
 
 	const text = {
 		"PERSONAL": {
@@ -25,6 +28,24 @@ const SignIn = () => {
 			setLoginType('PERSONAL')
 		}
 	}, [state])
+
+	const { signInWithToken } = useAuth()
+
+	const onSignInWithToken = useCallback(async (token: string) => {
+		const result = await signInWithToken(token)
+
+		if (result?.status === 'success') {
+			message.success('เข้าสู่ระบบสำเร็จ')
+		} else {
+			message.error(result?.message || 'เข้าสู่ระบบไม่สำเร็จ')
+		}
+	}, [signInWithToken])
+
+	useEffect(() => {
+		if (paramsToken) {
+			onSignInWithToken(paramsToken)
+		}
+	}, [paramsToken, onSignInWithToken])
 
 	return (
 		<ConfigProvider

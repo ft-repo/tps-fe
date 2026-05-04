@@ -1,4 +1,4 @@
-import { apiSignIn, apiSignInStaff, apiSignUp } from '@/services/AuthService'
+import { apiSignIn, apiSignInStaff, apiSignInWithToken, apiSignUp } from '@/services/AuthService'
 import {
 	setUser,
 	signInSuccess,
@@ -22,6 +22,52 @@ function useAuth() {
 	const query = useQuery()
 
 	const { token, signedIn } = useAppSelector((state) => state.auth.session)
+
+	const signInWithToken = async (
+		token: string,
+	): Promise<
+		| {
+			status: Status
+			message: string
+		}
+		| undefined
+	> => {
+		try {
+			const resp = await apiSignInWithToken(token)
+
+			if (resp.data) {
+				const { access_token } = resp.data
+				dispatch(signInSuccess(access_token))
+				if (resp.data.details) {
+					dispatch(
+						setUser(
+							{
+								id: resp.data.details.id,
+								userName: resp.data.details.registration_no,
+								name: resp.data.details.business_details.business_name,
+								profile_url: resp.data.details.profile_url,
+								details: { ...resp.data.details },
+								authority: ['USER'],
+							},
+						),
+					)
+				}
+				const redirectUrl = query.get(REDIRECT_URL_KEY)
+				navigate(redirectUrl === '/access-denied' ? appConfig.authenticatedEntryPath : (redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath))
+				return {
+					status: 'success',
+					message: '',
+				}
+			}
+			// eslint-disable-next-line  @typescript-eslint/no-explicit-any
+		} catch (errors: any) {
+			console.log(errors)
+			return {
+				status: 'failed',
+				message: errors?.response?.data?.res_data?.message || errors.toString(),
+			}
+		}
+	}
 
 	const signIn = async (
 		values: SignInCredential,
@@ -189,6 +235,7 @@ function useAuth() {
 
 	return {
 		authenticated: token && signedIn,
+		signInWithToken,
 		signIn,
 		signUp,
 		signOut,
