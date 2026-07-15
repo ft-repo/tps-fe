@@ -2,6 +2,7 @@ export type SignInCredential = {
   registration_no: string
   password: string
   is_personal?: boolean
+  from_web?: boolean
 }
 
 export type SignInStaffCredential = {

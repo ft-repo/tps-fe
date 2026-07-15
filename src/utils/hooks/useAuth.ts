@@ -48,6 +48,7 @@ function useAuth() {
 								profile_url: resp.data.details.profile_url,
 								details: { ...resp.data.details },
 								authority: ['USER'],
+								from_web: false
 							},
 						),
 					)
@@ -98,6 +99,7 @@ function useAuth() {
 								profile_url: resp.data.details.profile_url,
 								details: { ...resp.data.details },
 								authority: ['USER'],
+								from_web: true
 							},
 						),
 					)
@@ -134,6 +136,7 @@ function useAuth() {
 								name: resp.data.details.business_details.business_name,
 								details: { ...resp.data.details },
 								authority: ['USER'],
+								from_web: true
 							},
 						),
 					)
@@ -174,6 +177,7 @@ function useAuth() {
 					entity_type: undefined,
 				},
 				authority: [],
+				from_web: null
 			}),
 		)
 		localStorage.removeItem("notification_cache")
@@ -205,6 +209,7 @@ function useAuth() {
 									},
 								},
 								authority: ['ADMIN'],
+								from_web: true
 							},
 						),
 					)

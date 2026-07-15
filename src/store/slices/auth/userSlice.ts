@@ -71,6 +71,7 @@ export type UserState = {
 		}
 	}
 	authority: string[]
+	from_web?: boolean | null
 }
 
 const initialState: UserState = {
@@ -143,6 +144,7 @@ const initialState: UserState = {
 		}
 	},
 	authority: [],
+	from_web: null
 }
 
 const userSlice = createSlice({
@@ -156,6 +158,7 @@ const userSlice = createSlice({
 			state.profile_url = action.payload?.profile_url
 			state.details = action.payload?.details
 			state.authority = action.payload?.authority
+			state.from_web = action.payload?.from_web
 		},
 	},
 })

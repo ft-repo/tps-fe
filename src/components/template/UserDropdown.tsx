@@ -29,7 +29,7 @@ const dropdownItemList: DropdownList[] = [
 const _UserDropdown = ({ className }: CommonProps) => {
 	const { signOut } = useAuth()
 	const dispatch = useAppDispatch()
-	const { authority, name, details } = useAppSelector(state => state.auth.user)
+	const { authority, name, details, from_web } = useAppSelector(state => state.auth.user)
 	const [avatarImage, setAvatarImage] = useState<string>('')
 	const [loading, setLoading] = useState<boolean>(false)
 
@@ -92,6 +92,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
 				menuStyle={{ minWidth: 240 }}
 				renderTitle={UserAvatar}
 				placement="bottom-end"
+				disabled={authority[0] === 'USER' && from_web === false}
 			>
 				<Dropdown.Item variant="header">
 					<div className="py-2 px-3 flex items-center gap-2">
