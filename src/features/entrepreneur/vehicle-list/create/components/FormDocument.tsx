@@ -16,10 +16,12 @@ import {
 interface Props {
   control: Control<FieldType>;
   setValue: UseFormSetValue<FieldType>;
+  onUploadStart?: (field: string) => void;
+  onUploadEnd?: (field: string) => void;
 }
 
 const FormDocument: React.FC<Props> = (props) => {
-  const { control, setValue } = props
+  const { control, setValue, onUploadStart, onUploadEnd } = props
   const { errors } = useFormState({ control })
 
   const uploadFile = useCallback(async (fieldName: string, file: any, isImage: boolean = false) => {
@@ -29,6 +31,7 @@ const FormDocument: React.FC<Props> = (props) => {
     } else {
       uploadAPI = postUploadFileAPI
     }
+    onUploadStart?.(fieldName)
     try {
       // POST
       const response = await uploadAPI({ upload: file[0].originFileObj })
@@ -43,8 +46,10 @@ const FormDocument: React.FC<Props> = (props) => {
       } else {
         console.error(error)
       }
+    } finally {
+      onUploadEnd?.(fieldName)
     }
-  }, [setValue])
+  }, [setValue, onUploadStart, onUploadEnd])
 
   const _itemRender = useCallback((
     originNode: ReactElement,

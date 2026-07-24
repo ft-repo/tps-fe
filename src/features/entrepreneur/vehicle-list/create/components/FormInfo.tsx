@@ -13,10 +13,12 @@ import { RcFile } from 'antd/es/upload'
 interface Props {
   control: Control<FieldType>;
   setValue: UseFormSetValue<FieldType>;
+  onUploadStart?: (field: string) => void;
+  onUploadEnd?: (field: string) => void;
 }
 
 const FormInfo: React.FC<Props> = (props) => {
-  const { control, setValue } = props
+  const { control, setValue, onUploadStart, onUploadEnd } = props
   const { province, axis_type } = useAppSelector(state => state.master)
   const vehicleType = useAppSelector(state => state.master.vehicle_type)
   const { errors } = useFormState({ control })
@@ -26,6 +28,7 @@ const FormInfo: React.FC<Props> = (props) => {
   } = useWatch({ control })
 
   const uploadFile = useCallback(async (file: any) => {
+    onUploadStart?.('file_registered_document_id')
     try {
       // POST
       const response = await postUploadFileAPI({ upload: file[0].originFileObj })
@@ -40,8 +43,10 @@ const FormInfo: React.FC<Props> = (props) => {
       } else {
         console.log(error)
       }
+    } finally {
+      onUploadEnd?.('file_registered_document_id')
     }
-  }, [setValue])
+  }, [setValue, onUploadStart, onUploadEnd])
 
   return (
     <div>

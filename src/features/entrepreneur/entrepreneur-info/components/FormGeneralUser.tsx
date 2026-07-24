@@ -19,6 +19,7 @@ const FormGeneralUser: React.FC<Props> = (props) => {
   const { control, setValue } = props
   const { contact_type } = useAppSelector(state => state.master)
   const disabled = window.location.href.includes('/user-info/entrepreneur/view/') ? true : false
+  const { user } = useAppSelector(state => state.auth)
 
   const { errors } = useFormState({ control })
 
@@ -183,6 +184,7 @@ const FormGeneralUser: React.FC<Props> = (props) => {
               <fieldset>
                 <label>เบอร์โทรศัพท์ <span className='text-red-500'>*</span></label>
                 <Input
+                  disabled={user.details.is_personal === true && user.from_web === false}
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'
@@ -303,6 +305,7 @@ const FormGeneralUser: React.FC<Props> = (props) => {
               <fieldset>
                 <label>หมายเลขบัตรประชาชน <span className='text-red-500'>*</span></label>
                 <Input
+                  disabled={user.details.is_personal === true && user.from_web === false}
                   {...field}
                   name={field.name}
                   placeholder='กรุณาระบุ'

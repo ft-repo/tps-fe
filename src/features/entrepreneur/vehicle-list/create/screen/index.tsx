@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useRef } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { FormInfo, FormDocument } from '../components'
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import { postVehicleAPI } from '@/services/entrepreneur/VehicleListService';
 import { getProductType, getVehicleSelection, setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { Button, Modal } from 'antd';
 import { getVehicleData } from '@/store/slices/entrepreneur';
+import { AxiosError } from 'axios';
 
 interface Props {
 
@@ -24,6 +25,20 @@ const CreateScreen: React.FC<Props> = (props) => {
   const loading = useAppSelector(state => state.layout.loading)
   const vehicle = useAppSelector(state => state.entrepreneur.vehicleList)
   const { province } = useAppSelector(state => state.master)
+  const [uploadingFields, setUploadingFields] = useState<Set<string>>(new Set())
+  const isUploading = uploadingFields.size > 0
+
+  const handleUploadStart = useCallback((field: string) => {
+    setUploadingFields((prev) => new Set(prev).add(field))
+  }, [])
+
+  const handleUploadEnd = useCallback((field: string) => {
+    setUploadingFields((prev) => {
+      const next = new Set(prev)
+      next.delete(field)
+      return next
+    })
+  }, [])
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -79,7 +94,41 @@ const CreateScreen: React.FC<Props> = (props) => {
     setValue,
   } = form;
 
+  const renderErrorContent = useCallback((error: AxiosError<{ res_code?: number; res_data?: { keys?: string[]; details?: string; message?: string } }>) => {
+    const resData = error.response?.data?.res_data
+    if (resData?.keys?.length) {
+      return (
+        <>
+          <h6 className='mb-1.5'>{resData.details}</h6>
+          <ul className='list-disc pl-5 text-left'>
+            {resData.keys.map((key) => (
+              <li key={key}>{key}</li>
+            ))}
+          </ul>
+        </>
+      )
+    }
+    return resData?.message
+  }, [])
+
   const onSubmit = useCallback(async (value: FieldType) => {
+    if (isUploading) {
+      Modal.warning({
+        title: 'กรุณารอสักครู่',
+        content: 'กำลังอัปโหลดไฟล์ กรุณารอให้อัปโหลดเสร็จสิ้นก่อนบันทึก',
+        okText: 'ตกลง',
+        onOk: () => Modal.destroyAll(),
+        okButtonProps: {
+          style: {
+            fontFamily: 'Noto Sans Thai'
+          }
+        },
+        style: {
+          fontFamily: 'Noto Sans Thai'
+        }
+      })
+      return
+    }
     // BUILD BODY
     const body: APIPostBody = {
       vehicle_detail: {
@@ -144,10 +193,10 @@ const CreateScreen: React.FC<Props> = (props) => {
         console.log(response)
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof AxiosError) {
         Modal.error({
           title: 'ผิดพลาด',
-          content: 'ไม่สามารถบันทึกข้อมูลได้',
+          content: renderErrorContent(error) || 'ไม่สามารถบันทึกข้อมูลได้',
           okText: 'ตกลง',
           onOk: () => Modal.destroyAll(),
           okButtonProps: {
@@ -165,7 +214,7 @@ const CreateScreen: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [navigate, dispatch, vehicle.overview.search, province])
+  }, [navigate, dispatch, vehicle.overview.search, province, renderErrorContent, isUploading])
 
   return (
     <div>
@@ -183,6 +232,7 @@ const CreateScreen: React.FC<Props> = (props) => {
             ย้อนกลับ
           </Button>
           <Button
+            disabled={isUploading}
             loading={loading}
             htmlType='submit'
             type='primary'
@@ -216,10 +266,14 @@ const CreateScreen: React.FC<Props> = (props) => {
             <FormInfo
               control={control}
               setValue={setValue}
+              onUploadStart={handleUploadStart}
+              onUploadEnd={handleUploadEnd}
             />
             <FormDocument
               control={control}
               setValue={setValue}
+              onUploadStart={handleUploadStart}
+              onUploadEnd={handleUploadEnd}
             />
           </div>
           <button ref={submitRef} hidden type='submit' />
