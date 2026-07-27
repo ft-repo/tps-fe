@@ -30,3 +30,6 @@ build
 
 #safelist
 safelist.txt
+
+# disposable vitest output (test reports, coverage) — build output, not source
+claude-capture/

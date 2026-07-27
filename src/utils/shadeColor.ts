@@ -2,9 +2,9 @@ const shadeColor = (color: string, percent: number) => {
     let R = parseInt(color.substring(1, 3), 16)
     let G = parseInt(color.substring(3, 5), 16)
     let B = parseInt(color.substring(5, 7), 16)
-    R = (R * (100 + percent)) / 100
-    G = (G * (100 + percent)) / 100
-    B = (B * (100 + percent)) / 100
+    R = Math.round((R * (100 + percent)) / 100)
+    G = Math.round((G * (100 + percent)) / 100)
+    B = Math.round((B * (100 + percent)) / 100)
     R = R < 255 ? R : 255
     G = G < 255 ? G : 255
     B = B < 255 ? B : 255
