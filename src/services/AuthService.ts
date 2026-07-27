@@ -1,4 +1,7 @@
+import axios from 'axios'
 import ApiService from './ApiService'
+import appConfig from '@/configs/app.config'
+import { API_KEY } from '@/constants/api.constant'
 import type {
 	SignInCredential,
 	SignUpCredential,
@@ -9,6 +12,31 @@ import type {
 	SignInStaffCredential,
 	SignInStaffResponse,
 } from '@/@types/auth'
+
+export type RefreshRole = 'client' | 'admin'
+
+export type RefreshResponse = {
+	access_token: string
+	refresh_token?: string
+}
+
+// Bare axios instance for the token refresh call ONLY — it must never go
+// through BaseService/ApiService. Routing it there would re-enter the
+// request interceptor's proactive refresh check and the response
+// interceptor's 401 handler, turning a refresh 401 into an infinite loop.
+const RefreshHttpClient = axios.create({
+	baseURL: appConfig.apiPrefix,
+	timeout: 60000,
+})
+
+export async function apiRefresh(data: { refresh_token: string }, role: RefreshRole) {
+	const path = role === 'admin' ? 'admin/auth/refresh' : 'client/auth/refresh'
+	const headers: Record<string, string> = {}
+	if (import.meta.env.VITE_API_KEY) {
+		headers[API_KEY] = import.meta.env.VITE_API_KEY
+	}
+	return RefreshHttpClient.post<RefreshResponse>(path, data, { headers })
+}
 
 export async function apiSignIn(data: SignInCredential, is_personal?: boolean) {
 	return ApiService.fetchData<SignInResponse>({
