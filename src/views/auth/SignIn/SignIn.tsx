@@ -3,6 +3,7 @@ import SignInForm from './SignInForm'
 import { ConfigProvider, message, Segmented } from 'antd'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import useAuth from '@/utils/hooks/useAuth'
+import { SESSION_EXPIRED_STORAGE_KEY } from '@/services/sessionManagerInstance'
 
 const SignIn = () => {
 	const [loginType, setLoginType] = useState<'PERSONAL' | 'ENTREPRENEUR'>('ENTREPRENEUR')
@@ -46,6 +47,13 @@ const SignIn = () => {
 			onSignInWithToken(paramsToken)
 		}
 	}, [paramsToken, onSignInWithToken])
+
+	useEffect(() => {
+		if (sessionStorage.getItem(SESSION_EXPIRED_STORAGE_KEY)) {
+			sessionStorage.removeItem(SESSION_EXPIRED_STORAGE_KEY)
+			message.warning('เซสชันหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง')
+		}
+	}, [])
 
 	return (
 		<ConfigProvider

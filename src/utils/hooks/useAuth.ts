@@ -2,7 +2,6 @@ import { apiSignIn, apiSignInStaff, apiSignInWithToken, apiSignUp } from '@/serv
 import {
 	setUser,
 	signInSuccess,
-	signOutSuccess,
 	useAppSelector,
 	useAppDispatch,
 } from '@/store'
@@ -10,6 +9,8 @@ import appConfig from '@/configs/app.config'
 import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import { useNavigate } from 'react-router-dom'
 import useQuery from './useQuery'
+import sessionManager from '@/services/sessionManagerInstance'
+import { clearAuthState } from '@/store/slices/auth/authActions'
 import type { SignInCredential, SignInStaffCredential, SignUpCredential } from '@/@types/auth'
 
 type Status = 'success' | 'failed'
@@ -36,8 +37,9 @@ function useAuth() {
 			const resp = await apiSignInWithToken(token)
 
 			if (resp.data) {
-				const { access_token } = resp.data
+				const { access_token, refresh_token } = resp.data
 				dispatch(signInSuccess(access_token))
+				sessionManager.onLogin({ accessToken: access_token, refreshToken: refresh_token ?? null, role: 'client' })
 				if (resp.data.details) {
 					dispatch(
 						setUser(
@@ -87,8 +89,9 @@ function useAuth() {
 				values.is_personal
 			)
 			if (resp.data) {
-				const { access_token } = resp.data
+				const { access_token, refresh_token } = resp.data
 				dispatch(signInSuccess(access_token))
+				sessionManager.onLogin({ accessToken: access_token, refreshToken: refresh_token ?? null, role: 'client' })
 				if (resp.data.details) {
 					dispatch(
 						setUser(
@@ -125,8 +128,9 @@ function useAuth() {
 		try {
 			const resp = await apiSignUp(values)
 			if (resp.data) {
-				const { access_token } = resp.data
+				const { access_token, refresh_token } = resp.data
 				dispatch(signInSuccess(access_token))
+				sessionManager.onLogin({ accessToken: access_token, refreshToken: refresh_token ?? null, role: 'client' })
 				if (resp.data.details) {
 					dispatch(
 						setUser(
@@ -165,21 +169,8 @@ function useAuth() {
 	}
 
 	const handleSignOut = () => {
-		dispatch(signOutSuccess())
-		dispatch(
-			setUser({
-				id: '',
-				userName: '',
-				name: '',
-				details: {
-					department: undefined,
-					role: undefined,
-					entity_type: undefined,
-				},
-				authority: [],
-				from_web: null
-			}),
-		)
+		sessionManager.onLogout()
+		clearAuthState(dispatch)
 		localStorage.removeItem("notification_cache")
 		navigate(appConfig.unAuthenticatedEntryPath)
 	}
@@ -188,8 +179,9 @@ function useAuth() {
 		try {
 			const resp = await apiSignInStaff(values)
 			if (resp.data) {
-				const { access_token } = resp.data
+				const { access_token, refresh_token } = resp.data
 				dispatch(signInSuccess(access_token))
+				sessionManager.onLogin({ accessToken: access_token, refreshToken: refresh_token ?? null, role: 'admin' })
 				if (resp.data.details) {
 					dispatch(
 						setUser(

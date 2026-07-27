@@ -66,7 +66,7 @@ export type SignInResponse = {
       };
     };
   };
-  refresh_token: string;
+  refresh_token?: string;
   role: string;
 }
 
@@ -90,7 +90,7 @@ export type SignInStaffResponse = {
       name: string
     }
   }
-  refresh_token: string
+  refresh_token?: string
 }
 
 export type SignUpResponse = SignInResponse
