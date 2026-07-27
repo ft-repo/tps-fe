@@ -1,6 +1,11 @@
 // Shared, non-suite test helpers for src/lib/auth/**. Not a *.test.ts file, so
 // vitest's default include never collects it as a suite of its own.
 
+import { vi } from 'vitest'
+import { createMemoryAuthStorage } from '@/lib/auth/authStorage'
+import { createPassthroughLock } from '@/lib/auth/refreshLock'
+import type { SessionManagerDeps } from '@/lib/auth/sessionManager'
+
 function base64UrlEncode(input: string): string {
     const bytes = new TextEncoder().encode(input)
     let binary = ''
@@ -69,9 +74,20 @@ export function makeClock(start = 1_700_000_000_000): FakeClock {
         return new Promise((resolve) => setTimer(resolve, ms))
     }
 
+    async function drainMicrotasks(): Promise<void> {
+        for (let i = 0; i < 20; i++) await Promise.resolve()
+    }
+
     async function advance(ms: number): Promise<void> {
         const target = currentTime + ms
         for (;;) {
+            // Let any pending microtasks (promise .then chains from the last
+            // timer fired, or from code that ran before advance() was even
+            // called) settle BEFORE deciding what's due — a chain like
+            // "sleep resolves -> reject -> arm the next sleep" needs to fully
+            // play out or we'd miss the newly-armed timer.
+            await drainMicrotasks()
+
             let dueId: FakeTimerHandle | null = null
             let dueAt = Infinity
             for (const [id, entry] of timers) {
@@ -85,10 +101,6 @@ export function makeClock(start = 1_700_000_000_000): FakeClock {
             timers.delete(dueId)
             currentTime = entry.at
             entry.fn()
-            // Let microtasks queued by this timer (promise chains) settle
-            // before deciding whether another timer is now due.
-            await Promise.resolve()
-            await Promise.resolve()
         }
         currentTime = target
     }
@@ -98,4 +110,45 @@ export function makeClock(start = 1_700_000_000_000): FakeClock {
     }
 
     return { now, setTimer, clearTimer, sleep, advance, pending }
+}
+
+/**
+ * Build a full SessionManagerDeps with sane defaults (memory storage,
+ * passthrough lock, a fake clock, vi.fn() spies for refresh/onTokens/
+ * onSessionExpired), overridable per test. Returns the pieces individually
+ * too, so a test can assert on them without reaching back into `deps`.
+ */
+export function makeDeps(overrides?: {
+    clock?: FakeClock
+    storage?: SessionManagerDeps['storage']
+    lock?: SessionManagerDeps['lock']
+    refresh?: SessionManagerDeps['refresh']
+    onTokens?: SessionManagerDeps['onTokens']
+    onSessionExpired?: SessionManagerDeps['onSessionExpired']
+    currentRole?: SessionManagerDeps['currentRole']
+}) {
+    const clock = overrides?.clock ?? makeClock()
+    const storage = overrides?.storage ?? createMemoryAuthStorage()
+    const lock = overrides?.lock ?? createPassthroughLock()
+    const refresh = overrides?.refresh ?? vi.fn()
+    const onTokens = overrides?.onTokens ?? vi.fn()
+    const onSessionExpired = overrides?.onSessionExpired ?? vi.fn()
+
+    const deps: SessionManagerDeps = {
+        storage,
+        refresh,
+        lock,
+        now: clock.now,
+        setTimer: clock.setTimer,
+        // FakeClock's handles are numbers; SessionManagerDeps only needs
+        // whatever type setTimer hands back to be round-tripped into
+        // clearTimer, so this narrowing is safe.
+        clearTimer: clock.clearTimer as (handle: unknown) => void,
+        sleep: clock.sleep,
+        onTokens,
+        onSessionExpired,
+        currentRole: overrides?.currentRole,
+    }
+
+    return { deps, clock, storage, refresh, onTokens, onSessionExpired }
 }
