@@ -28,7 +28,7 @@ const ContentPDFViewer: React.FC<Props> = (props) => {
           ]}
           httpHeaders={{
             'Authorization': `Bearer ${token}`,
-            'x-api-key': 'TlDUgcAzXWdy1kyB40IHVpgL9g4ELXdPxx4GKpxF'
+            'x-api-key': import.meta.env.VITE_API_KEY
           }}
           withCredentials={true}
         />

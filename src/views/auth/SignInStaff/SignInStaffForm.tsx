@@ -64,8 +64,8 @@ const SignInStaffForm = (props: SignInStaffFormProps) => {
 			)}
 			<Formik
 				initialValues={{
-					userName: 'admin',
-					password: 'DRR@dm1n',
+					userName: '',
+					password: '',
 				}}
 				validationSchema={validationSchema}
 				onSubmit={(values, { setSubmitting }) => {

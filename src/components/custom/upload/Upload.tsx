@@ -159,10 +159,6 @@ const Upload: React.FC<Props> = (props) => {
           }
         }
       }}
-      // headers={{
-      //   Authorization: `Bearer ${token}`,
-      //   'x-api-key': 'TlDUgcAzXWdy1kyB40IHVpgL9g4ELXdPxx4GKpxF'
-      // }}
       onChange={onChange}
       onRemove={onRemove}
       {...propsUpload}
