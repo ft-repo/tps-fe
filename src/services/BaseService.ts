@@ -18,7 +18,7 @@ BaseService.interceptors.request.use(
 		const persistData = deepParseJson(rawPersistData)
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let accessToken = (persistData as any).auth.session.token
+		let accessToken = (persistData as any)?.auth?.session?.token
 
 		if (!accessToken) {
 			const { auth } = store.getState()
@@ -35,9 +35,11 @@ BaseService.interceptors.request.use(
 			config.headers[API_KEY] = import.meta.env.VITE_API_KEY
 		}
 
-		const base = (config.baseURL ?? '').replace(/\/+$/, '')
-		const path = (config.url ?? '').replace(/^\/+/, '')
-		console.log('[REQ]', `${base}/${path}`, config.params ?? {}, config.method)
+		if (import.meta.env.DEV) {
+			const base = (config.baseURL ?? '').replace(/\/+$/, '')
+			const path = (config.url ?? '').replace(/^\/+/, '')
+			console.log('[REQ]', `${base}/${path}`, config.params ?? {}, config.method)
+		}
 
 		return config
 	},
