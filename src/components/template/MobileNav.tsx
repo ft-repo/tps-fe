@@ -12,9 +12,11 @@ import navigationConfig from '@/configs/navigation.config'
 import useResponsive from '@/utils/hooks/useResponsive'
 import { useAppSelector } from '@/store'
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
-import { Avatar, Button, message, Spin } from 'antd'
+import { Button, message, Spin } from 'antd'
 import DRRLogo from '@/assets/img/drr-logo.png'
 import useAuth from '@/utils/hooks/useAuth'
+import { HiOutlineUser } from 'react-icons/hi'
+import Avatar from '@/components/ui/Avatar'
 
 const VerticalMenuContent = lazy(
 	() => import('@/components/template/VerticalMenuContent'),
@@ -124,12 +126,20 @@ const MobileNav = () => {
 		return (
 			<header className='flex flex-col flex-wrap items-center justify-center gap-3'>
 				<Spin spinning={loading}>
-					<Avatar
+					{/* <Avatar
 						size={64}
 						src={authority[0] === 'USER' ? avatarImage : DRRLogo}
 						alt='กรมทางหลวงชนบท'
 						style={{ backgroundColor: 'transparent' }}
-					/>
+					/> */}
+					<Spin spinning={loading}>
+						<Avatar
+							size={32}
+							shape="circle"
+							icon={<HiOutlineUser />}
+							src={authority[0] === 'USER' ? avatarImage : DRRLogo}
+						/>
+					</Spin>
 				</Spin>
 				<section className='text-center'>
 					<p className='font-bold'>{name || '-'}</p>
