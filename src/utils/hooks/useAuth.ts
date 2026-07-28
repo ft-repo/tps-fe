@@ -50,7 +50,8 @@ function useAuth() {
 								profile_url: resp.data.details.profile_url,
 								details: { ...resp.data.details },
 								authority: ['USER'],
-								from_web: false
+								from_web: false,
+								m_token: token
 							},
 						),
 					)
@@ -102,7 +103,8 @@ function useAuth() {
 								profile_url: resp.data.details.profile_url,
 								details: { ...resp.data.details },
 								authority: ['USER'],
-								from_web: true
+								from_web: true,
+								m_token: null
 							},
 						),
 					)
@@ -140,7 +142,8 @@ function useAuth() {
 								name: resp.data.details.business_details.business_name,
 								details: { ...resp.data.details },
 								authority: ['USER'],
-								from_web: true
+								from_web: true,
+								m_token: null
 							},
 						),
 					)
@@ -201,7 +204,8 @@ function useAuth() {
 									},
 								},
 								authority: ['ADMIN'],
-								from_web: true
+								from_web: true,
+								m_token: null
 							},
 						),
 					)

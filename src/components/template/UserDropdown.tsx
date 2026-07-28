@@ -29,7 +29,7 @@ const dropdownItemList: DropdownList[] = [
 const _UserDropdown = ({ className }: CommonProps) => {
 	const { signOut } = useAuth()
 	const dispatch = useAppDispatch()
-	const { authority, name, details, from_web } = useAppSelector(state => state.auth.user)
+	const { authority, name, details, from_web, m_token } = useAppSelector(state => state.auth.user)
 	const [avatarImage, setAvatarImage] = useState<string>('')
 	const [loading, setLoading] = useState<boolean>(false)
 
@@ -160,12 +160,18 @@ const _UserDropdown = ({ className }: CommonProps) => {
 				<Dropdown.Item
 					eventKey="Sign Out"
 					className="gap-2"
-					onClick={signOut}
+					onClick={() => {
+						if (authority[0] === 'USER' && from_web === false) {
+							window.location.href = `http://eservice.drr.go.th/uat/dga/back_to_web?mToken=${m_token}`
+						} else {
+							signOut()
+						}
+					}}
 				>
 					<span className="text-xl opacity-50">
 						<HiOutlineLogout />
 					</span>
-					<span>ออกจากระบบ</span>
+					<span>{(authority[0] === 'USER' && from_web === false) ? 'กลับสู่แอพทางรัฐ' : 'ออกจากระบบ'}</span>
 				</Dropdown.Item>
 			</Dropdown>
 			<ChangePassword />

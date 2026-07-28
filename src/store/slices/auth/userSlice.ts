@@ -72,6 +72,7 @@ export type UserState = {
 	}
 	authority: string[]
 	from_web?: boolean | null
+	m_token?: string | null
 }
 
 const initialState: UserState = {
@@ -144,7 +145,8 @@ const initialState: UserState = {
 		}
 	},
 	authority: [],
-	from_web: null
+	from_web: null,
+	m_token: null
 }
 
 const userSlice = createSlice({
@@ -159,6 +161,7 @@ const userSlice = createSlice({
 			state.details = action.payload?.details
 			state.authority = action.payload?.authority
 			state.from_web = action.payload?.from_web
+			state.m_token = action.payload?.m_token
 		},
 	},
 })
