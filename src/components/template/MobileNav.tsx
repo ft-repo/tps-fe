@@ -166,7 +166,7 @@ const MobileNav = () => {
 					}
 				}}
 			>
-				{(authority[0] === 'USER' && from_web === false) ? 'กลับสู่แอพทางรัฐ' : 'ออกจากระบบ'}
+				{(authority[0] === 'USER' && from_web === false) ? 'ย้อนกลับ' : 'ออกจากระบบ'}
 			</Button>
 		)
 	}, [signOut, authority, from_web, m_token])

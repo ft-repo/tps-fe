@@ -92,7 +92,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
 				menuStyle={{ minWidth: 240 }}
 				renderTitle={UserAvatar}
 				placement="bottom-end"
-				disabled={authority[0] === 'USER' && from_web === false}
+			// disabled={authority[0] === 'USER' && from_web === false}
 			>
 				<Dropdown.Item variant="header">
 					<div className="py-2 px-3 flex items-center gap-2">
@@ -117,7 +117,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
 					</div>
 				</Dropdown.Item>
 				<Dropdown.Item variant="divider" />
-				{authority[0] === 'USER' ?
+				{authority[0] === 'USER' && from_web === true ?
 					dropdownItemList.map((item) => {
 						if (item.path === '/password') {
 							return (
@@ -171,7 +171,7 @@ const _UserDropdown = ({ className }: CommonProps) => {
 					<span className="text-xl opacity-50">
 						<HiOutlineLogout />
 					</span>
-					<span>{(authority[0] === 'USER' && from_web === false) ? 'กลับสู่แอพทางรัฐ' : 'ออกจากระบบ'}</span>
+					<span>{(authority[0] === 'USER' && from_web === false) ? 'ย้อนกลับ' : 'ออกจากระบบ'}</span>
 				</Dropdown.Item>
 			</Dropdown>
 			<ChangePassword />
