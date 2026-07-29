@@ -41,15 +41,18 @@ const FormDownloadTemplate: React.FC<Props> = (props) => {
   const onShowAttachedPDF = useCallback(async (value: FieldType) => {
     const blob = await pdf(<AttachedDoc data={petition.detail} value={value} />).toBlob();
     const url = URL.createObjectURL(blob);
+    // Deliberately not revoked on a timer: the opened tab's own PDF viewer
+    // download button can be clicked any time after this, and revoking
+    // early (even after a delay) invalidates the blob URL out from under
+    // it, which is what caused "check internet connection" on download.
     window.open(url, '_blank');
-    setTimeout(() => URL.revokeObjectURL(url), 100);
   }, [petition.detail])
 
   const onShowPDF = useCallback(async (value: FieldType) => {
     const blob = await pdf(<RenderDoc data={petition.detail} value={value} />).toBlob();
     const url = URL.createObjectURL(blob);
+    // See onShowAttachedPDF above — no premature revokeObjectURL.
     window.open(url, '_blank');
-    setTimeout(() => URL.revokeObjectURL(url), 100);
   }, [petition.detail])
 
   const onSubmit = useCallback((value: FieldType) => {
