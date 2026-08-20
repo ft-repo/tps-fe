@@ -4,22 +4,21 @@
 import React from 'react'
 import { FaPenToSquare as EditIcon, FaTrash as DeleteIcon } from "react-icons/fa6";
 import { Button } from '@/components/ui';
-import { TableData } from '@/@types/entrepreneur/vehicle-list';
-import { Data } from '@/@types/reducer/vehicle';
+import { Data, VehicleListData } from '@/@types/reducer/vehicle';
 import { Table, type TableProps } from 'antd';
 
 interface Props {
   data: Data;
   loading: boolean;
   handleTableChange: (page: number, pageSize: number) => void;
-  confirmDelete: (id: string | number, data: TableData) => void;
+  confirmDelete: (id: string | number, data: VehicleListData) => void;
   openDataModal: (id: string | number) => void;
 }
 
 const TableVehicleList: React.FC<Props> = (props) => {
   const { data, loading, handleTableChange, confirmDelete, openDataModal } = props
 
-  const columns: TableProps<TableData>['columns'] = [
+  const columns: TableProps<VehicleListData>['columns'] = [
     {
       title: 'เลขที่',
       dataIndex: 'id',
