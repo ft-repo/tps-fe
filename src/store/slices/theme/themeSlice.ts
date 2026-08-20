@@ -38,6 +38,7 @@ export type ThemeState = {
     primaryColorLevel: ColorLevel
     panelExpand: boolean
     navMode: NavMode
+    previousNavMode?: NavMode
     cardBordered: boolean
     layout: {
         type: LayoutType
@@ -114,8 +115,31 @@ export const themeSlice = createSlice({
                 ...{ type: action.payload },
             }
         },
-        setPreviousLayout: (state, action) => {
-            state.layout.previousType = action.payload
+        setPreviousLayout: (
+            state,
+            action: PayloadAction<{ type: LayoutType; navMode: NavMode } | ''>,
+        ) => {
+            if (action.payload === '') {
+                state.layout.previousType = undefined
+                state.previousNavMode = undefined
+            } else {
+                state.layout.previousType = action.payload.type
+                state.previousNavMode = action.payload.navMode
+            }
+        },
+        /**
+         * Restores a layout snapshot captured by setPreviousLayout, bypassing
+         * setLayout's forced navMode side effects (e.g. modern -> transparent)
+         * which are meant for genuine user-driven layout switches, not for
+         * returning from a transient 'blank' layout detour (see AppRoute).
+         */
+        restoreLayout: (
+            state,
+            action: PayloadAction<{ type: LayoutType; navMode: NavMode }>,
+        ) => {
+            state.cardBordered = action.payload.type === LAYOUT_TYPE_MODERN
+            state.layout = { ...state.layout, type: action.payload.type }
+            state.navMode = action.payload.navMode
         },
         setSideNavCollapse: (state, action) => {
             state.layout = {
@@ -166,6 +190,7 @@ export const {
     setThemeColor,
     setThemeColorLevel,
     setPreviousLayout,
+    restoreLayout,
 } = themeSlice.actions
 
 export default themeSlice.reducer
