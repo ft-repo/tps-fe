@@ -12,6 +12,16 @@ export const protectedRoutes = [
     //     component: lazy(() => import('@/views/Home')),
     //     authority: [],
     // },
+    {
+        key: 'redirect',
+        path: '/redirect',
+        component: lazy(() => import('@/views/redirect')),
+        authority: [],
+        meta: {
+            layout: 'blank',
+            pageContainerType: 'gutterless',
+        },
+    },
     /** ROLE ADMIN */
     {
         // key: 'route_estimation',
