@@ -18,11 +18,21 @@ export interface Search {
 }
 
 export interface Data {
-  data: any[];
+  data: VehicleListData[];
   total: number;
   page: number;
   limit: number;
   total_pages: number;
+}
+
+export interface VehicleListData {
+  id: number
+  vehicle_type_name: string
+  brand: string
+  plate_no: string
+  plate_province: string
+  weight: number
+  item_name: any
 }
 
 export interface Detail {
