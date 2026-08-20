@@ -1,7 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
+  CardListPetition,
   FormSearchCategory as FormSearchPetition,
   ModalMessage,
   ModalRuralRoadDetails,
@@ -75,6 +76,8 @@ export const INIT_MODAL_MESSAGE: ModalMessageStateProps = {
       created_by: '',
       created_at: '',
       is_end: false,
+      is_edited: false,
+
       is_canceled: false
     }
   }
@@ -85,6 +88,7 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { petition, loading } = useAppSelector(state => state.entrepreneur.permitList)
+  const { authority, from_web } = useAppSelector(state => state.auth.user)
   // const loading = useAppSelector(state => state.layout.loading)
   // STATE
   const [open, setOpen] = useState<ModalStateProps>(INIT_MODAL)
@@ -208,8 +212,32 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
       }
     } finally {
       dispatch(setLoading(false))
+      dispatch(getPetitionData(petition.overview.search))
     }
-  }, [dispatch, openMessage.data.id])
+  }, [dispatch, openMessage.data.id, petition.overview.search])
+
+  const renderMobileCard = useMemo(() => {
+    if (authority[0] === 'USER' && from_web === false) {
+      return (
+        <CardListPetition
+          data={petition.overview.data}
+          loading={loading.petition.overview.is_loading}
+          handleTableChange={handleTableChange}
+          openDataModal={openDataModal}
+          openMessageModal={openMessageModal}
+        />
+      )
+    }
+    return (
+      <TablePetition
+        data={petition.overview.data}
+        loading={loading.petition.overview.is_loading}
+        handleTableChange={handleTableChange}
+        openDataModal={openDataModal}
+        openMessageModal={openMessageModal}
+      />
+    )
+  }, [authority, from_web, petition.overview.data, loading.petition.overview.is_loading, handleTableChange, openDataModal, openMessageModal])
 
   return (
     <div>
@@ -235,13 +263,7 @@ const ContentSearchCategory: React.FC<Props> = (props) => {
         />
       </section>
       <section className='mt-3'>
-        <TablePetition
-          data={petition.overview.data}
-          loading={loading.petition.overview.is_loading}
-          handleTableChange={handleTableChange}
-          openDataModal={openDataModal}
-          openMessageModal={openMessageModal}
-        />
+        {renderMobileCard}
       </section>
       <ModalMessage
         open={openMessage.open}
