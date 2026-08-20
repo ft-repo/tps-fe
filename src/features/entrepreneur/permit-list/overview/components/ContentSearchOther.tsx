@@ -1,7 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
+  CardListPetitionExtended,
   FormSearchOther as FormSearchPetitionExtended,
   TableOther as TablePetitionExtended
 } from '../components'
@@ -56,6 +57,7 @@ const ContentSearchOther: React.FC<Props> = (props) => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { petition_extended, loading } = useAppSelector(state => state.entrepreneur.permitList)
+  const { authority, from_web } = useAppSelector(state => state.auth.user)
   // const loading = useAppSelector(state => state.layout.loading)
   const [open, setOpen] = useState<ModalStateProps>(INIT_MODAL)
 
@@ -129,6 +131,27 @@ const ContentSearchOther: React.FC<Props> = (props) => {
     }
   }, [dispatch, petition_extended.overview.search])
 
+  const renderMobileCard = useMemo(() => {
+    if (authority[0] === 'USER' && from_web === false) {
+      return (
+        <CardListPetitionExtended
+          data={petition_extended.overview.data}
+          loading={loading.petition_extended.overview.is_loading}
+          handleTableChange={handleTableChange}
+          openMessageModal={openMessageModal}
+        />
+      )
+    }
+    return (
+      <TablePetitionExtended
+        data={petition_extended.overview.data}
+        loading={loading.petition_extended.overview.is_loading}
+        handleTableChange={handleTableChange}
+        openMessageModal={openMessageModal}
+      />
+    )
+  }, [authority, from_web, petition_extended.overview.data, loading.petition_extended.overview.is_loading, handleTableChange, openMessageModal])
+
   return (
     <div>
       <Flex
@@ -152,12 +175,7 @@ const ContentSearchOther: React.FC<Props> = (props) => {
         />
       </section>
       <section className='mt-3'>
-        <TablePetitionExtended
-          data={petition_extended.overview.data}
-          loading={loading.petition_extended.overview.is_loading}
-          handleTableChange={handleTableChange}
-          openMessageModal={openMessageModal}
-        />
+        {renderMobileCard}
       </section>
       <ModalExtendedMessage
         open={open.open}
