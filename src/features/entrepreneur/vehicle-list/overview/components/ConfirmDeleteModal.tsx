@@ -3,7 +3,7 @@
 import { TableData } from '@/@types/entrepreneur/vehicle-list';
 import { ConfirmDialog } from '@/components/shared'
 import React from 'react'
-import { INIT_CONFIRM_DELETE } from '../screen';
+// import { INIT_CONFIRM_DELETE } from '../screen';
 
 interface Props {
   open: boolean;
@@ -41,7 +41,12 @@ const Content = (props: ContentProps) => {
 }
 
 const ConfirmDeleteModal: React.FC<Props> = (props) => {
-  const { open, id, data, setOpen, deleteRecord } = props
+  const {
+    open,
+    id,
+    data,
+    // setOpen,
+    deleteRecord } = props
 
   return (
     <ConfirmDialog
@@ -51,8 +56,8 @@ const ConfirmDeleteModal: React.FC<Props> = (props) => {
       cancelText='ยกเลิก'
       confirmText='ลบข้อมูล'
       confirmButtonColor='red-500'
-      onClose={() => setOpen(INIT_CONFIRM_DELETE)}
-      onCancel={() => setOpen(INIT_CONFIRM_DELETE)}
+      // onClose={() => setOpen(INIT_CONFIRM_DELETE)}
+      // onCancel={() => setOpen(INIT_CONFIRM_DELETE)}
       onConfirm={() => deleteRecord(id)}
     >
       <Content
