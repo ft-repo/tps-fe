@@ -2,6 +2,7 @@ import { useEffect, useCallback } from 'react'
 import {
     setLayout,
     setPreviousLayout,
+    restoreLayout,
     setCurrentRouteKey,
     useAppSelector,
     useAppDispatch,
@@ -29,20 +30,37 @@ const AppRoute = <T extends Record<string, unknown>>({
     const previousLayout = useAppSelector(
         (state) => state.theme.layout.previousType,
     )
+    const navMode = useAppSelector((state) => state.theme.navMode)
+    const previousNavMode = useAppSelector(
+        (state) => state.theme.previousNavMode,
+    )
 
     const handleLayoutChange = useCallback(() => {
         dispatch(setCurrentRouteKey(routeKey))
 
         if (props.layout && props.layout !== layoutType) {
-            dispatch(setPreviousLayout(layoutType))
+            dispatch(setPreviousLayout({ type: layoutType, navMode }))
             dispatch(setLayout(props.layout))
         }
 
         if (!props.layout && previousLayout && layoutType !== previousLayout) {
-            dispatch(setLayout(previousLayout))
+            dispatch(
+                restoreLayout({
+                    type: previousLayout,
+                    navMode: previousNavMode ?? navMode,
+                }),
+            )
             dispatch(setPreviousLayout(''))
         }
-    }, [dispatch, layoutType, previousLayout, props.layout, routeKey])
+    }, [
+        dispatch,
+        layoutType,
+        previousLayout,
+        navMode,
+        previousNavMode,
+        props.layout,
+        routeKey,
+    ])
 
     useEffect(() => {
         handleLayoutChange()
