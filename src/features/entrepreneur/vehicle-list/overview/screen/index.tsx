@@ -1,8 +1,8 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useState } from 'react'
-import { TableVehicleList, FormSearchVehicleList, ModalUpdateVehicle } from '../components';
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { TableVehicleList, FormSearchVehicleList, ModalUpdateVehicle, CardListVehicle } from '../components';
 import { FaPlus as PlusIcon } from "react-icons/fa6";
 import { useNavigate } from 'react-router-dom';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
@@ -12,6 +12,7 @@ import { VehicleListByIDResponse } from '@/@types/services/vehicle';
 import { TableData } from '@/@types/entrepreneur/vehicle-list';
 import { FieldType } from '../components/FormSearchVehicleList';
 import { Button, message, Modal } from 'antd';
+import { VehicleListData } from '@/@types/reducer/vehicle';
 
 interface Props {
 
@@ -77,9 +78,8 @@ const OverviewScreen: React.FC<Props> = (props) => {
   const loading = useAppSelector(state => state.layout.loading)
   const [open, setOpen] = useState<OpenDialogProps>(INIT_VEHICLE_MODAL)
 
-  const state = useAppSelector(state => state)
+  const { authority, from_web } = useAppSelector(state => state.auth.user)
 
-  console.log(state.auth.user.details.is_personal)
 
   useEffect(() => {
     dispatch(getVehicleData(vehicle.overview.search))
@@ -176,15 +176,19 @@ const OverviewScreen: React.FC<Props> = (props) => {
     }
   }, [dispatch, vehicle.overview])
 
-  const confirmDeleteRecord = useCallback((id: string | number, data: TableData) => {
+  const confirmDeleteRecord = useCallback((id: string | number, data: VehicleListData) => {
     Modal.confirm({
       title: 'ยืนยันการลบข้อมูล',
       content: (
         <>
           <p className='text-base'><strong>ประเภท</strong> : {data.vehicle_type_name || '-'}</p>
-          <p className='text-base'><strong>ยี่ห้อ</strong> : {data.brand || '-'}</p>
-          <p className='text-base'><strong>ป้ายทะเบียน / เลขตัวรถ</strong> : {data.plate_no}</p>
-          <p className='text-base'><strong>จังหวัด</strong> : {data.plate_province}</p>
+          {data.vehicle_type_name !== 'เครื่องจักร / สินค้า' && (
+            <p className='text-base'><strong>ยี่ห้อ</strong> : {data.brand || '-'}</p>
+          )}
+          <p className='text-base'><strong>{data.vehicle_type_name === 'เครื่องจักร / สินค้า' ? 'สินค้า' : 'ป้ายทะเบียน / เลขตัวรถ'}</strong> : {data.plate_no}</p>
+          {data.vehicle_type_name !== 'เครื่องจักร / สินค้า' && (
+            <p className='text-base'><strong>จังหวัด</strong> : {data.plate_province}</p>
+          )}
           <p className='text-base'><strong>น้ำหนัก</strong> : {data.weight} กก.</p>
         </>
       ),
@@ -234,6 +238,29 @@ const OverviewScreen: React.FC<Props> = (props) => {
     }
   }, [dispatch])
 
+  const renderMobileCard = useMemo(() => {
+    if (authority[0] === 'USER' && from_web === false) {
+      return (
+        <CardListVehicle
+          data={vehicle.overview.data}
+          loading={vehicle.loading}
+          handleTableChange={handleTableChange}
+          confirmDelete={confirmDeleteRecord}
+          openDataModal={openDataModal}
+        />
+      )
+    }
+    return (
+      <TableVehicleList
+        data={vehicle.overview.data}
+        loading={vehicle.loading}
+        handleTableChange={handleTableChange}
+        confirmDelete={confirmDeleteRecord}
+        openDataModal={openDataModal}
+      />
+    )
+  }, [authority, from_web, vehicle.overview.data, vehicle.loading, handleTableChange, confirmDeleteRecord, openDataModal])
+
   return (
     <>
       <section className='flex justify-between items-center flex-wrap'>
@@ -261,13 +288,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
         <FormSearchVehicleList
           handleSearch={handleSearch}
         />
-        <TableVehicleList
-          data={vehicle.overview.data}
-          loading={vehicle.loading}
-          handleTableChange={handleTableChange}
-          confirmDelete={confirmDeleteRecord}
-          openDataModal={openDataModal}
-        />
+        {renderMobileCard}
       </section>
       <ModalUpdateVehicle
         open={open.open}
