@@ -57,7 +57,8 @@ function useAuth() {
 					)
 				}
 				const redirectUrl = query.get(REDIRECT_URL_KEY)
-				navigate(redirectUrl === '/access-denied' ? appConfig.authenticatedEntryPath : (redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath))
+				const destination = redirectUrl === '/access-denied' ? appConfig.authenticatedEntryPath : (redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath)
+				navigate('/redirect', { state: { to: destination } })
 				return {
 					status: 'success',
 					message: '',
@@ -110,7 +111,8 @@ function useAuth() {
 					)
 				}
 				const redirectUrl = query.get(REDIRECT_URL_KEY)
-				navigate(redirectUrl === '/access-denied' ? appConfig.authenticatedEntryPath : (redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath))
+				const destination = redirectUrl === '/access-denied' ? appConfig.authenticatedEntryPath : (redirectUrl ? redirectUrl : appConfig.authenticatedEntryPath)
+				navigate('/redirect', { state: { to: destination } })
 				return {
 					status: 'success',
 					message: '',
@@ -211,11 +213,9 @@ function useAuth() {
 					)
 				}
 				const redirectUrl = query.get(REDIRECT_URL_KEY)
-				navigate(
-					redirectUrl
-						? redirectUrl
-						: appConfig.authenticatedAdminEntryPath,
-				)
+				navigate('/redirect', {
+					state: { to: redirectUrl ? redirectUrl : appConfig.authenticatedAdminEntryPath },
+				})
 				return {
 					status: 'success',
 					message: '',
