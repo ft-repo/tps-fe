@@ -50,8 +50,17 @@ When asked to modify a "page", check both `views/.../index.tsx` (wiring/initial 
 - `src/configs/routes.config/routes.config.ts` is the single source of truth for all routes: `publicRoutes` (auth pages) and `protectedRoutes` (everything else), each entry `{ key, path, component: lazy(...), authority: ['USER'|'ADMIN'], meta? }`.
 - `src/components/route/ProtectedRoute.tsx` gates on authentication (`useAuth`), redirecting to `unAuthenticatedEntryPath` (from `configs/app.config.ts`) when not logged in.
 - `src/components/route/AuthorityGuard.tsx` gates on role (`useAuthority`), redirecting to `/access-denied` on mismatch.
-- `src/components/route/AppRoute.tsx` wraps each routed component to sync the active layout type into the theme store per-route.
+- `src/components/route/AppRoute.tsx` wraps each routed component to sync the active layout type into the theme store per-route. A route with `meta.layout` (e.g. `/access-denied`, `/redirect`) has its entry/exit handled specially: on entry, `AppRoute` snapshots the current `layout.type` + `navMode` via `setPreviousLayout` before switching; on exit it restores both via a dedicated `restoreLayout` action — deliberately not `setLayout`, since `setLayout` has forced side effects for genuine user-driven layout switches (switching to `'modern'` always resets `navMode` to `'transparent'`) that would otherwise silently corrupt the sidebar color when a route just returns from a transient blank-layout detour.
 - Routes currently mix `authority: ['USER']` (entrepreneur) and `['ADMIN']` (staff) — some entrepreneur routes are temporarily reachable under `USER` pending a separate staff-login rollout (see comments in `routes.config.ts`).
+
+### Entrepreneur list screens: Table vs Card views
+
+Several entrepreneur list screens (`permit-list/overview`, `vehicle-list/overview`) render one of two sibling components for the same data, chosen in the parent screen's `render*` `useMemo`:
+
+- `Table*` (`TableCategory`, `TableOther`, `TableVehicleList`) — desktop view, antd `Table` with its built-in `pagination` prop.
+- `CardList*` (`CardListPetition`, `CardListPetitionExtended`, `CardListVehicle`) — mobile-card view, shown when `authority[0] === 'USER' && from_web === true` (regular entrepreneur web login — not the mobile-app deep-link `signInWithToken` flow, which sets `from_web: false`).
+
+Both siblings receive identical `data`/`loading`/`handleTableChange`/action-callback props from the same Redux slice, so a fetch/refetch fix applied at the parent screen level (e.g. dispatching the list's `get*Data` thunk after a create/update/delete) automatically applies to both. However, the `CardList*` variants have repeatedly shipped incomplete relative to their `Table*` sibling — missing the `Pagination` control entirely, or receiving action-callback props (`openDataModal`, `confirmDelete`, etc.) without ever wiring them to an `onClick`. When asked to touch either sibling, check the other for parity.
 
 ### State management
 
