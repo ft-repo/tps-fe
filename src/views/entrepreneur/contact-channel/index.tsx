@@ -37,7 +37,7 @@ const ContactChannelIndex: React.FC<Props> = (props) => {
           </div>
 
           {/* การ์ดที่ 3 */}
-          <div className="relative z-30 -ml-4 flex-1 rounded-xl p-[25px] pb-10 text-xs leading-relaxed bg-[#83CDFF] shadow-md max-[1200px]:ml-0">
+          <div className="relative z-25 -ml-4 flex-1 rounded-xl p-[25px] pb-10 text-xs leading-relaxed bg-[#83CDFF] shadow-md max-[1200px]:ml-0">
             <h4 className="mb-3 text-sm font-semibold">สถานที่ให้บริการ</h4>
             <p className="mb-3">ศูนย์บริการเบ็ดเสร็จกรมทางหลวงชนบท Rural Roads One Stop Service Center เลขที่ 9 ถนนพหลโยธิน แขวงจอมพล เขตจตุจักร กรุงเทพมหานคร ติดต่อด้วยตนเอง ณ หน่วยงาน</p>
             <h4 className="mb-3 mt-[15px] text-sm font-semibold">ระยะเวลาเปิดให้บริการ</h4>
