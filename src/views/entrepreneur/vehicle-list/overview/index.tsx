@@ -15,9 +15,18 @@ const VehicleListIndex: React.FC<Props> = (props) => {
 
   useEffect(() => {
     dispatch(getVehicleType())
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(getProvince())
+  }, [dispatch])
+
+  useEffect(() => {
     dispatch(getProductType())
-    dispatch(getAxisType())
+  }, [dispatch])
+
+  useEffect(() => {
+    dispatch(getAxisType({}))
   }, [dispatch])
 
   return (
