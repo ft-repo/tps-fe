@@ -160,7 +160,7 @@ const MobileNav = () => {
 				}}
 				onClick={() => {
 					if (authority[0] === 'USER' && from_web === false) {
-						window.location.href = `https://eservice.drr.go.th/uat/dga/back_to_web?mToken=${m_token}`
+						window.location.href = `https://eservice.drr.go.th/dga/back_to_web?mToken=${m_token}`
 					} else {
 						signOut()
 					}
