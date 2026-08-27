@@ -162,7 +162,8 @@ const _UserDropdown = ({ className }: CommonProps) => {
 					className="gap-2"
 					onClick={() => {
 						if (authority[0] === 'USER' && from_web === false) {
-							window.location.href = `https://eservice.drr.go.th/uat/dga/back_to_web?mToken=${m_token}`
+							window.location.href = `https://eservice.drr.go.th/dga/back_to_web?mToken=${m_token}`
+							signOut()
 						} else {
 							signOut()
 						}
