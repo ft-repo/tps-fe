@@ -31,6 +31,7 @@ const _SidePanel = (props: SidePanelProps) => {
 	//STATE
 	const [cachedTotal, setCachedTotal] = useState<number>(0);
 	const [unreadCount, setUnreadCount] = useState<number>(0);
+	const [manualTooltipOpen, setManualTooltipOpen] = useState(false);
 
 	// Initialize cache from localStorage on mount
 	useEffect(() => {
@@ -155,7 +156,11 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	return (
 		<>
-			<Tooltip title='คู่มือการใช้งานระบบ'>
+			<Tooltip
+				title='คู่มือการใช้งานระบบ'
+				open={manualTooltipOpen}
+				onOpenChange={setManualTooltipOpen}
+			>
 				<Dropdown
 					menu={{
 						items: items
@@ -164,6 +169,7 @@ const _SidePanel = (props: SidePanelProps) => {
 				>
 					<div
 						className={classNames('text-2xl', className)}
+						onClick={() => setManualTooltipOpen(false)}
 						{...rest}
 					>
 						<FaQuestion />
