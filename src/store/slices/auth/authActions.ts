@@ -22,6 +22,7 @@ export function clearAuthState(dispatch: AppDispatch): void {
 			},
 			authority: [],
 			from_web: null,
+			m_token: null,
 		}),
 	)
 }
