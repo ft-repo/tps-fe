@@ -8,7 +8,7 @@ import { setPanelExpand, useAppSelector, useAppDispatch } from '@/store'
 import type { CommonProps } from '@/@types/common'
 import { useEffect, useMemo, useState } from 'react'
 import { getPetitionNotification } from '@/store/slices/staff'
-import { Badge, Dropdown, MenuProps, Tooltip } from 'antd'
+import { Badge, Dropdown, MenuProps } from 'antd'
 import { FaQuestion } from "react-icons/fa6";
 
 type SidePanelProps = SidePanelContentProps & CommonProps
@@ -31,7 +31,7 @@ const _SidePanel = (props: SidePanelProps) => {
 	//STATE
 	const [cachedTotal, setCachedTotal] = useState<number>(0);
 	const [unreadCount, setUnreadCount] = useState<number>(0);
-	const [manualTooltipOpen, setManualTooltipOpen] = useState(false);
+	// const [manualTooltipOpen, setManualTooltipOpen] = useState(false);
 
 	// Initialize cache from localStorage on mount
 	useEffect(() => {
@@ -156,26 +156,26 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	return (
 		<>
-			<Tooltip
+			{/* <Tooltip
 				title='คู่มือการใช้งานระบบ'
 				open={manualTooltipOpen}
 				onOpenChange={setManualTooltipOpen}
+			> */}
+			<Dropdown
+				menu={{
+					items: items
+				}}
+				trigger={['click']}
 			>
-				<Dropdown
-					menu={{
-						items: items
-					}}
-					trigger={['click']}
+				<div
+					className={classNames('text-2xl', className)}
+					// onClick={() => setManualTooltipOpen(false)}
+					{...rest}
 				>
-					<div
-						className={classNames('text-2xl', className)}
-						onClick={() => setManualTooltipOpen(false)}
-						{...rest}
-					>
-						<FaQuestion />
-					</div>
-				</Dropdown>
-			</Tooltip>
+					<FaQuestion />
+				</div>
+			</Dropdown>
+			{/* </Tooltip> */}
 			{authority[0] === 'ADMIN' ?
 				<Badge count={unreadCount} offset={[-5, 5]}>
 					<div
