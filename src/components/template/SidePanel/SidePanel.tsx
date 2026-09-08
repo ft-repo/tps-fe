@@ -103,40 +103,40 @@ const _SidePanel = (props: SidePanelProps) => {
 					label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
 					onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
 				},
-				{
-					key: '2',
-					label: 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
-					onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
-				},
-				{
-					key: '3',
-					label: 'คู่มือระบบ TPS สำหรับบุคคลทั่วไป',
-					onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับบุคคลทั่วไป V.02.pdf', '_blank')
-				},
+				// {
+				// 	key: '2',
+				// 	label: 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
+				// 	onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
+				// },
+				// {
+				// 	key: '3',
+				// 	label: 'คู่มือระบบ TPS สำหรับบุคคลทั่วไป',
+				// 	onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับบุคคลทั่วไป V.02.pdf', '_blank')
+				// },
 			]
 		} else {
 			if (is_personal) {
 				return [
+					// {
+					// 	key: '1',
+					// 	label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
+					// 	onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
+					// },
 					{
 						key: '1',
-						label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
-						onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
-					},
-					{
-						key: '2',
 						label: 'คู่มือระบบ TPS สำหรับบุคคลทั่วไป',
 						onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับบุคคลทั่วไป V.02.pdf', '_blank')
 					},
 				]
 			} else {
 				return [
+					// {
+					// 	key: '1',
+					// 	label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
+					// 	onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
+					// },
 					{
 						key: '1',
-						label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
-						onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
-					},
-					{
-						key: '2',
 						label: 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
 						onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
 					},

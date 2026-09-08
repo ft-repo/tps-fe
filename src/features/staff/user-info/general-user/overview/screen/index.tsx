@@ -153,7 +153,7 @@ const OverviewScreen: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <h3>ข้อมูลผู้ประกอบการ</h3>
+      <h3>ข้อมูลบุคคลทั่วไป</h3>
       <section className="mt-5">
         <FormSearchUser
           handleSearch={handleSearch}
