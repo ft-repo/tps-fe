@@ -83,7 +83,13 @@ const CardListPetition: React.FC<Props> = (props) => {
 
   const renderCardList = useMemo(() => {
     if (loading) return <Skeleton loading={loading} paragraph={{ rows: 4 }} />
-    if (!data || data.data.length === 0) return <Empty description="ไม่พบข้อมูล" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+    if (!data || data.data.length === 0) {
+      return (
+        <div className='w-full mx-auto'>
+          <Empty description="ไม่พบข้อมูล" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        </div>
+      )
+    }
 
     return data.data.map((item) => {
       const title = [item.road_code, item.road_name].filter(Boolean).join(' ')
