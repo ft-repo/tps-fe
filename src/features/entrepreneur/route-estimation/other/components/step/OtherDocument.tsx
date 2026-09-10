@@ -14,6 +14,8 @@ import { postConfirmPetitionExtendedAPI } from '@/services/entrepreneur/Petition
 import { getPetitionExtendedData } from '@/store/slices/entrepreneur'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircleFilled } from '@ant-design/icons'
+import { pdf } from '@react-pdf/renderer'
+import AddressLabel from '@/components/custom/pdf/AddressLabel'
 
 interface Props {
 
@@ -126,7 +128,24 @@ const OtherDocument: React.FC<Props> = (props) => {
     setValue
   } = form
 
-  const onPrintAddress = useCallback(() => {
+  const onPrintAddress = useCallback(async () => {
+    if (from_web === false) {
+      const previewTab = window.open('', '_blank')
+      try {
+        const blob = await pdf(<AddressLabel />).toBlob()
+        const url = URL.createObjectURL(blob)
+        if (previewTab) {
+          previewTab.location.href = url
+        } else {
+          window.open(url, '_blank')
+        }
+      } catch (error) {
+        previewTab?.close()
+        console.error(error)
+      }
+      return
+    }
+
     const postalCode = '10220'
     const circles = postalCode.split('').map(d =>
       `<span class="circle">${d}</span>`
@@ -202,15 +221,6 @@ const OtherDocument: React.FC<Props> = (props) => {
   </div>
 </body>
 </html>`
-
-    if (from_web === false) {
-      const previewTab = window.open('', '_blank')
-      if (!previewTab) return
-      previewTab.document.open()
-      previewTab.document.write(html)
-      previewTab.document.close()
-      return
-    }
 
     const iframe = document.createElement('iframe')
     iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1122px;height:794px;border:none;visibility:hidden;'
