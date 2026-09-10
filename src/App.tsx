@@ -8,6 +8,7 @@ import Layout from '@/components/layouts'
 import { SessionBootstrap } from '@/components/shared'
 import mockServer from './mock'
 import appConfig from '@/configs/app.config'
+import { isAndroidWebView, trySystemBrowserOpen } from '@/utils/platformOpen'
 import './locales'
 import '@ant-design/v5-patch-for-react-19';
 
@@ -29,22 +30,17 @@ function App() {
 			// Find the closest anchor tag (in case they clicked an icon or text inside the link)
 			const anchor = target.closest('a');
 
-			if (anchor && anchor.getAttribute('target') === '_blank') {
+			if (anchor && anchor.getAttribute('target') === '_blank' && isAndroidWebView()) {
 				const url = anchor.href;
 
-				// 1. Check if the user is on an Android device
-				const isAndroid = /Android/i.test(navigator.userAgent);
+				e.preventDefault(); // Stop the default webview behavior
 
-				if (isAndroid) {
-					e.preventDefault(); // Stop the default webview behavior
+				// Try handing off to the external browser (Commonly supported by hybrid wrappers)
+				const newWindow = trySystemBrowserOpen(url);
 
-					// 2. Try window.open with '_system' (Commonly supported by hybrid wrappers)
-					const newWindow = window.open(url, '_system');
-
-					// 3. Fallback: If window.open is blocked or fails, use a clean top-level push
-					if (!newWindow) {
-						window.location.href = url;
-					}
+				// Fallback: If window.open is blocked or fails, use a clean top-level push
+				if (!newWindow) {
+					window.location.href = url;
 				}
 			}
 		};

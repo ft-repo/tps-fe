@@ -18,8 +18,8 @@ import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
 import { APIResponseRegion } from '@/@types/shared'
 import axios from 'axios'
 import { CheckCircleFilled } from '@ant-design/icons'
-import { pdf } from '@react-pdf/renderer'
 import AddressLabel from '@/components/custom/pdf/AddressLabel'
+import { openGeneratedDocument } from '@/utils/openGeneratedDocument'
 
 interface Props {
 
@@ -540,19 +540,7 @@ const RequestPermit: React.FC<Props> = (props) => {
 
   const onPrintAddress = useCallback(async () => {
     if (user.from_web === false) {
-      const previewTab = window.open('', '_blank')
-      try {
-        const blob = await pdf(<AddressLabel />).toBlob()
-        const url = URL.createObjectURL(blob)
-        if (previewTab) {
-          previewTab.location.href = url
-        } else {
-          window.open(url, '_blank')
-        }
-      } catch (error) {
-        previewTab?.close()
-        console.error(error)
-      }
+      await openGeneratedDocument(<AddressLabel />, { fromWeb: user.from_web })
       return
     }
 

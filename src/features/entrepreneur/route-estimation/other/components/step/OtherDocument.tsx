@@ -14,8 +14,8 @@ import { postConfirmPetitionExtendedAPI } from '@/services/entrepreneur/Petition
 import { getPetitionExtendedData } from '@/store/slices/entrepreneur'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircleFilled } from '@ant-design/icons'
-import { pdf } from '@react-pdf/renderer'
 import AddressLabel from '@/components/custom/pdf/AddressLabel'
+import { openGeneratedDocument } from '@/utils/openGeneratedDocument'
 
 interface Props {
 
@@ -130,19 +130,7 @@ const OtherDocument: React.FC<Props> = (props) => {
 
   const onPrintAddress = useCallback(async () => {
     if (from_web === false) {
-      const previewTab = window.open('', '_blank')
-      try {
-        const blob = await pdf(<AddressLabel />).toBlob()
-        const url = URL.createObjectURL(blob)
-        if (previewTab) {
-          previewTab.location.href = url
-        } else {
-          window.open(url, '_blank')
-        }
-      } catch (error) {
-        previewTab?.close()
-        console.error(error)
-      }
+      await openGeneratedDocument(<AddressLabel />, { fromWeb: from_web })
       return
     }
 
