@@ -613,6 +613,15 @@ const RequestPermit: React.FC<Props> = (props) => {
   </body>
   </html>`
 
+    if (user.from_web === false) {
+      const previewTab = window.open('', '_blank')
+      if (!previewTab) return
+      previewTab.document.open()
+      previewTab.document.write(html)
+      previewTab.document.close()
+      return
+    }
+
     const iframe = document.createElement('iframe')
     iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1122px;height:794px;border:none;visibility:hidden;'
     document.body.appendChild(iframe)
@@ -629,7 +638,7 @@ const RequestPermit: React.FC<Props> = (props) => {
       iframe.contentWindow?.print()
       setTimeout(() => document.body.removeChild(iframe), 1500)
     }, 500)
-  }, [])
+  }, [user.from_web])
 
   const renderResult = useMemo(() => {
     return (

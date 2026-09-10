@@ -25,6 +25,7 @@ const OtherDocument: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   const { petition_extended } = useAppSelector(state => state.entrepreneur.permitList)
   const { loading } = useAppSelector(state => state.layout)
+  const { from_web } = useAppSelector(state => state.auth.user)
   const navigate = useNavigate()
   const submitRef = useRef<HTMLButtonElement>(null)
 
@@ -202,6 +203,15 @@ const OtherDocument: React.FC<Props> = (props) => {
 </body>
 </html>`
 
+    if (from_web === false) {
+      const previewTab = window.open('', '_blank')
+      if (!previewTab) return
+      previewTab.document.open()
+      previewTab.document.write(html)
+      previewTab.document.close()
+      return
+    }
+
     const iframe = document.createElement('iframe')
     iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1122px;height:794px;border:none;visibility:hidden;'
     document.body.appendChild(iframe)
@@ -218,7 +228,7 @@ const OtherDocument: React.FC<Props> = (props) => {
       iframe.contentWindow?.print()
       setTimeout(() => document.body.removeChild(iframe), 1500)
     }, 500)
-  }, [])
+  }, [from_web])
 
   const renderResult = useMemo(() => {
     return (
