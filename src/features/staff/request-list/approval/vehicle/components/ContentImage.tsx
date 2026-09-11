@@ -4,7 +4,8 @@
 import { ETCVehicle, VehicleList } from '@/@types/reducer/petition';
 import { FileType } from '@/@types/shared';
 import { getUploadAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
-import { setLoading, useAppDispatch } from '@/store';
+import { setLoading, useAppDispatch, useAppSelector } from '@/store';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 import { Col, Empty, Image, message, Row, Upload } from 'antd'
 import { RcFile/*, UploadFile*/ } from 'antd/es/upload';
 import React, { /*ReactElement,*/ useCallback, useEffect, useState } from 'react'
@@ -55,6 +56,8 @@ const INIT_IMG_STATE: ImageState = {
 const ContentImage: React.FC<Props> = (props) => {
   const { item } = props
   const dispatch = useAppDispatch()
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
   const [towingUrl, setTowingUrl] = useState<ImageState>(INIT_IMG_STATE)
   const [semiUrl, setSemiUrl] = useState<ImageState>(INIT_IMG_STATE)
   // const [etcUrl, setEtcUrl] = useState<ImageState>(INIT_IMG_STATE)
@@ -656,6 +659,15 @@ const ContentImage: React.FC<Props> = (props) => {
     }
   }, [etcUrl])
 
+  const handlePreview = useCallback((file?: RcFile) => {
+    if (!file) return
+    if (from_web) {
+      window.open(URL.createObjectURL(file))
+    } else {
+      setPreviewFile(file)
+    }
+  }, [from_web])
+
   return (
     <>
       <section>
@@ -916,10 +928,7 @@ const ContentImage: React.FC<Props> = (props) => {
                                 setValue(`truck_dimension_image.url`, '')
                               }
                             }}
-                            onPreview={(e) => {
-                              const url = URL.createObjectURL(e.originFileObj as RcFile);
-                              window.open(url);
-                            }}
+                            onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                           >
                             {field.value.length ? null :
                               <div className="my-8 text-center">
@@ -989,10 +998,7 @@ const ContentImage: React.FC<Props> = (props) => {
                                 setValue(`semi_dimension_image.url`, '')
                               }
                             }}
-                            onPreview={(e) => {
-                              const url = URL.createObjectURL(e.originFileObj as RcFile);
-                              window.open(url);
-                            }}
+                            onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                           >
                             {field.value.length ? null :
                               <div className="my-8 text-center">
@@ -1062,10 +1068,7 @@ const ContentImage: React.FC<Props> = (props) => {
                                 setValue(`cargo_dimension_image.url`, '')
                               }
                             }}
-                            onPreview={(e) => {
-                              const url = URL.createObjectURL(e.originFileObj as RcFile);
-                              window.open(url);
-                            }}
+                            onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                           >
                             {field.value.length ? null :
                               <div className="my-8 text-center">
@@ -1135,10 +1138,7 @@ const ContentImage: React.FC<Props> = (props) => {
                                 setValue(`combined_vehicle_image.url`, '')
                               }
                             }}
-                            onPreview={(e) => {
-                              const url = URL.createObjectURL(e.originFileObj as RcFile);
-                              window.open(url);
-                            }}
+                            onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                           >
                             {field.value.length ? null :
                               <div className="my-8 text-center">
@@ -1208,10 +1208,7 @@ const ContentImage: React.FC<Props> = (props) => {
                                 setValue(`turn_radius_image.url`, '')
                               }
                             }}
-                            onPreview={(e) => {
-                              const url = URL.createObjectURL(e.originFileObj as RcFile);
-                              window.open(url);
-                            }}
+                            onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                           >
                             {field.value.length ? null :
                               <div className="my-8 text-center">
@@ -1281,10 +1278,7 @@ const ContentImage: React.FC<Props> = (props) => {
                                 setValue(`highway_permit_image.url`, '')
                               }
                             }}
-                            onPreview={(e) => {
-                              const url = URL.createObjectURL(e.originFileObj as RcFile);
-                              window.open(url);
-                            }}
+                            onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                           >
                             {field.value.length ? null :
                               <div className="my-8 text-center">
@@ -1354,10 +1348,7 @@ const ContentImage: React.FC<Props> = (props) => {
                                 setValue(`highway_number_image.url`, '')
                               }
                             }}
-                            onPreview={(e) => {
-                              const url = URL.createObjectURL(e.originFileObj as RcFile);
-                              window.open(url);
-                            }}
+                            onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                           >
                             {field.value.length ? null :
                               <div className="my-8 text-center">
@@ -1427,10 +1418,7 @@ const ContentImage: React.FC<Props> = (props) => {
                                 setValue(`rural_permit_image.url`, '')
                               }
                             }}
-                            onPreview={(e) => {
-                              const url = URL.createObjectURL(e.originFileObj as RcFile);
-                              window.open(url);
-                            }}
+                            onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                           >
                             {field.value.length ? null :
                               <div className="my-8 text-center">
@@ -1500,10 +1488,7 @@ const ContentImage: React.FC<Props> = (props) => {
                                 setValue(`rural_number_image.url`, '')
                               }
                             }}
-                            onPreview={(e) => {
-                              const url = URL.createObjectURL(e.originFileObj as RcFile);
-                              window.open(url);
-                            }}
+                            onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                           >
                             {field.value.length ? null :
                               <div className="my-8 text-center">
@@ -1544,6 +1529,10 @@ const ContentImage: React.FC<Props> = (props) => {
           <></>
           : <Empty description='ไม่พบข้อมูลเอกสารรายละเอียดยานพาหนะ' />} */}
       </section>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </>
   )
 }

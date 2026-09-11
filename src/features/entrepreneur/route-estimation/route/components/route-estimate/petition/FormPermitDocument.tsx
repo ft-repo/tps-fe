@@ -1,12 +1,13 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { ReactElement, useCallback } from 'react'
+import React, { ReactElement, useCallback, useState } from 'react'
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { EstimateResponse } from '@/@types/services/petition';
 import { Col, message, Row, Select, Upload } from 'antd';
 import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 import { FieldTypePetition } from '@/@types/entrepreneur/permit-list';
 import { useAppSelector } from '@/store';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 import { postUploadVehicleRegistrationDocumentAPI } from '@/services/entrepreneur/PetitionService';
 import { RcFile, UploadFile } from 'antd/es/upload';
 import {
@@ -24,6 +25,8 @@ interface Props {
 const FormPermitDocument: React.FC<Props> = (props) => {
   const { item, index, control, setValue } = props
   const { vehicle_selection } = useAppSelector(state => state.master)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
 
   const { errors } = useFormState({ control })
 
@@ -45,6 +48,15 @@ const FormPermitDocument: React.FC<Props> = (props) => {
     }
   }, [setValue])
 
+  const handlePreview = useCallback((file?: RcFile) => {
+    if (!file) return
+    if (from_web) {
+      window.open(URL.createObjectURL(file))
+    } else {
+      setPreviewFile(file)
+    }
+  }, [from_web])
+
   const _itemRender = useCallback((
     originNode: ReactElement,
     file: UploadFile,
@@ -61,10 +73,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
           <div className='preview-overlay rounded-md'>
             <EyeOutlined
               className='preview-icon'
-              onClick={() => {
-                const url = URL.createObjectURL(file.originFileObj as RcFile);
-                window.open(url);
-              }}
+              onClick={() => handlePreview(file.originFileObj as RcFile)}
             />
             <DeleteOutlined
               className='delete-icon'
@@ -75,7 +84,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
       )
     }
     return originNode
-  }, []);
+  }, [handlePreview]);
 
   return (
     <>
@@ -160,10 +169,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.truck_dimension_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -230,10 +236,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.semi_trailer_dimension_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -300,10 +303,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.cargo_dimension_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -370,10 +370,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.combined_vehicle_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -440,10 +437,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.turning_radius_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -510,10 +504,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.highway_dept_permit_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -580,10 +571,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.highway_dept_permit_number_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -650,10 +638,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.rural_highway_dept_permit_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -720,10 +705,7 @@ const FormPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.rural_highway_dept_permit_number_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -749,6 +731,10 @@ const FormPermitDocument: React.FC<Props> = (props) => {
           </Col>
         </Row>
       </section>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </>
   )
 }

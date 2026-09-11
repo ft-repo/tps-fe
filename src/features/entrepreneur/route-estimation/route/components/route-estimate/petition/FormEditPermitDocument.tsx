@@ -1,11 +1,12 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { ReactElement, useCallback, useMemo } from 'react'
+import React, { ReactElement, useCallback, useMemo, useState } from 'react'
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { Col, Input, message, Row, Upload } from 'antd';
 import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 import { FieldTypePetition } from '@/@types/entrepreneur/permit-list';
-// import { useAppSelector } from '@/store';
+import { useAppSelector } from '@/store';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 import { postUploadVehicleRegistrationDocumentAPI } from '@/services/entrepreneur/PetitionService';
 import { RcFile, UploadFile } from 'antd/es/upload';
 import {
@@ -25,6 +26,8 @@ interface Props {
 const FormEditPermitDocument: React.FC<Props> = (props) => {
   const { item, index, control, setValue } = props
   // const { vehicle_selection } = useAppSelector(state => state.master)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | string | null>(null)
   const { state } = useLocation()
   const isEditDocument = state?.type === 'ตรวจเอกสาร' ? true : false
 
@@ -48,6 +51,15 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
     }
   }, [setValue])
 
+  const handlePreview = useCallback((source?: Blob | string) => {
+    if (!source) return
+    if (from_web) {
+      window.open(typeof source === 'string' ? source : URL.createObjectURL(source))
+    } else {
+      setPreviewFile(source)
+    }
+  }, [from_web])
+
   const _itemRender = useCallback((
     originNode: ReactElement,
     file: UploadFile,
@@ -64,12 +76,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
           <div className='preview-overlay rounded-md'>
             <EyeOutlined
               className='preview-icon'
-              onClick={() => {
-                const url = file.originFileObj
-                  ? URL.createObjectURL(file.originFileObj as RcFile)
-                  : file.url!
-                window.open(url);
-              }}
+              onClick={() => handlePreview(file.originFileObj ? (file.originFileObj as RcFile) : file.url)}
             />
             {!isEditDocument && (
               <DeleteOutlined
@@ -82,7 +89,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
       )
     }
     return originNode
-  }, [isEditDocument]);  // <-- add isEditDocument here
+  }, [isEditDocument, handlePreview]);  // <-- add isEditDocument here
 
   const renderVehicleField = useMemo(() => {
     const arr: { vehicle_type: string; plate_no: string }[] = []
@@ -181,10 +188,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.truck_dimension_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {(field.value || []).length ? null :
                         <div className="my-8 text-center">
@@ -253,10 +257,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.semi_trailer_dimension_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {(field.value || []).length ? null :
                         <div className="my-8 text-center">
@@ -325,10 +326,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.cargo_dimension_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {(field.value || []).length ? null :
                         <div className="my-8 text-center">
@@ -397,10 +395,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.combined_vehicle_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {(field.value || []).length ? null :
                         <div className="my-8 text-center">
@@ -469,10 +464,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.turning_radius_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {(field.value || []).length ? null :
                         <div className="my-8 text-center">
@@ -541,10 +533,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.highway_dept_permit_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {(field.value || []).length ? null :
                         <div className="my-8 text-center">
@@ -613,10 +602,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.highway_dept_permit_number_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {(field.value || []).length ? null :
                         <div className="my-8 text-center">
@@ -685,10 +671,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.rural_highway_dept_permit_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {(field.value || []).length ? null :
                         <div className="my-8 text-center">
@@ -757,10 +740,7 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
                           setValue(`vehicle.${index}.rural_highway_dept_permit_number_url.url`, '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {(field.value || []).length ? null :
                         <div className="my-8 text-center">
@@ -786,6 +766,10 @@ const FormEditPermitDocument: React.FC<Props> = (props) => {
           </Col>
         </Row>
       </section>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </>
   )
 }

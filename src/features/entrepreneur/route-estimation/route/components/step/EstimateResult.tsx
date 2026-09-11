@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { postConfirmPetitionRoadMapAPI } from '@/services/entrepreneur/PetitionService'
 import { AxiosError } from 'axios'
 import { getPetitionData } from '@/store/slices/entrepreneur'
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
 // import Map from '../map/Map'
 
 interface Props {
@@ -22,10 +23,12 @@ const EstimateResult: React.FC<Props> = (props) => {
   const { } = props
   const { loading } = useAppSelector(state => state.layout)
   const { estimate, petition } = useAppSelector(state => state.entrepreneur.permitList)
+  const { from_web } = useAppSelector(state => state.auth.user)
   const { setStep, index, item, dataParser } = useRouteContext()
   const detail = estimate.detail
   // STATE
   const [remark, setRemark] = useState<'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว'>('ตารางสรุป')
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
   // LOCATION STATE
   const { state } = useLocation()
   // DISPATCH
@@ -109,6 +112,15 @@ const EstimateResult: React.FC<Props> = (props) => {
     })
   }, [loading, onSubmit])
 
+  const openTurningRadiusFormula = useCallback(() => {
+    const url = '/pdf/สูตรคำนวณรัศมีวงเลี้ยว.pdf'
+    if (from_web) {
+      window.open(url, '_blank')
+    } else {
+      setPreviewFile(url)
+    }
+  }, [from_web])
+
   return (
     <main>
       <section className='flex justify-between items-center flex-wrap gap-5 mb-5'>
@@ -159,7 +171,7 @@ const EstimateResult: React.FC<Props> = (props) => {
       </section>
       <hr className='my-5' />
       <section>
-        <h3 className='flex items-center gap-3 flex-wrap'>รายการประเมินเส้นทาง ({remark}){remark !== 'รัศมีเลี้ยว' ? null : <Tooltip title="เอกสารสูตรคำนวณรัศมีวงเลี้ยว"><InfoCircleFilled style={{ color: '#69b1ff' }} onClick={() => window.open('/pdf/สูตรคำนวณรัศมีวงเลี้ยว.pdf', '_blank')} /></Tooltip>}</h3>
+        <h3 className='flex items-center gap-3 flex-wrap'>รายการประเมินเส้นทาง ({remark}){remark !== 'รัศมีเลี้ยว' ? null : <Tooltip title="เอกสารสูตรคำนวณรัศมีวงเลี้ยว"><InfoCircleFilled style={{ color: '#69b1ff' }} onClick={openTurningRadiusFormula} /></Tooltip>}</h3>
         <section className='mt-3'>
           <ContentRouteList
             item={item}
@@ -169,6 +181,11 @@ const EstimateResult: React.FC<Props> = (props) => {
           />
         </section>
       </section>
+      <ModalPdfPreview
+        file={previewFile}
+        title='เอกสารสูตรคำนวณรัศมีวงเลี้ยว'
+        onClose={() => setPreviewFile(null)}
+      />
     </main>
   )
 }

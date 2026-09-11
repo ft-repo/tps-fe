@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Grid, message, Table, type TableProps } from 'antd'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
 import { AiOutlineFilePdf } from 'react-icons/ai'
 
@@ -15,6 +16,8 @@ interface TableData {
 
 const TablePermitDocument: React.FC<Props> = () => {
   const { petition_extended } = useAppSelector(s => s.staff.petition)
+  const { from_web } = useAppSelector(s => s.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
   const detail = petition_extended.detail
   const dispatch = useAppDispatch()
   const screens = Grid.useBreakpoint()
@@ -27,8 +30,12 @@ const TablePermitDocument: React.FC<Props> = () => {
     try {
       const res = await getUploadAPI(fileUrl)
       if (res.status === 200) {
-        const url = URL.createObjectURL(res.data)
-        window.open(url)
+        if (from_web === false) {
+          setPreviewFile(res.data)
+        } else {
+          const url = URL.createObjectURL(res.data)
+          window.open(url)
+        }
       }
     } catch (e) {
       if (e instanceof Error) message.error(e.message)
@@ -36,7 +43,7 @@ const TablePermitDocument: React.FC<Props> = () => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch])
+  }, [dispatch, from_web])
 
   const columns: TableProps<TableData>['columns'] = [
     {
@@ -118,6 +125,10 @@ const TablePermitDocument: React.FC<Props> = () => {
         pagination={false}
         // ถ้าจอเล็ก ไม่ต้องมีสกรอลล์แนวนอน
         scroll={isCompact ? undefined : { x: 900 }}
+      />
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
       />
     </div>
   )

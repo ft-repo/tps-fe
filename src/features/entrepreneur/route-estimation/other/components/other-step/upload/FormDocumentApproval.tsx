@@ -2,9 +2,11 @@
 /* eslint-disable react-refresh/only-export-components */
 import { DocumentFieldType } from '@/@types/entrepreneur/route-estimation';
 import { postUploadVehicleRegistrationDocumentAPI } from '@/services/entrepreneur/PetitionService';
+import { useAppSelector } from '@/store';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 import { Button, Input, message, Upload } from 'antd';
 import { RcFile } from 'antd/es/upload';
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 
 interface Props {
@@ -15,6 +17,8 @@ interface Props {
 const FormDocumentApproval: React.FC<Props> = (props) => {
   const { control, setValue } = props
   const { errors } = useFormState({ control })
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
 
   const uploadFile = useCallback(async (fieldName: string, file: any) => {
     try {
@@ -33,6 +37,15 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
       }
     }
   }, [setValue])
+
+  const handlePreview = useCallback((file?: RcFile) => {
+    if (!file) return
+    if (from_web) {
+      window.open(URL.createObjectURL(file))
+    } else {
+      setPreviewFile(file)
+    }
+  }, [from_web])
 
   return (
     <div className='border-2 rounded-md p-4 mb-3'>
@@ -79,10 +92,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.bridge_structure_calculation_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -155,10 +165,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.road_structure_calculation_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -231,10 +238,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.bridge_engineer_certificate_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -307,10 +311,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.road_engineer_certificate_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -383,10 +384,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.mechanical_engineer_certificate_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -459,10 +457,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.mechanical_engineer_certifier_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -535,10 +530,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.safety_management_plan_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -611,10 +603,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.route_map_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -687,10 +676,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.operation_plan_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -763,10 +749,7 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
                       setValue('petition_extended_audit_document.contact_info_url.url', '')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <div className='flex items-center gap-1'>
@@ -797,6 +780,10 @@ const FormDocumentApproval: React.FC<Props> = (props) => {
           }}
         />
       </div>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </div>
   )
 }

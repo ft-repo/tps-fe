@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Flex, Input, message, Modal, Tag } from 'antd'
 import { PetitionExtendedMessageResponse } from '@/@types/services/petition';
 import { Controller, useForm } from 'react-hook-form';
@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { INIT_MODAL } from './ContentSearchOther';
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 
 interface Props {
   open: boolean;
@@ -25,8 +26,9 @@ interface FieldType {
 
 const Content = (props: ContentProps) => {
   const { data } = props
-  const { name } = useAppSelector(state => state.auth.user)
+  const { name, from_web } = useAppSelector(state => state.auth.user)
   const dispatch = useAppDispatch()
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -52,8 +54,12 @@ const Content = (props: ContentProps) => {
     try {
       const response = await getUploadAPI(fileUrl)
       if (response.status === 200) {
-        const url = URL.createObjectURL(response.data);
-        window.open(url);
+        if (from_web === false) {
+          setPreviewFile(response.data)
+        } else {
+          const url = URL.createObjectURL(response.data);
+          window.open(url);
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -64,10 +70,11 @@ const Content = (props: ContentProps) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch])
+  }, [dispatch, from_web])
 
 
   return (
+    <>
     <form>
       <section>
         <p><strong>ยื่นคำขอโดย</strong>: {name || '-'}</p>
@@ -107,6 +114,12 @@ const Content = (props: ContentProps) => {
         />
       </section>
     </form>
+      <ModalPdfPreview
+        file={previewFile}
+        title='เอกสารตอบกลับ'
+        onClose={() => setPreviewFile(null)}
+      />
+    </>
   )
 }
 

@@ -1,8 +1,9 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Descriptions, DescriptionsProps, message } from 'antd'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
 import dayjs from 'dayjs'
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
 import { AiOutlineFilePdf } from 'react-icons/ai'
@@ -14,6 +15,8 @@ interface Props {
 const PetitionDetail: React.FC<Props> = (props) => {
   const { } = props
   const { petition } = useAppSelector(state => state.staff.petition)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
   const document = petition?.detail?.document
   const dispatch = useAppDispatch()
 
@@ -27,8 +30,12 @@ const PetitionDetail: React.FC<Props> = (props) => {
     try {
       const response = await getUploadAPI(fileUrl)
       if (response.status === 200) {
-        const url = URL.createObjectURL(response.data);
-        window.open(url);
+        if (from_web === false) {
+          setPreviewFile(response.data)
+        } else {
+          const url = URL.createObjectURL(response.data);
+          window.open(url);
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -39,7 +46,7 @@ const PetitionDetail: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch])
+  }, [dispatch, from_web])
 
   const items: DescriptionsProps['items'] = useMemo(() => {
     return [
@@ -137,13 +144,19 @@ const PetitionDetail: React.FC<Props> = (props) => {
   }, [document?.is_personal, items])
 
   return (
-    <Descriptions
-      title="ข้อมูลผู้ประสงค์ขออนุญาต"
-      items={isPersonalContent}
-      column={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 2, xxl: 3 }}
-      layout='vertical'
-      size='small'
-    />
+    <>
+      <Descriptions
+        title="ข้อมูลผู้ประสงค์ขออนุญาต"
+        items={isPersonalContent}
+        column={{ xs: 1, sm: 1, md: 1, lg: 1, xl: 2, xxl: 3 }}
+        layout='vertical'
+        size='small'
+      />
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
+    </>
   )
 }
 

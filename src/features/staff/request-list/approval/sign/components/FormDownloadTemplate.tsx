@@ -3,6 +3,7 @@
 import RenderDoc from '@/features/staff/request-history/view/other/components/pdf/ApproveForm';
 import AttachedDoc from '@/features/staff/request-history/view/other/components/pdf/AttachedForm';
 import { useAppSelector } from '@/store';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 import { pdf } from '@react-pdf/renderer';
 import { Button, Col, Input, Row } from 'antd';
 import React, { useCallback, useState } from 'react'
@@ -22,6 +23,8 @@ export interface FieldType {
 const FormDownloadTemplate: React.FC<Props> = (props) => {
   const { setStep } = props
   const { petition } = useAppSelector(state => state.staff.petition)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
   const [type, setType] = useState<'DOC' | 'ATTACHED' | null>(null)
   const form = useForm<FieldType>({
     defaultValues: {
@@ -40,20 +43,28 @@ const FormDownloadTemplate: React.FC<Props> = (props) => {
 
   const onShowAttachedPDF = useCallback(async (value: FieldType) => {
     const blob = await pdf(<AttachedDoc data={petition.detail} value={value} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    // Deliberately not revoked on a timer: the opened tab's own PDF viewer
-    // download button can be clicked any time after this, and revoking
-    // early (even after a delay) invalidates the blob URL out from under
-    // it, which is what caused "check internet connection" on download.
-    window.open(url, '_blank');
-  }, [petition.detail])
+    if (from_web) {
+      const url = URL.createObjectURL(blob);
+      // Deliberately not revoked on a timer: the opened tab's own PDF viewer
+      // download button can be clicked any time after this, and revoking
+      // early (even after a delay) invalidates the blob URL out from under
+      // it, which is what caused "check internet connection" on download.
+      window.open(url, '_blank');
+    } else {
+      setPreviewFile(blob)
+    }
+  }, [petition.detail, from_web])
 
   const onShowPDF = useCallback(async (value: FieldType) => {
     const blob = await pdf(<RenderDoc data={petition.detail} value={value} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    // See onShowAttachedPDF above — no premature revokeObjectURL.
-    window.open(url, '_blank');
-  }, [petition.detail])
+    if (from_web) {
+      const url = URL.createObjectURL(blob);
+      // See onShowAttachedPDF above — no premature revokeObjectURL.
+      window.open(url, '_blank');
+    } else {
+      setPreviewFile(blob)
+    }
+  }, [petition.detail, from_web])
 
   const onSubmit = useCallback((value: FieldType) => {
     if (type === 'DOC') {
@@ -221,6 +232,10 @@ const FormDownloadTemplate: React.FC<Props> = (props) => {
           </Col>
         </Row>
       </form>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </div>
   )
 }

@@ -6,10 +6,11 @@ import NotificationContent, { SidePanelContentProps } from './NotificationConten
 import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import { setPanelExpand, useAppSelector, useAppDispatch } from '@/store'
 import type { CommonProps } from '@/@types/common'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getPetitionNotification } from '@/store/slices/staff'
 import { Badge, Dropdown, MenuProps } from 'antd'
 import { FaQuestion } from "react-icons/fa6";
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
 
 type SidePanelProps = SidePanelContentProps & CommonProps
 
@@ -22,7 +23,7 @@ const _SidePanel = (props: SidePanelProps) => {
 
 	const direction = useAppSelector((state) => state.theme.direction)
 
-	const { authority } = useAppSelector(state => state.auth.user)
+	const { authority, from_web } = useAppSelector(state => state.auth.user)
 
 	const { notification } = useAppSelector(state => state.staff.petition)
 
@@ -31,6 +32,7 @@ const _SidePanel = (props: SidePanelProps) => {
 	//STATE
 	const [cachedTotal, setCachedTotal] = useState<number>(0);
 	const [unreadCount, setUnreadCount] = useState<number>(0);
+	const [previewFile, setPreviewFile] = useState<string | null>(null);
 	// const [manualTooltipOpen, setManualTooltipOpen] = useState(false);
 
 	// Initialize cache from localStorage on mount
@@ -95,13 +97,21 @@ const _SidePanel = (props: SidePanelProps) => {
 	// 	}
 	// }
 
+	const openManual = useCallback((url: string) => {
+		if (from_web) {
+			window.open(url, '_blank')
+		} else {
+			setPreviewFile(url)
+		}
+	}, [from_web])
+
 	const items: MenuProps['items'] = useMemo(() => {
 		if (authority[0] === 'ADMIN') {
 			return [
 				{
 					key: '1',
 					label: 'คู่มือระบบ TPS สำหรับเจ้าหน้าที่',
-					onClick: () => window.open('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf', '_blank')
+					onClick: () => openManual('/pdf/คู่มือระบบ TPS สำหรับเจ้าหน้าที่ V.02.pdf')
 				},
 				// {
 				// 	key: '2',
@@ -125,7 +135,7 @@ const _SidePanel = (props: SidePanelProps) => {
 					{
 						key: '1',
 						label: 'คู่มือระบบ TPS สำหรับบุคคลทั่วไป',
-						onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับบุคคลทั่วไป V.02.pdf', '_blank')
+						onClick: () => openManual('/pdf/new-pdf/คู่มือระบบ TPS สำหรับบุคคลทั่วไป V.02.pdf')
 					},
 				]
 			} else {
@@ -138,13 +148,13 @@ const _SidePanel = (props: SidePanelProps) => {
 					{
 						key: '1',
 						label: 'คู่มือระบบ TPS สำหรับผู้ประกอบการ',
-						onClick: () => window.open('/pdf/new-pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf', '_blank')
+						onClick: () => openManual('/pdf/new-pdf/คู่มือระบบ TPS สำหรับผู้ประกอบการ V.02.pdf')
 					},
 				]
 			}
 
 		}
-	}, [is_personal, authority])
+	}, [is_personal, authority, openManual])
 
 	// const checkRole = useMemo(() => {
 	// 	if (authority[0] !== 'ADMIN') {
@@ -198,6 +208,11 @@ const _SidePanel = (props: SidePanelProps) => {
 				{/* <SidePanelContent callBackClose={closePanel} /> */}
 				<NotificationContent callBackClose={closePanel} />
 			</Drawer>
+			<ModalPdfPreview
+				file={previewFile}
+				title='คู่มือการใช้งานระบบ'
+				onClose={() => setPreviewFile(null)}
+			/>
 		</>
 	)
 }

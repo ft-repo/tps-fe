@@ -2,9 +2,10 @@
 /* eslint-disable react-refresh/only-export-components */
 import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
 import { Col, Descriptions, DescriptionsProps, message, Row } from 'antd'
 import dayjs from 'dayjs'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { AiOutlineFilePdf } from 'react-icons/ai'
 
 interface Props {
@@ -14,6 +15,8 @@ interface Props {
 const ResultPermitDetail: React.FC<Props> = (props) => {
   const { } = props
   const { petition_status } = useAppSelector(state => state.staff.petition)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
   const dispatch = useAppDispatch()
 
   const extractUrl = useCallback((url: string) => {
@@ -32,8 +35,12 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
     try {
       const response = await getUploadAPI(fileUrl)
       if (response.status === 200) {
-        const url = URL.createObjectURL(response.data);
-        window.open(url);
+        if (from_web === false) {
+          setPreviewFile(response.data)
+        } else {
+          const url = URL.createObjectURL(response.data);
+          window.open(url);
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -44,7 +51,7 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch])
+  }, [dispatch, from_web])
 
   const signed_document: DescriptionsProps['items'] = [
     {
@@ -103,26 +110,32 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
   ]
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-        <Descriptions
-          title="เอกสารสำคัญ (เอกสารลงนาม)"
-          items={signed_document}
-          column={1}
-          layout='vertical'
-          size='small'
-        />
-      </Col>
-      <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
-        <Descriptions
-          title="เอกสารสำคัญ (เอกสารใบอนุมัติ)"
-          items={permit_document}
-          column={1}
-          layout='vertical'
-          size='small'
-        />
-      </Col>
-    </Row>
+    <>
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+          <Descriptions
+            title="เอกสารสำคัญ (เอกสารลงนาม)"
+            items={signed_document}
+            column={1}
+            layout='vertical'
+            size='small'
+          />
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12} xxl={12}>
+          <Descriptions
+            title="เอกสารสำคัญ (เอกสารใบอนุมัติ)"
+            items={permit_document}
+            column={1}
+            layout='vertical'
+            size='small'
+          />
+        </Col>
+      </Row>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
+    </>
   )
 }
 

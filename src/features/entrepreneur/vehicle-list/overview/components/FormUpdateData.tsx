@@ -2,7 +2,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
 import { useAppSelector } from '@/store';
-import React, { useCallback } from 'react'
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
+import React, { useCallback, useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form'
 import { Select, Input, Upload, message, Button, Row, Col } from 'antd';
 import { HiOutlineCloudUpload } from 'react-icons/hi';
@@ -18,6 +19,8 @@ const FormUpdateData: React.FC<Props> = (props) => {
   const { control, setValue } = props
   const { province, axis_type } = useAppSelector(state => state.master)
   const vehicleType = useAppSelector(state => state.master.vehicle_type)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
   const { errors } = useFormState({ control })
 
   const { vehicle_type } = useWatch({ control })
@@ -39,6 +42,15 @@ const FormUpdateData: React.FC<Props> = (props) => {
       }
     }
   }, [setValue])
+
+  const handlePreview = useCallback((file?: RcFile) => {
+    if (!file) return
+    if (from_web) {
+      window.open(URL.createObjectURL(file))
+    } else {
+      setPreviewFile(file)
+    }
+  }, [from_web])
 
   return (
     <div className='mt-5'>
@@ -511,10 +523,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
                         setValue('file_registered_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => {
-                      const url = URL.createObjectURL(e.originFileObj as RcFile);
-                      window.open(url);
-                    }}
+                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                   >
                     {field.value.length ? null :
                       <Button
@@ -535,6 +544,10 @@ const FormUpdateData: React.FC<Props> = (props) => {
           />
         </Col>
       </Row>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </div>
   )
 }

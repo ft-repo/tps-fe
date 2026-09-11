@@ -1,11 +1,12 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { ReactElement, useCallback } from 'react'
+import React, { ReactElement, useCallback, useState } from 'react'
 import { Col, DatePicker, Input, Row, Select, message, Upload } from 'antd';
 import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 'react-hook-form';
 import { FieldTypePetition } from '@/@types/entrepreneur/permit-list';
 import { useAppSelector } from '@/store';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { postUploadSignedDocumentAPI } from '@/services/entrepreneur/PetitionService';
 import { RcFile, UploadFile } from 'antd/es/upload';
@@ -23,8 +24,9 @@ interface Props {
 
 const FormPermitRoute: React.FC<Props> = (props) => {
   const { control, setValue } = props
-  const { details } = useAppSelector(state => state.auth.user)
+  const { details, from_web } = useAppSelector(state => state.auth.user)
   const { province } = useAppSelector(state => state.master)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
 
   const { errors } = useFormState({ control })
   const { start_date } = useWatch({ control })
@@ -51,6 +53,15 @@ const FormPermitRoute: React.FC<Props> = (props) => {
     }
   }, [setValue])
 
+  const handlePreview = useCallback((file?: RcFile) => {
+    if (!file) return
+    if (from_web) {
+      window.open(URL.createObjectURL(file))
+    } else {
+      setPreviewFile(file)
+    }
+  }, [from_web])
+
   const _itemRender = useCallback((
     originNode: ReactElement,
     file: UploadFile,
@@ -67,10 +78,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           <div className='preview-overlay rounded-md'>
             <EyeOutlined
               className='preview-icon'
-              onClick={() => {
-                const url = URL.createObjectURL(file.originFileObj as RcFile);
-                window.open(url);
-              }}
+              onClick={() => handlePreview(file.originFileObj as RcFile)}
             />
             {!isEditVehicle && (
               <DeleteOutlined
@@ -83,7 +91,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
       )
     }
     return originNode
-  }, [isEditVehicle]);
+  }, [isEditVehicle, handlePreview]);
 
   return (
     <>
@@ -455,10 +463,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                           setValue('poa_url.url', '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -527,10 +532,7 @@ const FormPermitRoute: React.FC<Props> = (props) => {
                           setValue('mach_book_url.url', '')
                         }
                       }}
-                      onPreview={(e) => {
-                        const url = URL.createObjectURL(e.originFileObj as RcFile);
-                        window.open(url);
-                      }}
+                      onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                     >
                       {field.value.length ? null :
                         <div className="my-8 text-center">
@@ -556,6 +558,10 @@ const FormPermitRoute: React.FC<Props> = (props) => {
           </Col>
         </Row>
       </section>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </>
 
   )

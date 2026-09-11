@@ -16,6 +16,7 @@ import 'swiper/css/pagination';
 import { getAxisWeightAPI } from '@/services/master/MasterService';
 import { AxiosError } from 'axios';
 import { useRouteContext } from '../../../context';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 
 interface Props {
   formItem: FieldTypeForRoute;
@@ -41,6 +42,8 @@ const FormVehicle: React.FC<Props> = (props) => {
   const { formIndex, control, setValue, trigger } = props
   const { vehicle_selection } = useAppSelector(state => state.master)
   const { loading } = useAppSelector(state => state.layout)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
   // WHEEL
   const [toweringVehicleWheel, setToweringVehicleWheel] = useState<number>(0)
   const [semiVehicleWheel, setSemiVehicleWheel] = useState<number>(0)
@@ -91,6 +94,15 @@ const FormVehicle: React.FC<Props> = (props) => {
     const path = url.split('/upload')[1];
     return path
   }, []);
+
+  const openTurningRadiusFormula = useCallback(() => {
+    const url = '/pdf/สูตรคำนวณรัศมีวงเลี้ยว.pdf'
+    if (from_web) {
+      window.open(url, '_blank')
+    } else {
+      setPreviewFile(url)
+    }
+  }, [from_web])
 
   const fetchImage = useCallback(async (stateType: 'towing' | 'semi' | 'etc', imgUrl: string[], etcId?: number) => {
     try {
@@ -485,7 +497,7 @@ const FormVehicle: React.FC<Props> = (props) => {
                           style={{
                             color: '#69b1ff'
                           }}
-                          onClick={() => window.open('/pdf/สูตรคำนวณรัศมีวงเลี้ยว.pdf', '_blank')}
+                          onClick={openTurningRadiusFormula}
                         />
                       </Tooltip>
                     </label>
@@ -1542,6 +1554,11 @@ const FormVehicle: React.FC<Props> = (props) => {
           </Row>
         </section>
         : null}
+      <ModalPdfPreview
+        file={previewFile}
+        title='เอกสารสูตรคำนวณรัศมีวงเลี้ยว'
+        onClose={() => setPreviewFile(null)}
+      />
     </>
 
   )

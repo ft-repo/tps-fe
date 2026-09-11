@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FormSearchPetitionExtended, TablePetitionExtended } from '../components'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { getAdminPetitionExtendedData, setAdminPetitionExtendedData } from '@/store/slices/staff'
@@ -8,6 +8,7 @@ import type { FieldType } from './FormSearchPetition'
 import { useSearchParams } from 'react-router-dom'
 import { Tooltip } from 'antd'
 import { InfoCircleFilled } from '@ant-design/icons'
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
 
 interface Props { }
 
@@ -16,6 +17,8 @@ const ContentPetitionExtended: React.FC<Props> = (props) => {
   const dispatch = useAppDispatch()
   // ⬇️ ตาม state structure เดิม: state.staff.petition มีทั้ง petition และ petition_extended
   const { petition_extended, loading } = useAppSelector(state => state.staff.petition)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
   const [params] = useSearchParams()
   const petitionId = params.get('petition_id')
   const findPetition = petition_extended.overview.data.data.find(item => Number(item.id) === Number(petitionId))
@@ -60,9 +63,18 @@ const ContentPetitionExtended: React.FC<Props> = (props) => {
     }
   }, [dispatch, petition_extended.overview])
 
+  const openManualPDF = useCallback(() => {
+    const url = '/pdf/คู่มือที่-4-การขออนุญาตใช้ยานพาหนะบางชนิด-.pdf'
+    if (from_web) {
+      window.open(url, '_blank')
+    } else {
+      setPreviewFile(url)
+    }
+  }, [from_web])
+
   return (
     <div>
-      <h3 className='flex items-center gap-3 flex-wrap'>รายการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)<Tooltip title='เอกสารคู่มือที่-4-การขออนุญาตใช้ยานพาหนะบางชนิด-'><InfoCircleFilled style={{ color: '#69b1ff' }} onClick={() => window.open('/pdf/คู่มือที่-4-การขออนุญาตใช้ยานพาหนะบางชนิด-.pdf', '_blank')} /></Tooltip></h3>
+      <h3 className='flex items-center gap-3 flex-wrap'>รายการขออนุญาตรถหมวด 2 นอกเหนือ (4 - 7 เพลา)<Tooltip title='เอกสารคู่มือที่-4-การขออนุญาตใช้ยานพาหนะบางชนิด-'><InfoCircleFilled style={{ color: '#69b1ff' }} onClick={openManualPDF} /></Tooltip></h3>
       <section className="mt-5">
         <FormSearchPetitionExtended
           poaName={poaName}
@@ -76,6 +88,10 @@ const ContentPetitionExtended: React.FC<Props> = (props) => {
           handleTableChange={handleTableChange}
         />
       </section>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </div>
   )
 }

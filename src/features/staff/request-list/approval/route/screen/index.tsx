@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button, Spin, Tooltip } from 'antd'
 import { ContentSection, ContentRouteList } from '../components'
 import { AiOutlineLeft } from 'react-icons/ai'
@@ -12,6 +12,7 @@ import { useRouteContext } from '../context'
 // import { useReactToPrint } from 'react-to-print'
 import DisplayMap from '@/features/entrepreneur/route-estimation/route/components/map/DisplayMap'
 import { InfoCircleFilled } from '@ant-design/icons'
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
 // import Map from '@/features/entrepreneur/route-estimation/route/components/map/Map'
 
 interface Props { }
@@ -25,6 +26,8 @@ const RouteScreen: React.FC<Props> = () => {
   const { loading } = useAppSelector(state => state.staff.petition)
   const { index, item } = useRouteContext()
   const { petition } = useAppSelector(state => state.staff.petition)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
   const detail = petition.detail.estimate.route
   const [remark, setRemark] = useState<'ตารางสรุป' | 'สะพาน' | 'รัศมีเลี้ยว'>('ตารางสรุป')
   const { state } = useLocation()
@@ -55,6 +58,15 @@ const RouteScreen: React.FC<Props> = () => {
   //   }
   //   return undefined
   // }, [detail])
+
+  const openTurningRadiusFormula = useCallback(() => {
+    const url = '/pdf/สูตรคำนวณรัศมีวงเลี้ยว.pdf'
+    if (from_web) {
+      window.open(url, '_blank')
+    } else {
+      setPreviewFile(url)
+    }
+  }, [from_web])
 
   // ====== PRINT (A4) ======
   // const printRef = useRef<HTMLDivElement>(null)
@@ -104,7 +116,7 @@ const RouteScreen: React.FC<Props> = () => {
       </section>
       <hr className="my-5" />
       <section>
-        <h3 className='flex items-center gap-3 flex-wrap'>รายการประเมินเส้นทาง ({remark}){remark !== 'รัศมีเลี้ยว' ? null : <Tooltip title="เอกสารสูตรคำนวณรัศมีวงเลี้ยว"><InfoCircleFilled style={{ color: '#69b1ff' }} onClick={() => window.open('/pdf/สูตรคำนวณรัศมีวงเลี้ยว.pdf', '_blank')} /></Tooltip>}</h3>
+        <h3 className='flex items-center gap-3 flex-wrap'>รายการประเมินเส้นทาง ({remark}){remark !== 'รัศมีเลี้ยว' ? null : <Tooltip title="เอกสารสูตรคำนวณรัศมีวงเลี้ยว"><InfoCircleFilled style={{ color: '#69b1ff' }} onClick={openTurningRadiusFormula} /></Tooltip>}</h3>
         <section className="mt-3 print-condensed">
           <ContentRouteList
             index={index}
@@ -115,6 +127,11 @@ const RouteScreen: React.FC<Props> = () => {
         </section>
       </section>
       {/* </div> */}
+      <ModalPdfPreview
+        file={previewFile}
+        title='เอกสารสูตรคำนวณรัศมีวงเลี้ยว'
+        onClose={() => setPreviewFile(null)}
+      />
     </Spin>
   )
 }

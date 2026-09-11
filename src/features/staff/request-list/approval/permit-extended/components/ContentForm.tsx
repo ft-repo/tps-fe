@@ -7,10 +7,11 @@ import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 import { postPetitionExtendedApproveAPI } from '@/services/staff/PetitionService';
 import { setLoading, useAppDispatch, useAppSelector } from '@/store';
 import { getAdminPetitionExtendedData, getAdminPetitionHistoryData } from '@/store/slices/staff';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 import { Flex, Input, message, Modal, Upload, Button } from 'antd';
 import { RcFile } from 'antd/es/upload';
 import { AxiosError } from 'axios';
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -38,6 +39,8 @@ const ContentForm: React.FC<Props> = (props) => {
   // const isApproved = params.get('is_approved')
   // REDUX MANAGE
   const { petition_extended, petition_history_extended, petition_extended_status } = useAppSelector(state => state.staff.petition)
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
   const dispatch = useAppDispatch()
   // NAVIGATE
   const navigate = useNavigate()
@@ -194,6 +197,15 @@ const ContentForm: React.FC<Props> = (props) => {
     }
   }, [extractUrl, fetchImage, petition_extended_status])
 
+  const handlePreview = useCallback((file?: RcFile) => {
+    if (!file) return
+    if (from_web) {
+      window.open(URL.createObjectURL(file))
+    } else {
+      setPreviewFile(file)
+    }
+  }, [from_web])
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <section>
@@ -239,10 +251,7 @@ const ContentForm: React.FC<Props> = (props) => {
                       setUrl('')
                     }
                   }}
-                  onPreview={(e) => {
-                    const url = URL.createObjectURL(e.originFileObj as RcFile);
-                    window.open(url);
-                  }}
+                  onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                 >
                   {field.value.length ? null :
                     <Button
@@ -317,6 +326,10 @@ const ContentForm: React.FC<Props> = (props) => {
           </Button>
         </Flex>
       </section>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </form>
   )
 }

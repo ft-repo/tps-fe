@@ -11,6 +11,7 @@ import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { patchPetitionHoldAPI } from '@/services/entrepreneur/PetitionService';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 
 interface Props {
   open: boolean;
@@ -34,8 +35,9 @@ interface FieldType {
 
 const Content = (props: ContentProps) => {
   const { data, showEditForm, submitRef, setShowEditForm, onRefetch } = props
-  const { name } = useAppSelector(state => state.auth.user)
+  const { name, from_web } = useAppSelector(state => state.auth.user)
   const dispatch = useAppDispatch()
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -83,8 +85,12 @@ const Content = (props: ContentProps) => {
     try {
       const response = await getUploadAPI(fileUrl)
       if (response.status === 200) {
-        const url = URL.createObjectURL(response.data);
-        window.open(url);
+        if (from_web === false) {
+          setPreviewFile(response.data)
+        } else {
+          const url = URL.createObjectURL(response.data);
+          window.open(url);
+        }
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -95,7 +101,7 @@ const Content = (props: ContentProps) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch])
+  }, [dispatch, from_web])
 
   const onSubmit = useCallback(async (value: FieldType) => {
     const body = value.duration !== 'Cancel' ? {
@@ -149,6 +155,7 @@ const Content = (props: ContentProps) => {
   }, [data?.petition_hold?.id, setShowEditForm, onRefetch])
 
   return (
+    <>
     <form onSubmit={handleSubmit(onSubmit)}>
       <section>
         <p><strong>ยื่นคำขอโดย</strong>: {name || '-'}</p>
@@ -225,6 +232,12 @@ const Content = (props: ContentProps) => {
         </>}
       <button ref={submitRef} type='submit' className='hidden' />
     </form>
+      <ModalPdfPreview
+        file={previewFile}
+        title='เอกสารตอบกลับ'
+        onClose={() => setPreviewFile(null)}
+      />
+    </>
   )
 }
 

@@ -1,9 +1,11 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable react-refresh/only-export-components */
 import { FieldType } from '@/@types/entrepreneur/vehicle-list'
-import React, { ReactElement, useCallback } from 'react'
+import React, { ReactElement, useCallback, useState } from 'react'
 import { Control, Controller, UseFormSetValue, useFormState } from 'react-hook-form';
 import { postUploadFileAPI, postUploadImageAPI } from '@/services/entrepreneur/VehicleListService';
+import { useAppSelector } from '@/store';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 import { FaUpload as UploadIcon } from "react-icons/fa6";
 import { message, Upload } from 'antd';
 import { RcFile, UploadFile } from 'antd/es/upload';
@@ -20,6 +22,8 @@ interface Props {
 const FormUpdateDocument: React.FC<Props> = (props) => {
   const { control, setValue } = props
   const { errors } = useFormState({ control })
+  const { from_web } = useAppSelector(state => state.auth.user)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
 
   const uploadFile = useCallback(async (fieldName: string, file: any, isImage: boolean = false) => {
     let uploadAPI
@@ -45,6 +49,15 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
     }
   }, [setValue])
 
+  const handlePreview = useCallback((file?: RcFile) => {
+    if (!file) return
+    if (from_web) {
+      window.open(URL.createObjectURL(file))
+    } else {
+      setPreviewFile(file)
+    }
+  }, [from_web])
+
   const _itemRender = useCallback((
     originNode: ReactElement,
     file: UploadFile,
@@ -61,10 +74,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
           <div className='preview-overlay rounded-md'>
             <EyeOutlined
               className='preview-icon'
-              onClick={() => {
-                const url = URL.createObjectURL(file.originFileObj as RcFile);
-                window.open(url);
-              }}
+              onClick={() => handlePreview(file.originFileObj as RcFile)}
             />
             <DeleteOutlined
               className='delete-icon'
@@ -75,7 +85,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
       )
     }
     return originNode
-  }, []);
+  }, [handlePreview]);
 
   return (
     <div className='mt-5'>
@@ -125,10 +135,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         setValue('file_property_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => {
-                      const url = URL.createObjectURL(e.originFileObj as RcFile);
-                      window.open(url);
-                    }}
+                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -193,10 +200,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         setValue('file_hire_contact_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => {
-                      const url = URL.createObjectURL(e.originFileObj as RcFile);
-                      window.open(url);
-                    }}
+                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -261,10 +265,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         setValue('file_purchase_contact_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => {
-                      const url = URL.createObjectURL(e.originFileObj as RcFile);
-                      window.open(url);
-                    }}
+                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -329,10 +330,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         setValue('file_transfer_contact_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => {
-                      const url = URL.createObjectURL(e.originFileObj as RcFile);
-                      window.open(url);
-                    }}
+                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -563,6 +561,10 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
           />
         </div>
       </section>
+      <ModalPdfPreview
+        file={previewFile}
+        onClose={() => setPreviewFile(null)}
+      />
     </div>
   )
 }
