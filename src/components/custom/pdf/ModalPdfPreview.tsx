@@ -1,0 +1,66 @@
+/* eslint-disable react-refresh/only-export-components */
+import React, { useEffect, useState } from 'react'
+import { Modal } from 'antd'
+import { Viewer, Worker } from '@react-pdf-viewer/core'
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
+// Bundled locally rather than pulled from a CDN: in-app WebViews are the main audience
+// here and can't be relied on to reach an external host.
+import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.js?url'
+
+import '@react-pdf-viewer/core/lib/styles/index.css'
+import '@react-pdf-viewer/default-layout/lib/styles/index.css'
+
+interface Props {
+  /** A URL to load, or a blob for documents generated in the browser. */
+  file: Blob | string | null;
+  title?: string;
+  onClose: () => void;
+}
+
+/**
+ * Renders a PDF inside the app with pdf.js instead of handing it to the browser.
+ *
+ * Opening a document in a new tab (window.open) is unusable inside the in-app WebViews
+ * this app is launched from — some refuse to open any new window at all, and Android's
+ * WebView has no native PDF renderer to show a blob: URL with either. Drawing the PDF
+ * to canvas here works regardless of both limitations.
+ */
+const ModalPdfPreview: React.FC<Props> = (props) => {
+  const { file, title = 'เอกสาร', onClose } = props
+  const [blobUrl, setBlobUrl] = useState<string | null>(null)
+  // Calls hooks internally, so it has to run at the top level, not inside useMemo.
+  const defaultLayoutPluginInstance = defaultLayoutPlugin()
+
+  useEffect(() => {
+    if (!file || typeof file === 'string') {
+      setBlobUrl(null)
+      return
+    }
+    const url = URL.createObjectURL(file)
+    setBlobUrl(url)
+    return () => URL.revokeObjectURL(url)
+  }, [file])
+
+  const fileUrl = typeof file === 'string' ? file : blobUrl
+
+  return (
+    <Modal
+      destroyOnHidden
+      open={!!file}
+      title={title}
+      footer={null}
+      width="95vw"
+      style={{ top: 16, maxWidth: 1000 }}
+      styles={{ body: { height: '80vh', padding: 0 } }}
+      onCancel={onClose}
+    >
+      {fileUrl && (
+        <Worker workerUrl={pdfWorkerUrl}>
+          <Viewer fileUrl={fileUrl} plugins={[defaultLayoutPluginInstance]} />
+        </Worker>
+      )}
+    </Modal>
+  )
+}
+
+export default React.memo<Props>(ModalPdfPreview)

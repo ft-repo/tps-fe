@@ -1,14 +1,14 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { FormPermitRoute } from '..'
 import DocumentTabList from '../route-estimate/petition/DocumentTabList'
 import { useRouteContext } from '../../context'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { Button, Col, Modal, Row, UploadFile } from 'antd'
+import { Button, Col, message, Modal, Row, UploadFile } from 'antd'
 import { FieldTypePetition } from '@/@types/entrepreneur/permit-list'
 import { PetitionConfirmRequest, PetitionDocumentRequest, PetitionVehicleRequest } from '@/@types/services/petition'
 import dayjs from 'dayjs'
@@ -19,7 +19,8 @@ import { APIResponseRegion } from '@/@types/shared'
 import axios from 'axios'
 import { CheckCircleFilled } from '@ant-design/icons'
 import AddressLabel from '@/components/custom/pdf/AddressLabel'
-import { openGeneratedDocument } from '@/utils/openGeneratedDocument'
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
+import { pdf } from '@react-pdf/renderer'
 
 interface Props {
 
@@ -34,6 +35,7 @@ const RequestPermit: React.FC<Props> = (props) => {
   const { user } = useAppSelector(state => state.auth)
   const { province } = useAppSelector(state => state.master)
   const { petition, petition_detail } = useAppSelector(state => state.entrepreneur.permitList)
+  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
   // REACT HOOK
   const navigate = useNavigate()
   const location = useLocation();
@@ -539,104 +541,16 @@ const RequestPermit: React.FC<Props> = (props) => {
   ])
 
   const onPrintAddress = useCallback(async () => {
-    if (user.from_web === false) {
-      await openGeneratedDocument(<AddressLabel />, { fromWeb: user.from_web })
-      return
+    dispatch(setLoading(true))
+    try {
+      setPreviewFile(await pdf(<AddressLabel />).toBlob())
+    } catch (error) {
+      if (error instanceof Error) message.error(error.message)
+      else console.error(error)
+    } finally {
+      dispatch(setLoading(false))
     }
-
-    const postalCode = '10220'
-    const circles = postalCode.split('').map(d =>
-      `<span class="circle">${d}</span>`
-    ).join('')
-
-    const html = `<!DOCTYPE html>
-  <html>
-  <head>
-    <meta charset="UTF-8">
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai&display=swap');
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      @page { size: A4 landscape; margin: 0; }
-      html, body {
-        font-family: 'Noto Sans Thai', sans-serif;
-        width: 297mm;
-        height: 210mm;
-        overflow: hidden;
-      }
-      body {
-        padding: 16mm 0 0 16mm;
-        display: block;
-      }
-      .label {
-        width: 120mm;
-      }
-      .title {
-        font-size: 18px;
-        font-weight: 700;
-        margin-bottom: 16px;
-      }
-      .line {
-        border-bottom: 1.5px dashed #888;
-        padding-bottom: 4px;
-        margin-bottom: 18px;
-        font-size: 14px;
-        min-height: 24px;
-      }
-      .postal-row {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        margin-top: 6px;
-      }
-      .label-text {
-        font-size: 14px;
-        font-weight: 700;
-        margin-right: 4px;
-        white-space: nowrap;
-      }
-      .circle {
-        width: 30px; height: 30px;
-        border: 1.5px solid #888;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="label">
-      <div class="title">ชื่อผู้รับ</div>
-      <div class="line">กรมทางหลวงชนบท สำนักบำรุงทาง</div>
-      <div class="line">เลขที่ 9 ถนนพหลโยธิน</div>
-      <div class="line">แขวงอนุสาวรีย์ เขตบางเขน กทม. 10220</div>
-      <div class="line"></div>
-      <div class="postal-row">
-        <span class="label-text">รหัสไปรษณีย์</span>
-        ${circles}
-      </div>
-    </div>
-  </body>
-  </html>`
-
-    const iframe = document.createElement('iframe')
-    iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1122px;height:794px;border:none;visibility:hidden;'
-    document.body.appendChild(iframe)
-
-    const doc = iframe.contentDocument || iframe.contentWindow?.document
-    if (!doc) return
-
-    doc.open()
-    doc.write(html)
-    doc.close()
-
-    setTimeout(() => {
-      iframe.contentWindow?.focus()
-      iframe.contentWindow?.print()
-      setTimeout(() => document.body.removeChild(iframe), 1500)
-    }, 500)
-  }, [user.from_web])
+  }, [dispatch])
 
   const renderResult = useMemo(() => {
     return (
@@ -794,6 +708,11 @@ const RequestPermit: React.FC<Props> = (props) => {
           <button ref={submitRef} hidden type='submit' />
         </form>
       </section>
+      <ModalPdfPreview
+        file={previewFile}
+        title='ที่อยู่สำหรับจัดส่งเอกสาร'
+        onClose={() => setPreviewFile(null)}
+      />
     </>
   )
 }

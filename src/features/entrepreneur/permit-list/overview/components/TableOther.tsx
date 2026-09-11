@@ -1,6 +1,6 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Badge, message, Table, type TableProps } from 'antd';
 import type {
   PetitionExtendedData,
@@ -12,7 +12,8 @@ import { CLIENT_PETITION_STATUS } from '@/utils/constant';
 import dayjs from 'dayjs';
 import { getPetitionExtendedMessageAPI } from '@/services/entrepreneur/PetitionService';
 import { setLoading, useAppDispatch } from '@/store';
-import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
+import { buildUploadFileUrl } from '@/utils/uploadFileUrl';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 
 interface Props {
   data: PetitionExtendedData;           // ✅ ใช้ Extended
@@ -40,6 +41,7 @@ const STATUS_TAG_STYLE: React.CSSProperties = {
 const TableOther: React.FC<Props> = (props) => {
   const { data, loading, handleTableChange, openMessageModal } = props
   const dispatch = useAppDispatch()
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
 
   const renderStatusTag = useCallback((petitionFlow: PetitionExtendedFlow, record: PetitionExtendedTableData) => {
     let text: 'IN_PROGRESS' | 'REJECTED' | 'APPROVE' | 'NOT_APPROVE' = 'IN_PROGRESS'
@@ -92,37 +94,11 @@ const TableOther: React.FC<Props> = (props) => {
     );
   }, [openMessageModal])
 
-  const extractUrl = useCallback((url: string) => {
-    const path = url.split('/upload')[1];
-    return path
-  }, []);
-
-  const showFile = useCallback(async (fileUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(fileUrl)
-      if (response.status === 200) {
-        const url = URL.createObjectURL(response.data);
-        window.open(url);
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [dispatch])
-
   const fetchStatusMessage = useCallback(async (messageId: number) => {
     dispatch(setLoading(true))
     try {
       const response = await getPetitionExtendedMessageAPI({ message_id: messageId })
-      if (response.status === 200) {
-        showFile(extractUrl(response.data.document_url))
-      }
+      setPreviewFile(buildUploadFileUrl(response.data.document_url))
     } catch (error) {
       if (error instanceof Error) {
         message.error(error.message)
@@ -132,7 +108,7 @@ const TableOther: React.FC<Props> = (props) => {
     } finally {
       dispatch(setLoading(false))
     }
-  }, [dispatch, showFile, extractUrl])
+  }, [dispatch])
 
   const columns: TableProps<PetitionExtendedTableData>['columns'] = [
     {
@@ -191,6 +167,7 @@ const TableOther: React.FC<Props> = (props) => {
   ];
 
   return (
+    <>
     <Table
       columns={columns}
       rowKey="id"
@@ -223,6 +200,12 @@ const TableOther: React.FC<Props> = (props) => {
         };
       }}
     />
+      <ModalPdfPreview
+        file={previewFile}
+        title='ใบอนุญาต'
+        onClose={() => setPreviewFile(null)}
+      />
+    </>
   )
 }
 

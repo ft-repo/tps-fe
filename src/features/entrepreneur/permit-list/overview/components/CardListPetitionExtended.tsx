@@ -1,11 +1,12 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import type { PetitionExtendedData, PetitionExtendedFlow, PetitionExtendedTableData } from '@/@types/reducer/petition';
 import { Badge, Button, Card, Col, Empty, Flex, message, Pagination, Row, Skeleton, Tag, Typography } from 'antd';
 import { CLIENT_PETITION_STATUS } from '@/utils/constant';
 import { setLoading, useAppDispatch } from '@/store';
-import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
 import { getPetitionExtendedMessageAPI } from '@/services/entrepreneur/PetitionService';
+import { buildUploadFileUrl } from '@/utils/uploadFileUrl';
+import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 import dayjs from 'dayjs';
 
 const STEP_NAMES = ['คณะกรรมการพิจารณา', 'รอลงนาม', 'ออกใบอนุญาต'] as const
@@ -20,19 +21,13 @@ interface Props {
 const CardListPetitionExtended: React.FC<Props> = (props) => {
   const { data, loading, handleTableChange, openMessageModal } = props
   const dispatch = useAppDispatch()
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
 
-  const extractUrl = useCallback((url: string) => {
-    return url.split('/upload')[1]
-  }, [])
-
-  const showFile = useCallback(async (fileUrl: string) => {
+  const fetchStatusMessage = useCallback(async (messageId: number) => {
     dispatch(setLoading(true))
     try {
-      const response = await getUploadAPI(fileUrl)
-      if (response.status === 200) {
-        const url = URL.createObjectURL(response.data)
-        window.open(url)
-      }
+      const response = await getPetitionExtendedMessageAPI({ message_id: messageId })
+      setPreviewFile(buildUploadFileUrl(response.data.document_url))
     } catch (error) {
       if (error instanceof Error) message.error(error.message)
       else console.error(error)
@@ -40,21 +35,6 @@ const CardListPetitionExtended: React.FC<Props> = (props) => {
       dispatch(setLoading(false))
     }
   }, [dispatch])
-
-  const fetchStatusMessage = useCallback(async (messageId: number) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getPetitionExtendedMessageAPI({ message_id: messageId })
-      if (response.status === 200) {
-        showFile(extractUrl(response.data.document_url))
-      }
-    } catch (error) {
-      if (error instanceof Error) message.error(error.message)
-      else console.error(error)
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [dispatch, showFile, extractUrl])
 
   const renderStatusTag = useCallback((petitionFlow: PetitionExtendedFlow | undefined, record: PetitionExtendedTableData, stepName?: string) => {
     let text: 'IN_PROGRESS' | 'REJECTED' | 'APPROVE' | 'NOT_APPROVE' = 'IN_PROGRESS'
@@ -169,6 +149,11 @@ const CardListPetitionExtended: React.FC<Props> = (props) => {
           />
         </Flex>
       )}
+      <ModalPdfPreview
+        file={previewFile}
+        title='ใบอนุญาต'
+        onClose={() => setPreviewFile(null)}
+      />
     </>
   )
 }
