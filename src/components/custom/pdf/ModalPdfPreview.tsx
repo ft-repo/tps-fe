@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { Button, Modal } from 'antd'
 import { HiOutlineDownload } from 'react-icons/hi'
 import { Viewer, Worker } from '@react-pdf-viewer/core'
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
+import { defaultLayoutPlugin, type ToolbarSlot } from '@react-pdf-viewer/default-layout'
 // Bundled locally rather than pulled from a CDN: in-app WebViews are the main audience
 // here and can't be relied on to reach an external host.
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.js?url'
+import { downloadPdf } from '@/utils/custom/downloadBridge'
 
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
@@ -31,8 +32,6 @@ interface Props {
 const ModalPdfPreview: React.FC<Props> = (props) => {
   const { file, title = 'เอกสาร', filename = 'document.pdf', onClose } = props
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
-  // Calls hooks internally, so it has to run at the top level, not inside useMemo.
-  const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
   useEffect(() => {
     if (!file || typeof file === 'string') {
@@ -47,12 +46,29 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
   const fileUrl = typeof file === 'string' ? file : blobUrl
 
   const handleDownload = () => {
-    if (!fileUrl) return
-    const a = document.createElement('a')
-    a.href = fileUrl
-    a.download = filename
-    a.click()
+    if (!file) return
+    // Goes through the Android bridge when embedded in the app's WebView, since a plain
+    // `<a download>` click on a blob: URL never fires a real network request there and
+    // the app's DownloadListener silently never sees it — see downloadBridge.ts.
+    void downloadPdf(file, filename)
   }
+
+  // The default toolbar's own Download button hits the same blob: URL limitation and
+  // stays broken inside the WebView; hide it so the working footer button above isn't
+  // shadowed by a redundant one that looks the same but silently does nothing.
+  const transformToolbarSlot = (slot: ToolbarSlot): ToolbarSlot => ({
+    ...slot,
+    Download: () => <></>,
+    DownloadMenuItem: () => <></>,
+  })
+  // Calls hooks internally, so it has to run at the top level, not inside useMemo.
+  const defaultLayoutPluginInstance = defaultLayoutPlugin({
+    renderToolbar: (Toolbar) => (
+      <Toolbar>
+        {defaultLayoutPluginInstance.toolbarPluginInstance.renderDefaultToolbar(transformToolbarSlot)}
+      </Toolbar>
+    ),
+  })
 
   return (
     <Modal

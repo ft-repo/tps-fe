@@ -7,7 +7,7 @@ type PdfDocument = Parameters<typeof pdf>[0]
 // risk hitting URL-length limits in the native shell's external-open handoff.
 const MAX_EXTERNAL_OPEN_BYTES = 2 * 1024 * 1024
 
-const blobToDataUri = (blob: Blob): Promise<string> =>
+export const blobToDataUri = (blob: Blob): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader()
     reader.onload = () => resolve(reader.result as string)
