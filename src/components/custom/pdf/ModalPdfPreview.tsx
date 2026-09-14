@@ -80,7 +80,6 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
         <Button
           icon={<HiOutlineDownload className="text-lg" />}
           onClick={handleDownload}
-          disabled={!fileUrl}
         >
           ดาวน์โหลด
         </Button>
