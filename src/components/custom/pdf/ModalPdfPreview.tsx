@@ -47,9 +47,10 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
 
   const handleDownload = () => {
     if (!file) return
-    // Goes through the Android bridge when embedded in the app's WebView, since a plain
-    // `<a download>` click on a blob: URL never fires a real network request there and
-    // the app's DownloadListener silently never sees it — see downloadBridge.ts.
+    // A plain `<a download>` click on a blob: URL never fires a real network request
+    // inside the app's WebView, so its DownloadListener silently never sees it —
+    // downloadBridge.ts routes around that (Web Share sheet, then the native bridge if
+    // the host provides one, then a plain anchor download outside the WebView).
     void downloadPdf(file, filename)
   }
 
