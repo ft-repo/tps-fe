@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useEffect, useState } from 'react'
-import { Modal } from 'antd'
+import { Button, Modal } from 'antd'
+import { HiOutlineDownload } from 'react-icons/hi'
 import { Viewer, Worker } from '@react-pdf-viewer/core'
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
 // Bundled locally rather than pulled from a CDN: in-app WebViews are the main audience
@@ -14,6 +15,8 @@ interface Props {
   /** A URL to load, or a blob for documents generated in the browser. */
   file: Blob | string | null;
   title?: string;
+  /** Filename used when the user clicks Download (defaults to "document.pdf"). */
+  filename?: string;
   onClose: () => void;
 }
 
@@ -26,7 +29,7 @@ interface Props {
  * to canvas here works regardless of both limitations.
  */
 const ModalPdfPreview: React.FC<Props> = (props) => {
-  const { file, title = 'เอกสาร', onClose } = props
+  const { file, title = 'เอกสาร', filename = 'document.pdf', onClose } = props
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
   // Calls hooks internally, so it has to run at the top level, not inside useMemo.
   const defaultLayoutPluginInstance = defaultLayoutPlugin()
@@ -43,12 +46,28 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
 
   const fileUrl = typeof file === 'string' ? file : blobUrl
 
+  const handleDownload = () => {
+    if (!fileUrl) return
+    const a = document.createElement('a')
+    a.href = fileUrl
+    a.download = filename
+    a.click()
+  }
+
   return (
     <Modal
       destroyOnHidden
       open={!!file}
       title={title}
-      footer={null}
+      footer={
+        <Button
+          icon={<HiOutlineDownload className="text-lg" />}
+          onClick={handleDownload}
+          disabled={!fileUrl}
+        >
+          ดาวน์โหลด
+        </Button>
+      }
       width="95vw"
       style={{ top: 16, maxWidth: 1000 }}
       styles={{ body: { height: '80vh', padding: 0 } }}
