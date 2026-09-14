@@ -3,12 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { Button, Modal } from 'antd'
 import { HiOutlineDownload } from 'react-icons/hi'
 import { Viewer, Worker } from '@react-pdf-viewer/core'
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
-import { useAppSelector } from '@/store'
-import { trySystemBrowserOpen } from '@/utils/platformOpen'
+import { defaultLayoutPlugin, type ToolbarSlot } from '@react-pdf-viewer/default-layout'
 // Bundled locally rather than pulled from a CDN: in-app WebViews are the main audience
 // here and can't be relied on to reach an external host.
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.js?url'
+import { downloadPdf } from '@/utils/custom/downloadBridge'
 
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
@@ -33,9 +32,6 @@ interface Props {
 const ModalPdfPreview: React.FC<Props> = (props) => {
   const { file, title = 'เอกสาร', filename = 'document.pdf', onClose } = props
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
-  const { from_web } = useAppSelector(state => state.auth.user)
-  // Calls hooks internally, so it has to run at the top level, not inside useMemo.
-  const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
   useEffect(() => {
     if (!file || typeof file === 'string') {
@@ -48,28 +44,31 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
   }, [file])
 
   const fileUrl = typeof file === 'string' ? file : blobUrl
-  // Only a server-hosted document is worth offering: a Blob here is a file the user just
-  // picked off their own device, so it's already sitting in their downloads.
-  const downloadUrl = typeof file === 'string' ? file : null
 
   const handleDownload = () => {
-    if (!downloadUrl) return
-
-    // Inside the app's WebView, hand the document to the device's browser instead.
-    // Android's WebView routes every download to the host app's DownloadListener, and
-    // this one registers none — so downloading in place silently does nothing. The api
-    // key rides in the query string (see buildUploadFileUrl), which is what lets the URL
-    // survive the trip out: it authenticates itself with no header to carry along.
-    if (from_web === false) {
-      const absoluteUrl = new URL(downloadUrl, window.location.origin).href
-      if (trySystemBrowserOpen(absoluteUrl)) return
-    }
-
-    const a = document.createElement('a')
-    a.href = downloadUrl
-    a.download = filename
-    a.click()
+    if (!file) return
+    // Goes through the Android bridge when embedded in the app's WebView, since a plain
+    // `<a download>` click on a blob: URL never fires a real network request there and
+    // the app's DownloadListener silently never sees it — see downloadBridge.ts.
+    void downloadPdf(file, filename)
   }
+
+  // The default toolbar's own Download button hits the same blob: URL limitation and
+  // stays broken inside the WebView; hide it so the working footer button above isn't
+  // shadowed by a redundant one that looks the same but silently does nothing.
+  const transformToolbarSlot = (slot: ToolbarSlot): ToolbarSlot => ({
+    ...slot,
+    Download: () => <></>,
+    DownloadMenuItem: () => <></>,
+  })
+  // Calls hooks internally, so it has to run at the top level, not inside useMemo.
+  const defaultLayoutPluginInstance = defaultLayoutPlugin({
+    renderToolbar: (Toolbar) => (
+      <Toolbar>
+        {defaultLayoutPluginInstance.toolbarPluginInstance.renderDefaultToolbar(transformToolbarSlot)}
+      </Toolbar>
+    ),
+  })
 
   return (
     <Modal
@@ -77,14 +76,12 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
       open={!!file}
       title={title}
       footer={
-        downloadUrl ? (
-          <Button
-            icon={<HiOutlineDownload className="text-lg" />}
-            onClick={handleDownload}
-          >
-            ดาวน์โหลด
-          </Button>
-        ) : null
+        <Button
+          icon={<HiOutlineDownload className="text-lg" />}
+          onClick={handleDownload}
+        >
+          ดาวน์โหลด
+        </Button>
       }
       width="95vw"
       style={{ top: 16, maxWidth: 1000 }}
