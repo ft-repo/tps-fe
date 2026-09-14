@@ -23,7 +23,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
   const { control, setValue } = props
   const { errors } = useFormState({ control })
   const { from_web } = useAppSelector(state => state.auth.user)
-  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
 
   const uploadFile = useCallback(async (fieldName: string, file: any, isImage: boolean = false) => {
     let uploadAPI
@@ -49,12 +49,16 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
     }
   }, [setValue])
 
-  const handlePreview = useCallback((file?: RcFile) => {
-    if (!file) return
+  // An item loaded from the server carries a url and no originFileObj; one the user just
+  // picked is the other way round. The url is the better of the two to pass on — a blob
+  // can only leave this page as a data: uri, which Chrome refuses to open.
+  const handlePreview = useCallback((file: UploadFile) => {
+    const source = file.url || (file.originFileObj ? URL.createObjectURL(file.originFileObj) : null)
+    if (!source) return
     if (from_web) {
-      window.open(URL.createObjectURL(file))
+      window.open(source)
     } else {
-      setPreviewFile(file)
+      setPreviewFile(source)
     }
   }, [from_web])
 
@@ -74,7 +78,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
           <div className='preview-overlay rounded-md'>
             <EyeOutlined
               className='preview-icon'
-              onClick={() => handlePreview(file.originFileObj as RcFile)}
+              onClick={() => handlePreview(file)}
             />
             <DeleteOutlined
               className='delete-icon'
@@ -135,7 +139,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         setValue('file_property_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
+                    onPreview={handlePreview}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -200,7 +204,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         setValue('file_hire_contact_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
+                    onPreview={handlePreview}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -265,7 +269,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         setValue('file_purchase_contact_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
+                    onPreview={handlePreview}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">
@@ -330,7 +334,7 @@ const FormUpdateDocument: React.FC<Props> = (props) => {
                         setValue('file_transfer_contact_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
+                    onPreview={handlePreview}
                   >
                     {field.value.length ? null :
                       <div className="my-8 text-center">

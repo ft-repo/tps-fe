@@ -2,15 +2,16 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import { APIPostBody, VehicleListByIDResponse } from '@/@types/services/vehicle';
-import { Col, message, Modal, Row, UploadFile } from 'antd'
-import React, { Ref, useCallback, useEffect, useRef, useState } from 'react'
+import { Col, Modal, Row } from 'antd'
+import React, { Ref, useCallback, useEffect, useRef } from 'react'
 import { INIT_VEHICLE_MODAL } from '../screen';
 import { useForm } from 'react-hook-form';
 import { FieldType } from '@/@types/entrepreneur/vehicle-list';
 import { FormUpdateData, FormUpdateDocument } from '../components';
 import { getProductType, setLoading, useAppDispatch, useAppSelector } from '@/store';
-import { getUploadAPI, putVehicleAPI } from '@/services/entrepreneur/VehicleListService';
+import { putVehicleAPI } from '@/services/entrepreneur/VehicleListService';
 import { getVehicleData } from '@/store/slices/entrepreneur';
+import { buildUploadFileUrl } from '@/utils/uploadFileUrl';
 
 interface Props {
   open: boolean;
@@ -23,7 +24,6 @@ interface ContentProps {
   id: string | number;
   data: VehicleListByIDResponse,
   submitRef: Ref<HTMLButtonElement>;
-  fileList: UploadFile[];
   setOpen: ({ open, data, id }: { open: boolean, data: VehicleListByIDResponse, id: string | number }) => void;
 }
 
@@ -176,335 +176,43 @@ const Content = (props: ContentProps) => {
   //   return match ? match[1] : '';
   // }, [])
 
-  const extractUrl = useCallback((url: string) => {
-    const path = url.split('/upload')[1];
-    return path
-  }, []);
-
-  const fetchRegistrationUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(imgUrl)
-      if (response.status === 200) {
-        const blobFile = new Blob([response.data], { type: response.data.type })
-        const url = URL.createObjectURL(blobFile)
-        setValue('file_registered_document_id.file', [
-          {
-            // crossOrigin: 'use-credentials',
-            // name: extractFileName(String(data.vehicle_detail.registration_document_url)),
-            name: 'เอกสารเล่มทะเบียน',
-            // percent: 100,
-            uid: '1',
-            status: 'done',
-            url: url,
-            // thumbUrl: url,
-            type: response.data.type,
-            originFileObj: blobFile as any,
-          }
-        ])
-        setValue('file_registered_document_id.url', data.vehicle_detail.registration_document_url)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [data.vehicle_detail.registration_document_url, setValue, dispatch])
-
-  const fetchPropertyUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(imgUrl)
-      if (response.status === 200) {
-        const blobFile = new Blob([response.data], { type: response.data.type })
-        const url = URL.createObjectURL(blobFile)
-        setValue('file_property_document_id.file', [
-          {
-            // crossOrigin: 'use-credentials',
-            // name: extractFileName(String(data.vehicle_owner_documents.owner_document_url)),
-            name: 'เอกสารถือครองสิทธิ์',
-            // percent: 100,
-            uid: '1',
-            status: 'done',
-            url: url,
-            // thumbUrl: url,
-            type: response.data.type,
-            originFileObj: blobFile as any,
-          }
-        ])
-        setValue('file_property_document_id.url', data.vehicle_owner_documents.owner_document_url)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [data.vehicle_owner_documents.owner_document_url, setValue, dispatch])
-
-  const fetchHireUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(imgUrl)
-      if (response.status === 200) {
-        const blobFile = new Blob([response.data], { type: response.data.type })
-        const url = URL.createObjectURL(blobFile)
-        setValue('file_hire_contact_document_id.file', [
-          {
-            // crossOrigin: 'use-credentials',
-            // name: extractFileName(String(data.vehicle_owner_documents.employment_contact_url)),
-            name: 'สัญญาจ้างหรือเช่า',
-            // percent: 100,
-            uid: '1',
-            status: 'done',
-            url: url,
-            // thumbUrl: url,
-            type: response.data.type,
-            originFileObj: blobFile as any,
-          }
-        ])
-        setValue('file_hire_contact_document_id.url', data.vehicle_owner_documents.employment_contact_url)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [data.vehicle_owner_documents.employment_contact_url, setValue, dispatch])
-
-  const fetchPurchaseUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(imgUrl)
-      if (response.status === 200) {
-        const blobFile = new Blob([response.data], { type: response.data.type })
-        const url = URL.createObjectURL(blobFile)
-        setValue('file_purchase_contact_document_id.file', [
-          {
-            // crossOrigin: 'use-credentials',
-            // name: extractFileName(String(data.vehicle_owner_documents.buyer_contact_url)),
-            name: 'สัญญาเช่าซื้อ',
-            // percent: 100,
-            uid: '1',
-            status: 'done',
-            url: url,
-            // thumbUrl: url,
-            type: response.data.type,
-            originFileObj: blobFile as any,
-          }
-        ])
-        setValue('file_purchase_contact_document_id.url', data.vehicle_owner_documents.buyer_contact_url)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [data.vehicle_owner_documents.buyer_contact_url, setValue, dispatch])
-
-  const fetchTransferUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(imgUrl)
-      if (response.status === 200) {
-        const blobFile = new Blob([response.data], { type: response.data.type })
-        const url = URL.createObjectURL(blobFile)
-        setValue('file_transfer_contact_document_id.file', [
-          {
-            // crossOrigin: 'use-credentials',
-            // name: extractFileName(String(data.vehicle_owner_documents.assignment_contact_url)),
-            name: 'สัญญามอบสิทธิ์',
-            // percent: 100,
-            uid: '1',
-            status: 'done',
-            url: url,
-            // thumbUrl: url,
-            type: response.data.type,
-            originFileObj: blobFile as any,
-          }
-        ])
-        setValue('file_transfer_contact_document_id.url', data.vehicle_owner_documents.assignment_contact_url)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [data.vehicle_owner_documents.assignment_contact_url, setValue, dispatch])
-
-  const fetchFrontUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(imgUrl)
-      if (response.status === 200) {
-        const blobFile = new Blob([response.data], { type: response.data.type })
-        const url = URL.createObjectURL(blobFile)
-        setValue('file_front_image_id.file', [
-          {
-            // crossOrigin: 'use-credentials',
-            // name: extractFileName(String(data.vehicle_pictures.front_rear_url)),
-            name: 'รูปด้านหน้า',
-            // percent: 100,
-            uid: '1',
-            status: 'done',
-            url: url,
-            // thumbUrl: url,
-            type: response.data.type,
-            originFileObj: blobFile as any,
-          }
-        ])
-        setValue('file_front_image_id.url', data.vehicle_pictures.front_rear_url)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [data.vehicle_pictures.front_rear_url, setValue, dispatch])
-
-  const fetchSideUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(imgUrl)
-      if (response.status === 200) {
-        const blobFile = new Blob([response.data], { type: response.data.type })
-        const url = URL.createObjectURL(blobFile)
-        setValue('file_side_image_id.file', [
-          {
-            // crossOrigin: 'use-credentials',
-            // name: extractFileName(String(data.vehicle_pictures.side_rear_url)),
-            name: 'รูปด้านข้าง',
-            // percent: 100,
-            uid: '1',
-            status: 'done',
-            url: url,
-            // thumbUrl: url,
-            type: response.data.type,
-            originFileObj: blobFile as any,
-          }
-        ])
-        setValue('file_side_image_id.url', data.vehicle_pictures.side_rear_url)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [data.vehicle_pictures.side_rear_url, setValue, dispatch])
-
-  const fetchBackUrl = useCallback(async (imgUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(imgUrl)
-      if (response.status === 200) {
-        const blobFile = new Blob([response.data], { type: response.data.type })
-        const url = URL.createObjectURL(blobFile)
-        setValue('file_back_image_id.file', [
-          {
-            // crossOrigin: 'use-credentials',
-            // name: extractFileName(String(data.vehicle_pictures.back_rear_url)),
-            name: 'รูปด้านหลัง',
-            // percent: 100,
-            uid: '1',
-            status: 'done',
-            url: url,
-            // thumbUrl: url,
-            type: response.data.type,
-            originFileObj: blobFile as any,
-          }
-        ])
-        setValue('file_back_image_id.url', data.vehicle_pictures.back_rear_url)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [data.vehicle_pictures.back_rear_url, setValue, dispatch])
+  // Documents already live behind an api-key-guarded url, so the form can point straight
+  // at them. Fetching each one as a blob first — as this screen used to — left the preview
+  // holding bytes with no url, and a blob can only be handed onward as a data: uri, which
+  // Chrome refuses to open as a top-level navigation.
+  const setDocumentField = useCallback((field: string, label: string, documentUrl?: string | null) => {
+    if (!documentUrl) return
+    const extension = documentUrl.split('?')[0].split('.').pop()?.toLowerCase()
+    // antd decides whether to draw a thumbnail from `type`; it can't read the extension
+    // off these urls because the api key sits after it.
+    const type = extension === 'pdf'
+      ? 'application/pdf'
+      : extension
+        ? `image/${extension === 'jpg' ? 'jpeg' : extension}`
+        : undefined
+    setValue(`${field}.file` as never, [
+      {
+        name: label,
+        uid: '1',
+        status: 'done',
+        url: buildUploadFileUrl(documentUrl),
+        type,
+      },
+    ] as never)
+    setValue(`${field}.url` as never, documentUrl as never)
+  }, [setValue])
 
   useEffect(() => {
-    if (data.vehicle_detail.registration_document_url) {
-      if (extractUrl(data.vehicle_detail.registration_document_url)) {
-        fetchRegistrationUrl(extractUrl(data.vehicle_detail.registration_document_url))
-      }
-    }
-    if (data.vehicle_owner_documents.owner_document_url) {
-      if (extractUrl(data.vehicle_owner_documents.owner_document_url)) {
-        fetchPropertyUrl(extractUrl(data.vehicle_owner_documents.owner_document_url))
-      }
-    }
-    if (data.vehicle_owner_documents.employment_contact_url) {
-      if (extractUrl(data.vehicle_owner_documents.employment_contact_url)) {
-        fetchHireUrl(extractUrl(data.vehicle_owner_documents.employment_contact_url))
-      }
-    }
-    if (data.vehicle_owner_documents.buyer_contact_url) {
-      if (extractUrl(data.vehicle_owner_documents.buyer_contact_url)) {
-        fetchPurchaseUrl(extractUrl(data.vehicle_owner_documents.buyer_contact_url))
-      }
-    }
-    if (data.vehicle_owner_documents.assignment_contact_url) {
-      if (extractUrl(data.vehicle_owner_documents.assignment_contact_url)) {
-        fetchTransferUrl(extractUrl(data.vehicle_owner_documents.assignment_contact_url))
-      }
-    }
-    //
-    if (data.vehicle_pictures.front_rear_url) {
-      if (extractUrl(data.vehicle_pictures.front_rear_url)) {
-        fetchFrontUrl(extractUrl(data.vehicle_pictures.front_rear_url))
-      }
-    }
-    if (data.vehicle_pictures.side_rear_url) {
-      if (extractUrl(data.vehicle_pictures.side_rear_url)) {
-        fetchSideUrl(extractUrl(data.vehicle_pictures.side_rear_url))
-      }
-    }
-    if (data.vehicle_pictures.back_rear_url) {
-      if (extractUrl(data.vehicle_pictures.back_rear_url)) {
-        fetchBackUrl(extractUrl(data.vehicle_pictures.back_rear_url))
-      }
-    }
+    setDocumentField('file_registered_document_id', 'เอกสารเล่มทะเบียน', data.vehicle_detail.registration_document_url)
+    setDocumentField('file_property_document_id', 'เอกสารถือครองสิทธิ์', data.vehicle_owner_documents.owner_document_url)
+    setDocumentField('file_hire_contact_document_id', 'สัญญาจ้างหรือเช่า', data.vehicle_owner_documents.employment_contact_url)
+    setDocumentField('file_purchase_contact_document_id', 'สัญญาเช่าซื้อ', data.vehicle_owner_documents.buyer_contact_url)
+    setDocumentField('file_transfer_contact_document_id', 'สัญญามอบสิทธิ์', data.vehicle_owner_documents.assignment_contact_url)
+    setDocumentField('file_front_image_id', 'รูปด้านหน้า', data.vehicle_pictures.front_rear_url)
+    setDocumentField('file_side_image_id', 'รูปด้านข้าง', data.vehicle_pictures.side_rear_url)
+    setDocumentField('file_back_image_id', 'รูปด้านหลัง', data.vehicle_pictures.back_rear_url)
   }, [
-    extractUrl,
-    fetchRegistrationUrl,
-    fetchPropertyUrl,
-    fetchHireUrl,
-    fetchPurchaseUrl,
-    fetchTransferUrl,
-    fetchFrontUrl,
-    fetchSideUrl,
-    fetchBackUrl,
+    setDocumentField,
     data.vehicle_detail.registration_document_url,
     data.vehicle_owner_documents.owner_document_url,
     data.vehicle_owner_documents.employment_contact_url,
@@ -540,80 +248,6 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
   const { open, data, setOpen, id } = props
   const submitRef = useRef<HTMLButtonElement>(null)
   const loading = useAppSelector(state => state.layout.loading)
-  const dispatch = useAppDispatch()
-  const [fileList, setFileList] = useState<any[]>([])
-
-  const extractUrl = useCallback((url: string) => {
-    const pathname = new URL(url).pathname;
-    const match = pathname.match(/\/(business_certificate|business_picture)\/.*/);
-    return match ? match[0] : null;
-  }, []);
-
-  const extractFileName = useCallback((url: string | null) => {
-    const match = url?.match(/\/([^\/]+)$/);
-    return match ? match[1] : '';
-  }, [])
-
-  const getUploadAPIList = useCallback(async () => {
-    // CHECK IF DATA EXISTED
-    if (!data) return
-    dispatch(setLoading(true))
-
-    const uploadArr = [
-      extractUrl(data?.vehicle_detail.registration_document_url || ''),
-      extractUrl(data?.vehicle_owner_documents.owner_document_url || ''),
-      extractUrl(data?.vehicle_owner_documents.employment_contact_url || ''),
-      extractUrl(data?.vehicle_owner_documents.buyer_contact_url || ''),
-      extractUrl(data?.vehicle_owner_documents.assignment_contact_url || ''),
-      extractUrl(data?.vehicle_pictures.front_rear_url || ''),
-      extractUrl(data?.vehicle_pictures.side_rear_url || ''),
-      extractUrl(data?.vehicle_pictures.back_rear_url || ''),
-    ]
-    try {
-      const response = await Promise.all(uploadArr.map(item => getUploadAPI(item as string)))
-      const result = response.every(item => item.status === 200)
-      if (result) {
-        setFileList(response.map((item, index) => {
-          const blobFile = new Blob([item.data], { type: item.data.type })
-          const url = URL.createObjectURL(blobFile)
-          // RETURN VALUE
-          return {
-            // crossOrigin: 'use-credentials',
-            name: item.data.name || extractFileName(uploadArr[index]),
-            // percent: 100,
-            uid: String(index),
-            status: 'done',
-            url: url,
-            // thumbUrl: url,
-            type: item.data.type,
-            originFileObj: blobFile as any,
-          }
-        }))
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [data, extractUrl, dispatch, extractFileName])
-
-  useEffect(() => {
-    if (open) {
-      getUploadAPIList()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
-
-  useEffect(() => {
-    if (!open) {
-      setFileList([])
-    }
-  }, [open])
-
   if (!data) return
 
   return (
@@ -637,7 +271,6 @@ const ModalUpdateVehicle: React.FC<Props> = (props) => {
         id={id}
         data={data}
         submitRef={submitRef}
-        fileList={fileList}
         setOpen={setOpen}
       />
     </Modal>

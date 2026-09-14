@@ -8,7 +8,7 @@ import { Control, Controller, UseFormSetValue, useFormState, useWatch } from 're
 import { Select, Input, Upload, message, Button, Row, Col } from 'antd';
 import { HiOutlineCloudUpload } from 'react-icons/hi';
 import { postUploadFileAPI } from '@/services/entrepreneur/VehicleListService';
-import { RcFile } from 'antd/es/upload';
+import { UploadFile } from 'antd/es/upload';
 
 interface Props {
   control: Control<FieldType>;
@@ -20,7 +20,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
   const { province, axis_type } = useAppSelector(state => state.master)
   const vehicleType = useAppSelector(state => state.master.vehicle_type)
   const { from_web } = useAppSelector(state => state.auth.user)
-  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
   const { errors } = useFormState({ control })
 
   const { vehicle_type } = useWatch({ control })
@@ -43,12 +43,16 @@ const FormUpdateData: React.FC<Props> = (props) => {
     }
   }, [setValue])
 
-  const handlePreview = useCallback((file?: RcFile) => {
-    if (!file) return
+  // An item loaded from the server carries a url and no originFileObj; one the user just
+  // picked is the other way round. The url is the better of the two to pass on — a blob
+  // can only leave this page as a data: uri, which Chrome refuses to open.
+  const handlePreview = useCallback((file: UploadFile) => {
+    const source = file.url || (file.originFileObj ? URL.createObjectURL(file.originFileObj) : null)
+    if (!source) return
     if (from_web) {
-      window.open(URL.createObjectURL(file))
+      window.open(source)
     } else {
-      setPreviewFile(file)
+      setPreviewFile(source)
     }
   }, [from_web])
 
@@ -523,7 +527,7 @@ const FormUpdateData: React.FC<Props> = (props) => {
                         setValue('file_registered_document_id.url', '')
                       }
                     }}
-                    onPreview={(e) => handlePreview(e.originFileObj as RcFile)}
+                    onPreview={handlePreview}
                   >
                     {field.value.length ? null :
                       <Button
