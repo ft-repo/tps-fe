@@ -7,7 +7,15 @@ import { defaultLayoutPlugin, type ToolbarSlot } from '@react-pdf-viewer/default
 // Bundled locally rather than pulled from a CDN: in-app WebViews are the main audience
 // here and can't be relied on to reach an external host.
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.js?url'
-import { downloadPdf } from '@/utils/custom/downloadBridge'
+import {
+  DOWNLOAD_METHODS,
+  describeEnvironment,
+  downloadPdf,
+  runDownloadMethod,
+  type DownloadMethod,
+  type DownloadStep,
+} from '@/utils/custom/downloadBridge'
+import { useAppSelector } from '@/store'
 
 import '@react-pdf-viewer/core/lib/styles/index.css'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
@@ -16,9 +24,28 @@ interface Props {
   /** A URL to load, or a blob for documents generated in the browser. */
   file: Blob | string | null;
   title?: string;
-  /** Filename used when the user clicks Download (defaults to "document.pdf"). */
+  /** Overrides the name the download is saved under; otherwise taken from `file`. */
   filename?: string;
   onClose: () => void;
+}
+
+/**
+ * No caller passes a filename, and the documents here already carry a good one — either
+ * in the last segment of the URL or on the File the user picked.
+ */
+const deriveFilename = (file: Blob | string | null): string => {
+  if (typeof file === 'string') {
+    const lastSegment = file.split('?')[0].split('/').pop()
+    if (lastSegment) {
+      try {
+        return decodeURIComponent(lastSegment)
+      } catch {
+        return lastSegment
+      }
+    }
+  }
+  if (file instanceof File && file.name) return file.name
+  return 'document.pdf'
 }
 
 /**
@@ -30,8 +57,11 @@ interface Props {
  * to canvas here works regardless of both limitations.
  */
 const ModalPdfPreview: React.FC<Props> = (props) => {
-  const { file, title = 'เอกสาร', filename = 'document.pdf', onClose } = props
+  const { file, title = 'เอกสาร', filename, onClose } = props
+  const resolvedFilename = filename || deriveFilename(file)
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
+  const [trace, setTrace] = useState<DownloadStep[] | null>(null)
+  const { from_web } = useAppSelector(state => state.auth.user)
 
   useEffect(() => {
     if (!file || typeof file === 'string') {
@@ -45,12 +75,18 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
 
   const fileUrl = typeof file === 'string' ? file : blobUrl
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!file) return
     // Goes through the Android bridge when embedded in the app's WebView, since a plain
-    // `<a download>` click on a blob: URL never fires a real network request there and
-    // the app's DownloadListener silently never sees it — see downloadBridge.ts.
-    void downloadPdf(file, filename)
+    // `<a download>` click never fires a real network request there and the app's
+    // DownloadListener silently never sees it — see downloadBridge.ts.
+    setTrace(await downloadPdf(file, resolvedFilename, { fromWeb: from_web }))
+  }
+
+  const handleTryMethod = async (method: DownloadMethod) => {
+    if (!file) return
+    const environment = describeEnvironment(file, resolvedFilename, from_web)
+    setTrace([...environment, ...(await runDownloadMethod(method, file, resolvedFilename))])
   }
 
   // The default toolbar's own Download button hits the same blob: URL limitation and
@@ -76,12 +112,48 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
       open={!!file}
       title={title}
       footer={
-        <Button
-          icon={<HiOutlineDownload className="text-lg" />}
-          onClick={handleDownload}
-        >
-          ดาวน์โหลด
-        </Button>
+        <div className="flex flex-col gap-2 text-left">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              icon={<HiOutlineDownload className="text-lg" />}
+              onClick={handleDownload}
+            >
+              ดาวน์โหลด
+            </Button>
+            {DOWNLOAD_METHODS.map((method) => (
+              <Button
+                key={method.id}
+                size="small"
+                title={method.note}
+                onClick={() => handleTryMethod(method.id)}
+              >
+                {method.label}
+              </Button>
+            ))}
+            {trace && (
+              <Button size="small" type="text" onClick={() => setTrace(null)}>
+                ล้าง
+              </Button>
+            )}
+          </div>
+          {trace && (
+            <div className="max-h-48 overflow-auto rounded bg-black/85 p-2 font-mono text-xs leading-relaxed text-gray-100">
+              {trace.map((step, index) => (
+                <div key={index} className="break-all">
+                  <span
+                    className={
+                      step.ok === true ? 'text-green-400' : step.ok === false ? 'text-red-400' : 'text-sky-300'
+                    }
+                  >
+                    {step.ok === true ? '[ok]' : step.ok === false ? '[fail]' : '[·]'} {step.label}
+                  </span>
+                  {' '}
+                  <span className="text-gray-300">{step.detail}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       }
       width="95vw"
       style={{ top: 16, maxWidth: 1000 }}
