@@ -1,13 +1,13 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useRef, useState } from 'react'
-import { Button, Flex, Input, message, Modal, Radio, Tag } from 'antd'
+import { Button, Flex, Input, Modal, Radio, Tag } from 'antd'
 import { PetitionMessageResponse } from '@/@types/services/petition';
 import { INIT_MODAL_MESSAGE } from './ContentSearchCategory';
 import { Controller, useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
-import { setLoading, useAppDispatch, useAppSelector } from '@/store';
-import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
+import { useAppSelector } from '@/store';
+import { buildUploadFileUrl } from '@/utils/uploadFileUrl';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { patchPetitionHoldAPI } from '@/services/entrepreneur/PetitionService';
@@ -36,8 +36,7 @@ interface FieldType {
 const Content = (props: ContentProps) => {
   const { data, showEditForm, submitRef, setShowEditForm, onRefetch } = props
   const { name, from_web } = useAppSelector(state => state.auth.user)
-  const dispatch = useAppDispatch()
-  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
 
   const form = useForm<FieldType>({
     defaultValues: {
@@ -75,33 +74,17 @@ const Content = (props: ContentProps) => {
     return nameArr.join(' ').trim()
   }, [])
 
-  const extractUrl = useCallback((url: string) => {
-    const path = url.split('/upload')[1];
-    return path
-  }, []);
-
-  const showFile = useCallback(async (fileUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(fileUrl)
-      if (response.status === 200) {
-        if (from_web === false) {
-          setPreviewFile(response.data)
-        } else {
-          const url = URL.createObjectURL(response.data);
-          window.open(url);
-        }
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
+  const showFile = useCallback((documentUrl: string) => {
+    if (!documentUrl) return
+    // The upload routes take the api key as a query parameter, so the URL goes straight
+    // to the viewer — pulling the bytes down first was only ever a way to set a header.
+    const url = buildUploadFileUrl(documentUrl)
+    if (from_web === false) {
+      setPreviewFile(url)
+    } else {
+      window.open(url)
     }
-  }, [dispatch, from_web])
+  }, [from_web])
 
   const onSubmit = useCallback(async (value: FieldType) => {
     const body = value.duration !== 'Cancel' ? {
@@ -166,7 +149,7 @@ const Content = (props: ContentProps) => {
       </section>
       {data.document_url ?
         <section className='mt-3'>
-          <p className='cursor-pointer text-blue-500' onClick={() => showFile(extractUrl(data.document_url))}>ดูเอกสารตอบกลับ</p>
+          <p className='cursor-pointer text-blue-500' onClick={() => showFile(data.document_url)}>ดูเอกสารตอบกลับ</p>
         </section>
         : null}
       <section className='mt-3'>

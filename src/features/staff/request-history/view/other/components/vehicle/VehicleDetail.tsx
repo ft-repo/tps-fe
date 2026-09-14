@@ -1,11 +1,11 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
 import React, { useCallback, useMemo, useState } from 'react'
-import { Descriptions, DescriptionsProps, message } from 'antd'
+import { Descriptions, DescriptionsProps } from 'antd'
 import { VehicleList } from '@/@types/reducer/petition';
 import { AiOutlineFilePdf } from 'react-icons/ai';
-import { getUploadAPI } from '@/services/entrepreneur/VehicleListService';
-import { setLoading, useAppDispatch, useAppSelector } from '@/store';
+import { buildUploadFileUrl } from '@/utils/uploadFileUrl';
+import { useAppSelector } from '@/store';
 import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview';
 
 interface Props {
@@ -15,36 +15,19 @@ interface Props {
 const ContentDetail: React.FC<Props> = (props) => {
   const { item } = props
   const { from_web } = useAppSelector(state => state.auth.user)
-  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
-  const dispatch = useAppDispatch()
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
 
-  const extractUrl = useCallback((url: string) => {
-    const path = url.split('/upload')[1];
-    return path
-  }, []);
-
-  const showFile = useCallback(async (fileUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(fileUrl)
-      if (response.status === 200) {
-        if (from_web === false) {
-          setPreviewFile(response.data)
-        } else {
-          const url = URL.createObjectURL(response.data);
-          window.open(url);
-        }
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
+  const showFile = useCallback((documentUrl: string) => {
+    if (!documentUrl) return
+    // The upload routes take the api key as a query parameter, so the URL goes straight
+    // to the viewer — pulling the bytes down first was only ever a way to set a header.
+    const url = buildUploadFileUrl(documentUrl)
+    if (from_web === false) {
+      setPreviewFile(url)
+    } else {
+      window.open(url)
     }
-  }, [dispatch, from_web])
+  }, [from_web])
 
   // Add this helper function
   const getMaxEtcDimensions = useCallback(() => {
@@ -101,7 +84,7 @@ const ContentDetail: React.FC<Props> = (props) => {
       children: item?.rural_highway_dept_permit_url ? (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(extractUrl(item?.rural_highway_dept_permit_url))}
+          onClick={() => showFile(item?.rural_highway_dept_permit_url)}
         />
       ) : '-',
     },

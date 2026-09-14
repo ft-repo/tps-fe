@@ -1,9 +1,9 @@
 /* eslint-disable no-empty-pattern */
 /* eslint-disable react-refresh/only-export-components */
-import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
-import { setLoading, useAppDispatch, useAppSelector } from '@/store'
+import { buildUploadFileUrl } from '@/utils/uploadFileUrl'
+import { useAppSelector } from '@/store'
 import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
-import { Col, Descriptions, DescriptionsProps, message, Row } from 'antd'
+import { Col, Descriptions, DescriptionsProps, Row } from 'antd'
 import dayjs from 'dayjs'
 import React, { useCallback, useState } from 'react'
 import { AiOutlineFilePdf } from 'react-icons/ai'
@@ -16,13 +16,7 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
   const { } = props
   const { petition_extended_status } = useAppSelector(state => state.staff.petition)
   const { from_web } = useAppSelector(state => state.auth.user)
-  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
-  const dispatch = useAppDispatch()
-
-  const extractUrl = useCallback((url: string) => {
-    const path = url.split('/upload')[1];
-    return path
-  }, []);
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
 
   const renderName = useCallback((title: string, firstName: string, lastName: string) => {
     const nameArr = [title, firstName, lastName]
@@ -30,28 +24,17 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
     return nameArr.join(' ').trim()
   }, [])
 
-  const showFile = useCallback(async (fileUrl: string) => {
-    dispatch(setLoading(true))
-    try {
-      const response = await getUploadAPI(fileUrl)
-      if (response.status === 200) {
-        if (from_web === false) {
-          setPreviewFile(response.data)
-        } else {
-          const url = URL.createObjectURL(response.data);
-          window.open(url);
-        }
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        console.error(error)
-      }
-    } finally {
-      dispatch(setLoading(false))
+  const showFile = useCallback((documentUrl: string) => {
+    if (!documentUrl) return
+    // The upload routes take the api key as a query parameter, so the URL goes straight
+    // to the viewer — pulling the bytes down first was only ever a way to set a header.
+    const url = buildUploadFileUrl(documentUrl)
+    if (from_web === false) {
+      setPreviewFile(url)
+    } else {
+      window.open(url)
     }
-  }, [dispatch, from_web])
+  }, [from_web])
 
   const signed_document: DescriptionsProps['items'] = [
     {
@@ -60,7 +43,7 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
       children: petition_extended_status[1]?.document_url ? (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(extractUrl(petition_extended_status[1]?.document_url) || '-')}
+          onClick={() => showFile(petition_extended_status[1]?.document_url)}
         />
       ) : '-'
     },
@@ -88,7 +71,7 @@ const ResultPermitDetail: React.FC<Props> = (props) => {
       children: petition_extended_status[2]?.document_url ? (
         <AiOutlineFilePdf
           className='w-5 h-5 cursor-pointer inline-flex justify-center items-center'
-          onClick={() => showFile(extractUrl(petition_extended_status[2]?.document_url) || '-')}
+          onClick={() => showFile(petition_extended_status[2]?.document_url)}
         />
       ) : '-'
     },

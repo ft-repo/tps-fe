@@ -7,14 +7,7 @@ import { defaultLayoutPlugin, type ToolbarSlot } from '@react-pdf-viewer/default
 // Bundled locally rather than pulled from a CDN: in-app WebViews are the main audience
 // here and can't be relied on to reach an external host.
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.js?url'
-import {
-  DOWNLOAD_METHODS,
-  describeEnvironment,
-  downloadPdf,
-  runDownloadMethod,
-  type DownloadMethod,
-  type DownloadStep,
-} from '@/utils/custom/downloadBridge'
+import { downloadPdf } from '@/utils/custom/downloadBridge'
 import { useAppSelector } from '@/store'
 
 import '@react-pdf-viewer/core/lib/styles/index.css'
@@ -60,7 +53,6 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
   const { file, title = 'เอกสาร', filename, onClose } = props
   const resolvedFilename = filename || deriveFilename(file)
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
-  const [trace, setTrace] = useState<DownloadStep[] | null>(null)
   const { from_web } = useAppSelector(state => state.auth.user)
 
   useEffect(() => {
@@ -75,18 +67,11 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
 
   const fileUrl = typeof file === 'string' ? file : blobUrl
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     if (!file) return
-    // Goes through the Android bridge when embedded in the app's WebView, since a plain
-    // `<a download>` click never fires a real network request there and the app's
-    // DownloadListener silently never sees it — see downloadBridge.ts.
-    setTrace(await downloadPdf(file, resolvedFilename, { fromWeb: from_web }))
-  }
-
-  const handleTryMethod = async (method: DownloadMethod) => {
-    if (!file) return
-    const environment = describeEnvironment(file, resolvedFilename, from_web)
-    setTrace([...environment, ...(await runDownloadMethod(method, file, resolvedFilename))])
+    // Opens a new window inside the app's WebView, where a plain `<a download>` click
+    // never completes — see downloadBridge.ts.
+    void downloadPdf(file, resolvedFilename, { fromWeb: from_web })
   }
 
   // The default toolbar's own Download button hits the same blob: URL limitation and
@@ -112,48 +97,12 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
       open={!!file}
       title={title}
       footer={
-        <div className="flex flex-col gap-2 text-left">
-          <div className="flex flex-wrap items-center gap-2">
-            <Button
-              icon={<HiOutlineDownload className="text-lg" />}
-              onClick={handleDownload}
-            >
-              ดาวน์โหลด
-            </Button>
-            {DOWNLOAD_METHODS.map((method) => (
-              <Button
-                key={method.id}
-                size="small"
-                title={method.note}
-                onClick={() => handleTryMethod(method.id)}
-              >
-                {method.label}
-              </Button>
-            ))}
-            {trace && (
-              <Button size="small" type="text" onClick={() => setTrace(null)}>
-                ล้าง
-              </Button>
-            )}
-          </div>
-          {trace && (
-            <div className="max-h-48 overflow-auto rounded bg-black/85 p-2 font-mono text-xs leading-relaxed text-gray-100">
-              {trace.map((step, index) => (
-                <div key={index} className="break-all">
-                  <span
-                    className={
-                      step.ok === true ? 'text-green-400' : step.ok === false ? 'text-red-400' : 'text-sky-300'
-                    }
-                  >
-                    {step.ok === true ? '[ok]' : step.ok === false ? '[fail]' : '[·]'} {step.label}
-                  </span>
-                  {' '}
-                  <span className="text-gray-300">{step.detail}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <Button
+          icon={<HiOutlineDownload className="text-lg" />}
+          onClick={handleDownload}
+        >
+          ดาวน์โหลด
+        </Button>
       }
       width="95vw"
       style={{ top: 16, maxWidth: 1000 }}
