@@ -7,12 +7,7 @@ import { defaultLayoutPlugin, type ToolbarSlot } from '@react-pdf-viewer/default
 // Bundled locally rather than pulled from a CDN: in-app WebViews are the main audience
 // here and can't be relied on to reach an external host.
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.js?url'
-import {
-  describeEnvironment,
-  downloadPdf,
-  formatTrace,
-  type DownloadStep,
-} from '@/utils/custom/downloadBridge'
+import { downloadPdf } from '@/utils/custom/downloadBridge'
 import { useAppSelector } from '@/store'
 
 import '@react-pdf-viewer/core/lib/styles/index.css'
@@ -58,8 +53,6 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
   const { file, title = 'เอกสาร', filename, onClose } = props
   const resolvedFilename = filename || deriveFilename(file)
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
-  const [trace, setTrace] = useState<DownloadStep[] | null>(null)
-  const [copied, setCopied] = useState(false)
   const { from_web } = useAppSelector(state => state.auth.user)
 
   useEffect(() => {
@@ -74,31 +67,11 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
 
   const fileUrl = typeof file === 'string' ? file : blobUrl
 
-  const handleDownload = async () => {
+  const handleDownload = () => {
     if (!file) return
-    setCopied(false)
-    const environment = describeEnvironment(file, resolvedFilename, from_web)
     // Opens a new window inside the app's WebView, where a plain `<a download>` click
     // never completes — see downloadBridge.ts.
-    const attempt = await downloadPdf(file, resolvedFilename, { fromWeb: from_web })
-    setTrace([...environment, ...attempt])
-  }
-
-  const handleCopyTrace = async () => {
-    if (!trace) return
-    const text = formatTrace(trace)
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopied(true)
-    } catch {
-      // Clipboard access needs a secure context, which the WebView may not be in.
-      const area = document.createElement('textarea')
-      area.value = text
-      document.body.appendChild(area)
-      area.select()
-      setCopied(document.execCommand('copy'))
-      area.remove()
-    }
+    void downloadPdf(file, resolvedFilename, { fromWeb: from_web })
   }
 
   // The default toolbar's own Download button hits the same blob: URL limitation and
@@ -124,45 +97,12 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
       open={!!file}
       title={title}
       footer={
-        <div className="flex flex-col gap-2 text-left">
-          <div className="flex flex-wrap items-center gap-2">
-            <Button
-              icon={<HiOutlineDownload className="text-lg" />}
-              onClick={handleDownload}
-            >
-              ดาวน์โหลด
-            </Button>
-            {trace && (
-              <>
-                <Button size="small" onClick={handleCopyTrace}>
-                  {copied ? 'คัดลอกแล้ว' : 'คัดลอก log'}
-                </Button>
-                <Button size="small" type="text" onClick={() => setTrace(null)}>
-                  ล้าง
-                </Button>
-                <span className="text-xs text-gray-400">{trace.length} บรรทัด</span>
-              </>
-            )}
-          </div>
-          {trace && (
-            <div className="max-h-60 overflow-auto rounded bg-black/90 p-2 font-mono text-[11px] leading-snug text-gray-100">
-              {trace.map((step, index) => (
-                <div key={index} className="break-all">
-                  <span className="text-gray-500">{String(step.ms).padStart(5)}ms </span>
-                  <span
-                    className={
-                      step.ok === true ? 'text-green-400' : step.ok === false ? 'text-red-400' : 'text-sky-300'
-                    }
-                  >
-                    {step.label}
-                  </span>
-                  <span className="text-gray-500">: </span>
-                  <span className="text-gray-200">{step.detail}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <Button
+          icon={<HiOutlineDownload className="text-lg" />}
+          onClick={handleDownload}
+        >
+          ดาวน์โหลด
+        </Button>
       }
       width="95vw"
       style={{ top: 16, maxWidth: 1000 }}

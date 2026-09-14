@@ -5,7 +5,7 @@ import { useOtherContext } from '../../context'
 import FormDocumentApproval from '../other-step/upload/FormDocumentApproval'
 import FormDocumentVehicle from '../other-step/upload/FormDocumentVehicle'
 import FormDocumentProposal from '../other-step/upload/FormDocumentProposal'
-import { Button, message, Modal } from 'antd'
+import { Button, Modal } from 'antd'
 import { useForm } from 'react-hook-form'
 import { DocumentFieldType } from '@/@types/entrepreneur/route-estimation'
 import { PetitionExtendedDocumentPostRequest } from '@/@types/services/petition'
@@ -14,9 +14,7 @@ import { postConfirmPetitionExtendedAPI } from '@/services/entrepreneur/Petition
 import { getPetitionExtendedData } from '@/store/slices/entrepreneur'
 import { useNavigate } from 'react-router-dom'
 import { CheckCircleFilled } from '@ant-design/icons'
-import AddressLabel from '@/components/custom/pdf/AddressLabel'
 import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
-import { pdf } from '@react-pdf/renderer'
 
 interface Props {
 
@@ -30,7 +28,7 @@ const OtherDocument: React.FC<Props> = (props) => {
   const { loading } = useAppSelector(state => state.layout)
   const navigate = useNavigate()
   const submitRef = useRef<HTMLButtonElement>(null)
-  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
 
   const form = useForm<DocumentFieldType>({
     defaultValues: {
@@ -129,17 +127,12 @@ const OtherDocument: React.FC<Props> = (props) => {
     setValue
   } = form
 
-  const onPrintAddress = useCallback(async () => {
-    dispatch(setLoading(true))
-    try {
-      setPreviewFile(await pdf(<AddressLabel />).toBlob())
-    } catch (error) {
-      if (error instanceof Error) message.error(error.message)
-      else console.error(error)
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [dispatch])
+  // A fixed label for the one address documents are posted to, so it ships as an asset
+  // rather than being drawn in the browser on every click. Rendering it produced a blob,
+  // and a blob is the one thing that can't be downloaded from the app's WebView.
+  const onPrintAddress = useCallback(() => {
+    setPreviewFile('/pdf/ที่อยู่สำหรับจัดส่งเอกสาร.pdf')
+  }, [])
 
   const renderResult = useMemo(() => {
     return (

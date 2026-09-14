@@ -8,7 +8,7 @@ import { useRouteContext } from '../../context'
 import { setLoading, useAppDispatch, useAppSelector } from '@/store'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { Button, Col, message, Modal, Row, UploadFile } from 'antd'
+import { Button, Col, Modal, Row, UploadFile } from 'antd'
 import { FieldTypePetition } from '@/@types/entrepreneur/permit-list'
 import { PetitionConfirmRequest, PetitionDocumentRequest, PetitionVehicleRequest } from '@/@types/services/petition'
 import dayjs from 'dayjs'
@@ -18,9 +18,7 @@ import { getUploadAPI } from '@/services/entrepreneur/VehicleListService'
 import { APIResponseRegion } from '@/@types/shared'
 import axios from 'axios'
 import { CheckCircleFilled } from '@ant-design/icons'
-import AddressLabel from '@/components/custom/pdf/AddressLabel'
 import ModalPdfPreview from '@/components/custom/pdf/ModalPdfPreview'
-import { pdf } from '@react-pdf/renderer'
 
 interface Props {
 
@@ -35,7 +33,7 @@ const RequestPermit: React.FC<Props> = (props) => {
   const { user } = useAppSelector(state => state.auth)
   const { province } = useAppSelector(state => state.master)
   const { petition, petition_detail } = useAppSelector(state => state.entrepreneur.permitList)
-  const [previewFile, setPreviewFile] = useState<Blob | null>(null)
+  const [previewFile, setPreviewFile] = useState<string | null>(null)
   // REACT HOOK
   const navigate = useNavigate()
   const location = useLocation();
@@ -540,17 +538,12 @@ const RequestPermit: React.FC<Props> = (props) => {
     fetchFileToField,
   ])
 
-  const onPrintAddress = useCallback(async () => {
-    dispatch(setLoading(true))
-    try {
-      setPreviewFile(await pdf(<AddressLabel />).toBlob())
-    } catch (error) {
-      if (error instanceof Error) message.error(error.message)
-      else console.error(error)
-    } finally {
-      dispatch(setLoading(false))
-    }
-  }, [dispatch])
+  // A fixed label for the one address documents are posted to, so it ships as an asset
+  // rather than being drawn in the browser on every click. Rendering it produced a blob,
+  // and a blob is the one thing that can't be downloaded from the app's WebView.
+  const onPrintAddress = useCallback(() => {
+    setPreviewFile('/pdf/ที่อยู่สำหรับจัดส่งเอกสาร.pdf')
+  }, [])
 
   const renderResult = useMemo(() => {
     return (
