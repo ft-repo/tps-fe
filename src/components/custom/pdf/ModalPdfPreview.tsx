@@ -4,6 +4,8 @@ import { Button, Modal } from 'antd'
 import { HiOutlineDownload } from 'react-icons/hi'
 import { Viewer, Worker } from '@react-pdf-viewer/core'
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
+import { useAppSelector } from '@/store'
+import { trySystemBrowserOpen } from '@/utils/platformOpen'
 // Bundled locally rather than pulled from a CDN: in-app WebViews are the main audience
 // here and can't be relied on to reach an external host.
 import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.js?url'
@@ -31,6 +33,7 @@ interface Props {
 const ModalPdfPreview: React.FC<Props> = (props) => {
   const { file, title = 'เอกสาร', filename = 'document.pdf', onClose } = props
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
+  const { from_web } = useAppSelector(state => state.auth.user)
   // Calls hooks internally, so it has to run at the top level, not inside useMemo.
   const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
@@ -45,11 +48,25 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
   }, [file])
 
   const fileUrl = typeof file === 'string' ? file : blobUrl
+  // Only a server-hosted document is worth offering: a Blob here is a file the user just
+  // picked off their own device, so it's already sitting in their downloads.
+  const downloadUrl = typeof file === 'string' ? file : null
 
   const handleDownload = () => {
-    if (!fileUrl) return
+    if (!downloadUrl) return
+
+    // Inside the app's WebView, hand the document to the device's browser instead.
+    // Android's WebView routes every download to the host app's DownloadListener, and
+    // this one registers none — so downloading in place silently does nothing. The api
+    // key rides in the query string (see buildUploadFileUrl), which is what lets the URL
+    // survive the trip out: it authenticates itself with no header to carry along.
+    if (from_web === false) {
+      const absoluteUrl = new URL(downloadUrl, window.location.origin).href
+      if (trySystemBrowserOpen(absoluteUrl)) return
+    }
+
     const a = document.createElement('a')
-    a.href = fileUrl
+    a.href = downloadUrl
     a.download = filename
     a.click()
   }
@@ -60,13 +77,14 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
       open={!!file}
       title={title}
       footer={
-        <Button
-          icon={<HiOutlineDownload className="text-lg" />}
-          onClick={handleDownload}
-          disabled={!fileUrl}
-        >
-          ดาวน์โหลด
-        </Button>
+        downloadUrl ? (
+          <Button
+            icon={<HiOutlineDownload className="text-lg" />}
+            onClick={handleDownload}
+          >
+            ดาวน์โหลด
+          </Button>
+        ) : null
       }
       width="95vw"
       style={{ top: 16, maxWidth: 1000 }}
