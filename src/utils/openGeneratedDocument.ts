@@ -5,7 +5,7 @@ type PdfDocument = Parameters<typeof pdf>[0]
 
 // Practical upper bound for handing a document off as a data: URI — large payloads
 // risk hitting URL-length limits in the native shell's external-open handoff.
-const MAX_EXTERNAL_OPEN_BYTES = 2 * 1024 * 1024
+export const MAX_EXTERNAL_OPEN_BYTES = 2 * 1024 * 1024
 
 export const blobToDataUri = (blob: Blob): Promise<string> =>
   new Promise((resolve, reject) => {

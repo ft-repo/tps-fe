@@ -18,6 +18,15 @@ interface Props {
   title?: string;
   /** Filename used when the user clicks Download (defaults to "document.pdf"). */
   filename?: string;
+  /**
+   * The endpoint `file` was fetched from, when it's a Blob and that endpoint is
+   * publicly reachable without the app's Authorization header. Lets the download
+   * button's external-browser handoff use the real URL (no size limit) instead of
+   * inlining the Blob as a data: URI — see downloadBridge.ts's trySystemDownload.
+   * Leave unset for anything from an authenticated endpoint; the external browser can't
+   * carry that header and would just get a 401.
+   */
+  sourceUrl?: string;
   onClose: () => void;
 }
 
@@ -30,7 +39,7 @@ interface Props {
  * to canvas here works regardless of both limitations.
  */
 const ModalPdfPreview: React.FC<Props> = (props) => {
-  const { file, title = 'เอกสาร', filename = 'document.pdf', onClose } = props
+  const { file, title = 'เอกสาร', filename = 'document.pdf', sourceUrl, onClose } = props
   const [blobUrl, setBlobUrl] = useState<string | null>(null)
 
   useEffect(() => {
@@ -51,7 +60,7 @@ const ModalPdfPreview: React.FC<Props> = (props) => {
     // inside the app's WebView, so its DownloadListener silently never sees it —
     // downloadBridge.ts routes around that (Web Share sheet, then the native bridge if
     // the host provides one, then a plain anchor download outside the WebView).
-    void downloadPdf(file, filename)
+    void downloadPdf(file, filename, sourceUrl)
   }
 
   // The default toolbar's own Download button hits the same blob: URL limitation and
